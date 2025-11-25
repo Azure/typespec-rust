@@ -121,8 +121,9 @@ impl StandardClient {
         let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let api_version = self.api_version.clone();
         struct Progress {
             next_link: Url,
@@ -137,16 +138,10 @@ impl StandardClient {
             move |state: PollerState<Progress>, poller_options| {
                 let (mut request, progress) = match state {
                     PollerState::More(progress) => {
-                        let qp = progress
-                            .next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = progress.next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
@@ -275,22 +270,18 @@ impl StandardClient {
         let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         (request, next_link)
@@ -403,23 +394,19 @@ impl StandardClient {
         let mut path = String::from("/azure/core/lro/standard/users/{name}:export");
         path = path.replace("{name}", name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        url.query_pairs_mut().append_pair("format", format);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.set_pair("format", format);
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         (request, next_link)

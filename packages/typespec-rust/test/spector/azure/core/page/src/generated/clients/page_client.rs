@@ -99,23 +99,18 @@ impl PageClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/core/page/custom-page");
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = first_url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -166,23 +161,18 @@ impl PageClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/core/page/page");
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = first_url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -234,22 +224,22 @@ impl PageClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/core/page/with-parameterized-next-link");
+        let mut query_builder = first_url.query_builder();
         if let Some(include_pending) = options.include_pending {
-            first_url
-                .query_pairs_mut()
-                .append_pair("includePending", &include_pending.to_string());
+            query_builder.set_pair("includePending", include_pending.to_string());
         }
-        first_url.query_pairs_mut().append_pair("select", select);
+        query_builder.set_pair("select", select);
+        query_builder.build();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
                         let mut next_link = next_link.clone();
+                        let mut query_builder = next_link.query_builder();
                         if let Some(include_pending) = options.include_pending {
-                            next_link
-                                .query_pairs_mut()
-                                .append_pair("includePending", &include_pending.to_string());
+                            query_builder.set_pair("includePending", include_pending.to_string());
                         }
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -302,28 +292,21 @@ impl PageClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/core/page/parameters");
-        if let Some(another) = options.another {
-            first_url
-                .query_pairs_mut()
-                .append_pair("another", another.as_ref());
+        let mut query_builder = first_url.query_builder();
+        if let Some(another) = options.another.as_ref() {
+            query_builder.set_pair("another", another.as_ref());
         }
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),

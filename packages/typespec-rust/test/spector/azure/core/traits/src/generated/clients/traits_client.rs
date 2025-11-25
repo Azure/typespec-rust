@@ -117,8 +117,9 @@ impl TraitsClient {
         let mut path = String::from("/azure/core/traits/user/{id}:repeatableAction");
         path = path.replace("{id}", &id.to_string());
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -199,8 +200,9 @@ impl TraitsClient {
         let mut path = String::from("/azure/core/traits/user/{id}");
         path = path.replace("{id}", &id.to_string());
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         if let Some(if_match) = options.if_match.as_ref() {

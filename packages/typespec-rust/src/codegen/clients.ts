@@ -766,7 +766,7 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string): string {
   if (param.optional && param.type.kind !== 'literal') {
-    const asRef = nonCopyableType(param.type) ? '.as_ref()' : '';
+    const asRef = nonCopyableType(param.type) || isEnumString(param.type) ? '.as_ref()' : '';
     // optional params are in the unwrapped options local var
     const op = indent.get() + helpers.buildIfBlock(indent, {
       condition: `let Some(${param.name}) = options.${param.name}${asRef}`,
@@ -902,8 +902,17 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     }
   }
 
+  let hasQueryBuilder = false;
+
+  const getQueryBuilder = function(): string {
+    hasQueryBuilder = true;
+    use.add('azure_core::http', 'UrlExt');
+    return `${indent.get()}let mut query_builder = ${urlVarName}.query_builder();\n`;
+  };
+
   if (pathChunks.length === 2) {
-    body += `${indent.get()}${urlVarName}.query_pairs_mut()`;
+    body += getQueryBuilder();
+    body += `${indent.get()}query_builder`;
     // set the query params that were in the path
     const qps = queryString.parse(pathChunks[1]);
     for (const qp of Object.keys(qps)) {
@@ -923,12 +932,17 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     body += ';\n';
   }
 
+  if (paramGroups.query.length > 0 && !hasQueryBuilder) {
+    body += getQueryBuilder();
+  }
+
   for (const queryParam of paramGroups.query) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
       body += getParamValueHelper(indent, queryParam, () => {
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
-        text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
+        const deref = queryParam.type.kind === 'ref' ? '*' : '';
+        text += `${indent.push().get()}query_builder.append_pair("${queryParam.key}", ${deref}${valueVar});\n`;
         text += `${indent.pop().get()}}\n`;
         return text;
       });
@@ -939,19 +953,23 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.0);\n`;
         if (queryParam.explode) {
           text += `${indent.get()}for (k, v) in ${queryParam.name}_vec.iter() {\n`;
-          text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(k, &v.to_string());\n`;
+          text += `${indent.push().get()}query_builder.append_pair(*k, v.to_string());\n`;
           text += `${indent.pop().get()}}\n`;
         } else {
-          text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(",").as_str());\n`;
+          text += `${indent.get()}query_builder.set_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(","));\n`;
         }
         text += `${indent.pop().get()}}\n`;
         return text;
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
-        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false)});\n`;
+        return `${indent.get()}query_builder.set_pair("${queryParam.key}", ${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false)});\n`;
       });
     }
+  }
+
+  if (hasQueryBuilder) {
+    body += `${indent.get()}query_builder.build();\n`;
   }
 
   return body;
@@ -1251,23 +1269,16 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
           // if the url already contains the token query param,
           // e.g. we started on some page, then we need to remove
           // it before appending the token for the next page.
+          use.add('azure_core::http', 'UrlExt');
           const reqTokenValue = method.strategy.requestToken.key;
           body += `${indent.get()}${helpers.buildIfBlock(indent, {
             condition: `let PagerState::More(${reqTokenParam}) = ${reqTokenParam}`,
             body: (indent) => {
-              let body = indent.get() + helpers.buildIfBlock(indent, {
-                condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
-                body: (indent) => {
-                  let body = `${indent.get()}let mut new_url = url.clone();\n`;
-                  body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
-                  body += `${indent.get()}url = new_url;\n`;
-                  return body;
-                },
-              }) + '\n';
-              body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
-              return body;
+              return `${indent.get()}let mut query_builder = url.query_builder();\n`
+                + `${indent.get()}query_builder.set_pair("${reqTokenValue}", &${reqTokenParam});\n`
+                + `${indent.get()}query_builder.build();\n`;
             }
-          })}\n`
+          })}\n`;
         }
         srcUrlVar = 'url';
         break;
@@ -1281,24 +1292,31 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
           body: (indent) => {
             const cloneNextLink = `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
             let content = '';
+            let hasQueryBuilder = false;
             if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
-              const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
-              // there are no APIs to set/update an existing query parameter.
-              // so, we filter the existing query params to remove the api-version
-              // query param. we then add back the filtered set and then add the
-              // api-version as specified on the client.
-              content = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
               content += cloneNextLink;
-              content += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+              hasQueryBuilder = true;
+              use.add('azure_core::http', 'UrlExt');
+              content += `${indent.get()}let mut query_builder = ${nextLinkName}.query_builder();\n`;
+              content += `${indent.get()}query_builder.set_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
             } else if (reinjectedParams.length > 0) {
               // if we didn't clone it above, we'll need to clone it for this case
               content += cloneNextLink;
             }
+
             // add query params for reinjection
+            if (reinjectedParams.length > 0 && !hasQueryBuilder) {
+              hasQueryBuilder = true;
+              use.add('azure_core::http', 'UrlExt');
+              content += `${indent.get()}let mut query_builder = ${nextLinkName}.query_builder();\n`;
+            }
             for (const reinjectedParam of reinjectedParams) {
               content += getParamValueHelper(indent, reinjectedParam, () => {
-                return `${indent.get()}${nextLinkName}.query_pairs_mut().append_pair("${reinjectedParam.key}", ${getHeaderPathQueryParamValue(use, reinjectedParam, false, false)});\n`;
+                return `${indent.get()}query_builder.set_pair("${reinjectedParam.key}", ${getHeaderPathQueryParamValue(use, reinjectedParam, false, false)});\n`;
               });
+            }
+            if (hasQueryBuilder) {
+              content += `${indent.get()}query_builder.build();\n`;
             }
             content += `${indent.get()}${nextLinkName}\n`;
             return content;
@@ -1465,9 +1483,11 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
 
   const applyApiVersionParam = function (indent: helpers.indentation, paramGroups: MethodParamGroups, newLinkVarName: string, existingLinkVarAccessor: string): string {
     if (paramGroups.apiVersion?.kind === 'queryScalar') {
-      return `${indent.get()}let qp = ${existingLinkVarAccessor}.query_pairs().filter(|(name, _)| name.ne("${paramGroups.apiVersion.key}"));\n`
-        + `${indent.get()}let mut ${newLinkVarName} = ${existingLinkVarAccessor}.clone();\n`
-        + `${indent.get()}${newLinkVarName}.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
+      use.add('azure_core::http', 'UrlExt');
+      return `${indent.get()}let mut ${newLinkVarName} = ${existingLinkVarAccessor}.clone();\n`
+        + `${indent.get()}let mut query_builder = ${newLinkVarName}.query_builder();\n`
+        + `${indent.get()}query_builder.set_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`
+        + `${indent.get()}query_builder.build();\n`;
     }
 
     return '';
@@ -1706,7 +1726,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
 
   // contains the result from calculating if the
   // param requires borrowing.
-  let mustBorrow = true;
+  let mustBorrow = !helpers.isQueryParameter(param);
 
   const paramType = helpers.unwrapType(param.type);
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
@@ -1750,7 +1770,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         break;
       case 'enum':
       case 'scalar':
-        if (paramType.kind === 'enum' && (param.kind === 'pathScalar' || param.kind === 'queryScalar') && paramType.type === 'String') {
+        if (isEnumString(paramType) && (param.kind === 'pathScalar' || param.kind === 'queryScalar')) {
           // append_pair and path.replace() want a reference to the string
           paramValue = `${paramName}.as_ref()`;
           // as_ref() elides the need to borrow
@@ -1852,4 +1872,10 @@ function getPipelineOptions(indent: helpers.indentation, use: Use, method: Clien
   } else {
     return 'None';
   }
+}
+
+/** narrows type to an Enum type IFF its underlying type is String within the conditional block */
+function isEnumString(type: rust.Type): type is rust.Enum {
+  const unwrapped = helpers.unwrapType(type);
+  return unwrapped.kind === 'enum' && unwrapped.type === 'String';
 }

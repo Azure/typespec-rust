@@ -42,10 +42,11 @@ impl PageablePageSizeClient {
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
         url.append_path("/payload/pageable/pagesize/list");
+        let mut query_builder = url.query_builder();
         if let Some(page_size) = options.page_size {
-            url.query_pairs_mut()
-                .append_pair("pageSize", &page_size.to_string());
+            query_builder.set_pair("pageSize", page_size.to_string());
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |_: PagerState<Url>, pager_options| {
                 let mut request = Request::new(url.clone(), Method::Get);

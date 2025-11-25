@@ -40,7 +40,9 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/query/base64");
-        url.query_pairs_mut().append_pair("value", &encode(value));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", encode(value));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -72,8 +74,9 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/query/base64url");
-        url.query_pairs_mut()
-            .append_pair("value", &encode_url_safe(value));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", encode_url_safe(value));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -105,14 +108,16 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/query/base64url-array");
-        url.query_pairs_mut().append_pair(
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair(
             "value",
-            &value
+            value
                 .iter()
                 .map(encode_url_safe)
                 .collect::<Vec<String>>()
                 .join(","),
         );
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -144,7 +149,9 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/query/default");
-        url.query_pairs_mut().append_pair("value", &encode(value));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", encode(value));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

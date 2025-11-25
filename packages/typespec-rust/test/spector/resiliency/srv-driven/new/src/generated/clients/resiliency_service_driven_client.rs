@@ -137,10 +137,11 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-none");
+        let mut query_builder = url.query_builder();
         if let Some(new_parameter) = options.new_parameter.as_ref() {
-            url.query_pairs_mut()
-                .append_pair("new-parameter", new_parameter);
+            query_builder.set_pair("new-parameter", new_parameter);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
@@ -172,13 +173,14 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-one-optional");
+        let mut query_builder = url.query_builder();
         if let Some(new_parameter) = options.new_parameter.as_ref() {
-            url.query_pairs_mut()
-                .append_pair("new-parameter", new_parameter);
+            query_builder.set_pair("new-parameter", new_parameter);
         }
         if let Some(parameter) = options.parameter.as_ref() {
-            url.query_pairs_mut().append_pair("parameter", parameter);
+            query_builder.set_pair("parameter", parameter);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -212,11 +214,12 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-one-required");
+        let mut query_builder = url.query_builder();
         if let Some(new_parameter) = options.new_parameter.as_ref() {
-            url.query_pairs_mut()
-                .append_pair("new-parameter", new_parameter);
+            query_builder.set_pair("new-parameter", new_parameter);
         }
-        url.query_pairs_mut().append_pair("parameter", parameter);
+        query_builder.set_pair("parameter", parameter);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

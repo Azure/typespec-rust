@@ -127,9 +127,11 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-one-optional");
+        let mut query_builder = url.query_builder();
         if let Some(parameter) = options.parameter.as_ref() {
-            url.query_pairs_mut().append_pair("parameter", parameter);
+            query_builder.set_pair("parameter", parameter);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -164,7 +166,9 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-one-required");
-        url.query_pairs_mut().append_pair("parameter", parameter);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("parameter", parameter);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

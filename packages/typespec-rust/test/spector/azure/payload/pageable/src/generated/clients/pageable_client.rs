@@ -78,11 +78,11 @@ impl PageableClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/payload/pageable");
+        let mut query_builder = first_url.query_builder();
         if let Some(maxpagesize) = options.maxpagesize {
-            first_url
-                .query_pairs_mut()
-                .append_pair("maxpagesize", &maxpagesize.to_string());
+            query_builder.set_pair("maxpagesize", maxpagesize.to_string());
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {

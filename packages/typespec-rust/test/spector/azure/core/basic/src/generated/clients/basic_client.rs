@@ -94,8 +94,9 @@ impl BasicClient {
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -138,8 +139,9 @@ impl BasicClient {
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
@@ -180,8 +182,9 @@ impl BasicClient {
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -221,9 +224,10 @@ impl BasicClient {
         let mut path = String::from("/azure/core/basic/users/{id}:export");
         path = path.replace("{id}", &id.to_string());
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        url.query_pairs_mut().append_pair("format", format);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.set_pair("format", format);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -260,9 +264,10 @@ impl BasicClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/azure/core/basic/users:exportallusers");
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        url.query_pairs_mut().append_pair("format", format);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.set_pair("format", format);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -301,8 +306,9 @@ impl BasicClient {
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -334,56 +340,45 @@ impl BasicClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/core/basic/users");
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = first_url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(expand) = options.expand.as_ref() {
             for e in expand.iter() {
-                first_url.query_pairs_mut().append_pair("expand", e);
+                query_builder.append_pair("expand", e);
             }
         }
         if let Some(filter) = options.filter.as_ref() {
-            first_url.query_pairs_mut().append_pair("filter", filter);
+            query_builder.set_pair("filter", filter);
         }
         if let Some(maxpagesize) = options.maxpagesize {
-            first_url
-                .query_pairs_mut()
-                .append_pair("maxpagesize", &maxpagesize.to_string());
+            query_builder.set_pair("maxpagesize", maxpagesize.to_string());
         }
         if let Some(orderby) = options.orderby.as_ref() {
             for o in orderby.iter() {
-                first_url.query_pairs_mut().append_pair("orderby", o);
+                query_builder.append_pair("orderby", o);
             }
         }
         if let Some(select) = options.select.as_ref() {
             for s in select.iter() {
-                first_url.query_pairs_mut().append_pair("select", s);
+                query_builder.append_pair("select", s);
             }
         }
         if let Some(skip) = options.skip {
-            first_url
-                .query_pairs_mut()
-                .append_pair("skip", &skip.to_string());
+            query_builder.set_pair("skip", skip.to_string());
         }
         if let Some(top) = options.top {
-            first_url
-                .query_pairs_mut()
-                .append_pair("top", &top.to_string());
+            query_builder.set_pair("top", top.to_string());
         }
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),

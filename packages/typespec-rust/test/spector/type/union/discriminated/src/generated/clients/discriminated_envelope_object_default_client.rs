@@ -38,9 +38,11 @@ impl DiscriminatedEnvelopeObjectDefaultClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/type/union/discriminated/envelope/object/default");
+        let mut query_builder = url.query_builder();
         if let Some(kind) = options.kind.as_ref() {
-            url.query_pairs_mut().append_pair("kind", kind);
+            query_builder.set_pair("kind", kind);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

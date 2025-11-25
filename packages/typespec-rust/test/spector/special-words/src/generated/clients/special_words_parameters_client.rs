@@ -57,7 +57,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/and");
-        url.query_pairs_mut().append_pair("and", and);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("and", and);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -89,7 +91,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/as");
-        url.query_pairs_mut().append_pair("as", as_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("as", as_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -121,7 +125,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/assert");
-        url.query_pairs_mut().append_pair("assert", assert);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("assert", assert);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -153,7 +159,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/async");
-        url.query_pairs_mut().append_pair("async", async_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("async", async_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -185,7 +193,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/await");
-        url.query_pairs_mut().append_pair("await", await_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("await", await_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -217,7 +227,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/break");
-        url.query_pairs_mut().append_pair("break", break_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("break", break_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -249,8 +261,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/cancellationToken");
-        url.query_pairs_mut()
-            .append_pair("cancellationToken", cancellation_token);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("cancellationToken", cancellation_token);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -282,7 +295,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/class");
-        url.query_pairs_mut().append_pair("class", class);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("class", class);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -314,8 +329,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/constructor");
-        url.query_pairs_mut()
-            .append_pair("constructor", constructor);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("constructor", constructor);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -347,8 +363,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/continue");
-        url.query_pairs_mut()
-            .append_pair("continue", continue_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("continue", continue_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -380,7 +397,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/def");
-        url.query_pairs_mut().append_pair("def", def);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("def", def);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -412,7 +431,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/del");
-        url.query_pairs_mut().append_pair("del", del);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("del", del);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -444,7 +465,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/elif");
-        url.query_pairs_mut().append_pair("elif", elif);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("elif", elif);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -476,7 +499,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/else");
-        url.query_pairs_mut().append_pair("else", else_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("else", else_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -508,7 +533,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/except");
-        url.query_pairs_mut().append_pair("except", except);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("except", except);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -540,7 +567,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/exec");
-        url.query_pairs_mut().append_pair("exec", exec);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("exec", exec);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -572,7 +601,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/finally");
-        url.query_pairs_mut().append_pair("finally", finally);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("finally", finally);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -604,7 +635,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/for");
-        url.query_pairs_mut().append_pair("for", for_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("for", for_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -636,7 +669,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/from");
-        url.query_pairs_mut().append_pair("from", from);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("from", from);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -668,7 +703,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/global");
-        url.query_pairs_mut().append_pair("global", global);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("global", global);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -700,7 +737,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/if");
-        url.query_pairs_mut().append_pair("if", if_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("if", if_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -732,7 +771,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/import");
-        url.query_pairs_mut().append_pair("import", import);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("import", import);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -764,7 +805,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/in");
-        url.query_pairs_mut().append_pair("in", in_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("in", in_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -796,7 +839,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/is");
-        url.query_pairs_mut().append_pair("is", is);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("is", is);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -828,7 +873,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/lambda");
-        url.query_pairs_mut().append_pair("lambda", lambda);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("lambda", lambda);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -860,7 +907,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/not");
-        url.query_pairs_mut().append_pair("not", not);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("not", not);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -892,7 +941,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/or");
-        url.query_pairs_mut().append_pair("or", or);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("or", or);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -924,7 +975,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/pass");
-        url.query_pairs_mut().append_pair("pass", pass);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("pass", pass);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -956,7 +1009,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/raise");
-        url.query_pairs_mut().append_pair("raise", raise);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("raise", raise);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -988,7 +1043,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/return");
-        url.query_pairs_mut().append_pair("return", return_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("return", return_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -1020,7 +1077,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/try");
-        url.query_pairs_mut().append_pair("try", try_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("try", try_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -1052,7 +1111,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/while");
-        url.query_pairs_mut().append_pair("while", while_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("while", while_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -1084,7 +1145,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/with");
-        url.query_pairs_mut().append_pair("with", with);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("with", with);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -1116,7 +1179,9 @@ impl SpecialWordsParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/special-words/parameters/yield");
-        url.query_pairs_mut().append_pair("yield", yield_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("yield", yield_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

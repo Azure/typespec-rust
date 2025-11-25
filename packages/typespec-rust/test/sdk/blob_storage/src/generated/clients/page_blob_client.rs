@@ -152,13 +152,14 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("clear")
             .append_pair("comp", "page");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(if_match) = options.if_match.as_ref() {
@@ -173,7 +174,7 @@ impl PageBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -291,11 +292,12 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "incrementalcopy");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "incrementalcopy");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -389,11 +391,12 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_key_only("PageBlob");
+        let mut query_builder = url.query_builder();
+        query_builder.append_key_only("PageBlob");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(if_match) = options.if_match.as_ref() {
@@ -408,7 +411,7 @@ impl PageBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(tier) = options.tier {
+        if let Some(tier) = options.tier.as_ref() {
             request.insert_header("x-ms-access-tier", tier.to_string());
         }
         if let Some(blob_cache_control) = options.blob_cache_control.as_ref() {
@@ -437,7 +440,7 @@ impl PageBlobClient {
             );
         }
         request.insert_header("x-ms-blob-type", BlobType::PageBlob.to_string());
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -455,7 +458,7 @@ impl PageBlobClient {
         if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(immutability_policy_mode) = options.immutability_policy_mode {
+        if let Some(immutability_policy_mode) = options.immutability_policy_mode.as_ref() {
             request.insert_header(
                 "x-ms-immutability-policy-mode",
                 immutability_policy_mode.to_string(),
@@ -547,21 +550,21 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "pagelist");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "pagelist");
         if let Some(marker) = options.marker.as_ref() {
-            url.query_pairs_mut().append_pair("marker", marker);
+            query_builder.set_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
-            url.query_pairs_mut()
-                .append_pair("maxresults", &maxresults.to_string());
+            query_builder.set_pair("maxresults", maxresults.to_string());
         }
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
@@ -652,27 +655,26 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "pagelist")
             .append_key_only("diff");
         if let Some(marker) = options.marker.as_ref() {
-            url.query_pairs_mut().append_pair("marker", marker);
+            query_builder.set_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
-            url.query_pairs_mut()
-                .append_pair("maxresults", &maxresults.to_string());
+            query_builder.set_pair("maxresults", maxresults.to_string());
         }
         if let Some(prevsnapshot) = options.prevsnapshot.as_ref() {
-            url.query_pairs_mut()
-                .append_pair("prevsnapshot", prevsnapshot);
+            query_builder.set_pair("prevsnapshot", prevsnapshot);
         }
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
@@ -769,13 +771,14 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("Resize")
             .append_pair("comp", "properties");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -791,7 +794,7 @@ impl PageBlobClient {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
         request.insert_header("x-ms-blob-content-length", blob_content_length.to_string());
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -882,13 +885,14 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("UpdateSequenceNumber")
             .append_pair("comp", "properties");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -995,13 +999,14 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "page")
             .append_key_only("update");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
@@ -1023,7 +1028,7 @@ impl PageBlobClient {
         if let Some(transactional_content_crc64) = options.transactional_content_crc64 {
             request.insert_header("x-ms-content-crc64", encode(transactional_content_crc64));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -1158,14 +1163,15 @@ impl PageBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "page")
             .append_key_only("fromUrl")
             .append_key_only("update");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1184,7 +1190,7 @@ impl PageBlobClient {
         if let Some(copy_source_authorization) = options.copy_source_authorization.as_ref() {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),

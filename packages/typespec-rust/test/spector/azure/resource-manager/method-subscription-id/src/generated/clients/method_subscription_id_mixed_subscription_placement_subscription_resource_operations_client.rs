@@ -64,8 +64,9 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperation
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResourceName}", subscription_resource_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -116,8 +117,9 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperation
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResourceName}", subscription_resource_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -171,8 +173,9 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperation
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResourceName}", subscription_resource_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

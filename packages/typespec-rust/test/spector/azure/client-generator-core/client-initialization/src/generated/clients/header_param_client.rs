@@ -128,7 +128,9 @@ impl HeaderParamClient {
         url.append_path(
             "/azure/client-generator-core/client-initialization/header-param/with-query",
         );
-        url.query_pairs_mut().append_pair("id", id);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("id", id);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("name", &self.name);
         let rsp = self

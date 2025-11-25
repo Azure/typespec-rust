@@ -87,10 +87,10 @@ impl AzureExampleClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/azure/example/basic/basic");
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        url.query_pairs_mut()
-            .append_pair("query-param", query_param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.set_pair("query-param", query_param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

@@ -41,9 +41,11 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/query-expansion/explode/array");
+        let mut query_builder = url.query_builder();
         for p in param.iter() {
-            url.query_pairs_mut().append_pair("param", p);
+            query_builder.append_pair("param", *p);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -75,7 +77,9 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/query-expansion/explode/primitive");
-        url.query_pairs_mut().append_pair("param", param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("param", param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -107,13 +111,15 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/query-expansion/explode/record");
+        let mut query_builder = url.query_builder();
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);
             for (k, v) in param_vec.iter() {
-                url.query_pairs_mut().append_pair(k, &v.to_string());
+                query_builder.append_pair(*k, v.to_string());
             }
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

@@ -1,6 +1,12 @@
 # Release History
 
-## 0.29.1 (unreleased)
+## 0.30.0 (unreleased)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Use `QueryBuilder` when adding/setting query parameters on the request's URL.
 
 ### Other Changes
 

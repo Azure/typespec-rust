@@ -163,9 +163,11 @@ impl PathParamClient {
         );
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);
+        let mut query_builder = url.query_builder();
         if let Some(format) = options.format.as_ref() {
-            url.query_pairs_mut().append_pair("format", format);
+            query_builder.set_pair("format", format);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

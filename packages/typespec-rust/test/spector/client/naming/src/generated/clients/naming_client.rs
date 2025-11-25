@@ -236,8 +236,9 @@ impl NamingClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/client/naming/parameter");
-        url.query_pairs_mut()
-            .append_pair("defaultName", client_name);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("defaultName", client_name);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

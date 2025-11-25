@@ -41,10 +41,12 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/query-continuation/explode/array");
-        url.query_pairs_mut().append_pair("fixed", "true");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("fixed", "true");
         for p in param.iter() {
-            url.query_pairs_mut().append_pair("param", p);
+            query_builder.append_pair("param", *p);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -76,8 +78,10 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/query-continuation/explode/primitive");
-        url.query_pairs_mut().append_pair("fixed", "true");
-        url.query_pairs_mut().append_pair("param", param);
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("fixed", "true");
+        query_builder.set_pair("param", param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -109,14 +113,16 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/query-continuation/explode/record");
-        url.query_pairs_mut().append_pair("fixed", "true");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("fixed", "true");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);
             for (k, v) in param_vec.iter() {
-                url.query_pairs_mut().append_pair(k, &v.to_string());
+                query_builder.append_pair(*k, v.to_string());
             }
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

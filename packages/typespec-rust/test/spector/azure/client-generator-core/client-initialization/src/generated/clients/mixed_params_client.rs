@@ -90,7 +90,9 @@ impl MixedParamsClient {
         url.append_path(
             "/azure/client-generator-core/client-initialization/mixed-params/with-body",
         );
-        url.query_pairs_mut().append_pair("region", region);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("region", region);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.insert_header("name", &self.name);
@@ -130,8 +132,10 @@ impl MixedParamsClient {
         url.append_path(
             "/azure/client-generator-core/client-initialization/mixed-params/with-query",
         );
-        url.query_pairs_mut().append_pair("id", id);
-        url.query_pairs_mut().append_pair("region", region);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("id", id);
+        query_builder.set_pair("region", region);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("name", &self.name);
         let rsp = self

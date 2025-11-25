@@ -123,8 +123,9 @@ impl NotVersionedClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/server/versions/not-versioned/with-query-api-version");
-        url.query_pairs_mut()
-            .append_pair("api-version", api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
