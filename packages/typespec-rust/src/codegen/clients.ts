@@ -1498,6 +1498,11 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   let pollerStateInitialReturn = `${urlVar}.clone()`;
   let pollerStatusInProgressReturn = 'next_link';
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) {
+    // A case when the initial response contains two headers - one (usually, 'azure-asyncoperation') to poll operation status
+    // and another (usually, 'location') to collect the final result. Both values are URLs.
+    // But only the initial response will have these headers, i.e. responses from 'azure-asyncoperation' URL won't have the 'location'.
+    // Therefore, we need to preserve both URLs and pass them between poller states, up to the moment when the operation status
+    // is Succeeded, so that when operation is Succeeded, the poller can send a request to 'location' to collect the result.
     body += `${indent.get()}struct Progress{ next_link: Url, final_link: Url, }`;
     body += `${indent.get()}impl AsRef<str> for Progress{ fn as_ref(&self) -> &str{ self.next_link.as_ref() }}\n`;
 
