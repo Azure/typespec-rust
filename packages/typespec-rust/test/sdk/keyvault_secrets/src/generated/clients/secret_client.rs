@@ -256,8 +256,8 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
-        path = match options.secret_version {
-            Some(secret_version) => path.replace("{secret-version}", &secret_version),
+        path = match options.secret_version.as_ref() {
+            Some(secret_version) => path.replace("{secret-version}", secret_version),
             None => path.replace("{secret-version}", ""),
         };
         url.append_path(&path);
@@ -730,8 +730,8 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
-        path = match options.secret_version {
-            Some(secret_version) => path.replace("{secret-version}", &secret_version),
+        path = match options.secret_version.as_ref() {
+            Some(secret_version) => path.replace("{secret-version}", secret_version),
             None => path.replace("{secret-version}", ""),
         };
         url.append_path(&path);

@@ -337,25 +337,25 @@ impl BasicClient {
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(expand) = options.expand {
+        if let Some(expand) = options.expand.as_ref() {
             for e in expand.iter() {
                 first_url.query_pairs_mut().append_pair("expand", e);
             }
         }
-        if let Some(filter) = options.filter {
-            first_url.query_pairs_mut().append_pair("filter", &filter);
+        if let Some(filter) = options.filter.as_ref() {
+            first_url.query_pairs_mut().append_pair("filter", filter);
         }
         if let Some(maxpagesize) = options.maxpagesize {
             first_url
                 .query_pairs_mut()
                 .append_pair("maxpagesize", &maxpagesize.to_string());
         }
-        if let Some(orderby) = options.orderby {
+        if let Some(orderby) = options.orderby.as_ref() {
             for o in orderby.iter() {
                 first_url.query_pairs_mut().append_pair("orderby", o);
             }
         }
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             for s in select.iter() {
                 first_url.query_pairs_mut().append_pair("select", s);
             }

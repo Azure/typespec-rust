@@ -160,8 +160,8 @@ impl ParentChildClient {
         );
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);
-        if let Some(format) = options.format {
-            url.query_pairs_mut().append_pair("format", &format);
+        if let Some(format) = options.format.as_ref() {
+            url.query_pairs_mut().append_pair("format", format);
         }
         let mut request = Request::new(url, Method::Get);
         let rsp = self

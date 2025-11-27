@@ -38,8 +38,8 @@ impl DiscriminatedNoEnvelopeCustomDiscriminatorClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/type/union/discriminated/no-envelope/custom-discriminator");
-        if let Some(type_param) = options.type_param {
-            url.query_pairs_mut().append_pair("type", &type_param);
+        if let Some(type_param) = options.type_param.as_ref() {
+            url.query_pairs_mut().append_pair("type", type_param);
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");

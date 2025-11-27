@@ -161,13 +161,13 @@ impl PageBlobClient {
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
@@ -179,13 +179,13 @@ impl PageBlobClient {
                 encryption_algorithm.to_string(),
             );
         }
-        if let Some(encryption_key) = options.encryption_key {
+        if let Some(encryption_key) = options.encryption_key.as_ref() {
             request.insert_header("x-ms-encryption-key", encryption_key);
         }
-        if let Some(encryption_key_sha256) = options.encryption_key_sha256 {
+        if let Some(encryption_key_sha256) = options.encryption_key_sha256.as_ref() {
             request.insert_header("x-ms-encryption-key-sha256", encryption_key_sha256);
         }
-        if let Some(encryption_scope) = options.encryption_scope {
+        if let Some(encryption_scope) = options.encryption_scope.as_ref() {
             request.insert_header("x-ms-encryption-scope", encryption_scope);
         }
         if let Some(if_sequence_number_equal_to) = options.if_sequence_number_equal_to {
@@ -208,13 +208,13 @@ impl PageBlobClient {
                 if_sequence_number_less_than.to_string(),
             );
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        if let Some(range) = options.range {
+        if let Some(range) = options.range.as_ref() {
             request.insert_header("x-ms-range", range);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -298,20 +298,20 @@ impl PageBlobClient {
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
         request.insert_header("x-ms-copy-source", copy_source);
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -396,13 +396,13 @@ impl PageBlobClient {
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
@@ -411,23 +411,23 @@ impl PageBlobClient {
         if let Some(tier) = options.tier {
             request.insert_header("x-ms-access-tier", tier.to_string());
         }
-        if let Some(blob_cache_control) = options.blob_cache_control {
+        if let Some(blob_cache_control) = options.blob_cache_control.as_ref() {
             request.insert_header("x-ms-blob-cache-control", blob_cache_control);
         }
-        if let Some(blob_content_disposition) = options.blob_content_disposition {
+        if let Some(blob_content_disposition) = options.blob_content_disposition.as_ref() {
             request.insert_header("x-ms-blob-content-disposition", blob_content_disposition);
         }
-        if let Some(blob_content_encoding) = options.blob_content_encoding {
+        if let Some(blob_content_encoding) = options.blob_content_encoding.as_ref() {
             request.insert_header("x-ms-blob-content-encoding", blob_content_encoding);
         }
-        if let Some(blob_content_language) = options.blob_content_language {
+        if let Some(blob_content_language) = options.blob_content_language.as_ref() {
             request.insert_header("x-ms-blob-content-language", blob_content_language);
         }
         request.insert_header("x-ms-blob-content-length", blob_content_length.to_string());
         if let Some(blob_content_md5) = options.blob_content_md5 {
             request.insert_header("x-ms-blob-content-md5", encode(blob_content_md5));
         }
-        if let Some(blob_content_type) = options.blob_content_type {
+        if let Some(blob_content_type) = options.blob_content_type.as_ref() {
             request.insert_header("x-ms-blob-content-type", blob_content_type);
         }
         if let Some(blob_sequence_number) = options.blob_sequence_number {
@@ -443,16 +443,16 @@ impl PageBlobClient {
                 encryption_algorithm.to_string(),
             );
         }
-        if let Some(encryption_key) = options.encryption_key {
+        if let Some(encryption_key) = options.encryption_key.as_ref() {
             request.insert_header("x-ms-encryption-key", encryption_key);
         }
-        if let Some(encryption_key_sha256) = options.encryption_key_sha256 {
+        if let Some(encryption_key_sha256) = options.encryption_key_sha256.as_ref() {
             request.insert_header("x-ms-encryption-key-sha256", encryption_key_sha256);
         }
-        if let Some(encryption_scope) = options.encryption_scope {
+        if let Some(encryption_scope) = options.encryption_scope.as_ref() {
             request.insert_header("x-ms-encryption-scope", encryption_scope);
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
         if let Some(immutability_policy_mode) = options.immutability_policy_mode {
@@ -467,18 +467,18 @@ impl PageBlobClient {
                 to_rfc7231(&immutability_policy_expiry),
             );
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         if let Some(legal_hold) = options.legal_hold {
             request.insert_header("x-ms-legal-hold", legal_hold.to_string());
         }
-        if let Some(metadata) = options.metadata {
-            for (k, v) in &metadata {
+        if let Some(metadata) = options.metadata.as_ref() {
+            for (k, v) in metadata {
                 request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
-        if let Some(blob_tags_string) = options.blob_tags_string {
+        if let Some(blob_tags_string) = options.blob_tags_string.as_ref() {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -548,15 +548,15 @@ impl PageBlobClient {
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "pagelist");
-        if let Some(marker) = options.marker {
-            url.query_pairs_mut().append_pair("marker", &marker);
+        if let Some(marker) = options.marker.as_ref() {
+            url.query_pairs_mut().append_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
             url.query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
-        if let Some(snapshot) = options.snapshot {
-            url.query_pairs_mut().append_pair("snapshot", &snapshot);
+        if let Some(snapshot) = options.snapshot.as_ref() {
+            url.query_pairs_mut().append_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -565,25 +565,25 @@ impl PageBlobClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        if let Some(range) = options.range {
+        if let Some(range) = options.range.as_ref() {
             request.insert_header("x-ms-range", range);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -655,19 +655,19 @@ impl PageBlobClient {
         url.query_pairs_mut()
             .append_pair("comp", "pagelist")
             .append_key_only("diff");
-        if let Some(marker) = options.marker {
-            url.query_pairs_mut().append_pair("marker", &marker);
+        if let Some(marker) = options.marker.as_ref() {
+            url.query_pairs_mut().append_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
             url.query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
-        if let Some(prevsnapshot) = options.prevsnapshot {
+        if let Some(prevsnapshot) = options.prevsnapshot.as_ref() {
             url.query_pairs_mut()
-                .append_pair("prevsnapshot", &prevsnapshot);
+                .append_pair("prevsnapshot", prevsnapshot);
         }
-        if let Some(snapshot) = options.snapshot {
-            url.query_pairs_mut().append_pair("snapshot", &snapshot);
+        if let Some(snapshot) = options.snapshot.as_ref() {
+            url.query_pairs_mut().append_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -676,28 +676,28 @@ impl PageBlobClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        if let Some(prev_snapshot_url) = options.prev_snapshot_url {
+        if let Some(prev_snapshot_url) = options.prev_snapshot_url.as_ref() {
             request.insert_header("x-ms-previous-snapshot-url", prev_snapshot_url);
         }
-        if let Some(range) = options.range {
+        if let Some(range) = options.range.as_ref() {
             request.insert_header("x-ms-range", range);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -778,13 +778,13 @@ impl PageBlobClient {
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
@@ -797,19 +797,19 @@ impl PageBlobClient {
                 encryption_algorithm.to_string(),
             );
         }
-        if let Some(encryption_key) = options.encryption_key {
+        if let Some(encryption_key) = options.encryption_key.as_ref() {
             request.insert_header("x-ms-encryption-key", encryption_key);
         }
-        if let Some(encryption_key_sha256) = options.encryption_key_sha256 {
+        if let Some(encryption_key_sha256) = options.encryption_key_sha256.as_ref() {
             request.insert_header("x-ms-encryption-key-sha256", encryption_key_sha256);
         }
-        if let Some(encryption_scope) = options.encryption_scope {
+        if let Some(encryption_scope) = options.encryption_scope.as_ref() {
             request.insert_header("x-ms-encryption-scope", encryption_scope);
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -891,13 +891,13 @@ impl PageBlobClient {
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
@@ -909,10 +909,10 @@ impl PageBlobClient {
                 blob_sequence_number.to_string(),
             );
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header(
@@ -1008,13 +1008,13 @@ impl PageBlobClient {
             request.insert_header("content-md5", encode(transactional_content_md5));
         }
         request.insert_header("content-type", "application/octet-stream");
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
@@ -1029,13 +1029,13 @@ impl PageBlobClient {
                 encryption_algorithm.to_string(),
             );
         }
-        if let Some(encryption_key) = options.encryption_key {
+        if let Some(encryption_key) = options.encryption_key.as_ref() {
             request.insert_header("x-ms-encryption-key", encryption_key);
         }
-        if let Some(encryption_key_sha256) = options.encryption_key_sha256 {
+        if let Some(encryption_key_sha256) = options.encryption_key_sha256.as_ref() {
             request.insert_header("x-ms-encryption-key-sha256", encryption_key_sha256);
         }
-        if let Some(encryption_scope) = options.encryption_scope {
+        if let Some(encryption_scope) = options.encryption_scope.as_ref() {
             request.insert_header("x-ms-encryption-scope", encryption_scope);
         }
         if let Some(if_sequence_number_equal_to) = options.if_sequence_number_equal_to {
@@ -1058,16 +1058,16 @@ impl PageBlobClient {
                 if_sequence_number_less_than.to_string(),
             );
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        if let Some(range) = options.range {
+        if let Some(range) = options.range.as_ref() {
             request.insert_header("x-ms-range", range);
         }
-        if let Some(structured_body_type) = options.structured_body_type {
+        if let Some(structured_body_type) = options.structured_body_type.as_ref() {
             request.insert_header("x-ms-structured-body", structured_body_type);
         }
         if let Some(structured_content_length) = options.structured_content_length {
@@ -1168,20 +1168,20 @@ impl PageBlobClient {
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
         request.insert_header("x-ms-copy-source", source_url);
-        if let Some(copy_source_authorization) = options.copy_source_authorization {
+        if let Some(copy_source_authorization) = options.copy_source_authorization.as_ref() {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
         if let Some(encryption_algorithm) = options.encryption_algorithm {
@@ -1190,13 +1190,13 @@ impl PageBlobClient {
                 encryption_algorithm.to_string(),
             );
         }
-        if let Some(encryption_key) = options.encryption_key {
+        if let Some(encryption_key) = options.encryption_key.as_ref() {
             request.insert_header("x-ms-encryption-key", encryption_key);
         }
-        if let Some(encryption_key_sha256) = options.encryption_key_sha256 {
+        if let Some(encryption_key_sha256) = options.encryption_key_sha256.as_ref() {
             request.insert_header("x-ms-encryption-key-sha256", encryption_key_sha256);
         }
-        if let Some(encryption_scope) = options.encryption_scope {
+        if let Some(encryption_scope) = options.encryption_scope.as_ref() {
             request.insert_header("x-ms-encryption-scope", encryption_scope);
         }
         if let Some(if_sequence_number_equal_to) = options.if_sequence_number_equal_to {
@@ -1219,10 +1219,10 @@ impl PageBlobClient {
                 if_sequence_number_less_than.to_string(),
             );
         }
-        if let Some(if_tags) = options.if_tags {
+        if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-range", range);
@@ -1232,7 +1232,7 @@ impl PageBlobClient {
         if let Some(source_content_md5) = options.source_content_md5 {
             request.insert_header("x-ms-source-content-md5", encode(source_content_md5));
         }
-        if let Some(source_if_match) = options.source_if_match {
+        if let Some(source_if_match) = options.source_if_match.as_ref() {
             request.insert_header("x-ms-source-if-match", source_if_match);
         }
         if let Some(source_if_modified_since) = options.source_if_modified_since {
@@ -1241,7 +1241,7 @@ impl PageBlobClient {
                 to_rfc7231(&source_if_modified_since),
             );
         }
-        if let Some(source_if_none_match) = options.source_if_none_match {
+        if let Some(source_if_none_match) = options.source_if_none_match.as_ref() {
             request.insert_header("x-ms-source-if-none-match", source_if_none_match);
         }
         if let Some(source_if_unmodified_since) = options.source_if_unmodified_since {

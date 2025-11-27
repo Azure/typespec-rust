@@ -10,6 +10,7 @@
 ### Other Changes
 
 * Moved `TryFrom` impls for union types into their own file.
+* Call `.as_ref()` when consuming optional parameter values that are non-copyable types.
 
 ## 0.29.0 (2025-11-20)
 

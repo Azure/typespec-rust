@@ -127,7 +127,7 @@ impl BlobServiceClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.query_pairs_mut().append_pair("comp", "blobs");
-        if let Some(include) = options.include {
+        if let Some(include) = options.include.as_ref() {
             url.query_pairs_mut().append_pair(
                 "include",
                 &include
@@ -137,8 +137,8 @@ impl BlobServiceClient {
                     .join(","),
             );
         }
-        if let Some(marker) = options.marker {
-            url.query_pairs_mut().append_pair("marker", &marker);
+        if let Some(marker) = options.marker.as_ref() {
+            url.query_pairs_mut().append_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
             url.query_pairs_mut()
@@ -148,8 +148,8 @@ impl BlobServiceClient {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
         }
-        if let Some(where_param) = options.where_param {
-            url.query_pairs_mut().append_pair("where", &where_param);
+        if let Some(where_param) = options.where_param.as_ref() {
+            url.query_pairs_mut().append_pair("where", where_param);
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
@@ -442,7 +442,7 @@ impl BlobServiceClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.query_pairs_mut().append_pair("comp", "list");
-        if let Some(include) = options.include {
+        if let Some(include) = options.include.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "include",
                 &include
@@ -452,16 +452,16 @@ impl BlobServiceClient {
                     .join(","),
             );
         }
-        if let Some(marker) = options.marker {
-            first_url.query_pairs_mut().append_pair("marker", &marker);
+        if let Some(marker) = options.marker.as_ref() {
+            first_url.query_pairs_mut().append_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
             first_url
                 .query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
-        if let Some(prefix) = options.prefix {
-            first_url.query_pairs_mut().append_pair("prefix", &prefix);
+        if let Some(prefix) = options.prefix.as_ref() {
+            first_url.query_pairs_mut().append_pair("prefix", prefix);
         }
         if let Some(timeout) = options.timeout {
             first_url

@@ -85,8 +85,8 @@ impl MadeOptionalClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/test");
-        if let Some(param) = options.param {
-            url.query_pairs_mut().append_pair("param", &param);
+        if let Some(param) = options.param.as_ref() {
+            url.query_pairs_mut().append_pair("param", param);
         }
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");

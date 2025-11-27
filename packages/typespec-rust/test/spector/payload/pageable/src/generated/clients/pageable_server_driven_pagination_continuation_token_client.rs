@@ -51,15 +51,15 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-header-nested-response-body");
-        if let Some(bar) = options.bar {
-            first_url.query_pairs_mut().append_pair("bar", &bar);
+        if let Some(bar) = options.bar.as_ref() {
+            first_url.query_pairs_mut().append_pair("bar", bar);
         }
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
-                if let Some(foo) = &options.foo {
+                if let Some(foo) = options.foo.as_ref() {
                     request.insert_header("foo", foo);
                 }
                 let token = match token {
@@ -119,15 +119,15 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-header-response-body");
-        if let Some(bar) = options.bar {
-            first_url.query_pairs_mut().append_pair("bar", &bar);
+        if let Some(bar) = options.bar.as_ref() {
+            first_url.query_pairs_mut().append_pair("bar", bar);
         }
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
-                if let Some(foo) = &options.foo {
+                if let Some(foo) = options.foo.as_ref() {
                     request.insert_header("foo", foo);
                 }
                 let token = match token {
@@ -205,15 +205,15 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-header-response-header");
-        if let Some(bar) = options.bar {
-            first_url.query_pairs_mut().append_pair("bar", &bar);
+        if let Some(bar) = options.bar.as_ref() {
+            first_url.query_pairs_mut().append_pair("bar", bar);
         }
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
-                if let Some(foo) = &options.foo {
+                if let Some(foo) = options.foo.as_ref() {
                     request.insert_header("foo", foo);
                 }
                 let token = match token {
@@ -266,11 +266,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-query-nested-response-body");
-        if let Some(bar) = options.bar {
-            first_url.query_pairs_mut().append_pair("bar", &bar);
+        if let Some(bar) = options.bar.as_ref() {
+            first_url.query_pairs_mut().append_pair("bar", bar);
         }
-        if let Some(token) = options.token {
-            first_url.query_pairs_mut().append_pair("token", &token);
+        if let Some(token) = options.token.as_ref() {
+            first_url.query_pairs_mut().append_pair("token", token);
         }
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
@@ -288,7 +288,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
-                if let Some(foo) = &options.foo {
+                if let Some(foo) = options.foo.as_ref() {
                     request.insert_header("foo", foo);
                 }
                 let pipeline = pipeline.clone();
@@ -341,11 +341,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-query-response-body");
-        if let Some(bar) = options.bar {
-            first_url.query_pairs_mut().append_pair("bar", &bar);
+        if let Some(bar) = options.bar.as_ref() {
+            first_url.query_pairs_mut().append_pair("bar", bar);
         }
-        if let Some(token) = options.token {
-            first_url.query_pairs_mut().append_pair("token", &token);
+        if let Some(token) = options.token.as_ref() {
+            first_url.query_pairs_mut().append_pair("token", token);
         }
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
@@ -363,7 +363,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
-                if let Some(foo) = &options.foo {
+                if let Some(foo) = options.foo.as_ref() {
                     request.insert_header("foo", foo);
                 }
                 let pipeline = pipeline.clone();
@@ -434,11 +434,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-query-response-header");
-        if let Some(bar) = options.bar {
-            first_url.query_pairs_mut().append_pair("bar", &bar);
+        if let Some(bar) = options.bar.as_ref() {
+            first_url.query_pairs_mut().append_pair("bar", bar);
         }
-        if let Some(token) = options.token {
-            first_url.query_pairs_mut().append_pair("token", &token);
+        if let Some(token) = options.token.as_ref() {
+            first_url.query_pairs_mut().append_pair("token", token);
         }
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
@@ -456,7 +456,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
-                if let Some(foo) = &options.foo {
+                if let Some(foo) = options.foo.as_ref() {
                     request.insert_header("foo", foo);
                 }
                 let pipeline = pipeline.clone();
