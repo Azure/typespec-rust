@@ -19,7 +19,6 @@ async fn long_running_rpc() {
 
     let body: RequestContent<GenerationOptions> = GenerationOptions {
         prompt: Some("text".to_string()),
-        ..Default::default()
     }
     .try_into()
     .unwrap();
