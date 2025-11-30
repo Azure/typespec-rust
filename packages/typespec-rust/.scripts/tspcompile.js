@@ -86,7 +86,7 @@ const azureHttpSpecsGroup = {
   //'spector_coreoverride': {input: 'azure/client-generator-core/override/client.tsp'},
   'spector_coreusage': {input: 'azure/client-generator-core/usage'},
   'spector_basic': {input: 'azure/core/basic'},
-  //'spector_lrorpc': {input: 'azure/core/lro/rpc'},
+  'spector_lrorpc': {input: 'azure/core/lro/rpc'},
   'spector_lrostd': {input: 'azure/core/lro/standard'},
   'spector_coremodel': {input: 'azure/core/model'},
   'spector_corepage': {input: 'azure/core/page'},
