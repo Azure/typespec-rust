@@ -8,6 +8,13 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct ContainsInvalidChars {
+    #[serde(rename = "my.name", skip_serializing_if = "Option::is_none")]
+    pub my_name: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct LiteralWithInvalidChar {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,

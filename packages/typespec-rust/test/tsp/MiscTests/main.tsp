@@ -22,8 +22,15 @@ model LiteralWithInvalidChar {
   thing?: "Foo.Bar" = "Foo.Bar";
 }
 
+model `Contains.Invalid.Chars` {
+  `my.name`: string;
+}
+
 @@access(LiteralWithInvalidChar, Access.public);
 @@usage(LiteralWithInvalidChar, Usage.output);
+
+@@access(`Contains.Invalid.Chars`, Access.public);
+@@usage(`Contains.Invalid.Chars`, Usage.output);
 
 @route("/literal-with-invalid-char")
 op literalWithInvalidChar(@body body: LiteralWithInvalidChar): void;
