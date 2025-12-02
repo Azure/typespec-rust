@@ -1165,6 +1165,9 @@ export class Adapter {
     // client-side default value makes the param optional
     if (param.optional || param.clientDefaultValue) {
       optional = true;
+      if (!param.clientDefaultValue) {
+        paramType = this.getOptionType(this.typeToWireType(paramType));
+      }
       const paramField = new rust.StructField(paramName, 'pub', paramType);
       paramField.docs = this.adaptDocs(param.summary, param.doc);
       constructable.options.type.fields.push(paramField);

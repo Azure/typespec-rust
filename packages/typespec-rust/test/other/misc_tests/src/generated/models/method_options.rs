@@ -11,3 +11,10 @@ pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
+
+/// Options to be passed to [`MiscTestsClient::with_optional_client_query_param()`](crate::generated::clients::MiscTestsClient::with_optional_client_query_param())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientWithOptionalClientQueryParamOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
