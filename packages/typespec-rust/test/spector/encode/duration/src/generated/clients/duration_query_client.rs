@@ -46,7 +46,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/default");
-        url.query_pairs_mut().append_pair("input", input);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -78,8 +80,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/float64-milliseconds");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -111,8 +114,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/float64-seconds");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -144,8 +148,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/float-milliseconds");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -177,8 +182,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/float-milliseconds-larger-unit");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -210,8 +216,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/float-seconds");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -243,8 +250,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/float-seconds-larger-unit");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -276,8 +284,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/int32-milliseconds");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -309,14 +318,16 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/int32-milliseconds-array");
-        url.query_pairs_mut().append_pair(
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair(
             "input",
-            &input
+            input
                 .iter()
                 .map(|i| i.to_string())
                 .collect::<Vec<String>>()
                 .join(","),
         );
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -348,8 +359,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/int32-milliseconds-larger-unit");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -381,8 +393,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/int32-seconds");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -414,14 +427,16 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/int32-seconds-array");
-        url.query_pairs_mut().append_pair(
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair(
             "input",
-            &input
+            input
                 .iter()
                 .map(|i| i.to_string())
                 .collect::<Vec<String>>()
                 .join(","),
         );
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -453,8 +468,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/int32-seconds-larger-unit");
-        url.query_pairs_mut()
-            .append_pair("input", &input.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -486,7 +502,9 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/iso8601");
-        url.query_pairs_mut().append_pair("input", input);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("input", input);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

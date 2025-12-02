@@ -44,7 +44,9 @@ impl RoutesQueryParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/annotation-only");
-        url.query_pairs_mut().append_pair("param", param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("param", param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -76,7 +78,9 @@ impl RoutesQueryParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/explicit");
-        url.query_pairs_mut().append_pair("param", param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("param", param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -130,7 +134,9 @@ impl RoutesQueryParametersClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/template-only");
-        url.query_pairs_mut().append_pair("param", param);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("param", param);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

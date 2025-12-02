@@ -78,8 +78,9 @@ impl ScalarDecimal128TypeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/type/scalar/decimal128/request_parameter");
-        url.query_pairs_mut()
-            .append_pair("value", &value.to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", value.to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

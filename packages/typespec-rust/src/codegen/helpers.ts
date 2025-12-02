@@ -594,3 +594,15 @@ export function getUniqueVarName(params: Array<rust.MethodParameter>, candidates
     ++i;
   }
 }
+
+/** narrows param to the applicable query parameter type within the conditional block */
+export function isQueryParameter(param: rust.MethodParameter): param is rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter {
+  switch (param.kind) {
+    case 'queryCollection':
+    case 'queryHashMap':
+    case 'queryScalar':
+      return true;
+    default:
+      return false;
+  }
+}

@@ -182,7 +182,9 @@ impl ScalarAzureLocationScalarClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/azure/core/scalar/azureLocation/query");
-        url.query_pairs_mut().append_pair("region", region);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("region", region);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

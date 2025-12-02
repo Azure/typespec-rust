@@ -96,8 +96,9 @@ impl PreviewVersionClient {
         let mut path = String::from("/azure/versioning/previewVersion/widgets/{id}");
         path = path.replace("{id}", id);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -130,14 +131,15 @@ impl PreviewVersionClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/azure/versioning/previewVersion/widgets");
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(color) = options.color.as_ref() {
-            url.query_pairs_mut().append_pair("color", color);
+            query_builder.set_pair("color", color);
         }
         if let Some(name) = options.name.as_ref() {
-            url.query_pairs_mut().append_pair("name", name);
+            query_builder.set_pair("name", name);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -180,8 +182,9 @@ impl PreviewVersionClient {
         let mut path = String::from("/azure/versioning/previewVersion/widgets/{id}/color");
         path = path.replace("{id}", id);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");

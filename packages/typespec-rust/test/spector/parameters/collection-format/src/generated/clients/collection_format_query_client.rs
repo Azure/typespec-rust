@@ -40,8 +40,9 @@ impl CollectionFormatQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/parameters/collection-format/query/csv");
-        url.query_pairs_mut()
-            .append_pair("colors", &colors.join(","));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("colors", colors.join(","));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -74,9 +75,11 @@ impl CollectionFormatQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/parameters/collection-format/query/multi");
+        let mut query_builder = url.query_builder();
         for c in colors.iter() {
-            url.query_pairs_mut().append_pair("colors", c);
+            query_builder.append_pair("colors", *c);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -109,8 +112,9 @@ impl CollectionFormatQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/parameters/collection-format/query/pipes");
-        url.query_pairs_mut()
-            .append_pair("colors", &colors.join("|"));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("colors", colors.join("|"));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -143,8 +147,9 @@ impl CollectionFormatQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/parameters/collection-format/query/ssv");
-        url.query_pairs_mut()
-            .append_pair("colors", &colors.join(" "));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("colors", colors.join(" "));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

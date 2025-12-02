@@ -63,8 +63,9 @@ impl NonResourceNonResourceOperationsClient {
         path = path.replace("{parameter}", parameter);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -118,8 +119,9 @@ impl NonResourceNonResourceOperationsClient {
         path = path.replace("{parameter}", parameter);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

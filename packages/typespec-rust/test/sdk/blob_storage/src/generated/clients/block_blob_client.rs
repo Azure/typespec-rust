@@ -157,11 +157,12 @@ impl BlockBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "blocklist");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "blocklist");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
             request.insert_header("content-md5", encode(transactional_content_md5));
@@ -179,7 +180,7 @@ impl BlockBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(tier) = options.tier {
+        if let Some(tier) = options.tier.as_ref() {
             request.insert_header("x-ms-access-tier", tier.to_string());
         }
         if let Some(blob_cache_control) = options.blob_cache_control.as_ref() {
@@ -203,7 +204,7 @@ impl BlockBlobClient {
         if let Some(transactional_content_crc64) = options.transactional_content_crc64 {
             request.insert_header("x-ms-content-crc64", encode(transactional_content_crc64));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -221,7 +222,7 @@ impl BlockBlobClient {
         if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(immutability_policy_mode) = options.immutability_policy_mode {
+        if let Some(immutability_policy_mode) = options.immutability_policy_mode.as_ref() {
             request.insert_header(
                 "x-ms-immutability-policy-mode",
                 immutability_policy_mode.to_string(),
@@ -316,16 +317,16 @@ impl BlockBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "blocklist");
-        url.query_pairs_mut()
-            .append_pair("blocklisttype", list_type.as_ref());
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "blocklist");
+        query_builder.set_pair("blocklisttype", list_type.as_ref());
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
@@ -414,13 +415,14 @@ impl BlockBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("BlockBlob")
             .append_key_only("fromUrl");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
@@ -438,7 +440,7 @@ impl BlockBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(tier) = options.tier {
+        if let Some(tier) = options.tier.as_ref() {
             request.insert_header("x-ms-access-tier", tier.to_string());
         }
         if let Some(blob_cache_control) = options.blob_cache_control.as_ref() {
@@ -473,7 +475,7 @@ impl BlockBlobClient {
         if let Some(copy_source_tags) = options.copy_source_tags.as_ref() {
             request.insert_header("x-ms-copy-source-tag-option", copy_source_tags);
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -619,14 +621,15 @@ impl BlockBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "query");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "query");
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/octet-stream");
         request.insert_header("content-type", "application/xml");
@@ -642,7 +645,7 @@ impl BlockBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -736,13 +739,13 @@ impl BlockBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "block");
-        url.query_pairs_mut()
-            .append_pair("blockid", &encode(block_id));
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "block");
+        query_builder.set_pair("blockid", encode(block_id));
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
@@ -752,7 +755,7 @@ impl BlockBlobClient {
         if let Some(transactional_content_crc64) = options.transactional_content_crc64 {
             request.insert_header("x-ms-content-crc64", encode(transactional_content_crc64));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -848,15 +851,15 @@ impl BlockBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "block")
             .append_key_only("fromURL");
-        url.query_pairs_mut()
-            .append_pair("blockid", &encode(block_id));
+        query_builder.set_pair("blockid", encode(block_id));
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         request.insert_header("content-type", "application/xml");
@@ -864,7 +867,7 @@ impl BlockBlobClient {
         if let Some(copy_source_authorization) = options.copy_source_authorization.as_ref() {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -985,11 +988,12 @@ impl BlockBlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_key_only("BlockBlob");
+        let mut query_builder = url.query_builder();
+        query_builder.append_key_only("BlockBlob");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
@@ -1008,7 +1012,7 @@ impl BlockBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(tier) = options.tier {
+        if let Some(tier) = options.tier.as_ref() {
             request.insert_header("x-ms-access-tier", tier.to_string());
         }
         if let Some(blob_cache_control) = options.blob_cache_control.as_ref() {
@@ -1033,7 +1037,7 @@ impl BlockBlobClient {
         if let Some(transactional_content_crc64) = options.transactional_content_crc64 {
             request.insert_header("x-ms-content-crc64", encode(transactional_content_crc64));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -1051,7 +1055,7 @@ impl BlockBlobClient {
         if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(immutability_policy_mode) = options.immutability_policy_mode {
+        if let Some(immutability_policy_mode) = options.immutability_policy_mode.as_ref() {
             request.insert_header(
                 "x-ms-immutability-policy-mode",
                 immutability_policy_mode.to_string(),

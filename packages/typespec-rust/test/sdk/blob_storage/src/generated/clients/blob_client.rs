@@ -153,14 +153,15 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "copy")
             .append_key_only("copyid");
-        url.query_pairs_mut().append_pair("copyid", copy_id);
+        query_builder.set_pair("copyid", copy_id);
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(lease_id) = options.lease_id.as_ref() {
@@ -233,13 +234,14 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("acquire")
             .append_pair("comp", "lease");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -257,7 +259,7 @@ impl BlobClient {
         if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(duration) = options.duration {
+        if let Some(duration) = options.duration.as_ref() {
             request.insert_header("x-ms-lease-duration", duration.to_string());
         }
         if let Some(proposed_lease_id) = options.proposed_lease_id.as_ref() {
@@ -330,13 +332,14 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("break")
             .append_pair("comp", "lease");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -428,13 +431,14 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("change")
             .append_pair("comp", "lease");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -530,13 +534,14 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "copy")
             .append_key_only("sync");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -551,7 +556,7 @@ impl BlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(tier) = options.tier {
+        if let Some(tier) = options.tier.as_ref() {
             request.insert_header("x-ms-access-tier", tier.to_string());
         }
         request.insert_header("x-ms-copy-source", copy_source);
@@ -567,7 +572,7 @@ impl BlobClient {
         if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(immutability_policy_mode) = options.immutability_policy_mode {
+        if let Some(immutability_policy_mode) = options.immutability_policy_mode.as_ref() {
             request.insert_header(
                 "x-ms-immutability-policy-mode",
                 immutability_policy_mode.to_string(),
@@ -682,11 +687,12 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "snapshot");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "snapshot");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -701,7 +707,7 @@ impl BlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -769,20 +775,20 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        if let Some(blob_delete_type) = options.blob_delete_type {
-            url.query_pairs_mut()
-                .append_pair("deletetype", blob_delete_type.as_ref());
+        let mut query_builder = url.query_builder();
+        if let Some(blob_delete_type) = options.blob_delete_type.as_ref() {
+            query_builder.set_pair("deletetype", blob_delete_type.as_ref());
         }
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -797,7 +803,7 @@ impl BlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(delete_snapshots) = options.delete_snapshots {
+        if let Some(delete_snapshots) = options.delete_snapshots.as_ref() {
             request.insert_header("x-ms-delete-snapshots", delete_snapshots.to_string());
         }
         if let Some(if_tags) = options.if_tags.as_ref() {
@@ -863,18 +869,18 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("comp", "immutabilityPolicies");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "immutabilityPolicies");
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-version", &self.version);
@@ -979,16 +985,17 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
+        let mut query_builder = url.query_builder();
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1003,7 +1010,7 @@ impl BlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -1105,14 +1112,15 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("blob")
             .append_pair("comp", "properties")
             .append_pair("restype", "account");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-version", &self.version);
@@ -1257,16 +1265,17 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
+        let mut query_builder = url.query_builder();
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
@@ -1280,7 +1289,7 @@ impl BlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -1355,17 +1364,18 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "tags");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "tags");
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
@@ -1444,13 +1454,14 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "lease")
             .append_key_only("release");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1538,13 +1549,14 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "lease")
             .append_key_only("renew");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1630,11 +1642,12 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "expiry");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "expiry");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-expiry-option", expiry_options.to_string());
@@ -1706,24 +1719,24 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("comp", "immutabilityPolicies");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "immutabilityPolicies");
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(immutability_policy_mode) = options.immutability_policy_mode {
+        if let Some(immutability_policy_mode) = options.immutability_policy_mode.as_ref() {
             request.insert_header(
                 "x-ms-immutability-policy-mode",
                 immutability_policy_mode.to_string(),
@@ -1798,17 +1811,18 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "legalhold");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "legalhold");
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-legal-hold", legal_hold.to_string());
@@ -1846,11 +1860,12 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "metadata");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "metadata");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1865,7 +1880,7 @@ impl BlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(encryption_algorithm) = options.encryption_algorithm {
+        if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
                 "x-ms-encryption-algorithm",
                 encryption_algorithm.to_string(),
@@ -1925,13 +1940,14 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("SetHTTPHeaders")
             .append_pair("comp", "properties");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -2029,14 +2045,15 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "tags");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "tags");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
             request.insert_header("content-md5", encode(transactional_content_md5));
@@ -2090,17 +2107,18 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "tier");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "tier");
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(version_id) = options.version_id.as_ref() {
-            url.query_pairs_mut().append_pair("versionid", version_id);
+            query_builder.set_pair("versionid", version_id);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-access-tier", tier.to_string());
@@ -2110,7 +2128,7 @@ impl BlobClient {
         if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        if let Some(rehydrate_priority) = options.rehydrate_priority {
+        if let Some(rehydrate_priority) = options.rehydrate_priority.as_ref() {
             request.insert_header("x-ms-rehydrate-priority", rehydrate_priority.to_string());
         }
         request.insert_header("x-ms-version", &self.version);
@@ -2185,10 +2203,11 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
+        let mut query_builder = url.query_builder();
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -2203,14 +2222,14 @@ impl BlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(tier) = options.tier {
+        if let Some(tier) = options.tier.as_ref() {
             request.insert_header("x-ms-access-tier", tier.to_string());
         }
         request.insert_header("x-ms-copy-source", copy_source);
         if let Some(if_tags) = options.if_tags.as_ref() {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        if let Some(immutability_policy_mode) = options.immutability_policy_mode {
+        if let Some(immutability_policy_mode) = options.immutability_policy_mode.as_ref() {
             request.insert_header(
                 "x-ms-immutability-policy-mode",
                 immutability_policy_mode.to_string(),
@@ -2233,7 +2252,7 @@ impl BlobClient {
                 request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
-        if let Some(rehydrate_priority) = options.rehydrate_priority {
+        if let Some(rehydrate_priority) = options.rehydrate_priority.as_ref() {
             request.insert_header("x-ms-rehydrate-priority", rehydrate_priority.to_string());
         }
         if let Some(seal_blob) = options.seal_blob {
@@ -2320,11 +2339,12 @@ impl BlobClient {
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("comp", "undelete");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("comp", "undelete");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-version", &self.version);

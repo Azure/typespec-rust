@@ -154,14 +154,15 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("acquire")
             .append_pair("comp", "lease")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
@@ -170,7 +171,7 @@ impl BlobContainerClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(duration) = options.duration {
+        if let Some(duration) = options.duration.as_ref() {
             request.insert_header("x-ms-lease-duration", duration.to_string());
         }
         if let Some(proposed_lease_id) = options.proposed_lease_id.as_ref() {
@@ -243,14 +244,15 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("break")
             .append_pair("comp", "lease")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
@@ -332,14 +334,15 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_key_only("change")
             .append_pair("comp", "lease")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
@@ -384,14 +387,15 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("restype", "container");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
-        if let Some(access) = options.access {
+        if let Some(access) = options.access.as_ref() {
             request.insert_header("x-ms-blob-public-access", access.to_string());
         }
         if let Some(default_encryption_scope) = options.default_encryption_scope.as_ref() {
@@ -442,11 +446,12 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("restype", "container");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
@@ -515,13 +520,14 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "blobs")
             .append_pair("restype", "container");
         if let Some(include) = options.include.as_ref() {
-            url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "include",
-                &include
+                include
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -529,19 +535,18 @@ impl BlobContainerClient {
             );
         }
         if let Some(marker) = options.marker.as_ref() {
-            url.query_pairs_mut().append_pair("marker", marker);
+            query_builder.set_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
-            url.query_pairs_mut()
-                .append_pair("maxresults", &maxresults.to_string());
+            query_builder.set_pair("maxresults", maxresults.to_string());
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
         if let Some(where_param) = options.where_param.as_ref() {
-            url.query_pairs_mut().append_pair("where", where_param);
+            query_builder.set_pair("where", where_param);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
@@ -610,13 +615,14 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "acl")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
@@ -688,13 +694,14 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "properties")
             .append_pair("restype", "account");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-version", &self.version);
@@ -787,11 +794,12 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut().append_pair("restype", "container");
+        let mut query_builder = url.query_builder();
+        query_builder.append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("content-type", "application/xml");
         if let Some(lease_id) = options.lease_id.as_ref() {
@@ -853,15 +861,15 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         first_url.append_path(&path);
-        first_url
-            .query_pairs_mut()
+        let mut query_builder = first_url.query_builder();
+        query_builder
             .append_pair("comp", "list")
             .append_key_only("flat")
             .append_pair("restype", "container");
         if let Some(include) = options.include.as_ref() {
-            first_url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "include",
-                &include
+                include
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -869,35 +877,26 @@ impl BlobContainerClient {
             );
         }
         if let Some(marker) = options.marker.as_ref() {
-            first_url.query_pairs_mut().append_pair("marker", marker);
+            query_builder.set_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
-            first_url
-                .query_pairs_mut()
-                .append_pair("maxresults", &maxresults.to_string());
+            query_builder.set_pair("maxresults", maxresults.to_string());
         }
         if let Some(prefix) = options.prefix.as_ref() {
-            first_url.query_pairs_mut().append_pair("prefix", prefix);
+            query_builder.set_pair("prefix", prefix);
         }
         if let Some(timeout) = options.timeout {
-            first_url
-                .query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let version = self.version.clone();
         Ok(Pager::from_callback(
             move |marker: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(marker) = marker {
-                    if url.query_pairs().any(|(name, _)| name.eq("marker")) {
-                        let mut new_url = url.clone();
-                        new_url
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("marker")));
-                        url = new_url;
-                    }
-                    url.query_pairs_mut().append_pair("marker", &marker);
+                    let mut query_builder = url.query_builder();
+                    query_builder.set_pair("marker", &marker);
+                    query_builder.build();
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/xml");
@@ -977,18 +976,16 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         first_url.append_path(&path);
-        first_url
-            .query_pairs_mut()
+        let mut query_builder = first_url.query_builder();
+        query_builder
             .append_pair("comp", "list")
             .append_key_only("hierarchy")
             .append_pair("restype", "container");
-        first_url
-            .query_pairs_mut()
-            .append_pair("delimiter", delimiter);
+        query_builder.set_pair("delimiter", delimiter);
         if let Some(include) = options.include.as_ref() {
-            first_url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "include",
-                &include
+                include
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -996,35 +993,26 @@ impl BlobContainerClient {
             );
         }
         if let Some(marker) = options.marker.as_ref() {
-            first_url.query_pairs_mut().append_pair("marker", marker);
+            query_builder.set_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
-            first_url
-                .query_pairs_mut()
-                .append_pair("maxresults", &maxresults.to_string());
+            query_builder.set_pair("maxresults", maxresults.to_string());
         }
         if let Some(prefix) = options.prefix.as_ref() {
-            first_url.query_pairs_mut().append_pair("prefix", prefix);
+            query_builder.set_pair("prefix", prefix);
         }
         if let Some(timeout) = options.timeout {
-            first_url
-                .query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let version = self.version.clone();
         Ok(Pager::from_callback(
             move |marker: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(marker) = marker {
-                    if url.query_pairs().any(|(name, _)| name.eq("marker")) {
-                        let mut new_url = url.clone();
-                        new_url
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("marker")));
-                        url = new_url;
-                    }
-                    url.query_pairs_mut().append_pair("marker", &marker);
+                    let mut query_builder = url.query_builder();
+                    query_builder.set_pair("marker", &marker);
+                    query_builder.build();
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/xml");
@@ -1111,14 +1099,15 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "lease")
             .append_key_only("release")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
@@ -1186,13 +1175,14 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "rename")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-source-container-name", source_container_name);
@@ -1267,14 +1257,15 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "lease")
             .append_key_only("renew")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
@@ -1340,13 +1331,14 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "undelete")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(deleted_container_name) = options.deleted_container_name.as_ref() {
@@ -1422,13 +1414,14 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "acl")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
@@ -1437,7 +1430,7 @@ impl BlobContainerClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(access) = options.access {
+        if let Some(access) = options.access.as_ref() {
             request.insert_header("x-ms-blob-public-access", access.to_string());
         }
         if let Some(lease_id) = options.lease_id.as_ref() {
@@ -1477,13 +1470,14 @@ impl BlobContainerClient {
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
-        url.query_pairs_mut()
+        let mut query_builder = url.query_builder();
+        query_builder
             .append_pair("comp", "metadata")
             .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
+            query_builder.set_pair("timeout", timeout.to_string());
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {

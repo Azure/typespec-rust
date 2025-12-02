@@ -38,9 +38,11 @@ impl DiscriminatedEnvelopeObjectCustomPropertiesClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/type/union/discriminated/envelope/object/custom-properties");
+        let mut query_builder = url.query_builder();
         if let Some(pet_type) = options.pet_type.as_ref() {
-            url.query_pairs_mut().append_pair("petType", pet_type);
+            query_builder.set_pair("petType", pet_type);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

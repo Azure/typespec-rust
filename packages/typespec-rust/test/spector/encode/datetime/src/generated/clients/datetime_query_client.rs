@@ -41,8 +41,9 @@ impl DatetimeQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/datetime/query/default");
-        url.query_pairs_mut()
-            .append_pair("value", &to_rfc3339(value));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", to_rfc3339(value));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -74,8 +75,9 @@ impl DatetimeQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/datetime/query/rfc3339");
-        url.query_pairs_mut()
-            .append_pair("value", &to_rfc3339(value));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", to_rfc3339(value));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -107,8 +109,9 @@ impl DatetimeQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/datetime/query/rfc7231");
-        url.query_pairs_mut()
-            .append_pair("value", &to_rfc7231(value));
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", to_rfc7231(value));
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -140,8 +143,9 @@ impl DatetimeQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/datetime/query/unix-timestamp");
-        url.query_pairs_mut()
-            .append_pair("value", &value.unix_timestamp().to_string());
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("value", value.unix_timestamp().to_string());
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -173,14 +177,16 @@ impl DatetimeQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/datetime/query/unix-timestamp-array");
-        url.query_pairs_mut().append_pair(
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair(
             "value",
-            &value
+            value
                 .iter()
                 .map(|i| i.unix_timestamp().to_string())
                 .collect::<Vec<String>>()
                 .join(","),
         );
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

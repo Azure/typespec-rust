@@ -161,26 +161,27 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
+        let mut query_builder = url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
                     .join(","),
             );
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
         if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
-                url.query_pairs_mut().append_pair("tags", t);
+                query_builder.append_pair("tags", t);
             }
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
@@ -253,10 +254,11 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/kv");
+        let mut query_builder = url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -264,24 +266,24 @@ impl AzureAppConfigurationClient {
             );
         }
         if let Some(after) = options.after.as_ref() {
-            url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(key) = options.key.as_ref() {
-            url.query_pairs_mut().append_pair("key", key);
+            query_builder.set_pair("key", key);
         }
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
         if let Some(snapshot) = options.snapshot.as_ref() {
-            url.query_pairs_mut().append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
-                url.query_pairs_mut().append_pair("tags", t);
+                query_builder.append_pair("tags", t);
             }
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
@@ -350,14 +352,15 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/keys");
+        let mut query_builder = url.query_builder();
         if let Some(after) = options.after.as_ref() {
-            url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(name) = options.name.as_ref() {
-            url.query_pairs_mut().append_pair("name", name);
+            query_builder.set_pair("name", name);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
@@ -420,10 +423,11 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/labels");
+        let mut query_builder = url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -431,13 +435,13 @@ impl AzureAppConfigurationClient {
             );
         }
         if let Some(after) = options.after.as_ref() {
-            url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(name) = options.name.as_ref() {
-            url.query_pairs_mut().append_pair("name", name);
+            query_builder.set_pair("name", name);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
@@ -504,10 +508,11 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/revisions");
+        let mut query_builder = url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -515,21 +520,21 @@ impl AzureAppConfigurationClient {
             );
         }
         if let Some(after) = options.after.as_ref() {
-            url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(key) = options.key.as_ref() {
-            url.query_pairs_mut().append_pair("key", key);
+            query_builder.set_pair("key", key);
         }
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
         if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
-                url.query_pairs_mut().append_pair("tags", t);
+                query_builder.append_pair("tags", t);
             }
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
@@ -610,8 +615,9 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
@@ -677,11 +683,12 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/snapshots");
+        let mut query_builder = url.query_builder();
         if let Some(after) = options.after.as_ref() {
-            url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Head);
         if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
@@ -760,22 +767,18 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", &accept);
                         request.insert_header("content-type", content_type.to_string());
@@ -914,11 +917,12 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", accept);
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1001,11 +1005,12 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/locks/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", accept);
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1092,26 +1097,27 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
+        let mut query_builder = url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
                     .join(","),
             );
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
         if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
-                url.query_pairs_mut().append_pair("tags", t);
+                query_builder.append_pair("tags", t);
             }
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", accept);
         if let Some(accept_datetime) = options.accept_datetime.as_ref() {
@@ -1160,9 +1166,10 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/operations");
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        url.query_pairs_mut().append_pair("snapshot", snapshot);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.set_pair("snapshot", snapshot);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -1241,18 +1248,19 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
+        let mut query_builder = url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
                     .join(","),
             );
         }
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", accept);
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1328,10 +1336,11 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/kv");
+        let mut query_builder = first_url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            first_url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -1339,41 +1348,33 @@ impl AzureAppConfigurationClient {
             );
         }
         if let Some(after) = options.after.as_ref() {
-            first_url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(key) = options.key.as_ref() {
-            first_url.query_pairs_mut().append_pair("key", key);
+            query_builder.set_pair("key", key);
         }
         if let Some(label) = options.label.as_ref() {
-            first_url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
         if let Some(snapshot) = options.snapshot.as_ref() {
-            first_url
-                .query_pairs_mut()
-                .append_pair("snapshot", snapshot);
+            query_builder.set_pair("snapshot", snapshot);
         }
         if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
-                first_url.query_pairs_mut().append_pair("tags", t);
+                query_builder.append_pair("tags", t);
             }
         }
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -1466,29 +1467,24 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/keys");
+        let mut query_builder = first_url.query_builder();
         if let Some(after) = options.after.as_ref() {
-            first_url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(name) = options.name.as_ref() {
-            first_url.query_pairs_mut().append_pair("name", name);
+            query_builder.set_pair("name", name);
         }
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -1575,10 +1571,11 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/labels");
+        let mut query_builder = first_url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            first_url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -1586,28 +1583,22 @@ impl AzureAppConfigurationClient {
             );
         }
         if let Some(after) = options.after.as_ref() {
-            first_url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(name) = options.name.as_ref() {
-            first_url.query_pairs_mut().append_pair("name", name);
+            query_builder.set_pair("name", name);
         }
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -1698,10 +1689,11 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/revisions");
+        let mut query_builder = first_url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            first_url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -1709,36 +1701,30 @@ impl AzureAppConfigurationClient {
             );
         }
         if let Some(after) = options.after.as_ref() {
-            first_url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(key) = options.key.as_ref() {
-            first_url.query_pairs_mut().append_pair("key", key);
+            query_builder.set_pair("key", key);
         }
         if let Some(label) = options.label.as_ref() {
-            first_url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
         if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
-                first_url.query_pairs_mut().append_pair("tags", t);
+                query_builder.append_pair("tags", t);
             }
         }
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -1825,10 +1811,11 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/snapshots");
+        let mut query_builder = first_url.query_builder();
         if let Some(select) = options.select.as_ref() {
-            first_url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "$Select",
-                &select
+                select
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
@@ -1836,38 +1823,32 @@ impl AzureAppConfigurationClient {
             );
         }
         if let Some(after) = options.after.as_ref() {
-            first_url.query_pairs_mut().append_pair("After", after);
+            query_builder.set_pair("After", after);
         }
-        first_url
-            .query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(name) = options.name.as_ref() {
-            first_url.query_pairs_mut().append_pair("name", name);
+            query_builder.set_pair("name", name);
         }
         if let Some(status) = options.status.as_ref() {
-            first_url.query_pairs_mut().append_pair(
+            query_builder.set_pair(
                 "status",
-                &status
+                status
                     .iter()
                     .map(|i| i.to_string())
                     .collect::<Vec<String>>()
                     .join(","),
             );
         }
+        query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
                         let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
                         next_link
                     }
                     PagerState::Initial => first_url.clone(),
@@ -1967,11 +1948,12 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", accept);
         request.insert_header("content-type", content_type.to_string());
@@ -2061,11 +2043,12 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/locks/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
         if let Some(label) = options.label.as_ref() {
-            url.query_pairs_mut().append_pair("label", label);
+            query_builder.set_pair("label", label);
         }
+        query_builder.build();
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", accept);
         if let Some(if_match) = options.if_match.as_ref() {
@@ -2156,8 +2139,9 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", accept);
         request.insert_header("content-type", content_type.to_string());

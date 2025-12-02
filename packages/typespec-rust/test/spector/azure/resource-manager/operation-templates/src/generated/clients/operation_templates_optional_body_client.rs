@@ -63,8 +63,9 @@ impl OperationTemplatesOptionalBodyClient {
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace("{widgetName}", widget_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -117,8 +118,9 @@ impl OperationTemplatesOptionalBodyClient {
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace("{widgetName}", widget_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         if let Some(properties) = options.properties {
@@ -175,8 +177,9 @@ impl OperationTemplatesOptionalBodyClient {
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace("{widgetName}", widget_name);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         if let Some(body) = options.body {
@@ -214,8 +217,9 @@ impl OperationTemplatesOptionalBodyClient {
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/providerPost");
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url.append_path(&path);
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         if let Some(body) = options.body {

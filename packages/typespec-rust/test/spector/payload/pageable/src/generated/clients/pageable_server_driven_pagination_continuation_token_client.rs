@@ -51,9 +51,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-header-nested-response-body");
+        let mut query_builder = first_url.query_builder();
         if let Some(bar) = options.bar.as_ref() {
-            first_url.query_pairs_mut().append_pair("bar", bar);
+            query_builder.set_pair("bar", bar);
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
@@ -119,9 +121,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-header-response-body");
+        let mut query_builder = first_url.query_builder();
         if let Some(bar) = options.bar.as_ref() {
-            first_url.query_pairs_mut().append_pair("bar", bar);
+            query_builder.set_pair("bar", bar);
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
@@ -205,9 +209,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-header-response-header");
+        let mut query_builder = first_url.query_builder();
         if let Some(bar) = options.bar.as_ref() {
-            first_url.query_pairs_mut().append_pair("bar", bar);
+            query_builder.set_pair("bar", bar);
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
@@ -266,25 +272,21 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-query-nested-response-body");
+        let mut query_builder = first_url.query_builder();
         if let Some(bar) = options.bar.as_ref() {
-            first_url.query_pairs_mut().append_pair("bar", bar);
+            query_builder.set_pair("bar", bar);
         }
         if let Some(token) = options.token.as_ref() {
-            first_url.query_pairs_mut().append_pair("token", token);
+            query_builder.set_pair("token", token);
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
-                    if url.query_pairs().any(|(name, _)| name.eq("token")) {
-                        let mut new_url = url.clone();
-                        new_url
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
-                        url = new_url;
-                    }
-                    url.query_pairs_mut().append_pair("token", &token);
+                    let mut query_builder = url.query_builder();
+                    query_builder.set_pair("token", &token);
+                    query_builder.build();
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
@@ -341,25 +343,21 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-query-response-body");
+        let mut query_builder = first_url.query_builder();
         if let Some(bar) = options.bar.as_ref() {
-            first_url.query_pairs_mut().append_pair("bar", bar);
+            query_builder.set_pair("bar", bar);
         }
         if let Some(token) = options.token.as_ref() {
-            first_url.query_pairs_mut().append_pair("token", token);
+            query_builder.set_pair("token", token);
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
-                    if url.query_pairs().any(|(name, _)| name.eq("token")) {
-                        let mut new_url = url.clone();
-                        new_url
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
-                        url = new_url;
-                    }
-                    url.query_pairs_mut().append_pair("token", &token);
+                    let mut query_builder = url.query_builder();
+                    query_builder.set_pair("token", &token);
+                    query_builder.build();
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
@@ -434,25 +432,21 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/continuationtoken/request-query-response-header");
+        let mut query_builder = first_url.query_builder();
         if let Some(bar) = options.bar.as_ref() {
-            first_url.query_pairs_mut().append_pair("bar", bar);
+            query_builder.set_pair("bar", bar);
         }
         if let Some(token) = options.token.as_ref() {
-            first_url.query_pairs_mut().append_pair("token", token);
+            query_builder.set_pair("token", token);
         }
+        query_builder.build();
         Ok(Pager::from_callback(
             move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
-                    if url.query_pairs().any(|(name, _)| name.eq("token")) {
-                        let mut new_url = url.clone();
-                        new_url
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
-                        url = new_url;
-                    }
-                    url.query_pairs_mut().append_pair("token", &token);
+                    let mut query_builder = url.query_builder();
+                    query_builder.set_pair("token", &token);
+                    query_builder.build();
                 }
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
