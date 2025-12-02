@@ -9,7 +9,7 @@ use crate::generated::models::{
     StandardClientExportOperationStatus, StandardClientExportOptions, User,
 };
 use azure_core::{
-    error::CheckSuccessOptions,
+    error::{CheckSuccessOptions, Error, ErrorKind},
     fmt::SafeDebug,
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
@@ -125,50 +125,30 @@ impl StandardClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        struct Progress {
-            next_link: Url,
-            first_rsp: Option<RawResponse>,
-        }
-        impl AsRef<str> for Progress {
-            fn as_ref(&self) -> &str {
-                self.next_link.as_ref()
-            }
-        }
         Ok(Poller::from_callback(
-            move |state: PollerState<Progress>, poller_options| {
-                let (mut request, progress) = match state {
-                    PollerState::More(progress) => {
-                        let mut next_link = progress.next_link.clone();
+            move |next_link: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match next_link {
+                    PollerState::More(next_link) => {
+                        let mut next_link = next_link.clone();
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-                        (
-                            request,
-                            Progress {
-                                next_link,
-                                first_rsp: progress.first_rsp,
-                            },
-                        )
+                        (request, next_link)
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Put);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(resource.clone());
-                        (
-                            request,
-                            Progress {
-                                next_link: url.clone(),
-                                first_rsp: None,
-                            },
-                        )
+                        (request, url.clone())
                     }
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
+                let final_link = url.clone();
                 async move {
                     let rsp = pipeline
                         .send(
@@ -187,16 +167,8 @@ impl StandardClient {
                         .get_optional_string(&HeaderName::from_static("operation-location"))
                     {
                         Some(operation_location) => Url::parse(&operation_location)?,
-                        None => progress.next_link,
+                        None => next_link,
                     };
-                    let mut first_rsp = progress.first_rsp;
-                    if first_rsp.is_none() {
-                        first_rsp = Some(RawResponse::from_bytes(
-                            status,
-                            headers.clone(),
-                            body.clone(),
-                        ));
-                    }
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
@@ -208,15 +180,17 @@ impl StandardClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            next: Progress {
-                                next_link,
-                                first_rsp,
-                            },
+                            next: next_link,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(first_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    let mut request = Request::new(final_link, Method::Get);
+                                    request.insert_header("accept", "application/json");
+                                    request.insert_header("content-type", "application/json");
+                                    Ok(pipeline.send(&ctx, &mut request, None).await?.into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },
@@ -320,7 +294,7 @@ impl StandardClient {
                         &poller_options,
                     );
                     let res: StandardClientDeleteOperationStatus = json::from_json(&body)?;
-                    let mut final_rsp = None;
+                    let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
@@ -338,7 +312,13 @@ impl StandardClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },
@@ -445,7 +425,7 @@ impl StandardClient {
                         &poller_options,
                     );
                     let res: StandardClientExportOperationStatus = json::from_json(&body)?;
-                    let mut final_rsp = None;
+                    let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {
                         let body = azure_core::http::response::ResponseBody::from_bytes(
                             serde_json::from_str::<azure_core::Value>(
@@ -465,7 +445,13 @@ impl StandardClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },

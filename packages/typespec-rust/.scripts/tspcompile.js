@@ -86,7 +86,7 @@ const azureHttpSpecsGroup = {
   //'spector_coreoverride': {input: 'azure/client-generator-core/override/client.tsp'},
   'spector_coreusage': {input: 'azure/client-generator-core/usage'},
   'spector_basic': {input: 'azure/core/basic'},
-  //'spector_lrorpc': {input: 'azure/core/lro/rpc'},
+  'spector_lrorpc': {input: 'azure/core/lro/rpc'},
   'spector_lrostd': {input: 'azure/core/lro/standard'},
   'spector_coremodel': {input: 'azure/core/model'},
   'spector_corepage': {input: 'azure/core/page'},
@@ -204,7 +204,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       additionalArgs[i] = `--option="@azure-tools/typespec-rust.${additionalArgs[i]}"`;
     }
   }
-  sem.take(function() {
+  sem.take(async function() {
     // if a tsp file isn't specified, first check
     // for a client.tsp file. if that doesn't exist
     // then fall back to main.tsp.
@@ -228,7 +228,23 @@ function generate(crate, input, outputDir, additionalArgs) {
       }
       // delete all content before regenerating as it makes it
       // really easy to determine if something failed to generated
-      fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
+      const maxRmRetries = 4;
+      const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      for (let attempt = 0; attempt < maxRmRetries; ++attempt) {
+        const rmPath = path.join(fullOutputDir, 'src', 'generated')
+        try {
+          fs.rmSync(rmPath, { force: true, recursive: true });
+          break;
+        } catch (err) {
+          if (attempt === maxRmRetries - 1) {
+            throw err;
+          }
+          // Exponential backoff: 1s, 2s, 4s, 8s, etc. (1000ms * 2^attempt)
+          const retryTimeout = 1000 * (1 << attempt);
+          console.warn('\x1b[96m%s\x1b[0m', 'delete \'' + rmPath + '\' failed, will retry in ' + retryTimeout/1000 + ' second(s), that will be retry attempt #' + (attempt + 1) + ' out of ' + (maxRmRetries - 1) + '.');
+          await sleep(retryTimeout);
+        }
+      }
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
@@ -251,7 +267,12 @@ function logResult(error, stdout, stderr) {
     return;
   }
   if (stderr !== '') {
-    console.error('\x1b[91m%s\x1b[0m', 'stderr: ' + stderr);
+    if (stderr.startsWith('- Compiling...\n')) {
+      // not really an error, not worth highlighting in red
+      console.log('stderr: ' + stderr);
+    } else {
+      console.error('\x1b[91m%s\x1b[0m', 'stderr: ' + stderr);
+    }
   }
   if (error !== null) {
     console.error('\x1b[91m%s\x1b[0m', 'exec error: ' + error);

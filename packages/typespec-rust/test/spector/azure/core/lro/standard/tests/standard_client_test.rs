@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::http::poller::{PollerOptions, PollerStatus, StatusMonitor};
+use azure_core::http::RequestContent;
 use azure_core::http::StatusCode;
 use azure_core::time::Duration;
 use futures::StreamExt;
@@ -18,22 +19,23 @@ use spector_lrostd::{
 #[tokio::test]
 async fn create_or_replace() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let user = User {
+
+    let user: RequestContent<User> = User {
         role: Some("contributor".to_string()),
         ..Default::default()
-    };
+    }
+    .try_into()
+    .unwrap();
+
+    let options = Some(StandardClientCreateOrReplaceOptions {
+        method_options: PollerOptions {
+            frequency: Duration::seconds(1),
+            ..Default::default()
+        },
+    });
 
     let mut poller = client
-        .create_or_replace(
-            "madge",
-            user.try_into().unwrap(),
-            Some(StandardClientCreateOrReplaceOptions {
-                method_options: PollerOptions {
-                    frequency: Duration::seconds(1),
-                    ..Default::default()
-                },
-            }),
-        )
+        .create_or_replace("madge", user.clone(), options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -63,22 +65,7 @@ async fn create_or_replace() {
     }
     assert_eq!(poll_count, 3);
 
-    let user = User {
-        role: Some("contributor".to_string()),
-        ..Default::default()
-    };
-    let poller = client
-        .create_or_replace(
-            "madge",
-            user.try_into().unwrap(),
-            Some(StandardClientCreateOrReplaceOptions {
-                method_options: PollerOptions {
-                    frequency: Duration::seconds(1),
-                    ..Default::default()
-                },
-            }),
-        )
-        .unwrap();
+    let poller = client.create_or_replace("madge", user, options).unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.name, Some("madge".to_string()));
     assert_eq!(final_result.role, Some("contributor".to_string()));
@@ -87,17 +74,14 @@ async fn create_or_replace() {
 #[tokio::test]
 async fn delete() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut poller = client
-        .delete(
-            "madge",
-            Some(StandardClientDeleteOptions {
-                method_options: PollerOptions {
-                    frequency: Duration::seconds(1),
-                    ..Default::default()
-                },
-            }),
-        )
-        .unwrap();
+    let options = Some(StandardClientDeleteOptions {
+        method_options: PollerOptions {
+            frequency: Duration::seconds(1),
+            ..Default::default()
+        },
+    });
+
+    let mut poller = client.delete("madge", options).unwrap();
 
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
@@ -130,18 +114,14 @@ async fn delete() {
 #[tokio::test]
 async fn export() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut poller = client
-        .export(
-            "madge",
-            "json",
-            Some(StandardClientExportOptions {
-                method_options: PollerOptions {
-                    frequency: Duration::seconds(1),
-                    ..Default::default()
-                },
-            }),
-        )
-        .unwrap();
+    let options = Some(StandardClientExportOptions {
+        method_options: PollerOptions {
+            frequency: Duration::seconds(1),
+            ..Default::default()
+        },
+    });
+
+    let mut poller = client.export("madge", "json", options.clone()).unwrap();
 
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
@@ -170,19 +150,7 @@ async fn export() {
     }
     assert_eq!(poll_count, 3);
 
-    let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let poller = client
-        .export(
-            "madge",
-            "json",
-            Some(StandardClientExportOptions {
-                method_options: PollerOptions {
-                    frequency: Duration::seconds(1),
-                    ..Default::default()
-                },
-            }),
-        )
-        .unwrap();
+    let poller = client.export("madge", "json", options).unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.name, Some("madge".to_string()));
     assert_eq!(final_result.resource_uri, Some("/users/madge".to_string()));

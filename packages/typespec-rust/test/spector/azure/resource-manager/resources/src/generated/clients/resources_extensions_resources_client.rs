@@ -12,13 +12,13 @@ use crate::generated::models::{
     ResourcesExtensionsResourcesClientUpdateOptions,
 };
 use azure_core::{
-    error::CheckSuccessOptions,
+    error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
-        RequestContent, Response, Url, UrlExt,
+        RequestContent, Response, StatusCode, Url, UrlExt,
     },
     json, tracing, Result,
 };
@@ -115,6 +115,7 @@ impl ResourcesExtensionsResourcesClient {
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
+                let original_url = url.clone();
                 async move {
                     let rsp = pipeline
                         .send(
@@ -128,13 +129,20 @@ impl ResourcesExtensionsResourcesClient {
                             }),
                         )
                         .await?;
-                    let (status, headers, body) = rsp.deconstruct();
+                    let (status, headers, mut body) = rsp.deconstruct();
                     let next_link = match headers
                         .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
                     {
                         Some(operation_location) => Url::parse(&operation_location)?,
                         None => next_link,
                     };
+                    let mut final_body = None;
+                    if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
+                        final_body = Some(body);
+                        body = azure_core::http::response::ResponseBody::from_bytes(
+                            "{\"status\":\"Succeeded\"}",
+                        );
+                    }
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
@@ -142,12 +150,16 @@ impl ResourcesExtensionsResourcesClient {
                     );
                     let res: ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus =
                         json::from_json(&body)?;
-                    let mut final_rsp = None;
+                    let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
-                            body.clone(),
+                            if let Some(final_body) = final_body {
+                                final_body
+                            } else {
+                                body.clone()
+                            },
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
@@ -160,7 +172,13 @@ impl ResourcesExtensionsResourcesClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },

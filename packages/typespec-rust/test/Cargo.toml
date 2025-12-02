@@ -22,6 +22,7 @@ members = [
     "spector/azure/client-generator-core/usage",
     "spector/azure/core/basic",
     "spector/azure/core/lro/standard",
+    "spector/azure/core/lro/rpc",
     "spector/azure/core/model",
     "spector/azure/core/page",
     "spector/azure/core/scalar",
