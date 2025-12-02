@@ -2,6 +2,10 @@
 
 ## 0.29.1 (unreleased)
 
+### Bugs Fixed
+
+* Remove non-word characters from model names.
+
 ### Other Changes
 
 * Moved `TryFrom` impls for union types into their own file.

@@ -267,7 +267,10 @@ export class Adapter {
     if (modelName.length === 0) {
       throw new AdapterError('InternalError', 'unnamed model', model.__raw?.node); // TODO: this might no longer be an issue
     }
-    modelName = codegen.capitalize(modelName);
+
+    // remove any non-word characters from the name.
+    // the most common case is something like Foo.Bar.Baz
+    modelName = codegen.capitalize(modelName).replace(/\W/g, '');
     let rustModel = this.types.get(modelName);
     if (rustModel) {
       return <rust.Model>rustModel;
