@@ -151,8 +151,8 @@ impl MiscTestsClient {
                 query_builder.append_pair("optional-exploded-string-enums", o.as_ref());
             }
         }
-        if let Some(opt_strins) = options.opt_strins.as_ref() {
-            for o in opt_strins.iter() {
+        if let Some(opt_strings) = options.opt_strings.as_ref() {
+            for o in opt_strings.iter() {
                 query_builder.append_pair("optional-exploded-strings", o);
             }
         }

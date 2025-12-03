@@ -25,7 +25,7 @@ pub struct MiscTestsClientVariousExplodedQueryParamsOptions<'a> {
 
     pub opt_ints: Option<Vec<i32>>,
 
-    pub opt_strins: Option<Vec<String>>,
+    pub opt_strings: Option<Vec<String>>,
 }
 
 /// Options to be passed to [`MiscTestsClient::with_optional_client_query_param()`](crate::generated::clients::MiscTestsClient::with_optional_client_query_param())

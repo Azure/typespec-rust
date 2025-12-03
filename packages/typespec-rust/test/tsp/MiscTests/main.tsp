@@ -39,7 +39,7 @@ model ExplodedQueryParams {
   optInts?: int32[];
 
   @query(#{ name: "optional-exploded-strings", explode: true })
-  optStrins?: string[];
+  optStrings?: string[];
 
   @query(#{ name: "optional-exploded-string-enums", explode: true })
   optColors?: Colors[];
