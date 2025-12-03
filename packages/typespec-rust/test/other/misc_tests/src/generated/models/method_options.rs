@@ -6,6 +6,13 @@
 use super::{Colors, Indices};
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
+/// Options to be passed to [`MiscTestsClient::colliding_options_param()`](crate::generated::clients::MiscTestsClient::colliding_options_param())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientCollidingOptionsParamOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::literal_with_invalid_char()`](crate::generated::clients::MiscTestsClient::literal_with_invalid_char())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {

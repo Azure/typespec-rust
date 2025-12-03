@@ -1897,7 +1897,7 @@ export class Adapter {
       return param.name;
     };
 
-    const paramName = naming.getEscapedReservedName(snakeCaseName(getCorrespondingClientParamName(param)), 'param');
+    const paramName = naming.getEscapedReservedName(snakeCaseName(getCorrespondingClientParamName(param)), 'param', reservedParams);
     let paramType = this.getType(param.type);
 
     // for required header/path/query method string params, we might emit them as borrowed types
@@ -2394,3 +2394,11 @@ function adaptAccessFlags(access: tcgc.AccessFlags): rust.Visibility {
 }
 
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;
+
+/** contains reserved param names */
+const reservedParams = new Set<string>(
+  [
+    // reserved per SDK guidelines
+    'options',
+  ]
+);

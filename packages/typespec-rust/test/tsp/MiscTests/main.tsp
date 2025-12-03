@@ -77,6 +77,9 @@ union Indices {
 @@access(`Contains.Invalid.Chars`, Access.public);
 @@usage(`Contains.Invalid.Chars`, Usage.output);
 
+@route("/colliding-options-param")
+op collidingOptionsParam(@header("options") options: string): void;
+
 @route("/literal-with-invalid-char")
 op literalWithInvalidChar(@body body: LiteralWithInvalidChar): void;
 
