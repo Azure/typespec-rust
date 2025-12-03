@@ -15,7 +15,7 @@
 * Fixed various cases of bad codegen.
   * Referencing optional client parameters.
   * Query parameters that are exploded arrays.
-  * Deduplicate parameter name the collides with the `options` parameter.
+  * Deduplicate parameter name that collides with the `options` parameter.
 
 ### Features Added
 

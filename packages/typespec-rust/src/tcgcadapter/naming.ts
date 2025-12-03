@@ -12,11 +12,11 @@ import * as tcgc from '@azure-tools/typespec-client-generator-core';
  * 
  * @param name the name to potentially fix up
  * @param suffix the context in which name appears
- * @param addlWords optional set of additional reserved words
+ * @param extraWords optional set of additional reserved words
  * @returns the fixed up name. can be the original value if no fix-up was required
  */
-export function getEscapedReservedName(name: string, suffix: 'fn' | 'param' | 'prop', addlWords?: Set<string>): string {
-  if (reservedWords.has(name) || addlWords?.has(name)) {
+export function getEscapedReservedName(name: string, suffix: 'fn' | 'param' | 'prop', extraWords?: Set<string>): string {
+  if (reservedWords.has(name) || extraWords?.has(name)) {
     name = `${name}_${suffix}`;
   }
   return name;
