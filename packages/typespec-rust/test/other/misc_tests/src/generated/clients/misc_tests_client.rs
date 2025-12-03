@@ -5,6 +5,7 @@
 
 use crate::generated::models::{
     LiteralWithInvalidChar, MiscTestsClientLiteralWithInvalidCharOptions,
+    MiscTestsClientWithOptionalClientQueryParamOptions,
 };
 use azure_core::{
     error::CheckSuccessOptions,
@@ -19,6 +20,7 @@ use azure_core::{
 #[tracing::client]
 pub struct MiscTestsClient {
     pub(crate) endpoint: Url,
+    pub(crate) expand: Option<String>,
     pub(crate) pipeline: Pipeline,
 }
 
@@ -27,6 +29,7 @@ pub struct MiscTestsClient {
 pub struct MiscTestsClientOptions {
     /// Allows customization of the client.
     pub client_options: ClientOptions,
+    pub expand: Option<String>,
 }
 
 impl MiscTestsClient {
@@ -52,6 +55,7 @@ impl MiscTestsClient {
         endpoint = endpoint.join("supplemental-path")?;
         Ok(Self {
             endpoint,
+            expand: options.expand,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -85,6 +89,41 @@ impl MiscTestsClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.withOptionalClientQueryParam")]
+    pub async fn with_optional_client_query_param(
+        &self,
+        options: Option<MiscTestsClientWithOptionalClientQueryParamOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/with-optional-client-query-param");
+        let mut query_builder = url.query_builder();
+        if let Some(expand) = self.expand.as_ref() {
+            query_builder.set_pair("$expand", expand);
+        }
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
             .send(

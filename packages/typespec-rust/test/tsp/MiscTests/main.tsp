@@ -17,6 +17,11 @@ using TypeSpec.Http;
 )
 namespace MiscTests;
 
+model ExpandParameter {
+  @query("$expand")
+  $expand?: string;
+}
+
 model LiteralWithInvalidChar {
   name: string;
   thing?: "Foo.Bar" = "Foo.Bar";
@@ -34,3 +39,12 @@ model `Contains.Invalid.Chars` {
 
 @route("/literal-with-invalid-char")
 op literalWithInvalidChar(@body body: LiteralWithInvalidChar): void;
+
+@route("/with-optional-client-query-param")
+op withOptionalClientQueryParam(...ExpandParameter): void;
+
+@@clientInitialization(MiscTests,
+  {
+    parameters: ExpandParameter,
+  }
+);

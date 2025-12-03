@@ -770,7 +770,7 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
     const asRef = nonCopyableType(param.type) || isEnumString(param.type) ? '.as_ref()' : '';
     // optional params are in the unwrapped options local var
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${optionsPrefix}${param.name}${asRef}`,
+      condition: `let Some(${param.name}) = ${param.location === 'client' ? 'self.' : optionsPrefix}${param.name}${asRef}`,
       body: setter,
     });
     return op + '\n';

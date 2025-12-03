@@ -7,10 +7,12 @@
 **Note this version is incompatible with earlier versions of `azure_core`**
 
 * Use `QueryBuilder` when adding/setting query parameters on the request's URL.
+* Optional client parameters without a default value are now emitted as `Option<T>`.
 
 ### Bugs Fixed
 
 * Remove non-word characters from model names.
+* Fixed bad codegen when referencing optional client parameters.
 
 ### Features Added
 
