@@ -1281,7 +1281,7 @@ export class Adapter {
 
 
     const pub: rust.Visibility = adaptAccessFlags(method.access);
-    const methodOptions = new rust.MethodOptions(methodOptionsStruct);
+    const methodOptions = new rust.MethodOptions('options', methodOptionsStruct);
     const httpMethod = method.operation.verb;
 
     let rustMethod: MethodType;
@@ -1398,6 +1398,11 @@ export class Adapter {
         rustMethod.options.type.fields.push(optionsField);
       }
     }
+
+    // ensure that the method options param has a unique name.
+    // i.e. if an authored param has name 'options' then we'll
+    // rename the synthesized to something else.
+    methodOptions.name = shared.getUniqueVarName(rustMethod.params, ['options', 'opts', 'method_options']);
 
     // client params aren't included in method.parameters so
     // look for them in the remaining operation parameters.

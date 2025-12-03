@@ -340,6 +340,10 @@ export interface HeaderScalarParameter extends HTTPParameterBase {
 
 /** MethodOptions is the struct containing optional method params */
 export interface MethodOptions extends types.Option {
+  /** the name of the methoid options param */
+  name: string;
+
+  /** the method options type */
   type: types.Struct;
 }
 
@@ -740,8 +744,9 @@ export class HeaderScalarParameter extends HTTPParameterBase implements HeaderSc
 }
 
 export class MethodOptions extends types.Option implements MethodOptions {
-  constructor(type: types.Struct) {
+  constructor(name: string, type: types.Struct) {
     super(type);
+    this.name = name;
   }
 }
 

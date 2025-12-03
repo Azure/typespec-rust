@@ -311,6 +311,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   };
 }
 
+/**
+ * emits the content for all client method options types
+ * @param crate the crate for which to emit the content
+ * @returns the method options content
+ */
 function getMethodOptions(crate: rust.Crate): helpers.Module {
   const use = new Use('modelsOther');
   const indent = new helpers.indentation();
@@ -496,7 +501,7 @@ function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): { count:
       }
     }
 
-    paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, 'anonymous')}`);
+    paramsSig.push(`${method.options.name}: ${helpers.getTypeDeclaration(method.options, 'anonymous')}`);
     ++count;
   }
 
@@ -811,7 +816,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += `${indent.get()}${urlVarName}.append_path(${getHeaderPathQueryParamValue(use, pathParam, true, false)});\n`;
     } else {
       // we have path params that need to have their segments replaced with the param values
-      const pathVarName = helpers.getUniqueVarName(method.params, ['path', 'path_var']);
+      const pathVarName = shared.getUniqueVarName(method.params, ['path', 'path_var']);
       body += `${indent.get()}let mut ${pathVarName} = String::from(${path});\n`;
 
       for (const pathParam of paramGroups.path) {
@@ -1058,7 +1063,7 @@ function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam 
 function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, urlVarName: string, cloneUrl: boolean = false, forceMut: boolean = true): { requestVarName: string, content: string } {
   // when constructing the request var name we need to ensure
   // that it doesn't collide with any parameter name.
-  const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
+  const requestVarName = shared.getUniqueVarName(method.params, ['request', 'core_req']);
   let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   body += applyHeaderParams(indent, use, method, paramGroups, inClosure, requestVarName);
@@ -1200,7 +1205,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.add('azure_core::http', 'Method', 'Request');
 
-  const urlVarName = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
+  const urlVarName = shared.getUniqueVarName(method.params, ['url', 'url_var']);
   const paramGroups = getMethodParamGroup(method);
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default();\n';
@@ -1242,7 +1247,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   use.addForType(helpers.unwrapType(method.returns.type));
 
   const paramGroups = getMethodParamGroup(method);
-  const urlVar = method.strategy ? 'first_url' : helpers.getUniqueVarName(method.params, ['url', 'url_var']);
+  const urlVar = method.strategy ? 'first_url' : shared.getUniqueVarName(method.params, ['url', 'url_var']);
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
@@ -1474,7 +1479,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   use.addForType(helpers.unwrapType(method.returns.type));
 
   const paramGroups = getMethodParamGroup(method);
-  const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
+  const urlVar = shared.getUniqueVarName(method.params, ['url', 'url_var']);
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;

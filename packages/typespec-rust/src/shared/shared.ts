@@ -71,6 +71,39 @@ export function getPayloadFormatType(format: rust.PayloadFormat): rust.PayloadFo
 }
 
 /**
+ * returns a variable name that's unique with respect to the provided parameters.
+ * the candidates are selected in ascending order. if all candidates collide then
+ * the last candidate is selected and a number appended to the end (e.g. candidate_N).
+ * 
+ * @param params the parameters in the method
+ * @param candidates the candidate names in ascending order
+ * @returns one of candidates or the last candidate with a suffix
+ */
+export function getUniqueVarName(params: Array<rust.MethodParameter>, candidates: Array<string>): string {
+  let i = 0;
+  while (true) {
+    // if all the candidates have been exhausted
+    // then append the count to the last one.
+    // we subtract the length to start at zero.
+    const candidate = i < candidates.length ? candidates[i] : `${candidates[candidates.length - 1]}_${i - candidates.length}`;
+
+    let collides = false;
+    for (const param of params) {
+      if (!param.optional && param.name === candidate) {
+        collides = true;
+        break;
+      }
+    }
+
+    if (!collides) {
+      return candidate;
+    }
+
+    ++i;
+  }
+}
+
+/**
  * returns a wrapper type's inner type.
  * e.g. for a rust.Vector, return's the value of Vector.type.
  * if the type doesn't wrap another type, undefined is returned.

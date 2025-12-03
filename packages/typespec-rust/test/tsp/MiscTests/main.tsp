@@ -86,6 +86,9 @@ op withOptionalClientQueryParam(...ExpandParameter): void;
 @route("/various-exploded-query-params")
 op variousExplodedQueryParams(...ExplodedQueryParams): void;
 
+@route("/colliding-options-param")
+op collidingOptionsParam(@header("options") options: string): void;
+
 @@clientInitialization(MiscTests,
   {
     parameters: ExpandParameter,
