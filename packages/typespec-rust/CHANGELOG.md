@@ -12,7 +12,9 @@
 ### Bugs Fixed
 
 * Remove non-word characters from model names.
-* Fixed bad codegen when referencing optional client parameters.
+* Fixed various cases of bad codegen.
+  * Referencing optional client parameters.
+  * Query parameters that are exploded arrays.
 
 ### Features Added
 

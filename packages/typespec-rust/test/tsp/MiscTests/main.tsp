@@ -22,6 +22,32 @@ model ExpandParameter {
   $expand?: string;
 }
 
+model ExplodedQueryParams {
+  @query(#{ name: "exploded-ints", explode: true })
+  ints: int32[];
+
+  @query(#{ name: "exploded-strings", explode: true })
+  strings: string[];
+
+  @query(#{ name: "exploded-string-enums", explode: true })
+  colors: Colors[];
+
+  @query(#{ name: "exploded-int-enums", explode: true })
+  indices: Indices[];
+
+  @query(#{ name: "optional-exploded-ints", explode: true })
+  optInts?: int32[];
+
+  @query(#{ name: "optional-exploded-strings", explode: true })
+  optStrins?: string[];
+
+  @query(#{ name: "optional-exploded-string-enums", explode: true })
+  optColors?: Colors[];
+
+  @query(#{ name: "optional-exploded-int-enums", explode: true })
+  optIndices?: Indices[];
+}
+
 model LiteralWithInvalidChar {
   name: string;
   thing?: "Foo.Bar" = "Foo.Bar";
@@ -29,6 +55,20 @@ model LiteralWithInvalidChar {
 
 model `Contains.Invalid.Chars` {
   `my.name`: string;
+}
+
+union Colors {
+  string,
+  blue: "blue",
+  green: "green",
+  yellow: "yellow",
+}
+
+union Indices {
+  int32,
+  one: 1,
+  two: 2,
+  three: 3,
 }
 
 @@access(LiteralWithInvalidChar, Access.public);
@@ -42,6 +82,9 @@ op literalWithInvalidChar(@body body: LiteralWithInvalidChar): void;
 
 @route("/with-optional-client-query-param")
 op withOptionalClientQueryParam(...ExpandParameter): void;
+
+@route("/various-exploded-query-params")
+op variousExplodedQueryParams(...ExplodedQueryParams): void;
 
 @@clientInitialization(MiscTests,
   {

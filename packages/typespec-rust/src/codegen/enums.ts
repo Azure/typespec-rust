@@ -286,7 +286,6 @@ function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, ru
  * @returns the trait impls text
  */
 function emitNumericEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
-  use.add('azure_core', 'error::Error');
   let body = `impl TryFrom<${rustEnum.type}> for ${rustEnum.name} {\n`;
   if (rustEnum.extensible) {
     use.add('std', 'convert::Infallible');

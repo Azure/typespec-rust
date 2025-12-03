@@ -595,6 +595,18 @@ export function getUniqueVarName(params: Array<rust.MethodParameter>, candidates
   }
 }
 
+/** narrows param to the applicable path parameter type within the conditional block */
+export function isPathParameter(param: rust.MethodParameter): param is rust.PathCollectionParameter | rust.PathHashMapParameter | rust.PathScalarParameter {
+  switch (param.kind) {
+    case 'pathCollection':
+    case 'pathHashMap':
+    case 'pathScalar':
+      return true;
+    default:
+      return false;
+  }
+}
+
 /** narrows param to the applicable query parameter type within the conditional block */
 export function isQueryParameter(param: rust.MethodParameter): param is rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter {
   switch (param.kind) {

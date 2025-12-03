@@ -111,6 +111,7 @@ export class Use {
       case 'option':
       case 'ref':
       case 'result':
+      case 'slice':
       case 'hashmap':
       case 'Vec':
         this.addForType(type.type);

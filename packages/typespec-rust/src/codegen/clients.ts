@@ -942,8 +942,9 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += getParamValueHelper(indent, queryParam, () => {
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
-        const deref = queryParam.type.kind === 'ref' ? '*' : '';
-        text += `${indent.push().get()}query_builder.append_pair("${queryParam.key}", ${deref}${valueVar});\n`;
+        // if queryParam is a &[&str] then we'll need to deref the iterator
+        const deref = shared.asTypeOf(queryParam.type, 'str', 'ref', 'slice', 'ref') ? '*' : '';
+        text += `${indent.push().get()}query_builder.append_pair("${queryParam.key}", ${deref}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false, valueVar)});\n`;
         text += `${indent.pop().get()}}\n`;
         return text;
       });
@@ -1782,15 +1783,18 @@ function getClientSupplementalEndpointParamValue(param: rust.ClientSupplementalE
  * @param param the param for which to get the value
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
  * @param neverBorrow indicates that the borrowing calculation should be skipped
+ * @param overrideParamName optional value to use as the parameter name instead of param.name
  * @returns the code to use for the param's value
  */
-function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathParamType | QueryParamType, fromSelf: boolean, neverBorrow: boolean): string {
+function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathParamType | QueryParamType, fromSelf: boolean, neverBorrow: boolean, overrideParamName?: string): string {
   let paramName = param.name;
   // when fromSelf is false we assume that there's a local with the same name.
   // e.g. in pageable methods where we need to clone the params so they can be
   // passed to a future that can outlive the calling method.
   if (param.location === 'client' && fromSelf) {
     paramName = 'self.' + paramName;
+  } else if (overrideParamName) {
+    paramName = overrideParamName;
   }
 
   const encodeBytes = function (type: rust.EncodedBytes, param?: string): string {
@@ -1826,10 +1830,9 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
   let mustBorrow = !helpers.isQueryParameter(param);
 
   const paramType = helpers.unwrapType(param.type);
-  if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
-    if (param.format === 'multi') {
-      throw new CodegenError('InternalError', 'multi should have been handled outside getHeaderPathQueryParamValue');
-    } else if (paramType.kind === 'String' || paramType.kind === 'str') {
+  // we want multi to hit the else case so the necessary conversions etc can happen
+  if ((param.kind === 'headerCollection' || param.kind === 'queryCollection') && param.format !== 'multi') {
+    if (paramType.kind === 'String' || paramType.kind === 'str') {
       paramValue = `${paramName}.join("${getCollectionDelimiter(param.format)}")`;
     } else {
       // convert the items to strings
@@ -1867,7 +1870,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         break;
       case 'enum':
       case 'scalar':
-        if (isEnumString(paramType) && (param.kind === 'pathScalar' || param.kind === 'queryScalar')) {
+        if (isEnumString(paramType) && (helpers.isPathParameter(param) || helpers.isQueryParameter(param))) {
           // append_pair and path.replace() want a reference to the string
           paramValue = `${paramName}.as_ref()`;
           // as_ref() elides the need to borrow
