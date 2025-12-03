@@ -36,7 +36,7 @@ use azure_core::{
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
-        policies::{BearerTokenAuthorizationPolicy, Policy},
+        policies::{auth::BearerTokenAuthorizationPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         ClientOptions, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse,
         Request, RequestContent, Response, Url, UrlExt,

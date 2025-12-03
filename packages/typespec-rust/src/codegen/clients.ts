@@ -561,7 +561,8 @@ function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.params) {
     const arcTokenCred = shared.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
     if (arcTokenCred) {
-      use.add('azure_core::http::policies', 'BearerTokenAuthorizationPolicy', 'Policy');
+      use.add('azure_core::http::policies', 'Policy');
+      use.add('azure_core::http::policies::auth', 'BearerTokenAuthorizationPolicy');
       const scopes = new Array<string>();
       for (const scope of arcTokenCred.scopes) {
         scopes.push(`"${scope}"`);

@@ -8,7 +8,7 @@ use azure_core::{
     credentials::TokenCredential,
     fmt::SafeDebug,
     http::{
-        policies::{BearerTokenAuthorizationPolicy, Policy},
+        policies::{auth::BearerTokenAuthorizationPolicy, Policy},
         ClientOptions, Pipeline, Url,
     },
     tracing, Result,
