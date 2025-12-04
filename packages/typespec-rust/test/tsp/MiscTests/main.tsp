@@ -80,6 +80,16 @@ union Indices {
 @route("/colliding-options-param")
 op collidingOptionsParam(@header("options") options: string): void;
 
+@route("/avoid-dupe-headers-one")
+op avoidDupeHeadersOne(): {
+  @header("location") location: string;
+};
+
+@route("/avoid-dupe-headers-two")
+op avoidDupeHeadersTwo(): {
+  @header("Location") location: string;
+};
+
 @route("/literal-with-invalid-char")
 op literalWithInvalidChar(@body body: LiteralWithInvalidChar): void;
 

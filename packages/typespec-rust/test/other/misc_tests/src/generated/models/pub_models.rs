@@ -26,3 +26,11 @@ pub struct LiteralWithInvalidChar {
     )]
     pub thing: Option<String>,
 }
+
+/// Contains results for [`MiscTestsClient::avoid_dupe_headers_one()`](crate::generated::clients::MiscTestsClient::avoid_dupe_headers_one())
+#[derive(SafeDebug)]
+pub struct MiscTestsClientAvoidDupeHeadersOneResult;
+
+/// Contains results for [`MiscTestsClient::avoid_dupe_headers_two()`](crate::generated::clients::MiscTestsClient::avoid_dupe_headers_two())
+#[derive(SafeDebug)]
+pub struct MiscTestsClientAvoidDupeHeadersTwoResult;

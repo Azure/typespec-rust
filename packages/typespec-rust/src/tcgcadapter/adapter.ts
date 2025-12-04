@@ -167,6 +167,8 @@ export class Adapter {
       this.crate.enums.push(rustEnum);
     }
 
+    const processedTypes = new Set<string>();
+
     for (const model of this.ctx.sdkPackage.models) {
       if ((model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0 && (model.usage & tcgc.UsageFlags.Spread) === 0) {
         // skip types without input and output usage. this will include core
@@ -174,6 +176,15 @@ export class Adapter {
         // we keep the models for spread params as we internally use them.
         continue;
       }
+
+      // TODO: workaround for https://github.com/Azure/typespec-azure/issues/3614
+      if (processedTypes.has(model.name)) {
+        continue;
+      } else {
+        processedTypes.add(model.name);
+      }
+      // END workaround
+
       const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
     }

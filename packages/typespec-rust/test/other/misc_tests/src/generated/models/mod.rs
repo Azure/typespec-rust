@@ -6,10 +6,12 @@
 mod enums;
 mod enums_impl;
 mod enums_serde;
+mod header_traits;
 mod method_options;
 mod models_impl;
 mod models_serde;
 mod pub_models;
 pub use enums::*;
+pub use header_traits::*;
 pub use method_options::*;
 pub use pub_models::*;

@@ -16,6 +16,7 @@
   * Referencing optional client parameters.
   * Query parameters that are exploded arrays.
   * Deduplicate parameter name that collides with the `options` parameter.
+  * Remove duplicate header constant definitions.
 
 ### Features Added
 

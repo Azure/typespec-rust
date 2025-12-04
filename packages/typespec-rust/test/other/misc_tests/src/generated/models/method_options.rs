@@ -6,6 +6,20 @@
 use super::{Colors, Indices};
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
+/// Options to be passed to [`MiscTestsClient::avoid_dupe_headers_one()`](crate::generated::clients::MiscTestsClient::avoid_dupe_headers_one())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientAvoidDupeHeadersOneOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::avoid_dupe_headers_two()`](crate::generated::clients::MiscTestsClient::avoid_dupe_headers_two())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientAvoidDupeHeadersTwoOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::colliding_options_param()`](crate::generated::clients::MiscTestsClient::colliding_options_param())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientCollidingOptionsParamOptions<'a> {
