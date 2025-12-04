@@ -128,19 +128,19 @@ impl AzureAppConfigurationClient {
     /// async fn example() -> Result<()> {
     ///     let response: Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> = unimplemented!();
     ///     // Access response headers
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
-    ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders::sync_token) - Sync-Token
     /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCheckKeyValueResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValue")]
@@ -230,19 +230,19 @@ impl AzureAppConfigurationClient {
     /// async fn example() -> Result<()> {
     ///     let response: Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> = unimplemented!();
     ///     // Access response headers
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
-    ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders::sync_token) - Sync-Token
     /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCheckKeyValuesResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValues")]
@@ -333,14 +333,14 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders::sync_token) - Sync-Token
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCheckKeysResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeys")]
@@ -404,14 +404,14 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders::sync_token) - Sync-Token
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCheckLabelsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkLabels")]
@@ -484,19 +484,19 @@ impl AzureAppConfigurationClient {
     /// async fn example() -> Result<()> {
     ///     let response: Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> = unimplemented!();
     ///     // Access response headers
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
-    ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders::sync_token) - Sync-Token
     /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCheckRevisionsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkRevisions")]
@@ -578,23 +578,23 @@ impl AzureAppConfigurationClient {
     /// async fn example() -> Result<()> {
     ///     let response: Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> = unimplemented!();
     ///     // Access response headers
-    ///     if let Some(link) = response.link()? {
-    ///         println!("Link: {:?}", link);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
-    ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(link) = response.link()? {
+    ///         println!("link: {:?}", link);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::link) - Link
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::sync_token) - Sync-Token
     /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::etag_header) - etag
+    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::link) - link
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCheckSnapshotResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshot")]
@@ -664,14 +664,14 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders::sync_token) - Sync-Token
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCheckSnapshotsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshots")]
@@ -732,24 +732,24 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<AzureAppConfigurationClientCreateSnapshotOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
+    ///         println!("content-type: {:?}", content_type);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
     ///     }
     ///     if let Some(link) = response.link()? {
-    ///         println!("Link: {:?}", link);
-    ///     }
-    ///     if let Some(operation_location) = response.operation_location()? {
-    ///         println!("Operation-Location: {:?}", operation_location);
+    ///         println!("link: {:?}", link);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::content_type) - Content-Type
-    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::link) - Link
-    /// * [`operation_location`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::operation_location) - Operation-Location
-    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::etag_header) - etag
+    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::link) - link
+    /// * [`operation_location`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::operation_location) - operation-location
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::sync_token) - sync-token
     ///
     /// [`AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders`]: crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
     #[tracing::function("AzureAppConfiguration.createSnapshot")]
@@ -880,22 +880,22 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyValue> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - sync-token
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteKeyValue")]
@@ -968,22 +968,22 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyValue> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - sync-token
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteLock")]
@@ -1059,22 +1059,22 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyValue> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - sync-token
     /// * [`request_id`()](crate::generated::models::KeyValueHeaders::request_id) - x-ms-request-id
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
@@ -1209,23 +1209,23 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<Snapshot> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
+    ///         println!("content-type: {:?}", content_type);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
     ///     }
     ///     if let Some(link) = response.link()? {
-    ///         println!("Link: {:?}", link);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("link: {:?}", link);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
-    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
-    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - link
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - sync-token
     /// * [`request_id`()](crate::generated::models::SnapshotHeaders::request_id) - x-ms-request-id
     ///
     /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
@@ -1308,22 +1308,22 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyValueListResult> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::KeyValueListResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - sync-token
     ///
     /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeyValues")]
@@ -1443,18 +1443,18 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyListResult> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyListResultHeaders::content_type) - content-type
+    /// * [`sync_token`()](crate::generated::models::KeyListResultHeaders::sync_token) - sync-token
     ///
     /// [`KeyListResultHeaders`]: crate::generated::models::KeyListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeys")]
@@ -1547,18 +1547,18 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<LabelListResult> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::LabelListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::LabelListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::LabelListResultHeaders::content_type) - content-type
+    /// * [`sync_token`()](crate::generated::models::LabelListResultHeaders::sync_token) - sync-token
     ///
     /// [`LabelListResultHeaders`]: crate::generated::models::LabelListResultHeaders
     #[tracing::function("AzureAppConfiguration.getLabels")]
@@ -1661,22 +1661,22 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyValueListResult> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::KeyValueListResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - sync-token
     ///
     /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getRevisions")]
@@ -1787,18 +1787,18 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<SnapshotListResult> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::SnapshotListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::SnapshotListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::SnapshotListResultHeaders::content_type) - content-type
+    /// * [`sync_token`()](crate::generated::models::SnapshotListResultHeaders::sync_token) - sync-token
     ///
     /// [`SnapshotListResultHeaders`]: crate::generated::models::SnapshotListResultHeaders
     #[tracing::function("AzureAppConfiguration.getSnapshots")]
@@ -1910,22 +1910,22 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyValue> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - sync-token
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putKeyValue")]
@@ -2006,22 +2006,22 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<KeyValue> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("content-type: {:?}", content_type);
     ///     }
     ///     if let Some(etag_header) = response.etag_header()? {
     ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("sync-token: {:?}", sync_token);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - sync-token
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putLock")]
@@ -2099,23 +2099,23 @@ impl AzureAppConfigurationClient {
     ///     let response: Response<Snapshot> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
-    ///         println!("Content-Type: {:?}", content_type);
+    ///         println!("content-type: {:?}", content_type);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
     ///     }
     ///     if let Some(link) = response.link()? {
-    ///         println!("Link: {:?}", link);
-    ///     }
-    ///     if let Some(sync_token) = response.sync_token()? {
-    ///         println!("Sync-Token: {:?}", sync_token);
+    ///         println!("link: {:?}", link);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
-    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
-    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - content-type
     /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - link
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - sync-token
     ///
     /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.updateSnapshot")]

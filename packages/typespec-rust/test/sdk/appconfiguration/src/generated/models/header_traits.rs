@@ -39,31 +39,31 @@ const SYNC_TOKEN: HeaderName = HeaderName::from_static("sync-token");
 /// async fn example() -> Result<()> {
 ///     let response: Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> = unimplemented!();
 ///     // Access response headers
-///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
-///     }
 ///     if let Some(etag_header) = response.etag_header()? {
 ///         println!("etag: {:?}", etag_header);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait AzureAppConfigurationClientCheckKeyValueResultHeaders: private::Sealed {
-    fn sync_token(&self) -> Result<Option<String>>;
     fn etag_header(&self) -> Result<Option<String>>;
+    fn sync_token(&self) -> Result<Option<String>>;
 }
 
 impl AzureAppConfigurationClientCheckKeyValueResultHeaders
     for Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat>
 {
-    /// Used to guarantee real-time consistency between requests.
-    fn sync_token(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
     /// A value representing the current state of the resource.
     fn etag_header(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
+    /// Used to guarantee real-time consistency between requests.
+    fn sync_token(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
     }
 }
 
@@ -77,31 +77,31 @@ impl AzureAppConfigurationClientCheckKeyValueResultHeaders
 /// async fn example() -> Result<()> {
 ///     let response: Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
-///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
-///     }
 ///     if let Some(etag_header) = response.etag_header()? {
 ///         println!("etag: {:?}", etag_header);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait AzureAppConfigurationClientCheckKeyValuesResultHeaders: private::Sealed {
-    fn sync_token(&self) -> Result<Option<String>>;
     fn etag_header(&self) -> Result<Option<String>>;
+    fn sync_token(&self) -> Result<Option<String>>;
 }
 
 impl AzureAppConfigurationClientCheckKeyValuesResultHeaders
     for Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat>
 {
-    /// Used to guarantee real-time consistency between requests.
-    fn sync_token(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
     /// A value representing the current state of the resource.
     fn etag_header(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
+    /// Used to guarantee real-time consistency between requests.
+    fn sync_token(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
     }
 }
 
@@ -116,7 +116,7 @@ impl AzureAppConfigurationClientCheckKeyValuesResultHeaders
 ///     let response: Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
@@ -145,7 +145,7 @@ impl AzureAppConfigurationClientCheckKeysResultHeaders
 ///     let response: Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
@@ -173,31 +173,31 @@ impl AzureAppConfigurationClientCheckLabelsResultHeaders
 /// async fn example() -> Result<()> {
 ///     let response: Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
-///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
-///     }
 ///     if let Some(etag_header) = response.etag_header()? {
 ///         println!("etag: {:?}", etag_header);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait AzureAppConfigurationClientCheckRevisionsResultHeaders: private::Sealed {
-    fn sync_token(&self) -> Result<Option<String>>;
     fn etag_header(&self) -> Result<Option<String>>;
+    fn sync_token(&self) -> Result<Option<String>>;
 }
 
 impl AzureAppConfigurationClientCheckRevisionsResultHeaders
     for Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat>
 {
-    /// Used to guarantee real-time consistency between requests.
-    fn sync_token(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
     /// A value representing the current state of the resource.
     fn etag_header(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
+    /// Used to guarantee real-time consistency between requests.
+    fn sync_token(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
     }
 }
 
@@ -211,27 +211,32 @@ impl AzureAppConfigurationClientCheckRevisionsResultHeaders
 /// async fn example() -> Result<()> {
 ///     let response: Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> = unimplemented!();
 ///     // Access response headers
-///     if let Some(link) = response.link()? {
-///         println!("Link: {:?}", link);
-///     }
-///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
-///     }
 ///     if let Some(etag_header) = response.etag_header()? {
 ///         println!("etag: {:?}", etag_header);
+///     }
+///     if let Some(link) = response.link()? {
+///         println!("link: {:?}", link);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait AzureAppConfigurationClientCheckSnapshotResultHeaders: private::Sealed {
+    fn etag_header(&self) -> Result<Option<String>>;
     fn link(&self) -> Result<Option<String>>;
     fn sync_token(&self) -> Result<Option<String>>;
-    fn etag_header(&self) -> Result<Option<String>>;
 }
 
 impl AzureAppConfigurationClientCheckSnapshotResultHeaders
     for Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat>
 {
+    /// A value representing the current state of the resource.
+    fn etag_header(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// Includes links to related resources.
     fn link(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &LINK)
@@ -240,11 +245,6 @@ impl AzureAppConfigurationClientCheckSnapshotResultHeaders
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
-    /// A value representing the current state of the resource.
-    fn etag_header(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 }
 
@@ -259,7 +259,7 @@ impl AzureAppConfigurationClientCheckSnapshotResultHeaders
 ///     let response: Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
@@ -288,23 +288,23 @@ impl AzureAppConfigurationClientCheckSnapshotsResultHeaders
 ///     let response: Response<AzureAppConfigurationClientCreateSnapshotOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
-///         println!("Content-Type: {:?}", content_type);
+///         println!("content-type: {:?}", content_type);
+///     }
+///     if let Some(etag_header) = response.etag_header()? {
+///         println!("etag: {:?}", etag_header);
 ///     }
 ///     if let Some(link) = response.link()? {
-///         println!("Link: {:?}", link);
-///     }
-///     if let Some(operation_location) = response.operation_location()? {
-///         println!("Operation-Location: {:?}", operation_location);
+///         println!("link: {:?}", link);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>>;
+    fn etag_header(&self) -> Result<Option<String>>;
     fn link(&self) -> Result<Option<String>>;
     fn operation_location(&self) -> Result<Option<String>>;
     fn sync_token(&self) -> Result<Option<String>>;
-    fn etag_header(&self) -> Result<Option<String>>;
 }
 
 impl AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
@@ -313,6 +313,11 @@ impl AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
     /// Content-Type header
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>> {
         Headers::get_optional_as(self.headers(), &CONTENT_TYPE)
+    }
+
+    /// A value representing the current state of the resource.
+    fn etag_header(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Includes links to related resources.
@@ -329,11 +334,6 @@ impl AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
     fn sync_token(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
     }
-
-    /// A value representing the current state of the resource.
-    fn etag_header(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
-    }
 }
 
 /// Provides access to typed response headers for [`AzureAppConfigurationClient::list_keys()`](crate::generated::clients::AzureAppConfigurationClient::list_keys())
@@ -347,10 +347,10 @@ impl AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
 ///     let response: Response<KeyListResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
-///         println!("Content-Type: {:?}", content_type);
+///         println!("content-type: {:?}", content_type);
 ///     }
 ///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
@@ -380,8 +380,8 @@ impl KeyListResultHeaders for Response<KeyListResult> {
 /// * [`AzureAppConfigurationClient::put_lock()`](crate::generated::clients::AzureAppConfigurationClient::put_lock())
 pub trait KeyValueHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetKeyValueResponseContentType>>;
-    fn sync_token(&self) -> Result<Option<String>>;
     fn etag_header(&self) -> Result<Option<String>>;
+    fn sync_token(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
 
@@ -391,14 +391,14 @@ impl KeyValueHeaders for Response<KeyValue> {
         Headers::get_optional_as(self.headers(), &CONTENT_TYPE)
     }
 
-    /// Used to guarantee real-time consistency between requests.
-    fn sync_token(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
     /// A value representing the current state of the resource.
     fn etag_header(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
+    /// Used to guarantee real-time consistency between requests.
+    fn sync_token(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
@@ -412,8 +412,8 @@ impl KeyValueHeaders for Response<KeyValue> {
 /// * [`AzureAppConfigurationClient::list_revisions()`](crate::generated::clients::AzureAppConfigurationClient::list_revisions())
 pub trait KeyValueListResultHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetKeyValuesResponseContentType>>;
-    fn sync_token(&self) -> Result<Option<String>>;
     fn etag_header(&self) -> Result<Option<String>>;
+    fn sync_token(&self) -> Result<Option<String>>;
 }
 
 impl KeyValueListResultHeaders for Response<KeyValueListResult> {
@@ -422,14 +422,14 @@ impl KeyValueListResultHeaders for Response<KeyValueListResult> {
         Headers::get_optional_as(self.headers(), &CONTENT_TYPE)
     }
 
-    /// Used to guarantee real-time consistency between requests.
-    fn sync_token(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
     /// A value representing the current state of the resource.
     fn etag_header(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
+    /// Used to guarantee real-time consistency between requests.
+    fn sync_token(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
     }
 }
 
@@ -444,10 +444,10 @@ impl KeyValueListResultHeaders for Response<KeyValueListResult> {
 ///     let response: Response<LabelListResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
-///         println!("Content-Type: {:?}", content_type);
+///         println!("content-type: {:?}", content_type);
 ///     }
 ///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }
@@ -474,9 +474,9 @@ impl LabelListResultHeaders for Response<LabelListResult> {
 /// * [`AzureAppConfigurationClient::update_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::update_snapshot())
 pub trait SnapshotHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>>;
+    fn etag_header(&self) -> Result<Option<String>>;
     fn link(&self) -> Result<Option<String>>;
     fn sync_token(&self) -> Result<Option<String>>;
-    fn etag_header(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
 
@@ -484,6 +484,11 @@ impl SnapshotHeaders for Response<Snapshot> {
     /// Content-Type header
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>> {
         Headers::get_optional_as(self.headers(), &CONTENT_TYPE)
+    }
+
+    /// A value representing the current state of the resource.
+    fn etag_header(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Includes links to related resources.
@@ -494,11 +499,6 @@ impl SnapshotHeaders for Response<Snapshot> {
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
-    /// A value representing the current state of the resource.
-    fn etag_header(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
@@ -518,10 +518,10 @@ impl SnapshotHeaders for Response<Snapshot> {
 ///     let response: Response<SnapshotListResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
-///         println!("Content-Type: {:?}", content_type);
+///         println!("content-type: {:?}", content_type);
 ///     }
 ///     if let Some(sync_token) = response.sync_token()? {
-///         println!("Sync-Token: {:?}", sync_token);
+///         println!("sync-token: {:?}", sync_token);
 ///     }
 ///     Ok(())
 /// }

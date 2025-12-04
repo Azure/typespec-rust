@@ -28,7 +28,7 @@ const REPEATABILITY_RESULT: HeaderName = HeaderName::from_static("repeatability-
 ///     let response: Response<UserActionResponse> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(repeatability_result) = response.repeatability_result()? {
-///         println!("Repeatability-Result: {:?}", repeatability_result);
+///         println!("repeatability-result: {:?}", repeatability_result);
 ///     }
 ///     Ok(())
 /// }

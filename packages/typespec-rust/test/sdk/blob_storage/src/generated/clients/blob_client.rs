@@ -130,14 +130,14 @@ impl BlobClient {
     ///     let response: Response<BlobClientAbortCopyFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders::date) - date
     ///
     /// [`BlobClientAbortCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.abortCopyFromUrl")]
@@ -203,22 +203,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientAcquireLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_id`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobClientAcquireLeaseResultHeaders`]: crate::generated::models::BlobClientAcquireLeaseResultHeaders
@@ -301,22 +301,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientBreakLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_time`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
     ///
     /// [`BlobClientBreakLeaseResultHeaders`]: crate::generated::models::BlobClientBreakLeaseResultHeaders
@@ -398,22 +398,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientChangeLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_id`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobClientChangeLeaseResultHeaders`]: crate::generated::models::BlobClientChangeLeaseResultHeaders
@@ -497,23 +497,23 @@ impl BlobClient {
     ///     let response: Response<BlobClientCopyFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
-    ///         println!("Content-MD5: {:?}", content_md5);
+    ///         println!("content-md5: {:?}", content_md5);
     ///     }
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`content_md5`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::content_md5) - content-md5
+    /// * [`date`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::last_modified) - last-modified
     /// * [`content_crc64`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
     /// * [`copy_id`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
     /// * [`copy_status`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
@@ -654,22 +654,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientCreateSnapshotResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::last_modified) - last-modified
     /// * [`is_server_encrypted`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
     /// * [`snapshot`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::snapshot) - x-ms-snapshot
     /// * [`version_id`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::version_id) - x-ms-version-id
@@ -847,14 +847,14 @@ impl BlobClient {
     ///     let response: Response<BlobClientDeleteImmutabilityPolicyResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientDeleteImmutabilityPolicyResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientDeleteImmutabilityPolicyResultHeaders::date) - date
     ///
     /// [`BlobClientDeleteImmutabilityPolicyResultHeaders`]: crate::generated::models::BlobClientDeleteImmutabilityPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.deleteImmutabilityPolicy")]
@@ -919,29 +919,29 @@ impl BlobClient {
     ///     let response: AsyncResponse<BlobClientDownloadResult> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(accept_ranges) = response.accept_ranges()? {
-    ///         println!("Accept-Ranges: {:?}", accept_ranges);
+    ///         println!("accept-ranges: {:?}", accept_ranges);
     ///     }
     ///     if let Some(cache_control) = response.cache_control()? {
-    ///         println!("Cache-Control: {:?}", cache_control);
+    ///         println!("cache-control: {:?}", cache_control);
     ///     }
     ///     if let Some(content_disposition) = response.content_disposition()? {
-    ///         println!("Content-Disposition: {:?}", content_disposition);
+    ///         println!("content-disposition: {:?}", content_disposition);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`accept_ranges`()](crate::generated::models::BlobClientDownloadResultHeaders::accept_ranges) - Accept-Ranges
-    /// * [`cache_control`()](crate::generated::models::BlobClientDownloadResultHeaders::cache_control) - Cache-Control
-    /// * [`content_disposition`()](crate::generated::models::BlobClientDownloadResultHeaders::content_disposition) - Content-Disposition
-    /// * [`content_encoding`()](crate::generated::models::BlobClientDownloadResultHeaders::content_encoding) - Content-Encoding
-    /// * [`content_language`()](crate::generated::models::BlobClientDownloadResultHeaders::content_language) - Content-Language
-    /// * [`content_length`()](crate::generated::models::BlobClientDownloadResultHeaders::content_length) - Content-Length
-    /// * [`content_md5`()](crate::generated::models::BlobClientDownloadResultHeaders::content_md5) - Content-MD5
-    /// * [`content_range`()](crate::generated::models::BlobClientDownloadResultHeaders::content_range) - Content-Range
-    /// * [`last_modified`()](crate::generated::models::BlobClientDownloadResultHeaders::last_modified) - Last-Modified
+    /// * [`accept_ranges`()](crate::generated::models::BlobClientDownloadResultHeaders::accept_ranges) - accept-ranges
+    /// * [`cache_control`()](crate::generated::models::BlobClientDownloadResultHeaders::cache_control) - cache-control
+    /// * [`content_disposition`()](crate::generated::models::BlobClientDownloadResultHeaders::content_disposition) - content-disposition
+    /// * [`content_encoding`()](crate::generated::models::BlobClientDownloadResultHeaders::content_encoding) - content-encoding
+    /// * [`content_language`()](crate::generated::models::BlobClientDownloadResultHeaders::content_language) - content-language
+    /// * [`content_length`()](crate::generated::models::BlobClientDownloadResultHeaders::content_length) - content-length
+    /// * [`content_md5`()](crate::generated::models::BlobClientDownloadResultHeaders::content_md5) - content-md5
+    /// * [`content_range`()](crate::generated::models::BlobClientDownloadResultHeaders::content_range) - content-range
     /// * [`etag`()](crate::generated::models::BlobClientDownloadResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientDownloadResultHeaders::last_modified) - last-modified
     /// * [`blob_committed_block_count`()](crate::generated::models::BlobClientDownloadResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
     /// * [`blob_content_md5`()](crate::generated::models::BlobClientDownloadResultHeaders::blob_content_md5) - x-ms-blob-content-md5
     /// * [`is_sealed`()](crate::generated::models::BlobClientDownloadResultHeaders::is_sealed) - x-ms-blob-sealed
@@ -1081,7 +1081,7 @@ impl BlobClient {
     ///     let response: Response<BlobClientGetAccountInfoResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(account_kind) = response.account_kind()? {
     ///         println!("x-ms-account-kind: {:?}", account_kind);
@@ -1094,7 +1094,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::date) - date
     /// * [`account_kind`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
     /// * [`is_hierarchical_namespace_enabled`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
     /// * [`sku_name`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
@@ -1195,27 +1195,27 @@ impl BlobClient {
     ///     let response: Response<BlobClientGetPropertiesResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(cache_control) = response.cache_control()? {
-    ///         println!("Cache-Control: {:?}", cache_control);
+    ///         println!("cache-control: {:?}", cache_control);
     ///     }
     ///     if let Some(content_disposition) = response.content_disposition()? {
-    ///         println!("Content-Disposition: {:?}", content_disposition);
+    ///         println!("content-disposition: {:?}", content_disposition);
     ///     }
     ///     if let Some(content_encoding) = response.content_encoding()? {
-    ///         println!("Content-Encoding: {:?}", content_encoding);
+    ///         println!("content-encoding: {:?}", content_encoding);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`cache_control`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::cache_control) - Cache-Control
-    /// * [`content_disposition`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_disposition) - Content-Disposition
-    /// * [`content_encoding`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_encoding) - Content-Encoding
-    /// * [`content_language`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_language) - Content-Language
-    /// * [`content_length`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_length) - Content-Length
-    /// * [`content_md5`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_md5) - Content-MD5
-    /// * [`last_modified`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::last_modified) - Last-Modified
+    /// * [`cache_control`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::cache_control) - cache-control
+    /// * [`content_disposition`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_disposition) - content-disposition
+    /// * [`content_encoding`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_encoding) - content-encoding
+    /// * [`content_language`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_language) - content-language
+    /// * [`content_length`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_length) - content-length
+    /// * [`content_md5`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_md5) - content-md5
     /// * [`etag`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::last_modified) - last-modified
     /// * [`tier`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::tier) - x-ms-access-tier
     /// * [`access_tier_change_time`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::access_tier_change_time) - x-ms-access-tier-change-time
     /// * [`access_tier_inferred`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::access_tier_inferred) - x-ms-access-tier-inferred
@@ -1342,14 +1342,14 @@ impl BlobClient {
     ///     let response: Response<BlobTags, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobTagsHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobTagsHeaders::date) - date
     ///
     /// [`BlobTagsHeaders`]: crate::generated::models::BlobTagsHeaders
     #[tracing::function("Storage.Blob.Container.Blob.getTags")]
@@ -1423,22 +1423,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientReleaseLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::last_modified) - last-modified
     ///
     /// [`BlobClientReleaseLeaseResultHeaders`]: crate::generated::models::BlobClientReleaseLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.releaseLease")]
@@ -1517,22 +1517,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientRenewLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_id`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobClientRenewLeaseResultHeaders`]: crate::generated::models::BlobClientRenewLeaseResultHeaders
@@ -1611,22 +1611,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientSetExpiryResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientSetExpiryResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientSetExpiryResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientSetExpiryResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientSetExpiryResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientSetExpiryResultHeaders::last_modified) - last-modified
     ///
     /// [`BlobClientSetExpiryResultHeaders`]: crate::generated::models::BlobClientSetExpiryResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setExpiry")]
@@ -1689,7 +1689,7 @@ impl BlobClient {
     ///     let response: Response<BlobClientSetImmutabilityPolicyResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(immutability_policy_mode) = response.immutability_policy_mode()? {
     ///         println!("x-ms-immutability-policy-mode: {:?}", immutability_policy_mode);
@@ -1702,7 +1702,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders::date) - date
     /// * [`immutability_policy_mode`()](crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
     /// * [`immutability_policy_expires_on`()](crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
     ///
@@ -1784,7 +1784,7 @@ impl BlobClient {
     ///     let response: Response<BlobClientSetLegalHoldResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(legal_hold) = response.legal_hold()? {
     ///         println!("x-ms-legal-hold: {:?}", legal_hold);
@@ -1794,7 +1794,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientSetLegalHoldResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientSetLegalHoldResultHeaders::date) - date
     /// * [`legal_hold`()](crate::generated::models::BlobClientSetLegalHoldResultHeaders::legal_hold) - x-ms-legal-hold
     ///
     /// [`BlobClientSetLegalHoldResultHeaders`]: crate::generated::models::BlobClientSetLegalHoldResultHeaders
@@ -2022,14 +2022,14 @@ impl BlobClient {
     ///     let response: Response<BlobClientSetTagsResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientSetTagsResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientSetTagsResultHeaders::date) - date
     ///
     /// [`BlobClientSetTagsResultHeaders`]: crate::generated::models::BlobClientSetTagsResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setTags")]
@@ -2169,22 +2169,22 @@ impl BlobClient {
     ///     let response: Response<BlobClientStartCopyFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::last_modified) - last-modified
     /// * [`copy_id`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
     /// * [`copy_status`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
     /// * [`version_id`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::version_id) - x-ms-version-id
@@ -2317,14 +2317,14 @@ impl BlobClient {
     ///     let response: Response<BlobClientUndeleteResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobClientUndeleteResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientUndeleteResultHeaders::date) - date
     ///
     /// [`BlobClientUndeleteResultHeaders`]: crate::generated::models::BlobClientUndeleteResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.undelete")]

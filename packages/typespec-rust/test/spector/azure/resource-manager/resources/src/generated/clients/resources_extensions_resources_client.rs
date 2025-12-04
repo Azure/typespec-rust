@@ -59,18 +59,18 @@ impl ResourcesExtensionsResourcesClient {
     ///     let response: Response<ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`retry_after`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.createOrUpdate")]

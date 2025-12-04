@@ -46,7 +46,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   /** adds response headers to headers, avoiding duplicates */
   const addHeaders = function (...responseHeaders: Array<rust.ResponseHeader>): void {
     for (const responseHeader of responseHeaders) {
-      if (!headers.find(v => v.header.toLowerCase() === responseHeader.header.toLowerCase())) {
+      if (!headers.find(v => v.header === responseHeader.header)) {
         headers.push(responseHeader);
       }
     }
@@ -67,7 +67,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       mergedDocs += `/// * ${src.docs}\n`;
 
       for (const responseHeader of src.headers) {
-        const matchingHeader = mergedHeaders.find(h => h.header.toLowerCase() === responseHeader.header.toLowerCase());
+        const matchingHeader = mergedHeaders.find(h => h.header === responseHeader.header);
         if (!matchingHeader) {
           mergedHeaders.push(responseHeader);
         } else if (matchingHeader.type !== responseHeader.type) {

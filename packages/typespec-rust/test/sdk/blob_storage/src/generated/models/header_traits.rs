@@ -123,13 +123,13 @@ const VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
 ///     let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -137,8 +137,8 @@ const VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
 pub trait AppendBlobClientAppendBlockFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_append_offset(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
@@ -161,16 +161,16 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
@@ -220,13 +220,13 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
 ///     let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -234,8 +234,8 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
 pub trait AppendBlobClientAppendBlockResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_append_offset(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
@@ -259,16 +259,16 @@ impl AppendBlobClientAppendBlockResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
@@ -323,13 +323,13 @@ impl AppendBlobClientAppendBlockResultHeaders
 ///     let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -337,8 +337,8 @@ impl AppendBlobClientAppendBlockResultHeaders
 pub trait AppendBlobClientCreateResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
@@ -357,16 +357,16 @@ impl AppendBlobClientCreateResultHeaders for Response<AppendBlobClientCreateResu
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -406,21 +406,21 @@ impl AppendBlobClientCreateResultHeaders for Response<AppendBlobClientCreateResu
 ///     let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait AppendBlobClientSealResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn is_sealed(&self) -> Result<Option<bool>>;
 }
 
@@ -430,16 +430,16 @@ impl AppendBlobClientSealResultHeaders for Response<AppendBlobClientSealResult, 
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// If this blob has been sealed
@@ -459,7 +459,7 @@ impl AppendBlobClientSealResultHeaders for Response<AppendBlobClientSealResult, 
 ///     let response: Response<BlobClientAbortCopyFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -488,21 +488,21 @@ impl BlobClientAbortCopyFromUrlResultHeaders
 ///     let response: Response<BlobClientAcquireLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientAcquireLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
 
@@ -512,16 +512,16 @@ impl BlobClientAcquireLeaseResultHeaders for Response<BlobClientAcquireLeaseResu
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Uniquely identifies a blobs' lease
@@ -541,21 +541,21 @@ impl BlobClientAcquireLeaseResultHeaders for Response<BlobClientAcquireLeaseResu
 ///     let response: Response<BlobClientBreakLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientBreakLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_time(&self) -> Result<Option<i32>>;
 }
 
@@ -565,16 +565,16 @@ impl BlobClientBreakLeaseResultHeaders for Response<BlobClientBreakLeaseResult, 
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Approximate time remaining in the lease period, in seconds.
@@ -594,21 +594,21 @@ impl BlobClientBreakLeaseResultHeaders for Response<BlobClientBreakLeaseResult, 
 ///     let response: Response<BlobClientChangeLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientChangeLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
 
@@ -618,16 +618,16 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Uniquely identifies a blobs' lease
@@ -647,13 +647,13 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
 ///     let response: Response<BlobClientCopyFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -661,8 +661,8 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
 pub trait BlobClientCopyFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
     fn copy_id(&self) -> Result<Option<String>>;
     fn copy_status(&self) -> Result<Option<CopyStatus>>;
@@ -682,16 +682,16 @@ impl BlobClientCopyFromUrlResultHeaders for Response<BlobClientCopyFromUrlResult
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
@@ -735,21 +735,21 @@ impl BlobClientCopyFromUrlResultHeaders for Response<BlobClientCopyFromUrlResult
 ///     let response: Response<BlobClientCreateSnapshotResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientCreateSnapshotResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn snapshot(&self) -> Result<Option<String>>;
     fn version_id(&self) -> Result<Option<String>>;
@@ -761,16 +761,16 @@ impl BlobClientCreateSnapshotResultHeaders for Response<BlobClientCreateSnapshot
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -803,7 +803,7 @@ impl BlobClientCreateSnapshotResultHeaders for Response<BlobClientCreateSnapshot
 ///     let response: Response<BlobClientDeleteImmutabilityPolicyResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -832,13 +832,13 @@ impl BlobClientDeleteImmutabilityPolicyResultHeaders
 ///     let response: AsyncResponse<BlobClientDownloadResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(accept_ranges) = response.accept_ranges()? {
-///         println!("Accept-Ranges: {:?}", accept_ranges);
+///         println!("accept-ranges: {:?}", accept_ranges);
 ///     }
 ///     if let Some(cache_control) = response.cache_control()? {
-///         println!("Cache-Control: {:?}", cache_control);
+///         println!("cache-control: {:?}", cache_control);
 ///     }
 ///     if let Some(content_disposition) = response.content_disposition()? {
-///         println!("Content-Disposition: {:?}", content_disposition);
+///         println!("content-disposition: {:?}", content_disposition);
 ///     }
 ///     Ok(())
 /// }
@@ -852,8 +852,8 @@ pub trait BlobClientDownloadResultHeaders: private::Sealed {
     fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn content_range(&self) -> Result<Option<String>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn is_sealed(&self) -> Result<Option<bool>>;
@@ -931,16 +931,16 @@ impl BlobClientDownloadResultHeaders for AsyncResponse<BlobClientDownloadResult>
         Headers::get_optional_as(self.headers(), &CONTENT_RANGE)
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
@@ -1144,7 +1144,7 @@ impl BlobClientDownloadResultHeaders for AsyncResponse<BlobClientDownloadResult>
 ///     let response: Response<BlobClientGetAccountInfoResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(account_kind) = response.account_kind()? {
 ///         println!("x-ms-account-kind: {:?}", account_kind);
@@ -1195,13 +1195,13 @@ impl BlobClientGetAccountInfoResultHeaders for Response<BlobClientGetAccountInfo
 ///     let response: Response<BlobClientGetPropertiesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(cache_control) = response.cache_control()? {
-///         println!("Cache-Control: {:?}", cache_control);
+///         println!("cache-control: {:?}", cache_control);
 ///     }
 ///     if let Some(content_disposition) = response.content_disposition()? {
-///         println!("Content-Disposition: {:?}", content_disposition);
+///         println!("content-disposition: {:?}", content_disposition);
 ///     }
 ///     if let Some(content_encoding) = response.content_encoding()? {
-///         println!("Content-Encoding: {:?}", content_encoding);
+///         println!("content-encoding: {:?}", content_encoding);
 ///     }
 ///     Ok(())
 /// }
@@ -1213,8 +1213,8 @@ pub trait BlobClientGetPropertiesResultHeaders: private::Sealed {
     fn content_language(&self) -> Result<Option<String>>;
     fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn tier(&self) -> Result<Option<AccessTier>>;
     fn access_tier_change_time(&self) -> Result<Option<OffsetDateTime>>;
     fn access_tier_inferred(&self) -> Result<Option<bool>>;
@@ -1287,16 +1287,16 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
         Headers::get_optional_with(self.headers(), &CONTENT_MD5, |h| decode(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The tier to be set on the blob.
@@ -1535,21 +1535,21 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
 ///     let response: Response<BlobClientReleaseLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientReleaseLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
 impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResult, NoFormat> {
@@ -1558,16 +1558,16 @@ impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResu
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 }
 
@@ -1582,21 +1582,21 @@ impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResu
 ///     let response: Response<BlobClientRenewLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientRenewLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
 
@@ -1606,16 +1606,16 @@ impl BlobClientRenewLeaseResultHeaders for Response<BlobClientRenewLeaseResult, 
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Uniquely identifies a blobs' lease
@@ -1635,21 +1635,21 @@ impl BlobClientRenewLeaseResultHeaders for Response<BlobClientRenewLeaseResult, 
 ///     let response: Response<BlobClientSetExpiryResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientSetExpiryResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
 impl BlobClientSetExpiryResultHeaders for Response<BlobClientSetExpiryResult, NoFormat> {
@@ -1658,16 +1658,16 @@ impl BlobClientSetExpiryResultHeaders for Response<BlobClientSetExpiryResult, No
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 }
 
@@ -1682,7 +1682,7 @@ impl BlobClientSetExpiryResultHeaders for Response<BlobClientSetExpiryResult, No
 ///     let response: Response<BlobClientSetImmutabilityPolicyResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(immutability_policy_mode) = response.immutability_policy_mode()? {
 ///         println!("x-ms-immutability-policy-mode: {:?}", immutability_policy_mode);
@@ -1731,7 +1731,7 @@ impl BlobClientSetImmutabilityPolicyResultHeaders
 ///     let response: Response<BlobClientSetLegalHoldResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(legal_hold) = response.legal_hold()? {
 ///         println!("x-ms-legal-hold: {:?}", legal_hold);
@@ -1767,7 +1767,7 @@ impl BlobClientSetLegalHoldResultHeaders for Response<BlobClientSetLegalHoldResu
 ///     let response: Response<BlobClientSetTagsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -1794,21 +1794,21 @@ impl BlobClientSetTagsResultHeaders for Response<BlobClientSetTagsResult, NoForm
 ///     let response: Response<BlobClientStartCopyFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobClientStartCopyFromUrlResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn copy_id(&self) -> Result<Option<String>>;
     fn copy_status(&self) -> Result<Option<CopyStatus>>;
     fn version_id(&self) -> Result<Option<String>>;
@@ -1822,16 +1822,16 @@ impl BlobClientStartCopyFromUrlResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
@@ -1863,7 +1863,7 @@ impl BlobClientStartCopyFromUrlResultHeaders
 ///     let response: Response<BlobClientUndeleteResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -1890,21 +1890,21 @@ impl BlobClientUndeleteResultHeaders for Response<BlobClientUndeleteResult, NoFo
 ///     let response: Response<BlobContainerClientAcquireLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobContainerClientAcquireLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
 
@@ -1916,16 +1916,16 @@ impl BlobContainerClientAcquireLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Uniquely identifies a blobs' lease
@@ -1945,21 +1945,21 @@ impl BlobContainerClientAcquireLeaseResultHeaders
 ///     let response: Response<BlobContainerClientBreakLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobContainerClientBreakLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn lease_time(&self) -> Result<Option<i32>>;
 }
@@ -1972,16 +1972,16 @@ impl BlobContainerClientBreakLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Uniquely identifies a blobs' lease
@@ -2006,21 +2006,21 @@ impl BlobContainerClientBreakLeaseResultHeaders
 ///     let response: Response<BlobContainerClientChangeLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobContainerClientChangeLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
 
@@ -2032,16 +2032,16 @@ impl BlobContainerClientChangeLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Uniquely identifies a blobs' lease
@@ -2061,7 +2061,7 @@ impl BlobContainerClientChangeLeaseResultHeaders
 ///     let response: Response<BlobContainerClientGetAccountInfoResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(account_kind) = response.account_kind()? {
 ///         println!("x-ms-account-kind: {:?}", account_kind);
@@ -2113,11 +2113,11 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 /// async fn example() -> Result<()> {
 ///     let response: Response<BlobContainerClientGetPropertiesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
-///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     if let Some(access) = response.access()? {
 ///         println!("x-ms-blob-public-access: {:?}", access);
@@ -2126,8 +2126,8 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 /// }
 /// ```
 pub trait BlobContainerClientGetPropertiesResultHeaders: private::Sealed {
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn access(&self) -> Result<Option<PublicAccessType>>;
     fn default_encryption_scope(&self) -> Result<Option<String>>;
     fn prevent_encryption_scope_override(&self) -> Result<Option<bool>>;
@@ -2143,16 +2143,16 @@ pub trait BlobContainerClientGetPropertiesResultHeaders: private::Sealed {
 impl BlobContainerClientGetPropertiesResultHeaders
     for Response<BlobContainerClientGetPropertiesResult, NoFormat>
 {
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The public access setting for the container.
@@ -2226,21 +2226,21 @@ impl BlobContainerClientGetPropertiesResultHeaders
 ///     let response: Response<BlobContainerClientReleaseLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobContainerClientReleaseLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
 impl BlobContainerClientReleaseLeaseResultHeaders
@@ -2251,16 +2251,16 @@ impl BlobContainerClientReleaseLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 }
 
@@ -2275,7 +2275,7 @@ impl BlobContainerClientReleaseLeaseResultHeaders
 ///     let response: Response<BlobContainerClientRenameResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -2304,21 +2304,21 @@ impl BlobContainerClientRenameResultHeaders
 ///     let response: Response<BlobContainerClientRenewLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobContainerClientRenewLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
 
@@ -2330,16 +2330,16 @@ impl BlobContainerClientRenewLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// Uniquely identifies a blobs' lease
@@ -2359,7 +2359,7 @@ impl BlobContainerClientRenewLeaseResultHeaders
 ///     let response: Response<BlobContainerClientRestoreResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -2388,21 +2388,21 @@ impl BlobContainerClientRestoreResultHeaders
 ///     let response: Response<BlobContainerClientSetAccessPolicyResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlobContainerClientSetAccessPolicyResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
 impl BlobContainerClientSetAccessPolicyResultHeaders
@@ -2413,16 +2413,16 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 }
 
@@ -2437,7 +2437,7 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
 ///     let response: Response<BlobServiceClientGetAccountInfoResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(account_kind) = response.account_kind()? {
 ///         println!("x-ms-account-kind: {:?}", account_kind);
@@ -2490,7 +2490,7 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 ///     let response: Response<BlobTags, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -2517,21 +2517,21 @@ impl BlobTagsHeaders for Response<BlobTags, XmlFormat> {
 ///     let response: Response<BlockBlobClientCommitBlockListResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlockBlobClientCommitBlockListResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -2548,16 +2548,16 @@ impl BlockBlobClientCommitBlockListResultHeaders
         Headers::get_optional_with(self.headers(), &CONTENT_MD5, |h| decode(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
@@ -2602,13 +2602,13 @@ impl BlockBlobClientCommitBlockListResultHeaders
 ///     let response: Response<BlockBlobClientPutBlobFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -2616,8 +2616,8 @@ impl BlockBlobClientCommitBlockListResultHeaders
 pub trait BlockBlobClientPutBlobFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
@@ -2638,16 +2638,16 @@ impl BlockBlobClientPutBlobFromUrlResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2687,13 +2687,13 @@ impl BlockBlobClientPutBlobFromUrlResultHeaders
 ///     let response: AsyncResponse<BlockBlobClientQueryResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(accept_ranges) = response.accept_ranges()? {
-///         println!("Accept-Ranges: {:?}", accept_ranges);
+///         println!("accept-ranges: {:?}", accept_ranges);
 ///     }
 ///     if let Some(cache_control) = response.cache_control()? {
-///         println!("Cache-Control: {:?}", cache_control);
+///         println!("cache-control: {:?}", cache_control);
 ///     }
 ///     if let Some(content_disposition) = response.content_disposition()? {
-///         println!("Content-Disposition: {:?}", content_disposition);
+///         println!("content-disposition: {:?}", content_disposition);
 ///     }
 ///     Ok(())
 /// }
@@ -2708,8 +2708,8 @@ pub trait BlockBlobClientQueryResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn content_range(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
@@ -2781,16 +2781,16 @@ impl BlockBlobClientQueryResultHeaders for AsyncResponse<BlockBlobClientQueryRes
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
@@ -2923,10 +2923,10 @@ impl BlockBlobClientQueryResultHeaders for AsyncResponse<BlockBlobClientQueryRes
 ///     let response: Response<BlockBlobClientStageBlockFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(content_crc64) = response.content_crc64()? {
 ///         println!("x-ms-content-crc64: {:?}", content_crc64);
@@ -2993,7 +2993,7 @@ impl BlockBlobClientStageBlockFromUrlResultHeaders
 ///     let response: Response<BlockBlobClientStageBlockResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(content_crc64) = response.content_crc64()? {
 ///         println!("x-ms-content-crc64: {:?}", content_crc64);
@@ -3057,21 +3057,21 @@ impl BlockBlobClientStageBlockResultHeaders
 ///     let response: Response<BlockBlobClientUploadResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait BlockBlobClientUploadResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
@@ -3085,16 +3085,16 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
         Headers::get_optional_with(self.headers(), &CONTENT_MD5, |h| decode(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -3133,11 +3133,11 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
 /// async fn example() -> Result<()> {
 ///     let response: Response<BlockList, XmlFormat> = unimplemented!();
 ///     // Access response headers
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
-///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     if let Some(blob_content_length) = response.blob_content_length()? {
 ///         println!("x-ms-blob-content-length: {:?}", blob_content_length);
@@ -3146,22 +3146,22 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
 /// }
 /// ```
 pub trait BlockListHeaders: private::Sealed {
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_content_length(&self) -> Result<Option<u64>>;
 }
 
 impl BlockListHeaders for Response<BlockList, XmlFormat> {
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
@@ -3196,7 +3196,7 @@ impl FilterBlobSegmentHeaders for Response<FilterBlobSegment, XmlFormat> {
 ///     let response: Response<ListBlobsFlatSegmentResponse, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -3223,7 +3223,7 @@ impl ListBlobsFlatSegmentResponseHeaders for Response<ListBlobsFlatSegmentRespon
 ///     let response: Response<ListBlobsHierarchySegmentResponse, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -3252,13 +3252,13 @@ impl ListBlobsHierarchySegmentResponseHeaders
 ///     let response: Response<PageBlobClientClearPagesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -3266,8 +3266,8 @@ impl ListBlobsHierarchySegmentResponseHeaders
 pub trait PageBlobClientClearPagesResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
 }
@@ -3284,16 +3284,16 @@ impl PageBlobClientClearPagesResultHeaders for Response<PageBlobClientClearPages
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3318,21 +3318,21 @@ impl PageBlobClientClearPagesResultHeaders for Response<PageBlobClientClearPages
 ///     let response: Response<PageBlobClientCopyIncrementalResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait PageBlobClientCopyIncrementalResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn copy_id(&self) -> Result<Option<String>>;
     fn copy_status(&self) -> Result<Option<CopyStatus>>;
 }
@@ -3345,16 +3345,16 @@ impl PageBlobClientCopyIncrementalResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
@@ -3380,13 +3380,13 @@ impl PageBlobClientCopyIncrementalResultHeaders
 ///     let response: Response<PageBlobClientCreateResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -3394,8 +3394,8 @@ impl PageBlobClientCopyIncrementalResultHeaders
 pub trait PageBlobClientCreateResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
@@ -3414,16 +3414,16 @@ impl PageBlobClientCreateResultHeaders for Response<PageBlobClientCreateResult, 
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -3463,21 +3463,21 @@ impl PageBlobClientCreateResultHeaders for Response<PageBlobClientCreateResult, 
 ///     let response: Response<PageBlobClientResizeResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait PageBlobClientResizeResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
 }
 
@@ -3487,16 +3487,16 @@ impl PageBlobClientResizeResultHeaders for Response<PageBlobClientResizeResult, 
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3516,21 +3516,21 @@ impl PageBlobClientResizeResultHeaders for Response<PageBlobClientResizeResult, 
 ///     let response: Response<PageBlobClientUpdateSequenceNumberResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait PageBlobClientUpdateSequenceNumberResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
 }
 
@@ -3542,16 +3542,16 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3571,13 +3571,13 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
 ///     let response: Response<PageBlobClientUploadPagesFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -3585,8 +3585,8 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
 pub trait PageBlobClientUploadPagesFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
@@ -3608,16 +3608,16 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3661,13 +3661,13 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
 ///     let response: Response<PageBlobClientUploadPagesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
-///         println!("Content-MD5: {:?}", content_md5);
+///         println!("content-md5: {:?}", content_md5);
 ///     }
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///     if let Some(etag) = response.etag()? {
+///         println!("etag: {:?}", etag);
 ///     }
 ///     Ok(())
 /// }
@@ -3675,8 +3675,8 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
 pub trait PageBlobClientUploadPagesResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
@@ -3699,16 +3699,16 @@ impl PageBlobClientUploadPagesResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3751,8 +3751,8 @@ impl PageBlobClientUploadPagesResultHeaders
 /// * `PageBlobClient::get_page_ranges_diff()`
 pub trait PageListHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_content_length(&self) -> Result<Option<u64>>;
 }
 
@@ -3762,16 +3762,16 @@ impl PageListHeaders for Response<PageList, XmlFormat> {
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
@@ -3792,21 +3792,21 @@ impl PageListHeaders for Response<PageList, XmlFormat> {
 ///     let response: Response<SignedIdentifiers, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
-///     }
-///     if let Some(last_modified) = response.last_modified()? {
-///         println!("Last-Modified: {:?}", last_modified);
+///         println!("date: {:?}", date);
 ///     }
 ///     if let Some(etag) = response.etag()? {
 ///         println!("etag: {:?}", etag);
+///     }
+///     if let Some(last_modified) = response.last_modified()? {
+///         println!("last-modified: {:?}", last_modified);
 ///     }
 ///     Ok(())
 /// }
 /// ```
 pub trait SignedIdentifiersHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn etag(&self) -> Result<Option<String>>;
+    fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn access(&self) -> Result<Option<PublicAccessType>>;
 }
 
@@ -3816,16 +3816,16 @@ impl SignedIdentifiersHeaders for Response<SignedIdentifiers, XmlFormat> {
         Headers::get_optional_with(self.headers(), &DATE, |h| parse_rfc7231(h.as_str()))
     }
 
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
         })
-    }
-
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The public access setting for the container.
@@ -3845,7 +3845,7 @@ impl SignedIdentifiersHeaders for Response<SignedIdentifiers, XmlFormat> {
 ///     let response: Response<StorageServiceStats, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }
@@ -3872,7 +3872,7 @@ impl StorageServiceStatsHeaders for Response<StorageServiceStats, XmlFormat> {
 ///     let response: Response<UserDelegationKey, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
-///         println!("Date: {:?}", date);
+///         println!("date: {:?}", date);
 ///     }
 ///     Ok(())
 /// }

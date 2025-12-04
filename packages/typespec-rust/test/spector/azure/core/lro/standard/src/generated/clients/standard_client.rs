@@ -98,14 +98,14 @@ impl StandardClient {
     ///     let response: Response<StandardClientCreateOrReplaceOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(operation_location) = response.operation_location()? {
-    ///         println!("Operation-Location: {:?}", operation_location);
+    ///         println!("operation-location: {:?}", operation_location);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`operation_location`()](crate::generated::models::StandardClientCreateOrReplaceOperationStatusHeaders::operation_location) - Operation-Location
+    /// * [`operation_location`()](crate::generated::models::StandardClientCreateOrReplaceOperationStatusHeaders::operation_location) - operation-location
     ///
     /// [`StandardClientCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::StandardClientCreateOrReplaceOperationStatusHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.createOrReplace")]
@@ -222,14 +222,14 @@ impl StandardClient {
     ///     let response: Response<StandardClientDeleteOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(operation_location) = response.operation_location()? {
-    ///         println!("Operation-Location: {:?}", operation_location);
+    ///         println!("operation-location: {:?}", operation_location);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`operation_location`()](crate::generated::models::StandardClientDeleteOperationStatusHeaders::operation_location) - Operation-Location
+    /// * [`operation_location`()](crate::generated::models::StandardClientDeleteOperationStatusHeaders::operation_location) - operation-location
     ///
     /// [`StandardClientDeleteOperationStatusHeaders`]: crate::generated::models::StandardClientDeleteOperationStatusHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.delete")]
@@ -351,14 +351,14 @@ impl StandardClient {
     ///     let response: Response<StandardClientExportOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(operation_location) = response.operation_location()? {
-    ///         println!("Operation-Location: {:?}", operation_location);
+    ///         println!("operation-location: {:?}", operation_location);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`operation_location`()](crate::generated::models::StandardClientExportOperationStatusHeaders::operation_location) - Operation-Location
+    /// * [`operation_location`()](crate::generated::models::StandardClientExportOperationStatusHeaders::operation_location) - operation-location
     ///
     /// [`StandardClientExportOperationStatusHeaders`]: crate::generated::models::StandardClientExportOperationStatusHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.export")]

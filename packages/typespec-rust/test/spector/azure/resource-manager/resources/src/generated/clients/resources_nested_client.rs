@@ -59,18 +59,18 @@ impl ResourcesNestedClient {
     ///     let response: Response<ResourcesNestedClientCreateOrReplaceOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`ResourcesNestedClientCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.createOrReplace")]
@@ -216,18 +216,18 @@ impl ResourcesNestedClient {
     ///     let response: Response<ResourcesNestedClientDeleteOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
-    ///         println!("Location: {:?}", location);
+    ///         println!("location: {:?}", location);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders::location) - Location
-    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`ResourcesNestedClientDeleteOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.delete")]
@@ -515,18 +515,18 @@ impl ResourcesNestedClient {
     ///     let response: Response<ResourcesNestedClientUpdateOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
-    ///         println!("Location: {:?}", location);
+    ///         println!("location: {:?}", location);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders::location) - Location
-    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`ResourcesNestedClientUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.update")]

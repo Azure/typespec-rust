@@ -56,18 +56,18 @@ impl OperationTemplatesLroClient {
     ///     let response: Response<OperationTemplatesLroClientCreateOrReplaceOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.createOrReplace")]
@@ -207,18 +207,18 @@ impl OperationTemplatesLroClient {
     ///     let response: Response<OperationTemplatesLroClientDeleteOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
-    ///         println!("Location: {:?}", location);
+    ///         println!("location: {:?}", location);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::OperationTemplatesLroClientDeleteOperationStatusHeaders::location) - Location
-    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientDeleteOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::OperationTemplatesLroClientDeleteOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientDeleteOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`OperationTemplatesLroClientDeleteOperationStatusHeaders`]: crate::generated::models::OperationTemplatesLroClientDeleteOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.delete")]
@@ -349,22 +349,22 @@ impl OperationTemplatesLroClient {
     ///     let response: Response<OperationTemplatesLroClientExportOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
     ///     }
     ///     if let Some(location) = response.location()? {
-    ///         println!("Location: {:?}", location);
+    ///         println!("location: {:?}", location);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::OperationTemplatesLroClientExportOperationStatusHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`location`()](crate::generated::models::OperationTemplatesLroClientExportOperationStatusHeaders::location) - Location
-    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientExportOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::OperationTemplatesLroClientExportOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`location`()](crate::generated::models::OperationTemplatesLroClientExportOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientExportOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`OperationTemplatesLroClientExportOperationStatusHeaders`]: crate::generated::models::OperationTemplatesLroClientExportOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.export")]

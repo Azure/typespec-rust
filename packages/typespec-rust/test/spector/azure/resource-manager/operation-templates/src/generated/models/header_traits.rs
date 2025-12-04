@@ -16,7 +16,7 @@ use azure_core::{
     Result,
 };
 
-const AZURE_ASYNC_OPERATION: HeaderName = HeaderName::from_static("azure-asyncoperation");
+const AZURE_ASYNCOPERATION: HeaderName = HeaderName::from_static("azure-asyncoperation");
 const LOCATION: HeaderName = HeaderName::from_static("location");
 const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
 
@@ -31,10 +31,10 @@ const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
 ///     let response: Response<OperationTemplatesLroClientCreateOrReplaceOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///         println!("azure-asyncoperation: {:?}", azure_async_operation);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -51,7 +51,7 @@ impl OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders
 {
     /// A link to the status monitor
     fn azure_async_operation(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &AZURE_ASYNC_OPERATION)
+        Headers::get_optional_as(self.headers(), &AZURE_ASYNCOPERATION)
     }
 
     /// The Retry-After header can indicate how long the client should wait before polling the operation status.
@@ -71,10 +71,10 @@ impl OperationTemplatesLroClientCreateOrReplaceOperationStatusHeaders
 ///     let response: Response<OperationTemplatesLroClientDeleteOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(location) = response.location()? {
-///         println!("Location: {:?}", location);
+///         println!("location: {:?}", location);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -109,13 +109,13 @@ impl OperationTemplatesLroClientDeleteOperationStatusHeaders
 ///     let response: Response<OperationTemplatesLroClientExportOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///         println!("azure-asyncoperation: {:?}", azure_async_operation);
 ///     }
 ///     if let Some(location) = response.location()? {
-///         println!("Location: {:?}", location);
+///         println!("location: {:?}", location);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -131,7 +131,7 @@ impl OperationTemplatesLroClientExportOperationStatusHeaders
 {
     /// A link to the status monitor
     fn azure_async_operation(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &AZURE_ASYNC_OPERATION)
+        Headers::get_optional_as(self.headers(), &AZURE_ASYNCOPERATION)
     }
 
     /// The Location header contains the URL where the status of the long running operation can be checked.

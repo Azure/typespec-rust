@@ -53,7 +53,7 @@ impl MiscTestsClientAvoidDupeHeadersOneResultHeaders
 ///     let response: Response<MiscTestsClientAvoidDupeHeadersTwoResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(location) = response.location()? {
-///         println!("Location: {:?}", location);
+///         println!("location: {:?}", location);
 ///     }
 ///     Ok(())
 /// }

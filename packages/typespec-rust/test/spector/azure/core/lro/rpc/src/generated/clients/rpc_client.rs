@@ -92,14 +92,14 @@ impl RpcClient {
     ///     let response: Response<RpcClientLongRunningRpcOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(operation_location) = response.operation_location()? {
-    ///         println!("Operation-Location: {:?}", operation_location);
+    ///         println!("operation-location: {:?}", operation_location);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`operation_location`()](crate::generated::models::RpcClientLongRunningRpcOperationStatusHeaders::operation_location) - Operation-Location
+    /// * [`operation_location`()](crate::generated::models::RpcClientLongRunningRpcOperationStatusHeaders::operation_location) - operation-location
     ///
     /// [`RpcClientLongRunningRpcOperationStatusHeaders`]: crate::generated::models::RpcClientLongRunningRpcOperationStatusHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Rpc.longRunningRpc")]

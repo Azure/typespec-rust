@@ -94,14 +94,14 @@ impl TraitsClient {
     ///     let response: Response<UserActionResponse> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(repeatability_result) = response.repeatability_result()? {
-    ///         println!("Repeatability-Result: {:?}", repeatability_result);
+    ///         println!("repeatability-result: {:?}", repeatability_result);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`repeatability_result`()](crate::generated::models::UserActionResponseHeaders::repeatability_result) - Repeatability-Result
+    /// * [`repeatability_result`()](crate::generated::models::UserActionResponseHeaders::repeatability_result) - repeatability-result
     ///
     /// [`UserActionResponseHeaders`]: crate::generated::models::UserActionResponseHeaders
     #[tracing::function("_Specs_.Azure.Core.Traits.repeatableAction")]

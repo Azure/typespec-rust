@@ -1661,13 +1661,14 @@ export class Adapter {
     // adapt the response headers and add them to the trait
     for (const header of responseHeaders) {
       let responseHeader: rust.ResponseHeader;
+      const lowerCasedHeader = header.serializedName.toLowerCase();
       if (header.type.kind === 'dict') {
         if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
           throw new AdapterError('InternalError', `unexpected response header collection ${header.serializedName}`, header.__raw.node);
         }
-        responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
+        responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), lowerCasedHeader);
       } else {
-        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.typeToWireType(this.getType(header.type)));
+        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(lowerCasedHeader), this.typeToWireType(this.getType(header.type)));
       }
 
       responseHeader.docs = this.adaptDocs(header.summary, header.doc);

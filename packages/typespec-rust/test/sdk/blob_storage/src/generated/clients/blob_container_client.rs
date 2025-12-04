@@ -124,22 +124,22 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientAcquireLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_id`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobContainerClientAcquireLeaseResultHeaders`]: crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders
@@ -213,22 +213,22 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientBreakLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_id`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::lease_id) - x-ms-lease-id
     /// * [`lease_time`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
     ///
@@ -302,22 +302,22 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientChangeLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_id`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobContainerClientChangeLeaseResultHeaders`]: crate::generated::models::BlobContainerClientChangeLeaseResultHeaders
@@ -499,14 +499,14 @@ impl BlobContainerClient {
     ///     let response: Response<FilterBlobSegment, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::FilterBlobSegmentHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::FilterBlobSegmentHeaders::date) - date
     ///
     /// [`FilterBlobSegmentHeaders`]: crate::generated::models::FilterBlobSegmentHeaders
     #[tracing::function("Storage.Blob.Container.filterBlobs")]
@@ -585,22 +585,22 @@ impl BlobContainerClient {
     ///     let response: Response<SignedIdentifiers, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::SignedIdentifiersHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::SignedIdentifiersHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::SignedIdentifiersHeaders::date) - date
     /// * [`etag`()](crate::generated::models::SignedIdentifiersHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::SignedIdentifiersHeaders::last_modified) - last-modified
     /// * [`access`()](crate::generated::models::SignedIdentifiersHeaders::access) - x-ms-blob-public-access
     ///
     /// [`SignedIdentifiersHeaders`]: crate::generated::models::SignedIdentifiersHeaders
@@ -664,7 +664,7 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientGetAccountInfoResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(account_kind) = response.account_kind()? {
     ///         println!("x-ms-account-kind: {:?}", account_kind);
@@ -677,7 +677,7 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::date) - date
     /// * [`account_kind`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
     /// * [`is_hierarchical_namespace_enabled`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
     /// * [`sku_name`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
@@ -755,11 +755,11 @@ impl BlobContainerClient {
     /// async fn example() -> Result<()> {
     ///     let response: Response<BlobContainerClientGetPropertiesResult, NoFormat> = unimplemented!();
     ///     // Access response headers
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
-    ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     if let Some(access) = response.access()? {
     ///         println!("x-ms-blob-public-access: {:?}", access);
@@ -769,8 +769,8 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`last_modified`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::last_modified) - Last-Modified
     /// * [`etag`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::last_modified) - last-modified
     /// * [`access`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::access) - x-ms-blob-public-access
     /// * [`default_encryption_scope`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::default_encryption_scope) - x-ms-default-encryption-scope
     /// * [`prevent_encryption_scope_override`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::prevent_encryption_scope_override) - x-ms-deny-encryption-scope-override
@@ -840,14 +840,14 @@ impl BlobContainerClient {
     ///     let response: Response<ListBlobsFlatSegmentResponse, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::ListBlobsFlatSegmentResponseHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::ListBlobsFlatSegmentResponseHeaders::date) - date
     ///
     /// [`ListBlobsFlatSegmentResponseHeaders`]: crate::generated::models::ListBlobsFlatSegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobFlatSegment")]
@@ -954,14 +954,14 @@ impl BlobContainerClient {
     ///     let response: Response<ListBlobsHierarchySegmentResponse, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::ListBlobsHierarchySegmentResponseHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::ListBlobsHierarchySegmentResponseHeaders::date) - date
     ///
     /// [`ListBlobsHierarchySegmentResponseHeaders`]: crate::generated::models::ListBlobsHierarchySegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobHierarchySegment")]
@@ -1069,22 +1069,22 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientReleaseLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::last_modified) - last-modified
     ///
     /// [`BlobContainerClientReleaseLeaseResultHeaders`]: crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.releaseLease")]
@@ -1153,14 +1153,14 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientRenameResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientRenameResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobContainerClientRenameResultHeaders::date) - date
     ///
     /// [`BlobContainerClientRenameResultHeaders`]: crate::generated::models::BlobContainerClientRenameResultHeaders
     #[tracing::function("Storage.Blob.Container.rename")]
@@ -1226,22 +1226,22 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientRenewLeaseResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::last_modified) - last-modified
     /// * [`lease_id`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobContainerClientRenewLeaseResultHeaders`]: crate::generated::models::BlobContainerClientRenewLeaseResultHeaders
@@ -1310,14 +1310,14 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientRestoreResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientRestoreResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobContainerClientRestoreResultHeaders::date) - date
     ///
     /// [`BlobContainerClientRestoreResultHeaders`]: crate::generated::models::BlobContainerClientRestoreResultHeaders
     #[tracing::function("Storage.Blob.Container.restore")]
@@ -1384,22 +1384,22 @@ impl BlobContainerClient {
     ///     let response: Response<BlobContainerClientSetAccessPolicyResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::last_modified) - last-modified
     ///
     /// [`BlobContainerClientSetAccessPolicyResultHeaders`]: crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.setAccessPolicy")]

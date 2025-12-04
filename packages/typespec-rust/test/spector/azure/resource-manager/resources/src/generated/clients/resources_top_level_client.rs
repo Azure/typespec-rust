@@ -121,18 +121,18 @@ impl ResourcesTopLevelClient {
     ///     let response: Response<ResourcesTopLevelClientCreateOrReplaceOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.createOrReplace")]
@@ -275,18 +275,18 @@ impl ResourcesTopLevelClient {
     ///     let response: Response<ResourcesTopLevelClientDeleteOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
-    ///         println!("Location: {:?}", location);
+    ///         println!("location: {:?}", location);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders::location) - Location
-    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`ResourcesTopLevelClientDeleteOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.delete")]
@@ -614,18 +614,18 @@ impl ResourcesTopLevelClient {
     ///     let response: Response<ResourcesTopLevelClientUpdateOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
-    ///         println!("Location: {:?}", location);
+    ///         println!("location: {:?}", location);
     ///     }
     ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("Retry-After: {:?}", retry_after);
+    ///         println!("retry-after: {:?}", retry_after);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders::location) - Location
-    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders::retry_after) - retry-after
     ///
     /// [`ResourcesTopLevelClientUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]

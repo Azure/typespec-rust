@@ -28,7 +28,7 @@ const OPERATION_LOCATION: HeaderName = HeaderName::from_static("operation-locati
 ///     let response: Response<StandardClientCreateOrReplaceOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(operation_location) = response.operation_location()? {
-///         println!("Operation-Location: {:?}", operation_location);
+///         println!("operation-location: {:?}", operation_location);
 ///     }
 ///     Ok(())
 /// }
@@ -57,7 +57,7 @@ impl StandardClientCreateOrReplaceOperationStatusHeaders
 ///     let response: Response<StandardClientDeleteOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(operation_location) = response.operation_location()? {
-///         println!("Operation-Location: {:?}", operation_location);
+///         println!("operation-location: {:?}", operation_location);
 ///     }
 ///     Ok(())
 /// }
@@ -84,7 +84,7 @@ impl StandardClientDeleteOperationStatusHeaders for Response<StandardClientDelet
 ///     let response: Response<StandardClientExportOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(operation_location) = response.operation_location()? {
-///         println!("Operation-Location: {:?}", operation_location);
+///         println!("operation-location: {:?}", operation_location);
 ///     }
 ///     Ok(())
 /// }

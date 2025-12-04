@@ -25,7 +25,7 @@ const OPERATION_LOCATION: HeaderName = HeaderName::from_static("operation-locati
 ///     let response: Response<RpcClientLongRunningRpcOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(operation_location) = response.operation_location()? {
-///         println!("Operation-Location: {:?}", operation_location);
+///         println!("operation-location: {:?}", operation_location);
 ///     }
 ///     Ok(())
 /// }

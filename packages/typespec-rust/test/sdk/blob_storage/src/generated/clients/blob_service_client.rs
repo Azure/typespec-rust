@@ -108,14 +108,14 @@ impl BlobServiceClient {
     ///     let response: Response<FilterBlobSegment, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::FilterBlobSegmentHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::FilterBlobSegmentHeaders::date) - date
     ///
     /// [`FilterBlobSegmentHeaders`]: crate::generated::models::FilterBlobSegmentHeaders
     #[tracing::function("Storage.Blob.filterBlobs")]
@@ -189,7 +189,7 @@ impl BlobServiceClient {
     ///     let response: Response<BlobServiceClientGetAccountInfoResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(account_kind) = response.account_kind()? {
     ///         println!("x-ms-account-kind: {:?}", account_kind);
@@ -202,7 +202,7 @@ impl BlobServiceClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::date) - date
     /// * [`account_kind`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
     /// * [`is_hierarchical_namespace_enabled`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
     /// * [`sku_name`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
@@ -319,14 +319,14 @@ impl BlobServiceClient {
     ///     let response: Response<StorageServiceStats, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::StorageServiceStatsHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::StorageServiceStatsHeaders::date) - date
     ///
     /// [`StorageServiceStatsHeaders`]: crate::generated::models::StorageServiceStatsHeaders
     #[tracing::function("Storage.Blob.getStatistics")]
@@ -384,14 +384,14 @@ impl BlobServiceClient {
     ///     let response: Response<UserDelegationKey, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::UserDelegationKeyHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::UserDelegationKeyHeaders::date) - date
     ///
     /// [`UserDelegationKeyHeaders`]: crate::generated::models::UserDelegationKeyHeaders
     #[tracing::function("Storage.Blob.getUserDelegationKey")]

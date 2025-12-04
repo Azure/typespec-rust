@@ -114,23 +114,23 @@ impl AppendBlobClient {
     ///     let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
-    ///         println!("Content-MD5: {:?}", content_md5);
+    ///         println!("content-md5: {:?}", content_md5);
     ///     }
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::last_modified) - Last-Modified
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_md5) - content-md5
+    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::last_modified) - last-modified
     /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::blob_append_offset) - x-ms-blob-append-offset
     /// * [`blob_committed_block_count`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
     /// * [`content_crc64`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_crc64) - x-ms-content-crc64
@@ -256,23 +256,23 @@ impl AppendBlobClient {
     ///     let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
-    ///         println!("Content-MD5: {:?}", content_md5);
+    ///         println!("content-md5: {:?}", content_md5);
     ///     }
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_md5) - content-md5
+    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::last_modified) - last-modified
     /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::blob_append_offset) - x-ms-blob-append-offset
     /// * [`blob_committed_block_count`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
     /// * [`content_crc64`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
@@ -415,23 +415,23 @@ impl AppendBlobClient {
     ///     let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
-    ///         println!("Content-MD5: {:?}", content_md5);
+    ///         println!("content-md5: {:?}", content_md5);
     ///     }
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
+    ///         println!("date: {:?}", date);
     ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](crate::generated::models::AppendBlobClientCreateResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](crate::generated::models::AppendBlobClientCreateResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::AppendBlobClientCreateResultHeaders::last_modified) - Last-Modified
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientCreateResultHeaders::content_md5) - content-md5
+    /// * [`date`()](crate::generated::models::AppendBlobClientCreateResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::AppendBlobClientCreateResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientCreateResultHeaders::last_modified) - last-modified
     /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientCreateResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
     /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientCreateResultHeaders::encryption_scope) - x-ms-encryption-scope
     /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientCreateResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
@@ -570,22 +570,22 @@ impl AppendBlobClient {
     ///     let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
-    ///     if let Some(last_modified) = response.last_modified()? {
-    ///         println!("Last-Modified: {:?}", last_modified);
+    ///         println!("date: {:?}", date);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("last-modified: {:?}", last_modified);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::AppendBlobClientSealResultHeaders::date) - Date
-    /// * [`last_modified`()](crate::generated::models::AppendBlobClientSealResultHeaders::last_modified) - Last-Modified
+    /// * [`date`()](crate::generated::models::AppendBlobClientSealResultHeaders::date) - date
     /// * [`etag`()](crate::generated::models::AppendBlobClientSealResultHeaders::etag) - etag
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientSealResultHeaders::last_modified) - last-modified
     /// * [`is_sealed`()](crate::generated::models::AppendBlobClientSealResultHeaders::is_sealed) - x-ms-blob-sealed
     ///
     /// [`AppendBlobClientSealResultHeaders`]: crate::generated::models::AppendBlobClientSealResultHeaders

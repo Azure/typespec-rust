@@ -145,14 +145,14 @@ impl MiscTestsClient {
     ///     let response: Response<MiscTestsClientAvoidDupeHeadersTwoResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
-    ///         println!("Location: {:?}", location);
+    ///         println!("location: {:?}", location);
     ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::MiscTestsClientAvoidDupeHeadersTwoResultHeaders::location) - Location
+    /// * [`location`()](crate::generated::models::MiscTestsClientAvoidDupeHeadersTwoResultHeaders::location) - location
     ///
     /// [`MiscTestsClientAvoidDupeHeadersTwoResultHeaders`]: crate::generated::models::MiscTestsClientAvoidDupeHeadersTwoResultHeaders
     #[tracing::function("MiscTests.avoidDupeHeadersTwo")]

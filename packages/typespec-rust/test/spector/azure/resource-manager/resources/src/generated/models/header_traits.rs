@@ -19,7 +19,7 @@ use azure_core::{
     Result,
 };
 
-const AZURE_ASYNC_OPERATION: HeaderName = HeaderName::from_static("azure-asyncoperation");
+const AZURE_ASYNCOPERATION: HeaderName = HeaderName::from_static("azure-asyncoperation");
 const LOCATION: HeaderName = HeaderName::from_static("location");
 const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
 
@@ -34,10 +34,10 @@ const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
 ///     let response: Response<ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///         println!("azure-asyncoperation: {:?}", azure_async_operation);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -54,7 +54,7 @@ impl ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders
 {
     /// A link to the status monitor
     fn azure_async_operation(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &AZURE_ASYNC_OPERATION)
+        Headers::get_optional_as(self.headers(), &AZURE_ASYNCOPERATION)
     }
 
     /// The Retry-After header can indicate how long the client should wait before polling the operation status.
@@ -74,10 +74,10 @@ impl ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders
 ///     let response: Response<ResourcesNestedClientCreateOrReplaceOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///         println!("azure-asyncoperation: {:?}", azure_async_operation);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -92,7 +92,7 @@ impl ResourcesNestedClientCreateOrReplaceOperationStatusHeaders
 {
     /// A link to the status monitor
     fn azure_async_operation(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &AZURE_ASYNC_OPERATION)
+        Headers::get_optional_as(self.headers(), &AZURE_ASYNCOPERATION)
     }
 
     /// The Retry-After header can indicate how long the client should wait before polling the operation status.
@@ -112,10 +112,10 @@ impl ResourcesNestedClientCreateOrReplaceOperationStatusHeaders
 ///     let response: Response<ResourcesNestedClientDeleteOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(location) = response.location()? {
-///         println!("Location: {:?}", location);
+///         println!("location: {:?}", location);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -150,10 +150,10 @@ impl ResourcesNestedClientDeleteOperationStatusHeaders
 ///     let response: Response<ResourcesNestedClientUpdateOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(location) = response.location()? {
-///         println!("Location: {:?}", location);
+///         println!("location: {:?}", location);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -188,10 +188,10 @@ impl ResourcesNestedClientUpdateOperationStatusHeaders
 ///     let response: Response<ResourcesSingletonClientCreateOrUpdateOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///         println!("azure-asyncoperation: {:?}", azure_async_operation);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -206,7 +206,7 @@ impl ResourcesSingletonClientCreateOrUpdateOperationStatusHeaders
 {
     /// A link to the status monitor
     fn azure_async_operation(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &AZURE_ASYNC_OPERATION)
+        Headers::get_optional_as(self.headers(), &AZURE_ASYNCOPERATION)
     }
 
     /// The Retry-After header can indicate how long the client should wait before polling the operation status.
@@ -226,10 +226,10 @@ impl ResourcesSingletonClientCreateOrUpdateOperationStatusHeaders
 ///     let response: Response<ResourcesTopLevelClientCreateOrReplaceOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
-///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///         println!("azure-asyncoperation: {:?}", azure_async_operation);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -244,7 +244,7 @@ impl ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders
 {
     /// A link to the status monitor
     fn azure_async_operation(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &AZURE_ASYNC_OPERATION)
+        Headers::get_optional_as(self.headers(), &AZURE_ASYNCOPERATION)
     }
 
     /// The Retry-After header can indicate how long the client should wait before polling the operation status.
@@ -264,10 +264,10 @@ impl ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders
 ///     let response: Response<ResourcesTopLevelClientDeleteOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(location) = response.location()? {
-///         println!("Location: {:?}", location);
+///         println!("location: {:?}", location);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
@@ -302,10 +302,10 @@ impl ResourcesTopLevelClientDeleteOperationStatusHeaders
 ///     let response: Response<ResourcesTopLevelClientUpdateOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(location) = response.location()? {
-///         println!("Location: {:?}", location);
+///         println!("location: {:?}", location);
 ///     }
 ///     if let Some(retry_after) = response.retry_after()? {
-///         println!("Retry-After: {:?}", retry_after);
+///         println!("retry-after: {:?}", retry_after);
 ///     }
 ///     Ok(())
 /// }
