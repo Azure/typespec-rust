@@ -61,7 +61,6 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
         target: NoTarget,
       });
     } else {
-      console.log(`emit ${cargoTomlPath}`);
       await writeFile(cargoTomlPath, codegen.emitCargoToml());
     }
   } catch (error) {
