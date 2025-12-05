@@ -49,6 +49,10 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
       await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
     }
 
+    // NOTE: To allow the generated code to add cargo dependencies as needed (by calling crate.addDependency()),
+    // we should be calling emitCargoToml() after all the calls to emitContent() above, and not before.
+    // https://github.com/Azure/typespec-rust/issues/746
+
     // don't overwrite an existing Cargo.toml file by default
     // TODO: consider merging existing dependencies with emitted dependencies when overwriting
     // https://github.com/Azure/typespec-rust/issues/22
