@@ -31,21 +31,6 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
 
     const codegen = new CodeGenerator(crate);
 
-    // don't overwrite an existing Cargo.toml file by default
-    // TODO: consider merging existing dependencies with emitted dependencies when overwriting
-    // https://github.com/Azure/typespec-rust/issues/22
-    const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
-    if (existsSync(cargoTomlPath) && context.options['overwrite-cargo-toml'] !== true) {
-      context.program.reportDiagnostic({
-        code: 'FileAlreadyExists',
-        severity: 'warning',
-        message: `skip overwriting file ${cargoTomlPath}`,
-        target: NoTarget,
-      });
-    } else {
-      await writeFile(cargoTomlPath, codegen.emitCargoToml());
-    }
-
     const libRsPath = `${context.emitterOutputDir}/src/lib.rs`;
     if (existsSync(libRsPath) && context.options['overwrite-lib-rs'] !== true) {
       context.program.reportDiagnostic({
@@ -62,6 +47,22 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     rmSync(path.join(context.emitterOutputDir, 'src', 'generated'), { force: true, recursive: true });
     for (const file of files) {
       await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
+    }
+
+    // don't overwrite an existing Cargo.toml file by default
+    // TODO: consider merging existing dependencies with emitted dependencies when overwriting
+    // https://github.com/Azure/typespec-rust/issues/22
+    const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
+    if (existsSync(cargoTomlPath) && context.options['overwrite-cargo-toml'] !== true) {
+      context.program.reportDiagnostic({
+        code: 'FileAlreadyExists',
+        severity: 'warning',
+        message: `skip overwriting file ${cargoTomlPath}`,
+        target: NoTarget,
+      });
+    } else {
+      console.log(`emit ${cargoTomlPath}`);
+      await writeFile(cargoTomlPath, codegen.emitCargoToml());
     }
   } catch (error) {
     failed = true;
