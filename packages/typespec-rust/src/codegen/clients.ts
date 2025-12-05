@@ -222,7 +222,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         case 'lro':
           isPublicApi = true;
           methodBody = (indentation: helpers.indentation): string => {
-            return getLroMethodBody(indentation, use, client, method);
+            return getLroMethodBody(crate, indentation, use, client, method);
           };
           break;
         case 'clientaccessor':
@@ -1446,13 +1446,14 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 /**
  * constructs the body for an LRO client method
  *
+ * @param crate the crate to which method belongs
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param client the client to which the method belongs
  * @param method the method for the body to build
  * @returns the contents of the method body
  */
-function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
+function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
   let pollingStepHeaderName = undefined;
   for (const header of ['operation-location', 'azure-asyncoperation', 'location']) {
     if (method.responseHeaders?.headers.some(h => h.header.toLowerCase() === header)) {
@@ -1681,6 +1682,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     } else if (method.finalResultStrategy.propertyName !== undefined) {
       responseBodyExpr = 'body';
       if (bodyFormat === 'json') {
+        crate.addDependency(new rust.CrateDependency('serde_json'));
         body += `${indent.get()}let body = azure_core::http::response::ResponseBody::from_bytes(`
           + `serde_json::from_str::<azure_core::Value>(body.clone().into_string()?.as_str())?["${method.finalResultStrategy.propertyName}"].to_string());\n`;
       }
