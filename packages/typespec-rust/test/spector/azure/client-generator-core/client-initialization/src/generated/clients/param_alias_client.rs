@@ -38,7 +38,7 @@ impl ParamAliasClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - Blob name for the client.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.ParamAlias")]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,
@@ -76,7 +76,7 @@ impl ParamAliasClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withAliasedName"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.ParamAlias.withAliasedName"
     )]
     pub async fn with_aliased_name(
         &self,
@@ -110,7 +110,7 @@ impl ParamAliasClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withOriginalName"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.ParamAlias.withOriginalName"
     )]
     pub async fn with_original_name(
         &self,

@@ -38,7 +38,7 @@ impl MixedParamsClient {
     /// * `endpoint` - Service host
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MixedParams")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.MixedParams")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,
@@ -76,7 +76,7 @@ impl MixedParamsClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MixedParams.withBody"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.MixedParams.withBody"
     )]
     pub async fn with_body(
         &self,
@@ -118,7 +118,7 @@ impl MixedParamsClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MixedParams.withQuery"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.MixedParams.withQuery"
     )]
     pub async fn with_query(
         &self,

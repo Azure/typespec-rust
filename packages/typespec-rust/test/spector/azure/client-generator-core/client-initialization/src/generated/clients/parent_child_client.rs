@@ -40,7 +40,7 @@ impl ParentChildClient {
     /// * `blob_name` - The name of the blob. This parameter is used as a path parameter in all operations.
     /// * `options` - Optional configuration for the client.
     #[tracing::new(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.ParentClient.ChildClient"
     )]
     pub fn with_no_credential(
         endpoint: &str,
@@ -78,7 +78,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient.deleteStandalone")]
+    #[tracing::function("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.ParentClient.ChildClient.deleteStandalone")]
     pub async fn delete_standalone(
         &self,
         options: Option<ParentChildClientDeleteStandaloneOptions<'_>>,
@@ -112,7 +112,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient.getStandalone")]
+    #[tracing::function("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.ParentClient.ChildClient.getStandalone")]
     pub async fn get_standalone(
         &self,
         options: Option<ParentChildClientGetStandaloneOptions<'_>>,
@@ -145,9 +145,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient.withQuery"
-    )]
+    #[tracing::function("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.ParentClient.ChildClient.withQuery")]
     pub async fn with_query(
         &self,
         options: Option<ParentChildClientWithQueryOptions<'_>>,

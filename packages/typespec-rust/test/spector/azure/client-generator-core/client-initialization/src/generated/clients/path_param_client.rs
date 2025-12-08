@@ -39,7 +39,7 @@ impl PathParamClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - The name of the blob. This parameter is used as a path parameter in all operations.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.PathParam")]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,
@@ -77,7 +77,7 @@ impl PathParamClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.deleteStandalone"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.PathParam.deleteStandalone"
     )]
     pub async fn delete_standalone(
         &self,
@@ -112,7 +112,7 @@ impl PathParamClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.getStandalone"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.PathParam.getStandalone"
     )]
     pub async fn get_standalone(
         &self,
@@ -149,7 +149,7 @@ impl PathParamClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.withQuery"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.PathParam.withQuery"
     )]
     pub async fn with_query(
         &self,
