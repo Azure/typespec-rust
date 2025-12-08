@@ -11,7 +11,7 @@ export interface RustEmitterOptions {
   'crate-name': string;
   /** The version of the generated Rust crate */
   'crate-version': string;
-  /** skip emitting client constructors and their options type. Defaults to false */
+  /** Whether to skip emitting client constructors and their options type. Defaults to false */
   'omit-constructors': boolean;
   /** Whether to overwrite an existing Cargo.toml file. Defaults to false */
   'overwrite-cargo-toml': boolean;
