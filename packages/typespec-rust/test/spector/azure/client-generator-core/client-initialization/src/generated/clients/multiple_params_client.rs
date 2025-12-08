@@ -40,7 +40,7 @@ impl MultipleParamsClient {
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `region` - The region to use for all operations. This parameter is used as a query parameter.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.MultipleParams")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,
@@ -80,7 +80,7 @@ impl MultipleParamsClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withBody"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.MultipleParams.withBody"
     )]
     pub async fn with_body(
         &self,
@@ -121,7 +121,7 @@ impl MultipleParamsClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withQuery"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.MultipleParams.withQuery"
     )]
     pub async fn with_query(
         &self,

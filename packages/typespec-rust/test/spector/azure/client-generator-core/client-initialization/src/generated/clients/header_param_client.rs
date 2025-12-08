@@ -39,7 +39,7 @@ impl HeaderParamClient {
     /// * `endpoint` - Service host
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.HeaderParam")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.ClientInitialization.HeaderParam")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,
@@ -77,7 +77,7 @@ impl HeaderParamClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.HeaderParam.withBody"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.HeaderParam.withBody"
     )]
     pub async fn with_body(
         &self,
@@ -115,7 +115,7 @@ impl HeaderParamClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.HeaderParam.withQuery"
+        "_Specs_.Azure.ClientGenerator.Core.ClientInitialization.HeaderParam.withQuery"
     )]
     pub async fn with_query(
         &self,
