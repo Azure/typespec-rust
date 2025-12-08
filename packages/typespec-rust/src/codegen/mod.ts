@@ -52,7 +52,11 @@ export function emitGeneratedModRs(crate: rust.Crate): string {
     for (const client of crate.clients) {
       if (client.constructable) {
         clientsAndClientOptions.push(client.name);
-        clientsAndClientOptions.push(client.constructable.options.type.name);
+
+        // skip emitting the client options type (we always want to emit the client type)
+        if (!client.constructable.suppressed) {
+          clientsAndClientOptions.push(client.constructable.options.type.name);
+        }
       }
     }
     content += `pub use clients::{${clientsAndClientOptions.join(', ')}};\n`;

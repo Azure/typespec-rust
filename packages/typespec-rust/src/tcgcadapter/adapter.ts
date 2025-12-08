@@ -932,6 +932,7 @@ export class Adapter {
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
+      rustClient.constructable.suppressed = this.options['omit-constructors'];
       clientOptionsStruct.docs.summary = `Options used when creating a ${this.asDocLink(rustClient.name, rustClient.name)}`;
 
       // NOTE: per tcgc convention, if there is no param of kind credential

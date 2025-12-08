@@ -61,7 +61,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     }
     body += '}\n\n'; // end client
 
-    if (client.constructable) {
+    if (client.constructable && !client.constructable.suppressed) {
       // if client options doesn't require an impl for Default then just derive it
       let deriveDefault = 'Default, ';
       if (clientOptionsImplDefault(client.constructable)) {
@@ -86,7 +86,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
     body += `impl ${client.name} {\n`;
 
-    if (client.constructable) {
+    if (client.constructable && !client.constructable.suppressed) {
       // this is an instantiable client, so we need to emit client options and constructors
       use.add('azure_core', 'Result');
 

@@ -12,10 +12,9 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    fmt::SafeDebug,
     http::{
-        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url, UrlExt,
+        Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -27,49 +26,7 @@ pub struct MiscTestsClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`MiscTestsClient`](MiscTestsClient)
-#[derive(Clone, Default, SafeDebug)]
-pub struct MiscTestsClientOptions {
-    /// Allows customization of the client.
-    pub client_options: ClientOptions,
-    pub expand: Option<String>,
-}
-
 impl MiscTestsClient {
-    /// Creates a new MiscTestsClient requiring no authentication.
-    ///
-    /// # Arguments
-    ///
-    /// * `endpoint` - Service host
-    /// * `options` - Optional configuration for the client.
-    #[tracing::new("MiscTests")]
-    pub fn with_no_credential(
-        endpoint: &str,
-        options: Option<MiscTestsClientOptions>,
-    ) -> Result<Self> {
-        let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
-        if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{endpoint} must use http(s)"),
-            ));
-        }
-        endpoint = endpoint.join("supplemental-path")?;
-        Ok(Self {
-            endpoint,
-            expand: options.expand,
-            pipeline: Pipeline::new(
-                option_env!("CARGO_PKG_NAME"),
-                option_env!("CARGO_PKG_VERSION"),
-                options.client_options,
-                Vec::default(),
-                Vec::default(),
-                None,
-            ),
-        })
-    }
-
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
         &self.endpoint
