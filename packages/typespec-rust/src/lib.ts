@@ -11,6 +11,8 @@ export interface RustEmitterOptions {
   'crate-name': string;
   /** The version of the generated Rust crate */
   'crate-version': string;
+  /** skip emitting client constructors and their options type. Defaults to false */
+  'omit-constructors': boolean;
   /** Whether to overwrite an existing Cargo.toml file. Defaults to false */
   'overwrite-cargo-toml': boolean;
   /** Whether to overwrite an existing lib.rs file. Defaults to false */
@@ -32,6 +34,12 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
       type: 'string', 
       nullable: false,
       description: 'The version of the generated Rust crate'
+    },
+    'omit-constructors': {
+      type: 'boolean',
+      nullable: false,
+      default: false,
+      description: 'Whether to skip emitting client constructors and their options type. Defaults to false'
     },
     'overwrite-cargo-toml': { 
       type: 'boolean', 
@@ -87,7 +95,7 @@ const libDef = {
     }
   },
   emitter: {
-    options: <JSONSchemaType<RustEmitterOptions>>EmitterOptionsSchema,
+    options: EmitterOptionsSchema,
   },
 } as const;
 

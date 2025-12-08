@@ -1,6 +1,6 @@
 # Release History
 
-## 0.30.0 (unreleased)
+## 0.30.0 (2025-12-08)
 
 ### Breaking Changes
 
@@ -22,6 +22,7 @@
 
 * Added support for ARM LRO patterns.
 * Updated LROs that return result via original URL to GET the result after LRO has succeeded, instead of initial response.
+* Added emitter switch `omit-constructors` which will skip emitting client constructors and their associated options type (default is `false`).
 
 ### Other Changes
 

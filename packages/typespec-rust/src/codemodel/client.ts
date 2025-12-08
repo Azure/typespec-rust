@@ -53,6 +53,12 @@ export interface ClientConstruction {
    * endpoint passed by the caller will be augmented with supplemental path info.
    */
   endpoint?: SupplementalEndpoint;
+
+  /**
+   * indicates that any constructors and client options type be omitted.
+   * set via the omit-constructors switch (default is false).
+   */
+  suppressed: boolean;
 }
 
 /** ClientOptions is the struct containing optional client params */
@@ -666,6 +672,7 @@ export class ClientConstruction implements ClientConstruction {
   constructor(options: ClientOptions) {
     this.options = options;
     this.constructors = new Array<Constructor>();
+    this.suppressed = false;
   }
 }
 
