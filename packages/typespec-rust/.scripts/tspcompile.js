@@ -144,6 +144,9 @@ function should_generate(name) {
   return true
 }
 
+const alternate_types = pkgRoot + 'test/tsp/AlternateTypes';
+generate('alternate_types', alternate_types, 'test/other/alternate_types');
+
 const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration/client.tsp';
 generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
 

@@ -15,10 +15,10 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | AsyncResponse | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | AsyncResponse | Box | ImplTrait | MarkerType | Option | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | DiscriminatedUnion | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | DiscriminatedUnion | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -562,7 +562,9 @@ class External extends QualifiedType implements External {
     if (pathSep > 0) {
       crateName = crateName.substring(0, pathSep);
     }
-    crate.addDependency(new CrateDependency(crateName, features));
+    if (crateName !== 'crate') {
+      crate.addDependency(new CrateDependency(crateName, features));
+    }
   }
 }
 

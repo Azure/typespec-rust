@@ -1,5 +1,11 @@
 # Release History
 
+## 0.31.1 (unreleased)
+
+### Features Added
+
+* Added support for the `@alternateType` decorator.
+
 ## 0.31.0 (2025-12-09)
 
 ### Breaking Changes

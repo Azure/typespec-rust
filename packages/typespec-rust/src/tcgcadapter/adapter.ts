@@ -163,8 +163,13 @@ export class Adapter {
         // versions as we expose it as a String
         continue;
       }
-      const rustEnum = this.getEnum(sdkEnum);
-      this.crate.enums.push(rustEnum);
+
+      if (sdkEnum.external) {
+        this.getExternalType(sdkEnum.external);
+      } else {
+        const rustEnum = this.getEnum(sdkEnum);
+        this.crate.enums.push(rustEnum);
+      }
     }
 
     const processedTypes = new Set<string>();
@@ -185,8 +190,12 @@ export class Adapter {
       }
       // END workaround
 
-      const rustModel = this.getModel(model);
-      this.crate.models.push(rustModel);
+      if (model.external) {
+        this.getExternalType(model.external);
+      } else {
+        const rustModel = this.getModel(model);
+        this.crate.models.push(rustModel);
+      }
     }
   }
 
@@ -263,6 +272,26 @@ export class Adapter {
       }
     }
     throw new AdapterError('InternalError', `didn't find enum value for name ${sdkEnumValue.name} in enum ${enumType.name}`, sdkEnumValue.__raw?.node);
+  }
+
+  /**
+   * converts external type info to a Rust external type.
+   * 
+   * @param eti the tcgc external type info to convert
+   * @returns a Rust external type
+   */
+  private getExternalType(eti: tcgc.ExternalTypeInfo): rust.ExternalType {
+    let externalType = this.types.get(eti.identity);
+    if (externalType) {
+      return <rust.ExternalType>externalType;
+    }
+
+    // eti.identity is the fully qualified path to the type.
+    // split it into the type name and its import path.
+    const splitAt = eti.identity.lastIndexOf('::');
+    externalType = new rust.ExternalType(this.crate, eti.identity.substring(splitAt + 2), eti.identity.substring(0, splitAt));
+    this.types.set(eti.identity, externalType);
+    return externalType;
   }
 
   /**
@@ -571,10 +600,16 @@ export class Adapter {
       case 'uint8':
         return this.getScalar(type.kind, type.encode);
       case 'enum':
+        if (type.external) {
+          return this.getExternalType(type.external);
+        }
         return this.getEnum(type);
       case 'enumvalue':
         return this.getEnumValue(type);
       case 'model':
+        if (type.external) {
+          return this.getExternalType(type.external);
+        }
         return this.getModel(type, stack);
       case 'endpoint':
       case 'plainDate':
@@ -2127,6 +2162,7 @@ export class Adapter {
       case 'enum':
       case 'enumValue':
       case 'Etag':
+      case 'external':
       case 'hashmap':
       case 'jsonValue':
       case 'literal':
