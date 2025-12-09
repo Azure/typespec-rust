@@ -1317,6 +1317,12 @@ export class Adapter {
             case FinalStateValue.azureAsyncOperation:
               lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('azure-asyncoperation');
               break;
+            case FinalStateValue.customOperationReference:
+              // Some existing API specs are not correctly defined so that they are parsed
+              // into `custom-operation-reference` which should be `operation-location`.
+              // https://github.com/microsoft/typespec/blob/f3d792b252c6f40be0e174496d9f34d453676026/packages/http-client-csharp/emitter/src/type/operation-final-state-via.ts#L23-L27
+              lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('operation-location');
+              break;
             default:
               throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia ${method.lroMetadata.finalStateVia} NYI`, method.__raw?.node);
           }
