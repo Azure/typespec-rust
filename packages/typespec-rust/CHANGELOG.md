@@ -1,5 +1,13 @@
 # Release History
 
+## 0.31.0 (2025-12-09)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Fixed import path to `BearerTokenAuthorizationPolicy`.
+
 ## 0.30.0 (2025-12-08)
 
 ### Breaking Changes
