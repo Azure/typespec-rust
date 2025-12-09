@@ -236,8 +236,8 @@ export class Context {
     const resultType = this.lroResultTypes.get(model);
     if (resultType !== undefined) {
       use.addForType(resultType);
-      use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
     }
+    use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
 
     const indent = new helpers.indentation();
 

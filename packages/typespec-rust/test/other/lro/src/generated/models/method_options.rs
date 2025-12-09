@@ -8,30 +8,28 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`AuthoringTextAuthoringProjectClient::cancel_training_job()`](crate::generated::clients::AuthoringTextAuthoringProjectClient::cancel_training_job())
+/// Options to be passed to [`NIClient::get_status()`](crate::generated::clients::NIClient::get_status())
 #[derive(Clone, Default, SafeDebug)]
-pub struct AuthoringTextAuthoringProjectClientCancelTrainingJobOptions<'a> {
+pub struct NIClientGetStatusOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`NIClient::incorrect_custom_op_ref()`](crate::generated::clients::NIClient::incorrect_custom_op_ref())
+#[derive(Clone, Default, SafeDebug)]
+pub struct NIClientIncorrectCustomOpRefOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl AuthoringTextAuthoringProjectClientCancelTrainingJobOptions<'_> {
-    /// Transforms this [`AuthoringTextAuthoringProjectClientCancelTrainingJobOptions`] into a new `AuthoringTextAuthoringProjectClientCancelTrainingJobOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(
-        self,
-    ) -> AuthoringTextAuthoringProjectClientCancelTrainingJobOptions<'static> {
-        AuthoringTextAuthoringProjectClientCancelTrainingJobOptions {
+impl NIClientIncorrectCustomOpRefOptions<'_> {
+    /// Transforms this [`NIClientIncorrectCustomOpRefOptions`] into a new `NIClientIncorrectCustomOpRefOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> NIClientIncorrectCustomOpRefOptions<'static> {
+        NIClientIncorrectCustomOpRefOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
             },
         }
     }
-}
-
-/// Options to be passed to [`AuthoringTextAuthoringProjectClient::get_training_status()`](crate::generated::clients::AuthoringTextAuthoringProjectClient::get_training_status())
-#[derive(Clone, Default, SafeDebug)]
-pub struct AuthoringTextAuthoringProjectClientGetTrainingStatusOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
 }
