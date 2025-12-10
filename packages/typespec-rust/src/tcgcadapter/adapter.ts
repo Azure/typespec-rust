@@ -1355,9 +1355,10 @@ export class Adapter {
       // be a many-to-one mapping. i.e. multiple params will map to the same underlying
       // operation param. each param corresponds to a field within the operation param.
       const opParam = values(allOpParams).where((opParam: tcgc.SdkHttpParameter) => {
-        return values(opParam.correspondingMethodParams).where((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
-          return methodParam.name === param.name;
-        }).any();
+        return values(opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]))
+          .where((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
+            return methodParam.name === param.name;
+          }).any();
       }).first();
 
       if (!opParam) {
@@ -1376,7 +1377,9 @@ export class Adapter {
       // - e.g. method param's type is string/int/etc which is a field in the op param's body type
       // if the method param's type DOES match the op param's type and the op param has multiple corresponding method params, it's a spread param
       // - e.g. op param is an intersection of multiple model types, and each model type is exposed as a discrete param
-      if (opParam.kind === 'body' && opParam.type.kind === 'model' && (opParam.type.kind !== param.type.kind || opParam.correspondingMethodParams.length > 1)) {
+      if (opParam.kind === 'body' && opParam.type.kind === 'model'
+        && (opParam.type.kind !== param.type.kind || opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).length > 1)
+      ) {
         adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptPayloadFormat(opParam.defaultContentType), opParam.type);
       } else {
         adaptedParam = this.adaptMethodParameter(opParam);
@@ -1907,11 +1910,12 @@ export class Adapter {
 
     /** returns the corresponding client param field name for a client parameter */
     const getCorrespondingClientParamName = function (param: tcgc.SdkHttpParameter): string {
-      if (param.onClient && param.correspondingMethodParams.length === 1) {
+      const correspondingMethodParams = param.methodParameterSegments.map((segment) => segment[segment.length - 1]);
+      if (param.onClient && correspondingMethodParams.length === 1) {
         // we get here if the param was aliased via the @paramAlias decorator.
         // this gives us the name of the client param's backing field which has
         // the aliased name.
-        return param.correspondingMethodParams[0].name;
+        return correspondingMethodParams[0].name;
       }
       return param.name;
     };
