@@ -5,6 +5,8 @@
 
 /// Clients used to communicate with the service.
 pub mod clients;
+/// Contains all the error data structures and types.
+pub mod error;
 /// Contains all the data structures and types used by the client library.
 pub mod models;
 pub use clients::{
