@@ -115,9 +115,7 @@ async fn int32_seconds_larger_unit() {
 }
 
 #[tokio::test]
-#[should_panic]
 async fn float_seconds_larger_unit() {
-    // TODO: https://github.com/microsoft/typespec/issues/8987
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_duration_header_client()
@@ -137,9 +135,7 @@ async fn int32_milliseconds_larger_unit() {
 }
 
 #[tokio::test]
-#[should_panic]
 async fn float_milliseconds_larger_unit() {
-    // TODO: https://github.com/microsoft/typespec/issues/8987
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_duration_header_client()
