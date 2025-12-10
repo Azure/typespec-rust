@@ -3,7 +3,10 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::http::StatusCode;
-use spector_specialwords::{models::{DictMethods, SameAsModel}, SpecialWordsClient};
+use spector_specialwords::{
+    models::{DictMethods, SameAsModel},
+    SpecialWordsClient,
+};
 
 #[tokio::test]
 async fn same_as_model() {
@@ -43,7 +46,6 @@ async fn dict_methods() {
         .dict_methods(req, None)
         .await
         .unwrap();
-    
+
     assert_eq!(resp.status(), StatusCode::NoContent);
 }
-
