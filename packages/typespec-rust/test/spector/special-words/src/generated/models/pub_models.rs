@@ -73,6 +73,39 @@ pub struct Del {
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct DictMethods {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub clear: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub copy: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub get: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub items: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub keys: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pop: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub popitem: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub setdefault: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub update: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub values: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Elif {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,

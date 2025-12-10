@@ -5,6 +5,13 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
+/// Options to be passed to [`SpecialWordsModelPropertiesClient::dict_methods()`](crate::generated::clients::SpecialWordsModelPropertiesClient::dict_methods())
+#[derive(Clone, Default, SafeDebug)]
+pub struct SpecialWordsModelPropertiesClientDictMethodsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`SpecialWordsModelPropertiesClient::same_as_model()`](crate::generated::clients::SpecialWordsModelPropertiesClient::same_as_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelPropertiesClientSameAsModelOptions<'a> {
