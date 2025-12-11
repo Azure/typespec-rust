@@ -96,6 +96,7 @@ const azureHttpSpecsGroup = {
   'spector_azurepageable': {input: 'azure/payload/pageable'},
   'spector_azurebasic': {input: 'azure/example/basic'},
   'spector_armcommon': {input: 'azure/resource-manager/common-properties'},
+  'spector_armlargeheader': {input: 'azure/resource-manager/large-header'},
   'spector_armmethodsub': {input: 'azure/resource-manager/method-subscription-id/client.tsp'},
   'spector_armnonresource': {input: 'azure/resource-manager/non-resource'},
   'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
