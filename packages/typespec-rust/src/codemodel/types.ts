@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | AsyncResponse | Box | ImplTrait | MarkerType | Option | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | AsyncResponse | Box | ClientMethodOptions | ImplTrait | MarkerType | Option | Pager | PagerOptions | Poller | PollerOptions | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | DiscriminatedUnion | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -56,6 +56,14 @@ export interface Box {
 /** Bytes is a azure_core::Bytes type */
 export interface Bytes extends External {
   kind: 'bytes';
+}
+
+/** ClientMethodOptions is a ClientMethodOptions<'a> from azure_core */
+export interface ClientMethodOptions extends External {
+  kind: 'clientMethodOptions';
+
+  /** the lifetime annotation */
+  lifetime: Lifetime;
 }
 
 /** Decimal is a rust_decimal::Decimal type */
@@ -330,6 +338,23 @@ export interface Pager extends External {
 
   /** the model containing the page of items */
   type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+
+  /** the type of continuation used by the pager */
+  continuation: PagerContinuationKind;
+}
+
+/** PagerContinuationKind contains the kinds of paging continuations */
+export type PagerContinuationKind = 'token' | 'nextLink';
+
+/** PagerOptions is a PagerOptions<'a, C> from azure_core */
+export interface PagerOptions extends External {
+  kind: 'pagerOptions';
+
+  /** the lifetime annotation */
+  lifetime: Lifetime;
+
+  /** the type of continuation used by the pager */
+  continuation: PagerContinuationKind;
 }
 
 /** Poller is a Poller<T> from azure_core */
@@ -341,6 +366,14 @@ export interface Poller extends External {
 
   /** the model containing the status of a long-running-operation */
   type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+}
+
+/** PollerOptions is a PollerOptions<'a> from azure_core */
+export interface PollerOptions extends External {
+  kind: 'pollerOptions';
+
+  /** the lifetime annotation */
+  lifetime: Lifetime;
 }
 
 /** PayloadFormat indicates the wire format for request bodies */
@@ -657,6 +690,14 @@ export class Bytes extends External implements Bytes {
   }
 }
 
+export class ClientMethodOptions extends External implements ClientMethodOptions {
+  constructor(crate: Crate, lifetime: Lifetime) {
+    super(crate, 'ClientMethodOptions', 'azure_core::http');
+    this.kind = 'clientMethodOptions';
+    this.lifetime = lifetime;
+  }
+}
+
 export class Decimal extends External implements Decimal {
   constructor(crate: Crate, stringEncoding: boolean) {
     super(crate, 'Decimal', 'rust_decimal', !stringEncoding ? ['serde-with-float'] : undefined);
@@ -814,10 +855,20 @@ export class Option<T> implements Option<T> {
 }
 
 export class Pager extends External implements Pager {
-  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
+  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>, continuation: PagerContinuationKind) {
     super(crate, 'Pager', 'azure_core::http');
     this.kind = 'pager';
     this.type = type;
+    this.continuation = continuation;
+  }
+}
+
+export class PagerOptions extends External implements PagerOptions {
+  constructor(crate: Crate, lifetime: Lifetime, continuation: PagerContinuationKind) {
+    super(crate, 'PagerOptions', 'azure_core::http::pager');
+    this.kind = 'pagerOptions';
+    this.lifetime = lifetime;
+    this.continuation = continuation;
   }
 }
 
@@ -826,6 +877,14 @@ export class Poller extends External implements Poller {
     super(crate, 'Poller', 'azure_core::http');
     this.kind = 'poller';
     this.type = statusType;
+  }
+}
+
+export class PollerOptions extends External implements PollerOptions {
+  constructor(crate: Crate, lifetime: Lifetime) {
+    super(crate, 'PollerOptions', 'azure_core::http::poller');
+    this.kind = 'pollerOptions';
+    this.lifetime = lifetime;
   }
 }
 

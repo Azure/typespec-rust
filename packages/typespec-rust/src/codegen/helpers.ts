@@ -164,6 +164,9 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'decimal':
     case 'marker':
       return type.name;
+    case 'clientMethodOptions':
+    case 'pollerOptions':
+      return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
     case 'encodedBytes':
       return type.slice ? '[u8]' : 'Vec<u8>';
     case 'enumValue':
@@ -178,9 +181,22 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return getTypeDeclaration(type.valueKind);
     case 'option':
       return `Option<${getTypeDeclaration(type.type, withLifetime)}>`;
-    case 'pager':
+    case 'pager': {
+      let formatParam = '';
+      let continuationParam = '';
+      // we need a third generic type param when the continuation isn't a next link
+      if (type.continuation !== 'nextLink') {
+        formatParam = `, ${type.type.format}`;
+        continuationParam = ', String';
+      } else if (type.type.format !== 'JsonFormat') {
+        formatParam =  `, ${type.type.format}`;
+      }
       // we explicitly omit the Response<T> from the type decl
-      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}${type.type.format !== 'JsonFormat' ? `, ${type.type.format}` : ''}>`;
+      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}${formatParam}${continuationParam}>`;
+    }
+    case 'pagerOptions':
+      // for continuation tokens we need an extra generic type parameter
+      return `${type.name}<${type.lifetime.name}${type.continuation === 'nextLink' ? '' : ', String'}>`;
     case 'poller':
       // we explicitly omit the Response<T> from the type decl
       return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;

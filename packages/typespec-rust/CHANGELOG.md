@@ -1,6 +1,13 @@
 # Release History
 
-## 0.31.1 (unreleased)
+## 0.32.0 (unreleased)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Replaced `Pager::from_callback` with `Pager::new`.
+* Updated generic type parameters to `Pager<>` and `PagerOptions<>` type as required by the paging strategy.
 
 ### Features Added
 

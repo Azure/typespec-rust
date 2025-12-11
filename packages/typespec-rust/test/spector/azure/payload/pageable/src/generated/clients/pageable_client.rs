@@ -83,7 +83,7 @@ impl PageableClient {
             query_builder.set_pair("maxpagesize", maxpagesize.to_string());
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => next_link,
@@ -92,7 +92,7 @@ impl PageableClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -115,7 +115,7 @@ impl PageableClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))

@@ -47,12 +47,12 @@ impl PageablePageSizeClient {
             query_builder.set_pair("pageSize", page_size.to_string());
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |_: PagerState<Url>, pager_options| {
                 let mut request = Request::new(url.clone(), Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -68,7 +68,7 @@ impl PageablePageSizeClient {
                     Ok(PagerResult::Done {
                         response: rsp.into(),
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -87,12 +87,12 @@ impl PageablePageSizeClient {
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
         url.append_path("/payload/pageable/pagesize/without-continuation");
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |_: PagerState<Url>, pager_options| {
                 let mut request = Request::new(url.clone(), Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -108,7 +108,7 @@ impl PageablePageSizeClient {
                     Ok(PagerResult::Done {
                         response: rsp.into(),
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))

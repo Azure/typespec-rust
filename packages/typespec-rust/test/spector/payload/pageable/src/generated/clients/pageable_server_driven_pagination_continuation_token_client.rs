@@ -19,7 +19,8 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerResult, PagerState},
-        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Response, Url, UrlExt,
+        JsonFormat, Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Response,
+        Url, UrlExt,
     },
     json, tracing, Result,
 };
@@ -46,7 +47,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     pub fn list_request_header_nested_response_body(
         &self,
         options: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions<'_>>,
-    ) -> Result<Pager<RequestHeaderNestedResponseBodyResponse>> {
+    ) -> Result<Pager<RequestHeaderNestedResponseBodyResponse, JsonFormat, String>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -56,7 +57,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("bar", bar);
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
@@ -72,7 +73,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("token", token);
                 }
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -100,7 +101,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                             _ => PagerResult::Done { response: rsp },
                         },
                     )
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -116,7 +117,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     pub fn list_request_header_response_body(
         &self,
         options: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions<'_>>,
-    ) -> Result<Pager<RequestHeaderResponseBodyResponse>> {
+    ) -> Result<Pager<RequestHeaderResponseBodyResponse, JsonFormat, String>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -126,7 +127,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("bar", bar);
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
@@ -142,7 +143,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("token", token);
                 }
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -165,7 +166,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -204,7 +205,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     pub fn list_request_header_response_header(
         &self,
         options: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions<'_>>,
-    ) -> Result<Pager<RequestHeaderResponseHeaderResponse>> {
+    ) -> Result<Pager<RequestHeaderResponseHeaderResponse, JsonFormat, String>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -214,7 +215,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("bar", bar);
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
@@ -230,7 +231,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("token", token);
                 }
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp: Response<RequestHeaderResponseHeaderResponse> = pipeline
                         .send(
                             &pager_options.context,
@@ -251,7 +252,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -267,7 +268,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     pub fn list_request_query_nested_response_body(
         &self,
         options: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions<'_>>,
-    ) -> Result<Pager<RequestQueryNestedResponseBodyResponse>> {
+    ) -> Result<Pager<RequestQueryNestedResponseBodyResponse, JsonFormat, String>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -280,7 +281,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("token", token);
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
@@ -294,7 +295,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("foo", foo);
                 }
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -322,7 +323,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                             _ => PagerResult::Done { response: rsp },
                         },
                     )
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -338,7 +339,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     pub fn list_request_query_response_body(
         &self,
         options: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions<'_>>,
-    ) -> Result<Pager<RequestQueryResponseBodyResponse>> {
+    ) -> Result<Pager<RequestQueryResponseBodyResponse, JsonFormat, String>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -351,7 +352,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("token", token);
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
@@ -365,7 +366,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("foo", foo);
                 }
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -388,7 +389,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -427,7 +428,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     pub fn list_request_query_response_header(
         &self,
         options: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions<'_>>,
-    ) -> Result<Pager<RequestQueryResponseHeaderResponse>> {
+    ) -> Result<Pager<RequestQueryResponseHeaderResponse, JsonFormat, String>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -440,7 +441,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("token", token);
         }
         query_builder.build();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
@@ -454,7 +455,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("foo", foo);
                 }
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp: Response<RequestQueryResponseHeaderResponse> = pipeline
                         .send(
                             &pager_options.context,
@@ -475,7 +476,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))

@@ -1309,19 +1309,19 @@ export class Adapter {
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
-    let clientMethodOptions: rust.ExternalType;
+    let clientMethodOptions: rust.ClientMethodOptions | rust.PagerOptions | rust.PollerOptions;
     switch (method.kind) {
       case 'paging':
-        clientMethodOptions = new rust.ExternalType(this.crate, 'PagerOptions', 'azure_core::http::pager');
+        // default to nextLink. will update it as required when we have that info
+        clientMethodOptions = new rust.PagerOptions(this.crate, optionsLifetime, 'nextLink');
         break;
       case 'lro':
-        clientMethodOptions = new rust.ExternalType(this.crate, 'PollerOptions', 'azure_core::http::poller');
+        clientMethodOptions = new rust.PollerOptions(this.crate, optionsLifetime);
         break;
       default:
-        clientMethodOptions = new rust.ExternalType(this.crate, 'ClientMethodOptions', 'azure_core::http');
+        clientMethodOptions = new rust.ClientMethodOptions(this.crate, optionsLifetime);
     }
 
-    clientMethodOptions.lifetime = optionsLifetime;
     const methodOptionsField = new rust.StructField('method_options', 'pub', clientMethodOptions);
     methodOptionsField.docs.summary = 'Allows customization of the method call.';
     methodOptionsStruct.fields.push(methodOptionsField);
@@ -1606,7 +1606,8 @@ export class Adapter {
       }
 
       this.crate.addDependency(new rust.CrateDependency('async-trait'));
-      rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
+      // default to nextLink. will update it as required when we have that info
+      rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat), 'nextLink'));
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
 
@@ -1689,6 +1690,14 @@ export class Adapter {
       pageableMethod.strategy = this.adaptPageableMethodStrategy(method, paramsMap, responseHeadersMap);
       if (pageableMethod.strategy?.kind === 'nextLink') {
         pageableMethod.strategy.reinjectedParams = this.adaptPageableMethodReinjectionParams(method, paramsMap);
+      } else if (pageableMethod.strategy?.kind === 'continuationToken') {
+        // set the continuation type to token on the Pager and the PagerOptions field in the method options
+        pageableMethod.returns.type.continuation = 'token';
+        for (const field of pageableMethod.options.type.fields) {
+          if (field.type.kind === 'pagerOptions') {
+            field.type.continuation = 'token';
+          }
+        }
       }
     }
   }

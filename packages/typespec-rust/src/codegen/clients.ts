@@ -349,7 +349,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
         for (const field of method.options.type.fields) {
-          if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions' || field.type.name === 'PollerOptions')) {
+          if (field.type.kind === 'clientMethodOptions' || field.type.kind === 'pagerOptions' || field.type.kind === 'pollerOptions') {
             body += `${indent.get()}${field.name}: ${field.type.name} {\n`;
             body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
             body += `${indent.get()}..self.${field.name}\n`;
@@ -1267,7 +1267,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     switch (method.strategy.kind) {
       case 'continuationToken': {
         const reqTokenParam = method.strategy.requestToken.name;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>, pager_options| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::new(move |${reqTokenParam}: PagerState<String>, pager_options| {\n`;
         body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
         if (method.strategy.requestToken.kind === 'queryScalar') {
           // if the url already contains the token query param,
@@ -1290,7 +1290,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       case 'nextLink': {
         const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         const reinjectedParams = method.strategy.reinjectedParams;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>, pager_options| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::new(move |${nextLinkName}: PagerState<Url>, pager_options| {\n`;
         body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
           pattern: `PagerState::More(${nextLinkName})`,
           body: (indent) => {
@@ -1336,7 +1336,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   } else {
     // no next link when there's no strategy
-    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>, pager_options| {\n`;
+    body += `${indent.get()}Ok(${method.returns.type.name}::new(move |_: PagerState<Url>, pager_options| {\n`;
     indent.push();
     cloneUrl = true;
     srcUrlVar = urlVar;
@@ -1357,7 +1357,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   const requestResult = constructRequest(indent, use, method, paramGroups, true, srcUrlVar, cloneUrl);
   body += requestResult.content;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
-  body += `${indent.get()}async move {\n`;
+  body += `${indent.get()}Box::pin(async move {\n`;
   body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&pager_options.context, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
@@ -1436,9 +1436,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}Ok(PagerResult::Done { response: rsp.into() })\n`;
   }
 
-  body += `${indent.pop().get()}}\n`; // end async move
-  body += `${indent.get()}},\n${indent.get()}Some(options.method_options),\n`; // end move
-  body += `${indent.pop().get()}))`; // end Ok/Pager::from_callback
+  body += `${indent.pop().get()}})\n`; // end Box::pin(async move {
+  body += `${indent.get()}},\n${indent.get()}Some(options.method_options),\n`; // end move {
+  body += `${indent.pop().get()}))`; // end Ok(Pager::new(
 
   return body;
 }

@@ -326,7 +326,7 @@ impl ResourcesExtensionsResourcesClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
@@ -341,7 +341,7 @@ impl ResourcesExtensionsResourcesClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -364,7 +364,7 @@ impl ResourcesExtensionsResourcesClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))

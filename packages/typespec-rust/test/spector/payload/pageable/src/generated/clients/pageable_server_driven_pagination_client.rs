@@ -57,7 +57,7 @@ impl PageableServerDrivenPaginationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link");
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |next: PagerState<Url>, pager_options| {
                 let url = match next {
                     PagerState::More(next) => next,
@@ -66,7 +66,7 @@ impl PageableServerDrivenPaginationClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -89,7 +89,7 @@ impl PageableServerDrivenPaginationClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -108,7 +108,7 @@ impl PageableServerDrivenPaginationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link-string");
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |next: PagerState<Url>, pager_options| {
                 let url = match next {
                     PagerState::More(next) => next,
@@ -117,7 +117,7 @@ impl PageableServerDrivenPaginationClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -140,7 +140,7 @@ impl PageableServerDrivenPaginationClient {
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -159,7 +159,7 @@ impl PageableServerDrivenPaginationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/nested-link");
-        Ok(Pager::from_callback(
+        Ok(Pager::new(
             move |next: PagerState<Url>, pager_options| {
                 let url = match next {
                     PagerState::More(next) => next,
@@ -168,7 +168,7 @@ impl PageableServerDrivenPaginationClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &pager_options.context,
@@ -193,7 +193,7 @@ impl PageableServerDrivenPaginationClient {
                             _ => PagerResult::Done { response: rsp },
                         },
                     )
-                }
+                })
             },
             Some(options.method_options),
         ))

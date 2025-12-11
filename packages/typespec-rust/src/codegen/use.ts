@@ -116,6 +116,14 @@ export class Use {
       case 'Vec':
         this.addForType(type.type);
         break;
+      case 'pager':
+        if (type.continuation !== 'nextLink') {
+          // continuation token strategy will require the C
+          // type param in Pager<'a, F, C> so we must bring
+          // the format type into scope
+          this.add('azure_core::http', type.type.format);
+        }
+        break;
       case 'payload':
         this.addForType(type.type);
         break;
