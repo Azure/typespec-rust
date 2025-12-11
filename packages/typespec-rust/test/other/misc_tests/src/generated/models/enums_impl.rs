@@ -55,6 +55,7 @@ impl Display for Colors {
     }
 }
 
+#[allow(unknown_lints)]
 #[allow(clippy::infallible_try_from)]
 impl TryFrom<i32> for Indices {
     type Error = Infallible;

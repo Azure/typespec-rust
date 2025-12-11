@@ -286,7 +286,7 @@ function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, ru
  * @returns the trait impls text
  */
 function emitNumericEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
-  let body = rustEnum.extensible ? '#[allow(clippy::infallible_try_from)]\n' : '';
+  let body = rustEnum.extensible ? '#[allow(unknown_lints)]\n#[allow(clippy::infallible_try_from)]\n' : '';
   body += `impl TryFrom<${rustEnum.type}> for ${rustEnum.name} {\n`;
   if (rustEnum.extensible) {
     use.add('std', 'convert::Infallible');
