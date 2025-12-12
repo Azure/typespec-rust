@@ -152,7 +152,7 @@ const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration/client.tsp';
 generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
 
 const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrets/client.tsp';
-generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets');
+generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets', ['omit-constructors=true']);
 
 const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
 generate('blob_storage', blob_storage, 'test/sdk/blob_storage', ['temp-omit-doc-links=true']);
