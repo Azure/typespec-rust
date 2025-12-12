@@ -1,5 +1,11 @@
 # Release History
 
+## 0.33.0 (Unreleased)
+
+### Bugs Fixed
+
+* Emitting a `Default` implementation for some omitted options types
+
 ## 0.32.0 (2025-12-11)
 
 ### Breaking Changes

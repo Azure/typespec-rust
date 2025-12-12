@@ -39,7 +39,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   const clientOptionsImplDefault = function (constructable: rust.ClientConstruction): boolean {
     // only implement Default when there's more than one field (i.e. more than just client_options)
     // and the field(s) contain a client default value.
-    return constructable.options.type.fields.length > 1 && values(constructable.options.type.fields)
+    return !constructable.suppressed && constructable.options.type.fields.length > 1 && values(constructable.options.type.fields)
       .where((field) => field.name !== 'client_options')
       .where((field) => field.defaultValue !== undefined).any();
   };
