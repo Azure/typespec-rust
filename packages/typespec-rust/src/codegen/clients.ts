@@ -1103,7 +1103,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 
       let initializer = partialBodyParam.name;
       if (inClosure) {
-        initializer = initializer + '.clone()'
+        initializer = initializer + '.clone()';
       }
       if (requestContentType.content.type.visibility === 'pub') {
         // spread param maps to a non-internal model, so it must be wrapped in Some()
