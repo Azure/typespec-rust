@@ -1060,7 +1060,9 @@ export class Adapter {
                 const adaptedParam = new rust.ClientEndpointParameter(endpointName);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
-                rustClient.fields.push(new rust.StructField(endpointName, 'pubCrate', new rust.Url(this.crate)));
+                const endpointField = new rust.StructField(endpointName, 'pubCrate', new rust.Url(this.crate));
+                rustClient.endpoint = endpointField;
+                rustClient.fields.push(endpointField);
 
                 // if the server's URL is *only* the endpoint parameter then we're done.
                 // this is the param.type.kind === 'endpoint' case.
@@ -1112,6 +1114,7 @@ export class Adapter {
       // this is a sub-client. it will share some/all the fields of the parent.
       // NOTE: we must propagate parent params before a potential recursive call
       // to create a child client that will need to inherit our client params.
+      rustClient.endpoint = parent.endpoint;
       for (const prop of client.clientInitialization.parameters) {
         const name = snakeCaseName(prop.name);
         const parentField = parent.fields.find((v) => v.name === name);

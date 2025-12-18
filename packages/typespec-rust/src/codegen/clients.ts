@@ -191,7 +191,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     // we don't model this as the implementation isn't dynamic.
     body += `${indent.get()}/// Returns the Url associated with this client.\n`;
     body += `${indent.get()}pub fn endpoint(&self) -> &Url {\n`;
-    body += `${indent.push().get()}&self.${getEndpointFieldName(client)}\n`;
+    body += `${indent.push().get()}&self.${client.endpoint.name}\n`;
     body += `${indent.pop().get()}}\n\n`;
 
     for (let i = 0; i < client.methods.length; ++i) {
@@ -599,30 +599,6 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Parameter | rust
     format += param.name;
   }
   return format;
-}
-
-/**
- * returns the name of the endpoint field within the client
- * 
- * @param client the client in which to find the endpoint field
- * @returns the name of the endpoint field
- */
-function getEndpointFieldName(client: rust.Client): string {
-  // find the endpoint field. it's the only one that's
-  // a Url. the name will be uniform across clients
-  let endpointFieldName: string | undefined;
-  for (const field of client.fields) {
-    if (field.type.kind === 'Url') {
-      if (endpointFieldName) {
-        throw new CodegenError('InternalError', `found multiple URL fields in client ${client.name} which is unexpected`);
-      }
-      endpointFieldName = field.name;
-    }
-  }
-  if (!endpointFieldName) {
-    throw new CodegenError('InternalError', `didn't find URI field for client ${client.name}`);
-  }
-  return endpointFieldName;
 }
 
 /**
@@ -1205,7 +1181,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let ctx = options.method_options.context.to_borrowed();\n`;
-  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVarName} = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVarName} = self.${client.endpoint.name}.clone();\n`;
 
   body += constructUrl(indent, use, method, paramGroups, urlVarName);
   const requestResult = constructRequest(indent, use, method, paramGroups, false, urlVarName);
@@ -1247,7 +1223,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
-  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
 
   // passed to constructRequest. we only need to
@@ -1479,7 +1455,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
-  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
     body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true, true)}.clone();\n`;

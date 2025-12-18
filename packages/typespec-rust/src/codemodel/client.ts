@@ -23,6 +23,13 @@ export interface Client {
   constructable?: ClientConstruction;
 
   /**
+   * contains the endpoint field. this is a convenient way to
+   * access the the endpoint field instead of searching through
+   * the fields array (i.e. heuristics).
+   */
+  endpoint: types.StructField;
+
+  /**
    * fields contains the ctor parameters that are
    * persisted as fields on the client type and might
    * also contain other fields that don't originate
