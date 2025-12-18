@@ -254,8 +254,8 @@ impl NIClient {
                             b: options.b.clone(),
                         }
                         .try_into();
-                        if !body.is_err() {
-                            request.set_body(body.unwrap());
+                        if let Ok(body) = body {
+                            request.set_body(body);
                         }
                         (request, url.clone())
                     }

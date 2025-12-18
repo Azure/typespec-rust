@@ -1119,7 +1119,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     }
     if (inClosure) {
       body +=`${indent.pop().get()}}.try_into();\n`
-      body += `${indent.get()}if !body.is_err() { ${requestVarName}.set_body(body.unwrap()); }\n`;
+      body += `${indent.get()}if let Ok(body) = body { ${requestVarName}.set_body(body); }\n`;
     } else {
       body += `${indent.pop().get()}}.try_into()?;\n`;
       body += `${indent.get()}${requestVarName}.set_body(body);\n`;
