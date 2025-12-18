@@ -33,3 +33,25 @@ impl NIClientIncorrectCustomOpRefOptions<'_> {
         }
     }
 }
+
+/// Options to be passed to [`NIClient::partial_body()`](crate::generated::clients::NIClient::partial_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct NIClientPartialBodyOptions<'a> {
+    pub b: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl NIClientPartialBodyOptions<'_> {
+    /// Transforms this [`NIClientPartialBodyOptions`] into a new `NIClientPartialBodyOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> NIClientPartialBodyOptions<'static> {
+        NIClientPartialBodyOptions {
+            b: self.b,
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
