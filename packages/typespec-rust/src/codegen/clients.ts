@@ -1118,7 +1118,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       body += `${indent.get()}${initializer},\n`;
     }
     if (inClosure) {
-      body +=`${indent.pop().get()}}.try_into();\n`
+      body += `${indent.pop().get()}}.try_into();\n`
       body += `${indent.get()}if let Ok(body) = body { ${requestVarName}.set_body(body); }\n`;
     } else {
       body += `${indent.pop().get()}}.try_into()?;\n`;
