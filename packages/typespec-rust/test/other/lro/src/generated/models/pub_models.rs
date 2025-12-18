@@ -19,6 +19,16 @@ pub struct NIClientIncorrectCustomOpRefOperationStatus {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+pub struct NIClientPartialBodyOperationStatus {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub a: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<S>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct X {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,

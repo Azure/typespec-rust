@@ -27,6 +27,10 @@ model X {
   status: S;
 }
 
+model Y {
+  b?: string;
+}
+
 alias r = ResourceOperations<NoClientRequestId & NoConditionalRequests & NoRepeatableRequests, Foundations.ErrorResponse>;
 
 interface I {
@@ -40,6 +44,15 @@ interface I {
       @path
       a: string;
     },
+    AcceptedResponse,
+    {},
+    Foundations.ErrorResponse
+  >;
+
+  @route("/lro/partial-body")
+  @pollingOperation(I.getStatus)
+  op partialBody is Foundations.LongRunningOperation<
+    Y,
     AcceptedResponse,
     {},
     Foundations.ErrorResponse

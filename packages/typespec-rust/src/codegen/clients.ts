@@ -490,7 +490,7 @@ function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): { count:
 
       // don't add client or optional params to the method param sig
       if (param.location === 'method' && !param.optional) {
-        use.addForType(param.type);
+        use.addForType(param.kind === 'partialBody' ? param.paramType : param.type);
         paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
         ++count;
       }
@@ -1085,7 +1085,11 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     // all partial body params should point to the same underlying model type.
     const requestContentType = paramGroups.partialBody[0].type;
     use.addForType(requestContentType);
-    body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.content.type.name} {\n`;
+    if (inClosure) {
+      body += `${indent.get()}let body: Result<${helpers.getTypeDeclaration(requestContentType)}> = ${requestContentType.content.type.name} {\n`;
+    } else {
+      body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.content.type.name} {\n`;
+    }
     indent.push();
     for (const partialBodyParam of paramGroups.partialBody) {
       if (partialBodyParam.type.content.type !== requestContentType.content.type) {
@@ -1093,11 +1097,14 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       }
 
       if (partialBodyParam.optional) {
-        body += `${indent.get()}${partialBodyParam.name}: options.${partialBodyParam.name},\n`;
+        body += `${indent.get()}${partialBodyParam.name}: options.${partialBodyParam.name}${inClosure ? '.clone()' : ''},\n`;
         continue;
       }
 
       let initializer = partialBodyParam.name;
+      if (inClosure) {
+        initializer = initializer + '.clone()';
+      }
       if (requestContentType.content.type.visibility === 'pub') {
         // spread param maps to a non-internal model, so it must be wrapped in Some()
         initializer = `Some(${initializer})`;
@@ -1110,8 +1117,13 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 
       body += `${indent.get()}${initializer},\n`;
     }
-    body += `${indent.pop().get()}}.try_into()?;\n`;
-    body += `${indent.get()}${requestVarName}.set_body(body);\n`;
+    if (inClosure) {
+      body += `${indent.pop().get()}}.try_into();\n`;
+      body += `${indent.get()}if let Ok(body) = body { ${requestVarName}.set_body(body); }\n`;
+    } else {
+      body += `${indent.pop().get()}}.try_into()?;\n`;
+      body += `${indent.get()}${requestVarName}.set_body(body);\n`;
+    }
   }
 
   return {
