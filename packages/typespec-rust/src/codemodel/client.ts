@@ -24,7 +24,7 @@ export interface Client {
 
   /**
    * contains the endpoint field. this is a convenient way to
-   * access the the endpoint field instead of searching through
+   * access the endpoint field instead of searching through
    * the fields array (i.e. heuristics).
    */
   endpoint: types.StructField;
