@@ -1097,7 +1097,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       }
 
       if (partialBodyParam.optional) {
-        body += `${indent.get()}${partialBodyParam.name}: options.${partialBodyParam.name}${inClosure ? '.clone()': ''},\n`;
+        body += `${indent.get()}${partialBodyParam.name}: options.${partialBodyParam.name}${inClosure ? '.clone()' : ''},\n`;
         continue;
       }
 
