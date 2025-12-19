@@ -600,7 +600,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
 
     const optional = field.optional ? 'optional_' : '';
     const typeName = literal.valueKind.kind === 'scalar' ? literal.valueKind.type : literal.valueKind.kind.toLowerCase();
-    const name = `serialize_${optional}${typeName}_literal_${literalValueName}`;
+    const name = `serialize_${optional}${typeName}_literal_${literalValueName}`.replace(/_+/g, '_');
     serdeParams.add(`serialize_with = "models_serde::${name}"`);
 
     // we can reuse identical helpers
