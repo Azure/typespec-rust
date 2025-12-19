@@ -767,7 +767,7 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string, optionsPrefix: string = 'options.'): string {
   if (param.optional && param.type.kind !== 'literal') {
-    let asRefOrClone = '';
+    let asRefOrClone = ''; // Empty value is ok as well, depending on what is needed.
     if (param.type.kind === 'requestContent') {
       asRefOrClone = '.clone()';
     } else if (nonCopyableType(param.type) || isEnumString(param.type)) {
