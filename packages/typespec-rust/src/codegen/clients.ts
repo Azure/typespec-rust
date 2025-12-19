@@ -743,10 +743,15 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string, optionsPrefix: string = 'options.'): string {
   if (param.optional && param.type.kind !== 'literal') {
-    const asRef = nonCopyableType(param.type) || isEnumString(param.type) ? '.as_ref()' : '';
+    let asRefOrClone = ''; // Empty value is ok as well, depending on what is needed.
+    if (param.type.kind === 'requestContent') {
+      asRefOrClone = '.clone()';
+    } else if (nonCopyableType(param.type) || isEnumString(param.type)) {
+      asRefOrClone = '.as_ref()';
+    }
     // optional params are in the unwrapped options local var
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${param.location === 'client' ? 'self.' : optionsPrefix}${param.name}${asRef}`,
+      condition: `let Some(${param.name}) = ${param.location === 'client' ? 'self.' : optionsPrefix}${param.name}${asRefOrClone}`,
       body: setter,
     });
     return op + '\n';

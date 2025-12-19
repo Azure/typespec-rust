@@ -1966,7 +1966,7 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(entity) = options.entity {
+        if let Some(entity) = options.entity.clone() {
             request.set_body(entity);
         }
         let rsp = self
