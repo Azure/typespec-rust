@@ -123,7 +123,7 @@ impl OperationTemplatesOptionalBodyClient {
         query_builder.build();
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
-        if let Some(properties) = options.properties {
+        if let Some(properties) = options.properties.clone() {
             request.insert_header("content-type", "application/json");
             request.set_body(properties);
         }
@@ -182,7 +182,7 @@ impl OperationTemplatesOptionalBodyClient {
         query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        if let Some(body) = options.body {
+        if let Some(body) = options.body.clone() {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
@@ -222,7 +222,7 @@ impl OperationTemplatesOptionalBodyClient {
         query_builder.build();
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        if let Some(body) = options.body {
+        if let Some(body) = options.body.clone() {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }

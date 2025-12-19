@@ -39,7 +39,7 @@ impl BodyOptionalityOptionalExplicitClient {
         let mut url = self.endpoint.clone();
         url.append_path("/parameters/body-optionality/optional-explicit/omit");
         let mut request = Request::new(url, Method::Post);
-        if let Some(body) = options.body {
+        if let Some(body) = options.body.clone() {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
@@ -73,7 +73,7 @@ impl BodyOptionalityOptionalExplicitClient {
         let mut url = self.endpoint.clone();
         url.append_path("/parameters/body-optionality/optional-explicit/set");
         let mut request = Request::new(url, Method::Post);
-        if let Some(body) = options.body {
+        if let Some(body) = options.body.clone() {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }

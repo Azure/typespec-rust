@@ -121,7 +121,7 @@ impl JsonMergePatchClient {
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
-        if let Some(body) = options.body {
+        if let Some(body) = options.body.clone() {
             request.set_body(body);
         }
         let rsp = self
