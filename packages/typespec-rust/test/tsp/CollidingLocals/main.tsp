@@ -4,6 +4,27 @@ import "@typespec/http";
 using Azure.ClientGenerator.Core;
 using Http;
 
+@useAuth(
+  [
+    OAuth2Auth<[
+      {
+        type: OAuth2FlowType.implicit,
+        description: "We can use OAuth2 Implicit flow to get the auth token for calling the APIs.",
+        authorizationUrl: "https://login.microsoftonline.com/common/oauth2/authorize",
+        scopes: ["https://contoso.com/.default"],
+      }
+    ]>,
+    OAuth2Auth<[
+      {
+        type: OAuth2FlowType.authorizationCode,
+        description: "We can use OAuth2 Authorization Code flow to get the auth token for calling the APIs.",
+        authorizationUrl: "https://login.microsoftonline.com/common/oauth2/authorize",
+        tokenUrl: "https://login.microsoftonline.com/common/v2.0/oauth2/token",
+        scopes: ["https://contoso.com/.default"],
+      }
+    ]>
+  ]
+)
 @server(
   "{bogusUrl}",
   "Customized host name for a service that doesn't exist.",

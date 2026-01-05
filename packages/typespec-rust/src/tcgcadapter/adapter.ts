@@ -999,7 +999,11 @@ export class Adapter {
           case 'noAuth':
             return AuthTypes.NoAuth;
           case 'oauth2': {
-            constructable.constructors.push(this.createTokenCredentialCtor(rustClient, cred));
+            if ((authType & AuthTypes.WithAuth) === 0) {
+              // tsp can desciribe multiple oauth2 credentials in a union.
+              // we only need to emit one ctor for oauth2 creds.
+              constructable.constructors.push(this.createTokenCredentialCtor(rustClient, cred));
+            }
             return AuthTypes.WithAuth;
           }
           default:

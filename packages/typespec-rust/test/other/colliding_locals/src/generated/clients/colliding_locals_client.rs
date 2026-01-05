@@ -13,15 +13,18 @@ use crate::generated::models::{
     CollidingLocalsClientListWithCollisionsPagesOptions, WidgetPage, WidgetPages,
 };
 use azure_core::{
+    credentials::TokenCredential,
     error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
         pager::{PagerResult, PagerState},
+        policies::{auth::BearerTokenAuthorizationPolicy, Policy},
         ClientOptions, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse,
         Request, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
+use std::sync::Arc;
 
 #[tracing::client]
 pub struct CollidingLocalsClient {
@@ -37,15 +40,18 @@ pub struct CollidingLocalsClientOptions {
 }
 
 impl CollidingLocalsClient {
-    /// Creates a new CollidingLocalsClient requiring no authentication.
+    /// Creates a new CollidingLocalsClient, using Entra ID authentication.
     ///
     /// # Arguments
     ///
     /// * `bogus_url` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("CollidingLocals")]
-    pub fn with_no_credential(
+    pub fn new(
         bogus_url: &str,
+        credential: Arc<dyn TokenCredential>,
         options: Option<CollidingLocalsClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
@@ -56,6 +62,10 @@ impl CollidingLocalsClient {
                 format!("{bogus_url} must use http(s)"),
             ));
         }
+        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(
+            credential,
+            vec!["https://contoso.com/.default"],
+        ));
         Ok(Self {
             bogus_url,
             pipeline: Pipeline::new(
@@ -63,7 +73,7 @@ impl CollidingLocalsClient {
                 option_env!("CARGO_PKG_VERSION"),
                 options.client_options,
                 Vec::default(),
-                Vec::default(),
+                vec![auth_policy],
                 None,
             ),
         })
