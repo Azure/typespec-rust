@@ -37,6 +37,9 @@ model Widget {
 @route("/colliding/{request}")
 op collidesWithRequest(@path request: string): NoContentResponse;
 
+@route("/colliding/optional/request")
+op collidesWithOptionalRequest(@body request?: Widget): NoContentResponse;
+
 @route("/colliding/{request}/{coreReq}")
 op collidesWithCoreReq(@path request: string, @path coreReq: string): NoContentResponse;
 

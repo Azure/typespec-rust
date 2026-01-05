@@ -6,6 +6,7 @@
 use crate::generated::models::{
     CollidingLocalsClientCollidesWithCoreReqOptions,
     CollidingLocalsClientCollidesWithEverythingOptions,
+    CollidingLocalsClientCollidesWithOptionalRequestOptions,
     CollidingLocalsClientCollidesWithPathAndUrlOptions,
     CollidingLocalsClientCollidesWithRequestOptions,
     CollidingLocalsClientListWithCollisionsPageOptions,
@@ -172,6 +173,40 @@ impl CollidingLocalsClient {
             .send(
                 &ctx,
                 &mut core_req_0,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("CollidingLocals.collidesWithOptionalRequest")]
+    pub async fn collides_with_optional_request(
+        &self,
+        options: Option<CollidingLocalsClientCollidesWithOptionalRequestOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.bogus_url.clone();
+        url.append_path("/colliding/optional/request");
+        let mut core_req = Request::new(url, Method::Post);
+        if let Some(request) = options.request.clone() {
+            core_req.insert_header("content-type", "application/json");
+            core_req.set_body(request);
+        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut core_req,
                 Some(PipelineSendOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[204],

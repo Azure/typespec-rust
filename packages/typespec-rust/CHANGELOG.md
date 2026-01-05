@@ -5,6 +5,7 @@
 ### Bugs Fixed
 
 * Omit a `Default` implementation for omitted client options types.
+* Fixed another case of colliding locals.
 
 ## 0.32.0 (2025-12-11)
 

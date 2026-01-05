@@ -597,7 +597,8 @@ export function getUniqueVarName(params: Array<rust.MethodParameter>, candidates
 
     let collides = false;
     for (const param of params) {
-      if (!param.optional && param.name === candidate) {
+      // we include optional params since we will "if let Some(param.name)" them
+      if (param.name === candidate) {
         collides = true;
         break;
       }

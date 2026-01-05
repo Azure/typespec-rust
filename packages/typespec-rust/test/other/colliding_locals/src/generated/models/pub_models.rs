@@ -7,7 +7,6 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
 pub struct Widget {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub weight: Option<i32>,

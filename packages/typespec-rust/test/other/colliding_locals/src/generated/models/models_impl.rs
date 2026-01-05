@@ -5,7 +5,11 @@
 
 use super::{Widget, WidgetPage, WidgetPages};
 use async_trait::async_trait;
-use azure_core::{http::pager::Page, Result};
+use azure_core::{
+    http::{pager::Page, RequestContent},
+    json::to_json,
+    Result,
+};
 
 #[cfg_attr(not(target_arch = "wasm32"), async_trait)]
 #[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
@@ -24,5 +28,12 @@ impl Page for WidgetPages {
     type IntoIter = <Vec<Widget> as IntoIterator>::IntoIter;
     async fn into_items(self) -> Result<Self::IntoIter> {
         Ok(self.values.into_iter())
+    }
+}
+
+impl TryFrom<Widget> for RequestContent<Widget> {
+    type Error = azure_core::Error;
+    fn try_from(value: Widget) -> Result<Self> {
+        Ok(to_json(&value)?.into())
     }
 }
