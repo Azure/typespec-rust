@@ -980,7 +980,8 @@ export class Adapter {
       enum AuthTypes {
         Default = 0, // unspecified
         NoAuth = 1, // explicit NoAuth
-        WithAuth = 2, // explicit credential
+        OAuth2 = 2, // explicit OAuth2
+        WithAuth = 4, // explicit, unsupported credential
       }
 
       let authType = AuthTypes.Default;
@@ -999,13 +1000,13 @@ export class Adapter {
           case 'noAuth':
             return AuthTypes.NoAuth;
           case 'oauth2': {
-            if ((authType & AuthTypes.WithAuth) === 0) {
+            if ((authType & AuthTypes.OAuth2) === 0) {
               // tsp can describe multiple oauth2 credential flow in a union.
               // since each flow is implicitly handled via the credential, we
               // only need to emit one ctor for the oauth2 type.
               constructable.constructors.push(this.createTokenCredentialCtor(rustClient, cred));
             }
-            return AuthTypes.WithAuth;
+            return AuthTypes.OAuth2;
           }
           default:
             this.ctx.program.reportDiagnostic({
@@ -1027,9 +1028,7 @@ export class Adapter {
                 authType |= processCredential(rustClient, param, param.type.scheme, rustClient.constructable);
                 break;
               case 'union': {
-                const variantKinds = new Array<string>();
                 for (const variantType of param.type.variantTypes) {
-                  variantKinds.push(variantType.scheme.type);
                   // if OAuth2 is specified then emit that and skip any unsupported ones.
                   // this prevents emitting the with_no_credential constructor in cases
                   // where it might not actually be supported.
