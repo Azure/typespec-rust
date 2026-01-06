@@ -8,8 +8,13 @@ trigger:
 pr: none
 
 variables:
+  - template: /eng/pipelines/templates/variables/image.yml
   - name: TypeSpecRustPkgDir
     value: $(System.DefaultWorkingDirectory)/packages/typespec-rust
+
+pool:
+  name: $(LINUXPOOL)
+  demands: ImageOverride -equals $(LINUXVMIMAGE)
 
 steps:
   - template: /eng/pipelines/templates/steps/set-env.yaml
