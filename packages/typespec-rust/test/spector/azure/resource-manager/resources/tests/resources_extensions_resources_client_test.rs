@@ -18,14 +18,12 @@ use spector_armresources::models::{
 };
 use time::{Date, Month, Time};
 
-const TENANT: &str = "";
+const TENANT: &str = "/";
 const SUBSCRIPTION: &str = "/subscriptions/00000000-0000-0000-0000-000000000000";
 const RESOURCE_GROUP: &str =
     "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg";
 const RESOURCE: &str = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/top";
 
-// TODO: https://github.com/Azure/typespec-azure/issues/2764
-#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn delete_by_tenant() {
     let client = common::create_client();
@@ -78,8 +76,6 @@ async fn delete_by_resource() {
     assert!(resp.status().is_success());
 }
 
-// TODO: https://github.com/Azure/typespec-azure/issues/2764
-#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn get_by_tenant() {
     let client = common::create_client();
@@ -90,7 +86,7 @@ async fn get_by_tenant() {
         .unwrap();
 
     let resource: ExtensionsResource = resp.into_model().unwrap();
-    let expected_resource = get_extension_resource(TENANT);
+    let expected_resource = get_extension_resource("");
 
     assert_eq!(expected_resource.id, resource.id);
     assert_eq!(expected_resource.name, resource.name);
@@ -248,8 +244,6 @@ async fn get_by_resource() {
     );
 }
 
-// TODO: https://github.com/Azure/typespec-azure/issues/2764
-#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn list_by_scope_tenant() {
     let client = common::create_client();
@@ -263,7 +257,7 @@ async fn list_by_scope_tenant() {
         let item = item.unwrap();
         match item_count {
             1 => {
-                let expected_resource = get_extension_resource(TENANT);
+                let expected_resource = get_extension_resource("");
 
                 assert_eq!(expected_resource.id, item.id);
                 assert_eq!(expected_resource.name, item.name);
@@ -299,8 +293,6 @@ async fn list_by_scope_tenant() {
     }
 }
 
-// TODO: https://github.com/Azure/typespec-azure/issues/2764
-#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn list_by_scope_tenant_pages() {
     let client = common::create_client();
@@ -318,7 +310,7 @@ async fn list_by_scope_tenant_pages() {
             1 => {
                 assert_eq!(resources.value.len(), 1);
                 let resource = resources.value[0].clone();
-                let expected_resource = get_extension_resource(TENANT);
+                let expected_resource = get_extension_resource("");
 
                 assert_eq!(expected_resource.id, resource.id);
                 assert_eq!(expected_resource.name, resource.name);
@@ -660,8 +652,6 @@ async fn list_by_scope_resource_pages() {
     }
 }
 
-// TODO: https://github.com/Azure/typespec-azure/issues/2764
-#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn update_by_tenant() {
     let resource = ExtensionsResource {
@@ -680,7 +670,7 @@ async fn update_by_tenant() {
         .unwrap();
 
     let created_resource: ExtensionsResource = resp.into_model().unwrap();
-    let expected_resource = get_extension_resource(TENANT);
+    let expected_resource = get_extension_resource("");
 
     assert_eq!(expected_resource.id, created_resource.id);
     assert_eq!(expected_resource.name, created_resource.name);
