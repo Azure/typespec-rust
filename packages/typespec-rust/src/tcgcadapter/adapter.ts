@@ -2277,6 +2277,8 @@ export class Adapter {
       // XML support is disabled by default
       this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
       return 'xml';
+    } else if (contentType.match(/text\/plain/i)) {
+      return 'text';
     } else {
       throw new AdapterError('InternalError', `unexpected contentType ${contentType}`);
     }

@@ -2,6 +2,10 @@
 
 ## 0.33.0 (Unreleased)
 
+### Features Added
+
+* Added support for `text/plain` request and response bodies.
+
 ### Bugs Fixed
 
 * Omit a `Default` implementation for omitted client options types.

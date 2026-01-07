@@ -377,7 +377,7 @@ export interface PollerOptions extends External {
 }
 
 /** PayloadFormat indicates the wire format for request bodies */
-export type PayloadFormat = 'json' | 'xml';
+export type PayloadFormat = 'json' | 'text' | 'xml';
 
 /**
  * Payload<T> is used for operations that send a typed payload.

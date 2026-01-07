@@ -71,7 +71,7 @@ export class Context {
 
         for (const param of method.params) {
           if (param.kind === 'body' || param.kind === 'partialBody') {
-            if (param.type.content.kind === 'bytes') {
+            if (param.type.content.kind === 'bytes' || param.type.content.format === 'text') {
               // no body format to propagate
               continue;
             }
