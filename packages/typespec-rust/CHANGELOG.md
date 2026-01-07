@@ -8,6 +8,10 @@
 * Fixed another case of colliding locals.
 * Only emit one constructor for `oauth2` when multiple flows are described.
 
+### Other Changes
+
+* Enum values that coalesce into the same name no longer cause an error. The names will be flagged for improvement and diagnostics emitted.
+
 ## 0.32.0 (2025-12-11)
 
 ### Breaking Changes

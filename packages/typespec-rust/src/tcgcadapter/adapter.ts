@@ -240,17 +240,43 @@ export class Adapter {
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
-    const rustEnumNameToSdkEnumName = new Map<string, string>();
+    // the first pass is to detect any enum values that coalesce into duplicate entries
+    const rustEnumNameToSdkEnumName = new Map<string, Array<tcgc.SdkEnumValueType>>();
     for (const value of sdkEnum.values) {
       const enumValueName = naming.fixUpEnumValueName(value);
-      const existingMapping = rustEnumNameToSdkEnumName.get(enumValueName);
-      if (existingMapping) {
-        throw new AdapterError('NameCollision', `enum values ${value.name} and ${existingMapping} coalesce into the same name ${enumValueName}`, sdkEnum.__raw?.node);
+      let existingMapping = rustEnumNameToSdkEnumName.get(enumValueName);
+      if (!existingMapping) {
+        existingMapping = new Array<tcgc.SdkEnumValueType>();
+        rustEnumNameToSdkEnumName.set(enumValueName, existingMapping);
       }
-      rustEnumNameToSdkEnumName.set(enumValueName, value.name);
-      const rustEnumValue = new rust.EnumValue(enumValueName, rustEnum, value.value);
-      rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
-      rustEnum.values.push(rustEnumValue);
+      existingMapping.push(value);
+    }
+
+    // now adapt the values, renaming any collisions as required and reporting diagnostics
+    let groupCounter = 1;
+    for (const entry of rustEnumNameToSdkEnumName.entries()) {
+      const enumValueName = entry[0];
+      const enumValues = entry[1];
+      if (enumValues.length === 1) {
+        const rustEnumValue = new rust.EnumValue(enumValueName, rustEnum, enumValues[0].value);
+        rustEnumValue.docs = this.adaptDocs(enumValues[0].summary, enumValues[0].doc);
+        rustEnum.values.push(rustEnumValue);
+      } else {
+        this.ctx.program.reportDiagnostic({
+          code: 'NameCollision',
+          severity: 'warning',
+          message: `enum values ${enumValues.map((each) => `"${each.value}"`).join(', ')} coalesce into the same name ${enumValueName}`,
+          target: sdkEnum.__raw?.node ?? tsp.NoTarget,
+        });
+        for (let i = 0; i < enumValues.length; ++i) {
+          const ennumValue = enumValues[i];
+          const collidingEnumValueName = `COLLIDES_GRP${groupCounter}_ID${i+1}_${enumValueName}`;
+          const rustEnumValue = new rust.EnumValue(collidingEnumValueName, rustEnum, ennumValue.value);
+          rustEnumValue.docs = this.adaptDocs(ennumValue.summary, ennumValue.doc);
+          rustEnum.values.push(rustEnumValue);
+        }
+        ++groupCounter;
+      }
     }
 
     return rustEnum;

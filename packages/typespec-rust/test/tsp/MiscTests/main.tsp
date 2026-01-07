@@ -71,11 +71,23 @@ union Indices {
   three: 3,
 }
 
+union HasCollidingNames {
+  "application/json",
+  "application/*+json",
+  "application/xml",
+  "application/*xml",
+  "application/*+xml",
+  "text/plain",
+};
+
 @@access(LiteralWithInvalidChar, Access.public);
 @@usage(LiteralWithInvalidChar, Usage.output);
 
 @@access(`Contains.Invalid.Chars`, Access.public);
 @@usage(`Contains.Invalid.Chars`, Usage.output);
+
+@@access(HasCollidingNames, Access.public);
+@@usage(HasCollidingNames, Usage.output);
 
 @route("/colliding-options-param")
 op collidingOptionsParam(@header("options") options: string): void;
