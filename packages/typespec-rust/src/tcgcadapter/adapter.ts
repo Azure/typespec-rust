@@ -269,10 +269,10 @@ export class Adapter {
           target: sdkEnum.__raw?.node ?? tsp.NoTarget,
         });
         for (let i = 0; i < enumValues.length; ++i) {
-          const ennumValue = enumValues[i];
-          const collidingEnumValueName = `COLLIDES_GRP${groupCounter}_ID${i+1}_${enumValueName}`;
-          const rustEnumValue = new rust.EnumValue(collidingEnumValueName, rustEnum, ennumValue.value);
-          rustEnumValue.docs = this.adaptDocs(ennumValue.summary, ennumValue.doc);
+          const enumValue = enumValues[i];
+          const collidingEnumValueName = `COLLIDES_GRP${groupCounter}_ID${i + 1}_${enumValueName}`;
+          const rustEnumValue = new rust.EnumValue(collidingEnumValueName, rustEnum, enumValue.value);
+          rustEnumValue.docs = this.adaptDocs(enumValue.summary, enumValue.doc);
           rustEnum.values.push(rustEnumValue);
         }
         ++groupCounter;
