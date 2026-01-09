@@ -544,11 +544,25 @@ export class Adapter {
    * @returns a Rust model field
    */
   private getModelField(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<string>): rust.ModelField {
-    let fieldType = this.getType(property.type, stack);
+    const fieldNeedsBoxing = function(fieldType: rust.Type): fieldType is rust.WireType {
+      if (fieldType.kind === 'model' && stack.includes(fieldType.name)) {
+        // if the field's type is a model and it's in the type stack then
+        // box it. this is to avoid infinitely recursive type definitions.
+        return true;
+      } else if (fieldType.kind === 'discriminatedUnion') {
+        // if the field is a discriminated union whose type
+        // is part of the same union then box it.
+        for (const member of fieldType.members) {
+          if (stack.includes(member.type.name)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
 
-    // if the field's type is a model and it's in the type stack then
-    // box it. this is to avoid infinitely recursive type definitions.
-    if (fieldType.kind === 'model' && stack.includes(fieldType.name)) {
+    let fieldType = this.getType(property.type, stack);
+    if (fieldNeedsBoxing(fieldType)) {
       fieldType = this.getBoxType(fieldType);
     }
 
@@ -675,6 +689,8 @@ export class Adapter {
       case 'model':
         if (type.external) {
           return this.getExternalType(type.external);
+        } else if (type.discriminatedSubtypes) {
+          return this.getDiscriminatedUnion(type);
         }
         return this.getModel(type, stack);
       case 'endpoint':
@@ -2426,6 +2442,7 @@ function recursiveKeyName(root: string, type: rust.Box | rust.Payload | rust.Req
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'offsetDateTime':
       return `${root}-${type.kind}-${type.encoding}${type.utc ? '-utc' : ''}`;
+    case 'discriminatedUnion':
     case 'model':
     case 'struct':
       return `${root}-${type.kind}-${type.name}`;
