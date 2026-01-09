@@ -190,6 +190,11 @@ export class Adapter {
       }
       // END workaround
 
+      if (model.discriminatedSubtypes) {
+        const rustUnion = this.getDiscriminatedUnion(model);
+        this.crate.unions.push(rustUnion);
+      }
+
       if (model.external) {
         this.getExternalType(model.external);
       } else {
@@ -433,60 +438,95 @@ export class Adapter {
    * @param union the tcgc union to convert
    * @returns a Rust union
    */
-  private getDiscriminatedUnion(union: tcgc.SdkUnionType): rust.DiscriminatedUnion {
-    if (union.name.length === 0) {
-      throw new AdapterError('InternalError', 'unnamed union', union.__raw?.node);
+  private getDiscriminatedUnion(src: tcgc.SdkModelType | tcgc.SdkUnionType): rust.DiscriminatedUnion {
+    if (src.name.length === 0) {
+      throw new AdapterError('InternalError', 'unnamed union', src.__raw?.node);
     }
-    const unionName = codegen.capitalize(union.name);
+    const unionName = src.kind === 'model' ? `${codegen.capitalize(src.name)}Kind` : codegen.capitalize(src.name);
     let rustUnion = this.types.get(unionName);
     if (rustUnion) {
       return <rust.DiscriminatedUnion>rustUnion;
     }
 
-    if (!union.discriminatedOptions) {
-      // we should have verified this earlier.
-      // having this check means the compiler won't bark
-      // at us when accessing union.discriminatedOptions
-      throw new AdapterError('InternalError', 'getDiscriminatedUnion called for non-discriminated union', union.__raw?.node);
-    }
-
-    rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(union.access), union.discriminatedOptions.discriminatorPropertyName);
-    rustUnion.envelopeName = union.discriminatedOptions.envelopePropertyName;
-
-    rustUnion.docs = this.adaptDocs(union.summary, union.doc);
-    this.types.set(unionName, rustUnion);
-
-    // TODO: remove when https://github.com/microsoft/typespec/issues/8455 is complete
-    const discriminatorValues = new Map<string, string>();
-    const rawUnion = <tsp.Union | undefined>union.__raw;
-    if (rawUnion) {
-      for (const [variantKey, variant] of rawUnion.variants) {
-        const discriminatorValue = typeof variantKey === 'string' ? variantKey : variantKey.toString();
-        if (variant.type.kind === 'Model') {
-          discriminatorValues.set(variant.type.name, discriminatorValue);
-        } else {
-          throw new AdapterError('InternalError', `unexpected kind ${variant.type.kind} for discriminated union member`, rawUnion);
+    switch (src.kind) {
+      case 'model': {
+        if (!src.discriminatedSubtypes) {
+          // we should have verified this earlier.
+          // having this check means the compiler won't bark
+          // at us when accessing src.discriminatedSubtypes
+          throw new AdapterError('InternalError', 'getDiscriminatedUnion called for non-polymorphic model', src.__raw?.node);
         }
+
+        // find the discriminator field
+        let discriminatorPropertyName: string | undefined;
+        for (const prop of src.properties) {
+          if (prop.kind === 'property' && prop.discriminator) {
+            discriminatorPropertyName = prop.name;
+            break;
+          }
+        }
+        if (!discriminatorPropertyName) {
+          throw new AdapterError('InternalError', `failed to find discriminator field for type ${src.name}`, src.__raw?.node);
+        }
+        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorPropertyName);
+
+        for (const subType of values(src.discriminatedSubtypes)) {
+          if (!subType.discriminatorValue) {
+            throw new AdapterError('InternalError', `model ${src.name} has no discriminator value`, src.__raw?.node)
+          }
+          const unionMemberType = this.getModel(subType);
+          const rustUnionMember = new rust.DiscriminatedUnionMember(unionMemberType, subType.discriminatorValue);
+          rustUnion.members.push(rustUnionMember);
+        }
+        break;
+      }
+      case 'union': {
+        if (!src.discriminatedOptions) {
+          // we should have verified this earlier.
+          // having this check means the compiler won't bark
+          // at us when accessing src.discriminatedOptions
+          throw new AdapterError('InternalError', 'getDiscriminatedUnion called for non-discriminated union', src.__raw?.node);
+        }
+        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), src.discriminatedOptions.discriminatorPropertyName);
+        rustUnion.envelopeName = src.discriminatedOptions.envelopePropertyName;
+
+        // TODO: remove when https://github.com/microsoft/typespec/issues/8455 is complete
+        const discriminatorValues = new Map<string, string>();
+        const rawUnion = <tsp.Union | undefined>src.__raw;
+        if (rawUnion) {
+          for (const [variantKey, variant] of rawUnion.variants) {
+            const discriminatorValue = typeof variantKey === 'string' ? variantKey : variantKey.toString();
+            if (variant.type.kind === 'Model') {
+              discriminatorValues.set(variant.type.name, discriminatorValue);
+            } else {
+              throw new AdapterError('InternalError', `unexpected kind ${variant.type.kind} for discriminated union member`, rawUnion);
+            }
+          }
+        }
+        // END WORKAROUND
+
+        for (const unionMember of src.variantTypes) {
+          if (unionMember.kind !== 'model') {
+            throw new AdapterError('UnsupportedTsp', `non-model union member kind ${unionMember.kind}`, unionMember.__raw?.node);
+          }
+
+          // TODO: use unionMember.discriminatorValue
+          const discriminatorValue = discriminatorValues.get(unionMember.name);
+          if (!discriminatorValue) {
+            throw new AdapterError('InternalError', `didn't find discriminant value for type ${unionMember.name}`, unionMember.__raw?.node);
+          }
+
+          const unionMemberType = this.getModel(unionMember);
+          const rustUnionMember = new rust.DiscriminatedUnionMember(unionMemberType, discriminatorValue);
+          rustUnionMember.docs = this.adaptDocs(unionMember.summary, unionMember.doc);
+          rustUnion.members.push(rustUnionMember);
+        }
+        break;
       }
     }
-    // END WORKAROUND
 
-    for (const unionMember of union.variantTypes) {
-      if (unionMember.kind !== 'model') {
-        throw new AdapterError('UnsupportedTsp', `non-model union member kind ${unionMember.kind}`, unionMember.__raw?.node);
-      }
-
-      // TODO: use unionMember.discriminatorValue
-      const discriminatorValue = discriminatorValues.get(unionMember.name);
-      if (!discriminatorValue) {
-        throw new AdapterError('InternalError', `didn't find discriminant value for type ${unionMember.name}`, unionMember.__raw?.node);
-      }
-
-      const unionMemberType = this.getModel(unionMember);
-      const rustUnionMember = new rust.DiscriminatedUnionMember(unionMemberType, discriminatorValue);
-      rustUnionMember.docs = this.adaptDocs(unionMember.summary, unionMember.doc);
-      rustUnion.members.push(rustUnionMember);
-    }
+    rustUnion.docs = this.adaptDocs(src.summary, src.doc);
+    this.types.set(unionName, rustUnion);
 
     return rustUnion;
   }

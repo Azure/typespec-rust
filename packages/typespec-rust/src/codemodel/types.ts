@@ -802,6 +802,7 @@ export class DiscriminatedUnion implements DiscriminatedUnion {
     this.visibility = visibility;
     this.members = new Array<DiscriminatedUnionMember>();
     this.discriminant = discriminant;
+    this.docs = {};
   }
 }
 
@@ -810,6 +811,7 @@ export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
     this.kind = 'discriminatedUnionMember';
     this.type = type;
     this.discriminantValue = discriminantValue;
+    this.docs = {};
   }
 }
 
