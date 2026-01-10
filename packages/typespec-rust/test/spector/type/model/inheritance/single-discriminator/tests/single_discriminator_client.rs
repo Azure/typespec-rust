@@ -30,7 +30,12 @@ async fn get_missing_discriminator() {
 
     let resp = client.get_missing_discriminator(None).await.unwrap();
     assert_eq!(resp.status(), 200);
-    assert!(resp.into_model().is_err());
+    match resp.into_model().unwrap() {
+        BirdKind::Bird(bird) => {
+            assert_eq!(bird.wingspan, Some(1));
+        }
+        other => panic!("expected base Bird, found {other:?}"),
+    }
 }
 
 #[tokio::test]
@@ -94,7 +99,12 @@ async fn get_wrong_discriminator() {
 
     let resp = client.get_wrong_discriminator(None).await.unwrap();
     assert_eq!(resp.status(), 200);
-    assert!(resp.into_model().is_err());
+    match resp.into_model().unwrap() {
+        BirdKind::Bird(bird) => {
+            assert_eq!(bird.wingspan, Some(1));
+        }
+        other => panic!("expected base Bird, found {other:?}"),
+    }
 }
 
 #[tokio::test]
