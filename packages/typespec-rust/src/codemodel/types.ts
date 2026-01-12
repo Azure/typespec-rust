@@ -150,9 +150,12 @@ export interface DiscriminatedUnion {
   /** discriminator property name */
   discriminant: string;
 
-  /** data envelope property name */
-  envelopeName?: string;
+  /** the kind of discriminated union */
+  unionKind?: DiscriminatedUnionKind;
 }
+
+/** DiscriminatedUnionKind contains the kinds of discriminated unions */
+export type DiscriminatedUnionKind = DiscriminatedUnionBase | DiscriminatedUnionEnvelope;
 
 /** DiscriminatedUnionMember is a tagged enum member for a specific DiscriminatedUnion */
 export interface DiscriminatedUnionMember {
@@ -166,6 +169,22 @@ export interface DiscriminatedUnionMember {
 
   /** discriminator property value */
   discriminantValue: string;
+}
+
+/** DiscriminatedUnionBase indicates that the union has a polymorphic base type */
+export interface DiscriminatedUnionBase {
+  kind: 'discriminatedUnionBase';
+
+  /** the model for the base type */
+  baseType: Model;
+}
+
+/** DiscriminatedUnionEnvelope indicates that the data is wrapped in an envelope */
+export interface DiscriminatedUnionEnvelope {
+  kind: 'discriminatedUnionEnvelope';
+
+  /** data envelope property name */
+  envelopeName: string;
 }
 
 /** Etag is an azure_core::Etag */
@@ -806,6 +825,21 @@ export class DiscriminatedUnion implements DiscriminatedUnion {
     this.visibility = visibility;
     this.members = new Array<DiscriminatedUnionMember>();
     this.discriminant = discriminant;
+    this.docs = {};
+  }
+}
+
+export class DiscriminatedUnionBase implements DiscriminatedUnionBase {
+  constructor(baseType: Model) {
+    this.kind = 'discriminatedUnionBase';
+    this.baseType = baseType;
+  }
+}
+
+export class DiscriminatedUnionEnvelope implements DiscriminatedUnionEnvelope {
+  constructor(envelopeName: string) {
+    this.kind = 'discriminatedUnionEnvelope';
+    this.envelopeName = envelopeName;
   }
 }
 
@@ -814,6 +848,7 @@ export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
     this.kind = 'discriminatedUnionMember';
     this.type = type;
     this.discriminantValue = discriminantValue;
+    this.docs = {};
   }
 }
 

@@ -81,6 +81,7 @@ members = [
     "spector/type/enum/fixed",
     "spector/type/model/empty",
     "spector/type/model/inheritance/not-discriminated",
+    "spector/type/model/inheritance/single-discriminator",
     "spector/type/model/usage",
     "spector/type/property/nullable",
     "spector/type/property/optionality",

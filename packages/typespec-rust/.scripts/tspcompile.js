@@ -56,7 +56,7 @@ const httpSpecsGroup = {
   //'spector_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
   'spector_nodisc': {input: 'type/model/inheritance/not-discriminated'},
   //'spector_recursive': {input: 'type/model/inheritance/recursive'},
-  //'spector_singledisc': {input: 'type/model/inheritance/single-discriminator'},
+  'spector_singledisc': {input: 'type/model/inheritance/single-discriminator'},
   'spector_usage': {input: 'type/model/usage'},
   //'spector_visibility': {input: 'type/model/visibility'},
   //'spector_addlprops': {input: 'type/property/additional-properties'},
