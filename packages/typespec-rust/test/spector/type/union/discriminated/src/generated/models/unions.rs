@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 #[doc = r#"Test discriminated union with inline discriminator (no envelope).
 The discriminated union should serialize with discriminator property
 injected directly into the variant object."#]
-#[derive(Deserialize, Serialize, SafeDebug, Clone)]
+#[derive(Clone, Deserialize, Serialize, SafeDebug)]
 #[serde(tag = "kind")]
 pub enum PetInline {
     #[serde(rename = "cat")]
@@ -23,7 +23,7 @@ pub enum PetInline {
 #[doc = r#"Test discriminated union with inline discriminator and custom discriminator property name.
 The discriminated union should serialize with custom discriminator property
 injected directly into the variant object."#]
-#[derive(Deserialize, Serialize, SafeDebug, Clone)]
+#[derive(Clone, Deserialize, Serialize, SafeDebug)]
 #[serde(tag = "type")]
 pub enum PetInlineWithCustomDiscriminator {
     #[serde(rename = "cat")]
@@ -36,7 +36,7 @@ pub enum PetInlineWithCustomDiscriminator {
 #[doc = r#"Test discriminated union with custom property names.
 The discriminated union should serialize with custom discriminator
 and envelope property names."#]
-#[derive(Deserialize, Serialize, SafeDebug, Clone)]
+#[derive(Clone, Deserialize, Serialize, SafeDebug)]
 #[serde(content = "petData", tag = "petType")]
 pub enum PetWithCustomNames {
     #[serde(rename = "cat")]
@@ -49,7 +49,7 @@ pub enum PetWithCustomNames {
 #[doc = r#"Test discriminated union with default envelope serialization.
 The discriminated union should serialize with "kind" as discriminator
 and "value" as envelope property."#]
-#[derive(Deserialize, Serialize, SafeDebug, Clone)]
+#[derive(Clone, Deserialize, Serialize, SafeDebug)]
 #[serde(content = "value", tag = "kind")]
 pub enum PetWithEnvelope {
     #[serde(rename = "cat")]

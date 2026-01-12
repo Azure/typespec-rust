@@ -5,6 +5,7 @@
 ### Features Added
 
 * Added support for `text/plain` request and response bodies.
+* Added support for polymorphic discriminated unions.
 
 ### Bugs Fixed
 
