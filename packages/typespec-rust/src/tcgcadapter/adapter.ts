@@ -476,7 +476,7 @@ export class Adapter {
 
         for (const subType of values(src.discriminatedSubtypes)) {
           if (!subType.discriminatorValue) {
-            throw new AdapterError('InternalError', `model ${src.name} has no discriminator value`, src.__raw?.node)
+            throw new AdapterError('InternalError', `model ${src.name} has no discriminator value`, src.__raw?.node);
           }
           const unionMemberType = this.getModel(subType);
           const rustUnionMember = new rust.DiscriminatedUnionMember(unionMemberType, subType.discriminatorValue);
