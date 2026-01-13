@@ -194,8 +194,8 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
   }
 
   // all cases require these
+  use.add('azure_core', 'Value');
   use.add('serde', 'Deserialize');
-  use.add('serde_json', 'Value');
 
   let content = helpers.contentPreamble();
   content += use.text();

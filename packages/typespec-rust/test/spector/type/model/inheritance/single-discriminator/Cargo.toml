@@ -13,7 +13,6 @@ default = ["azure_core/default"]
 [dependencies]
 azure_core = { workspace = true }
 serde = { workspace = true }
-serde_json = { workspace = true }
 
 [dev-dependencies]
 tokio = { workspace = true }
