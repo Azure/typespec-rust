@@ -102,6 +102,7 @@ async fn get_wrong_discriminator() {
     assert_eq!(resp.status(), 200);
     match resp.into_model().unwrap() {
         BirdKind::Bird(bird) => {
+            assert_eq!(bird.kind, Some("wrongKind".to_string()));
             assert_eq!(bird.wingspan, Some(1));
         }
         other => panic!("expected base Bird, found {other:?}"),
