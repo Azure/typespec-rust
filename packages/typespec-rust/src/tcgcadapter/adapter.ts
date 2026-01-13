@@ -420,8 +420,15 @@ export class Adapter {
       rustModel.fields.push(structField);
     }
 
-    if (addlProps) {
-      const addlPropsType = this.getHashMap(this.typeToWireType(this.getType(addlProps)));
+    if (addlProps || model.discriminatedSubtypes) {
+      let addlPropsType: rust.HashMap;
+      if (addlProps) {
+        addlPropsType = this.getHashMap(this.typeToWireType(this.getType(addlProps)));
+      } else {
+        // if the base type in a polymorphic discriminated union doesn't
+        // define additional properties then we explicitly add it.
+        addlPropsType = this.getHashMap(this.getUnknownValue());
+      }
       const addlPropsField = new rust.ModelAdditionalProperties('additional_properties', 'pub', this.getOptionType(addlPropsType));
       addlPropsField.docs.summary = 'contains unnamed additional properties';
       rustModel.fields.push(addlPropsField);
@@ -745,16 +752,8 @@ export class Adapter {
         }
         return safeint;
       }
-      case 'unknown': {
-        const keyName = 'jsonValue';
-        let anyType = this.types.get(keyName);
-        if (anyType) {
-          return anyType;
-        }
-        anyType = new rust.JsonValue(this.crate);
-        this.types.set(keyName, anyType);
-        return anyType;
-      }
+      case 'unknown':
+        return this.getUnknownValue();
       case 'utcDateTime': {
         const encoding = getDateTimeEncoding(type.encode);
         const keyName = `offsetDateTime-${encoding}-utc`;
@@ -810,6 +809,18 @@ export class Adapter {
     hashmapType = new rust.HashMap(type);
     this.types.set(keyName, hashmapType);
     return hashmapType;
+  }
+
+  /** returns an azure_core::Value */
+  private getUnknownValue(): rust.JsonValue {
+    const keyName = 'jsonValue';
+    let anyType = this.types.get(keyName);
+    if (anyType) {
+      return <rust.JsonValue>anyType;
+    }
+    anyType = new rust.JsonValue(this.crate);
+    this.types.set(keyName, anyType);
+    return anyType;
   }
 
   /** returns an Option<T> where T is specified in type */
