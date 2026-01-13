@@ -114,10 +114,7 @@ async fn put_model() {
     let client =
         SingleDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
 
-    let body = BirdKind::Sparrow(Sparrow {
-        wingspan: Some(1),
-        kind: None,
-    });
+    let body = BirdKind::Sparrow(Sparrow { wingspan: Some(1) });
 
     let resp = client
         .put_model(body.try_into().unwrap(), None)
@@ -135,24 +132,14 @@ async fn put_recursive_model() {
     let mut hate = HashMap::new();
     hate.insert(
         "key3".to_string(),
-        BirdKind::Sparrow(Sparrow {
-            wingspan: Some(1),
-            kind: None,
-        }),
+        BirdKind::Sparrow(Sparrow { wingspan: Some(1) }),
     );
 
     let body = BirdKind::Eagle(Eagle {
         wingspan: Some(5),
-        partner: Some(Box::new(BirdKind::Goose(Goose {
-            wingspan: Some(2),
-            kind: None,
-        }))),
-        friends: Some(vec![BirdKind::SeaGull(SeaGull {
-            wingspan: Some(2),
-            kind: None,
-        })]),
+        partner: Some(Box::new(BirdKind::Goose(Goose { wingspan: Some(2) }))),
+        friends: Some(vec![BirdKind::SeaGull(SeaGull { wingspan: Some(2) })]),
         hate: Some(hate),
-        kind: None,
     });
 
     let resp = client
