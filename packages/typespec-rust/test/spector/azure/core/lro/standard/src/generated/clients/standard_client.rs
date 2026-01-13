@@ -125,7 +125,7 @@ impl StandardClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        Ok(Poller::from_callback(
+        Ok(Poller::new(
             move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
@@ -149,7 +149,7 @@ impl StandardClient {
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 let final_link = url.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &ctx,
@@ -180,7 +180,7 @@ impl StandardClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            next: next_link,
+                            continuation_token: next_link,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
@@ -195,7 +195,7 @@ impl StandardClient {
                         },
                         _ => PollerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -248,7 +248,7 @@ impl StandardClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        Ok(Poller::from_callback(
+        Ok(Poller::new(
             move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
@@ -268,7 +268,7 @@ impl StandardClient {
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &ctx,
@@ -307,7 +307,7 @@ impl StandardClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            next: next_link,
+                            continuation_token: next_link,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
@@ -323,7 +323,7 @@ impl StandardClient {
                         },
                         _ => PollerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))
@@ -379,7 +379,7 @@ impl StandardClient {
         query_builder.set_pair("format", format);
         query_builder.build();
         let api_version = self.api_version.clone();
-        Ok(Poller::from_callback(
+        Ok(Poller::new(
             move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
@@ -399,7 +399,7 @@ impl StandardClient {
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
-                async move {
+                Box::pin(async move {
                     let rsp = pipeline
                         .send(
                             &ctx,
@@ -440,7 +440,7 @@ impl StandardClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            next: next_link,
+                            continuation_token: next_link,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
@@ -456,7 +456,7 @@ impl StandardClient {
                         },
                         _ => PollerResult::Done { response: rsp },
                     })
-                }
+                })
             },
             Some(options.method_options),
         ))

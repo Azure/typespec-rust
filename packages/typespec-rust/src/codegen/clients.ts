@@ -886,7 +886,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   let hasQueryBuilder = false;
 
-  const getQueryBuilder = function(): string {
+  const getQueryBuilder = function (): string {
     hasQueryBuilder = true;
     use.add('azure_core::http', 'UrlExt');
     return `${indent.get()}let mut query_builder = ${urlVarName}.query_builder();\n`;
@@ -1505,7 +1505,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
       + applyHeaderParams(indent, use, method, paramGroups, true, requestVarName, optionsPrefix);
   };
 
-  let stateVarName = 'next_link';
   let stateVarType = 'Url';
   let progressVarName = 'next_link';
   let stateNextLinkAccessor = 'next_link';
@@ -1521,7 +1520,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     body += `${indent.get()}struct Progress{ next_link: Url, final_link: Url, }`;
     body += `${indent.get()}impl AsRef<str> for Progress{ fn as_ref(&self) -> &str{ self.next_link.as_ref() }}\n`;
 
-    stateVarName = 'state';
     stateVarType = 'Progress';
     progressVarName = 'progress';
     stateNextLinkAccessor = 'progress.next_link';
@@ -1529,9 +1527,9 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     pollerStateInitialReturn = `Progress{next_link: ${urlVar}.clone(), final_link: ${urlVar}.clone()}`;
     pollerStatusInProgressReturn = 'Progress{next_link, final_link}';
   }
-  body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
-  body += `${indent.push().get()}move |${stateVarName}: PollerState<${stateVarType}>, poller_options| {\n`;
-  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, ${progressVarName}) = ${helpers.buildMatch(indent, stateVarName, [{
+  body += `${indent.get()}Ok(${method.returns.type.name}::new(\n`
+  body += `${indent.push().get()}move |poller_state: PollerState<${stateVarType}>, poller_options| {\n`;
+  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, ${progressVarName}) = ${helpers.buildMatch(indent, 'poller_state', [{
     pattern: `PollerState::More(${progressVarName})`,
     body: (indent) => {
       return applyApiVersionParam(indent, paramGroups, 'next_link', stateNextLinkAccessor)
@@ -1605,11 +1603,11 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   if (isArmPutLro || isArmPatchLro) {
     body += 'let original_url = url.clone();\n';
   }
-  body += `${indent.get()}async move {\n`
+  body += `${indent.get()}Box::pin(async move {\n`
   body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?;\n`
 
   const needsMutBody = isArmPutLro || isArmPatchLro || isArmPostLro || isArmDeleteLro;
-  body += `${indent.get()}let (status, headers, ${needsMutBody ? 'mut' : '' } body) = rsp.deconstruct();\n`
+  body += `${indent.get()}let (status, headers, ${needsMutBody ? 'mut' : ''} body) = rsp.deconstruct();\n`
 
   if (isArmPostLro || isArmDeleteLro) {
     body += `${indent.get()}if body.is_empty() {\n`
@@ -1689,7 +1687,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   const arms: helpers.matchArm[] = [{
     pattern: `PollerStatus::InProgress`,
     body: (indent) => {
-      return `${indent.get()}response: rsp, retry_after, next: ${pollerStatusInProgressReturn}\n`;
+      return `${indent.get()}response: rsp, retry_after, continuation_token: ${pollerStatusInProgressReturn}\n`;
     },
     returns: 'PollerResult::InProgress'
   }];
@@ -1711,9 +1709,9 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
           + `Ok(pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, None).await?.into())\n`
       }
       body += `${indent.pop().get()}})\n`
-      + `${indent.get()}}),\n`
-      + `${indent.pop().get()}}`
-      + `${indent.pop().get()}}`;
+        + `${indent.get()}}),\n`
+        + `${indent.pop().get()}}`
+        + `${indent.pop().get()}}`;
 
       return body;
     }
@@ -1728,7 +1726,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   });
 
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
-  body += `${indent.pop().get()}}\n`; // end async move
+  body += `${indent.pop().get()}})\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::from_callback
 
