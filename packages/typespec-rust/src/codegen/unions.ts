@@ -50,13 +50,13 @@ export function emitUnions(crate: rust.Crate, context: Context): Models {
         const aName = a.kind === 'discriminatedUnionMember' ? a.type.name : a.name;
         const bName = b.kind === 'discriminatedUnionMember' ? b.type.name : b.name;
         return helpers.sortAscending(aName, bName);
-      })
+      });
     }
 
     use.add('serde', 'Serialize');
     const needsDeserialize = !rustUnion.unionKind || rustUnion.unionKind.kind !== 'discriminatedUnionBase';
     if (needsDeserialize) {
-      // discriminatedUnionBase explicitly define Deserialize
+      // discriminatedUnionBase unions explicitly define Deserialize
       use.add('serde', 'Deserialize');
     }
     use.add('azure_core::fmt', 'SafeDebug');
@@ -204,5 +204,5 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
   return {
     name: 'unions_serde',
     content: content,
-  }
+  };
 }
