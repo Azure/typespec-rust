@@ -370,6 +370,11 @@ export class Adapter {
     // aggregate the properties from the provided type and its parent types
     const allProps = new Array<tcgc.SdkModelPropertyType>();
     for (const prop of model.properties) {
+      if (prop.discriminator && !model.discriminatedSubtypes) {
+        // omit the discriminator field from child types
+        // as it's not very useful (or necessary)
+        continue;
+      }
       allProps.push(prop);
     }
 
@@ -382,6 +387,10 @@ export class Adapter {
         if (exists) {
           // don't add the duplicate. the TS compiler has better enforcement than OpenAPI
           // to ensure that duplicate fields with different types aren't added.
+          continue;
+        } else if (parentProp.discriminator) {
+          // we don't propagate the discriminator to the child
+          // types as it's not useful (or necessary)
           continue;
         }
         allProps.push(parentProp);
