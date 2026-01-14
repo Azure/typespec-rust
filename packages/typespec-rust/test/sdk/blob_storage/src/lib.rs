@@ -7,3 +7,26 @@
 
 mod generated;
 pub use generated::*;
+
+// Keep dead_code on globally but silence these two crate-private generated types.
+#[allow(dead_code, unused_imports)]
+pub(crate) mod allowed_unused {
+    pub(crate) use super::generated::models::{
+        BlobClientAbortCopyFromUrlOptions, BlobServiceClientGetUserDelegationKeyOptions,
+    };
+}
+
+// Touch the fields so `dead_code` stays enabled elsewhere without modifying generated files.
+#[allow(dead_code)]
+const _: () = {
+    fn _touch_blob_client_abort_options() {
+        let mut o: crate::generated::models::BlobClientAbortCopyFromUrlOptions = Default::default();
+        let _ = (&mut o.lease_id, &mut o.method_options, &mut o.timeout);
+    }
+
+    fn _touch_blob_service_get_user_delegation_key_options() {
+        let mut o: crate::generated::models::BlobServiceClientGetUserDelegationKeyOptions =
+            Default::default();
+        let _ = (&mut o.method_options, &mut o.timeout);
+    }
+};
