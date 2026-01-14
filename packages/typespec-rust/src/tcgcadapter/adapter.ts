@@ -246,42 +246,18 @@ export class Adapter {
     this.types.set(enumName, rustEnum);
 
     // the first pass is to detect any enum values that coalesce into duplicate entries
-    const rustEnumNameToSdkEnumName = new Map<string, Array<tcgc.SdkEnumValueType>>();
+    const nameCache = new naming.NameCache<tcgc.SdkEnumValueType>(this.ctx.program);
     for (const value of sdkEnum.values) {
       const enumValueName = naming.fixUpEnumValueName(value);
-      let existingMapping = rustEnumNameToSdkEnumName.get(enumValueName);
-      if (!existingMapping) {
-        existingMapping = new Array<tcgc.SdkEnumValueType>();
-        rustEnumNameToSdkEnumName.set(enumValueName, existingMapping);
-      }
-      existingMapping.push(value);
+      nameCache.add(enumValueName, value);
     }
 
-    // now adapt the values, renaming any collisions as required and reporting diagnostics
-    let groupCounter = 1;
-    for (const entry of rustEnumNameToSdkEnumName.entries()) {
-      const enumValueName = entry[0];
-      const enumValues = entry[1];
-      if (enumValues.length === 1) {
-        const rustEnumValue = new rust.EnumValue(enumValueName, rustEnum, enumValues[0].value);
-        rustEnumValue.docs = this.adaptDocs(enumValues[0].summary, enumValues[0].doc);
-        rustEnum.values.push(rustEnumValue);
-      } else {
-        this.ctx.program.reportDiagnostic({
-          code: 'NameCollision',
-          severity: 'warning',
-          message: `enum values ${enumValues.map((each) => `"${each.value}"`).join(', ')} coalesce into the same name ${enumValueName}`,
-          target: sdkEnum.__raw?.node ?? tsp.NoTarget,
-        });
-        for (let i = 0; i < enumValues.length; ++i) {
-          const enumValue = enumValues[i];
-          const collidingEnumValueName = `COLLIDES_GRP${groupCounter}_ID${i + 1}_${enumValueName}`;
-          const rustEnumValue = new rust.EnumValue(collidingEnumValueName, rustEnum, enumValue.value);
-          rustEnumValue.docs = this.adaptDocs(enumValue.summary, enumValue.doc);
-          rustEnum.values.push(rustEnumValue);
-        }
-        ++groupCounter;
-      }
+    // now adapt the values
+    for (const value of sdkEnum.values) {
+      const enumValueName = nameCache.get(value);
+      const rustEnumValue = new rust.EnumValue(enumValueName, rustEnum, value.value);
+      rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
+      rustEnum.values.push(rustEnumValue);
     }
 
     return rustEnum;
