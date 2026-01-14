@@ -106,7 +106,7 @@ function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module {
 
   // emit impls as required
   for (const rustEnum of crate.enums) {
-    body += context.getTryFromForRequestContent(rustEnum, use) ?? '';
+    body += context.getTryFromForRequestContent(rustEnum, use);
   }
 
   let content = helpers.contentPreamble();

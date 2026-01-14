@@ -243,7 +243,9 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
  * @returns the private mod definition
  */
 function getSealedImpls(traitDefs: Array<rust.ResponseHeadersTrait>): string {
-  const use = new Use('modelsOther');
+  // we set nestedModAssumesTypesInParentScope to true as all of the types
+  // required in this mod are already in scope within our parent mod.
+  const use = new Use('modelsOther', { nestedModAssumesTypesInParentScope: true });
   const indent = new helpers.indentation();
   use.add('azure_core::http', 'Response');
 

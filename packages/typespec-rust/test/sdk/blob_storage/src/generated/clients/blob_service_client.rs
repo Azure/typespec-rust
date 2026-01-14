@@ -6,12 +6,13 @@
 use crate::generated::{
     clients::BlobContainerClient,
     models::{
+        crate_models::{KeyInfo, UserDelegationKey},
         BlobServiceClientFilterBlobsOptions, BlobServiceClientGetAccountInfoOptions,
         BlobServiceClientGetAccountInfoResult, BlobServiceClientGetPropertiesOptions,
         BlobServiceClientGetStatisticsOptions, BlobServiceClientGetUserDelegationKeyOptions,
         BlobServiceClientListContainersSegmentOptions, BlobServiceClientSetPropertiesOptions,
-        FilterBlobSegment, KeyInfo, ListContainersSegmentResponse, StorageServiceProperties,
-        StorageServiceStats, UserDelegationKey,
+        FilterBlobSegment, ListContainersSegmentResponse, StorageServiceProperties,
+        StorageServiceStats,
     },
 };
 use azure_core::{
@@ -395,7 +396,7 @@ impl BlobServiceClient {
     ///
     /// [`UserDelegationKeyHeaders`]: crate::generated::models::UserDelegationKeyHeaders
     #[tracing::function("Storage.Blob.getUserDelegationKey")]
-    pub async fn get_user_delegation_key(
+    pub(crate) async fn get_user_delegation_key(
         &self,
         key_info: RequestContent<KeyInfo, XmlFormat>,
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,

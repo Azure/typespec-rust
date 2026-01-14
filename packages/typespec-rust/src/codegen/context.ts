@@ -100,16 +100,16 @@ export class Context {
 
   /**
    * returns the impl TryFrom<T> for RequestContent<T> where T is type.
-   * if no impl is required, it returns undefined.
+   * if no impl is required, the empty string is returned.
    *
    * @param model the model for which to implement TryFrom
    * @param use the use statement builder currently in scope
-   * @returns the impl TryFrom<T> block for type or undefined
+   * @returns the impl TryFrom<T> block for type or the empty string
    */
-  getTryFromForRequestContent(model: rust.DiscriminatedUnion | rust.Enum | rust.Model, use: Use): string | undefined {
+  getTryFromForRequestContent(model: rust.DiscriminatedUnion | rust.Enum | rust.Model, use: Use): string {
     const format = this.tryFromForRequestTypes.get(helpers.getTypeDeclaration(model));
     if (!format) {
-      return undefined;
+      return '';
     }
 
     const formatType = getPayloadFormatType(format);
