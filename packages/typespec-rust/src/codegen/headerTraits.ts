@@ -77,7 +77,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       }
     }
 
-    const mergedTrait = new rust.ResponseHeadersTrait(srcTrait[0].name, srcTrait[0].implFor, mergedDocs);
+    const mergedTrait = new rust.ResponseHeadersTrait(srcTrait[0].name, srcTrait[0].implFor, mergedDocs, srcTrait[0].visibility);
     mergedTrait.headers = mergedHeaders;
     traits.push(mergedTrait);
     addHeaders(...mergedHeaders);
@@ -149,7 +149,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += `///\n`;
       body += emitHeaderTraitDocExample(crate.name, trait);
     }
-    body += `pub trait ${trait.name}: private::Sealed {\n`;
+    body += `${helpers.emitVisibility(trait.visibility)}trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {
       use.addForType(header.type);
       body += `${indent.get()}${getHeaderMethodName(header)};\n`;
@@ -243,7 +243,9 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
  * @returns the private mod definition
  */
 function getSealedImpls(traitDefs: Array<rust.ResponseHeadersTrait>): string {
-  const use = new Use('modelsOther');
+  // we set nestedModAssumesTypesInParentScope to true as all of the types
+  // required in this mod are already in scope within our parent mod.
+  const use = new Use('modelsOther', { nestedModAssumesTypesInParentScope: true });
   const indent = new helpers.indentation();
   use.add('azure_core::http', 'Response');
 

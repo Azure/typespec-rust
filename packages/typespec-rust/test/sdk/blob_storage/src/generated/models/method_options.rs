@@ -282,15 +282,15 @@ pub struct AppendBlobClientSealOptions<'a> {
 
 /// Options to be passed to `BlobClient::abort_copy_from_url()`
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobClientAbortCopyFromUrlOptions<'a> {
+pub(crate) struct BlobClientAbortCopyFromUrlOptions<'a> {
     /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
-    pub lease_id: Option<String>,
+    pub(crate) lease_id: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub(crate) method_options: ClientMethodOptions<'a>,
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
+    pub(crate) timeout: Option<i32>,
 }
 
 /// Options to be passed to `BlobClient::acquire_lease()`
@@ -1461,12 +1461,12 @@ pub struct BlobServiceClientGetStatisticsOptions<'a> {
 
 /// Options to be passed to `BlobServiceClient::get_user_delegation_key()`
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
+pub(crate) struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub(crate) method_options: ClientMethodOptions<'a>,
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
+    pub(crate) timeout: Option<i32>,
 }
 
 /// Options to be passed to `BlobServiceClient::list_containers_segment()`

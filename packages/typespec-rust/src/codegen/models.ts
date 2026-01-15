@@ -71,24 +71,21 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
 
   let body = '';
   for (const model of crate.models) {
-    if (visibility === 'pub' && model.kind === 'marker') {
+    if (model.visibility !== visibility) {
+      continue;
+    }
+
+    if (model.kind === 'marker') {
       body += helpers.formatDocComment(model.docs);
       // marker types don't have any fields
       // and don't participate in serde.
       body += '#[derive(SafeDebug)]\n';
-      body += `pub struct ${model.name};\n\n`;
-      continue;
-    } else if (model.kind === 'marker') {
-      // marker types are always public, so we skip them for the internal models file
+      body += `${helpers.emitVisibility(model.visibility)}struct ${model.name};\n\n`;
       continue;
     }
 
     // we add this here to avoid using serde for marker-only models
     use.add('serde', 'Deserialize', 'Serialize');
-
-    if (model.visibility !== visibility) {
-      continue;
-    }
 
     const bodyFormat = context.getModelBodyFormat(model);
 

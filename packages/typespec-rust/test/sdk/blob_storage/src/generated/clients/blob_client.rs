@@ -6,10 +6,11 @@
 use crate::generated::{
     clients::{AppendBlobClient, BlockBlobClient, PageBlobClient},
     models::{
-        AccessTier, BlobClientAbortCopyFromUrlOptions, BlobClientAbortCopyFromUrlResult,
-        BlobClientAcquireLeaseOptions, BlobClientAcquireLeaseResult, BlobClientBreakLeaseOptions,
-        BlobClientBreakLeaseResult, BlobClientChangeLeaseOptions, BlobClientChangeLeaseResult,
-        BlobClientCopyFromUrlOptions, BlobClientCopyFromUrlResult, BlobClientCreateSnapshotOptions,
+        crate_models::BlobClientAbortCopyFromUrlResult, AccessTier,
+        BlobClientAbortCopyFromUrlOptions, BlobClientAcquireLeaseOptions,
+        BlobClientAcquireLeaseResult, BlobClientBreakLeaseOptions, BlobClientBreakLeaseResult,
+        BlobClientChangeLeaseOptions, BlobClientChangeLeaseResult, BlobClientCopyFromUrlOptions,
+        BlobClientCopyFromUrlResult, BlobClientCreateSnapshotOptions,
         BlobClientCreateSnapshotResult, BlobClientDeleteImmutabilityPolicyOptions,
         BlobClientDeleteImmutabilityPolicyResult, BlobClientDeleteOptions,
         BlobClientDownloadOptions, BlobClientDownloadResult, BlobClientGetAccountInfoOptions,
@@ -123,7 +124,7 @@ impl BlobClient {
     /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientAbortCopyFromUrlResultHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
-    /// ```no_run
+    /// ```ignore
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlobClientAbortCopyFromUrlResult, BlobClientAbortCopyFromUrlResultHeaders};
     /// async fn example() -> Result<()> {
@@ -141,7 +142,7 @@ impl BlobClient {
     ///
     /// [`BlobClientAbortCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.abortCopyFromUrl")]
-    pub async fn abort_copy_from_url(
+    pub(crate) async fn abort_copy_from_url(
         &self,
         copy_id: &str,
         options: Option<BlobClientAbortCopyFromUrlOptions<'_>>,

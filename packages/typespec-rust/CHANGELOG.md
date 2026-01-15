@@ -11,6 +11,7 @@
 * Omit a `Default` implementation for omitted client options types.
 * Fixed another case of colliding locals.
 * Only emit one constructor for `oauth2` when multiple flows are described.
+* Fixed bad codegen for some cases when an operation is annotated with `Access.internal`.
 
 ### Other Changes
 

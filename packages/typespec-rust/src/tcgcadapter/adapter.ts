@@ -1685,7 +1685,7 @@ export class Adapter {
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
-      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name, false)}Result`);
+      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name, false)}Result`, rustMethod.visibility);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
       let resultType: rust.ResultTypes;
@@ -1836,7 +1836,7 @@ export class Adapter {
 
     // NOTE: the complete doc text will be emitted at codegen time
     const docs = this.asDocLink(`${client.name}::${method.name}()`, `crate::generated::clients::${client.name}::${method.name}()`);
-    const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs);
+    const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs, method.visibility);
     responseHeadersTrait.headers.push(...responseHeaders);
 
     return responseHeadersTrait;

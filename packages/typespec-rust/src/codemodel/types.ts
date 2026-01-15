@@ -236,6 +236,9 @@ export interface MarkerType {
 
   /** any docs for the marker type */
   docs: Docs;
+
+  /** indicates the visibility of the marker type */
+  visibility: Visibility;
 }
 
 /** ModelFieldType contains the types of model fields */
@@ -788,10 +791,11 @@ export class Literal implements Literal {
 }
 
 export class MarkerType implements MarkerType {
-  constructor(name: string) {
+  constructor(name: string, visibility: Visibility) {
     this.kind = 'marker';
     this.name = name;
     this.docs = {};
+    this.visibility = visibility;
   }
 }
 

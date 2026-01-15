@@ -100,10 +100,6 @@ pub struct ArrowField {
     pub type_prop: Option<String>,
 }
 
-/// Contains results for `BlobClient::abort_copy_from_url()`
-#[derive(SafeDebug)]
-pub struct BlobClientAbortCopyFromUrlResult;
-
 /// Contains results for `BlobClient::acquire_lease()`
 #[derive(SafeDebug)]
 pub struct BlobClientAcquireLeaseResult;
@@ -930,18 +926,6 @@ pub struct JsonTextConfiguration {
     pub record_separator: Option<String>,
 }
 
-/// Key information
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct KeyInfo {
-    /// The date-time the key expires.
-    #[serde(rename = "Expiry", skip_serializing_if = "Option::is_none")]
-    pub expiry: Option<String>,
-
-    /// The date-time the key is active.
-    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
-    pub start: Option<String>,
-}
-
 /// An enumeration of blobs.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
@@ -1358,43 +1342,4 @@ pub struct StorageServiceStats {
     /// The geo replication stats.
     #[serde(rename = "GeoReplication", skip_serializing_if = "Option::is_none")]
     pub geo_replication: Option<GeoReplication>,
-}
-
-/// A user delegation key.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct UserDelegationKey {
-    /// The date-time the key expires.
-    #[serde(rename = "SignedExpiry", skip_serializing_if = "Option::is_none")]
-    pub signed_expiry: Option<String>,
-
-    /// The Azure Active Directory object ID in GUID format.
-    #[serde(rename = "SignedOid", skip_serializing_if = "Option::is_none")]
-    pub signed_oid: Option<String>,
-
-    /// Abbreviation of the Azure Storage service that accepts the key.
-    #[serde(rename = "SignedService", skip_serializing_if = "Option::is_none")]
-    pub signed_service: Option<String>,
-
-    /// The date-time the key is active.
-    #[serde(rename = "SignedStart", skip_serializing_if = "Option::is_none")]
-    pub signed_start: Option<String>,
-
-    /// The Azure Active Directory tenant ID in GUID format.
-    #[serde(rename = "SignedTid", skip_serializing_if = "Option::is_none")]
-    pub signed_tid: Option<String>,
-
-    /// The service version that created the key.
-    #[serde(rename = "SignedVersion", skip_serializing_if = "Option::is_none")]
-    pub signed_version: Option<String>,
-
-    /// The key as a base64 string.
-    #[serde(
-        default,
-        deserialize_with = "deserialize",
-        rename = "Value",
-        serialize_with = "serialize",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub value: Option<Vec<u8>>,
 }

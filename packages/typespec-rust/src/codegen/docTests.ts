@@ -39,7 +39,8 @@ export function emitHeaderTraitDocExample(crateName: string, trait: rust.Respons
       break;
   }
 
-  let headerDocs = `${indent.get()}/// ${helpers.emitBackTicks(3)}no_run\n`;
+  // internal types aren't accessible in doc tests so we ignore them
+  let headerDocs = `${indent.get()}/// ${helpers.emitBackTicks(3)}${trait.visibility === 'pub' ? 'no_run' : 'ignore'}\n`;
   headerDocs += `${indent.get()}/// use azure_core::{Result, ${useFromHttp}};\n`;
   // we need to unwrap content in case it's a Vec<T> etc
   headerDocs += `${indent.get()}/// use ${crateName}::models::{${helpers.getTypeDeclaration(helpers.unwrapType(targetType))}, ${trait.name}};\n`;

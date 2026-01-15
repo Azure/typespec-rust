@@ -98,3 +98,6 @@ model BlobServiceClientParameters {
   uint64,
   "rust"
 );
+
+@@access(Storage.Blob.getUserDelegationKey, Access.internal);
+@@access(Storage.Blob.Container.Blob.abortCopyFromUrl, Access.internal);
