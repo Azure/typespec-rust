@@ -1836,7 +1836,7 @@ export class Adapter {
 
     // NOTE: the complete doc text will be emitted at codegen time
     const docs = this.asDocLink(`${client.name}::${method.name}()`, `crate::generated::clients::${client.name}::${method.name}()`);
-    const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs);
+    const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs, method.visibility);
     responseHeadersTrait.headers.push(...responseHeaders);
 
     return responseHeadersTrait;

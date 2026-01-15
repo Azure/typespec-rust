@@ -77,7 +77,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       }
     }
 
-    const mergedTrait = new rust.ResponseHeadersTrait(srcTrait[0].name, srcTrait[0].implFor, mergedDocs);
+    const mergedTrait = new rust.ResponseHeadersTrait(srcTrait[0].name, srcTrait[0].implFor, mergedDocs, srcTrait[0].visibility);
     mergedTrait.headers = mergedHeaders;
     traits.push(mergedTrait);
     addHeaders(...mergedHeaders);
@@ -149,7 +149,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += `///\n`;
       body += emitHeaderTraitDocExample(crate.name, trait);
     }
-    body += `pub trait ${trait.name}: private::Sealed {\n`;
+    body += `${helpers.emitVisibility(trait.visibility)}trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {
       use.addForType(header.type);
       body += `${indent.get()}${getHeaderMethodName(header)};\n`;

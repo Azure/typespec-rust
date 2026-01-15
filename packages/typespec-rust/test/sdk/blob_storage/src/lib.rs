@@ -29,4 +29,16 @@ const _: () = {
             Default::default();
         let _ = (&mut o.method_options, &mut o.timeout);
     }
+
+    fn _touch_blob_client_abort_copy_from_url_result_headers<
+        T: crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders,
+    >(_value: &T) {
+        let _ = _value.date();
+    }
+
+    fn _touch_user_delegation_key_headers<
+        T: crate::generated::models::UserDelegationKeyHeaders,
+    >(_value: &T) {
+        let _ = _value.date();
+    }
 };

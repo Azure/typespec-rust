@@ -465,7 +465,7 @@ impl AppendBlobClientSealResultHeaders for Response<AppendBlobClientSealResult, 
 ///     Ok(())
 /// }
 /// ```
-pub trait BlobClientAbortCopyFromUrlResultHeaders: private::Sealed {
+pub(crate) trait BlobClientAbortCopyFromUrlResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
 }
 
@@ -3878,7 +3878,7 @@ impl StorageServiceStatsHeaders for Response<StorageServiceStats, XmlFormat> {
 ///     Ok(())
 /// }
 /// ```
-pub trait UserDelegationKeyHeaders: private::Sealed {
+pub(crate) trait UserDelegationKeyHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
 }
 

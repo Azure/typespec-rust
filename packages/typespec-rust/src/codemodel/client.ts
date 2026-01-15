@@ -551,6 +551,9 @@ export interface ResponseHeadersTrait {
 
   /** doc string for the trait */
   docs: string;
+
+  /** indicates the visibility of the trait */
+  visibility: types.Visibility;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -899,12 +902,13 @@ export class ResponseHeaderScalar implements ResponseHeaderScalar {
 }
 
 export class ResponseHeadersTrait implements ResponseHeadersTrait {
-  constructor(name: string, implFor: types.AsyncResponse<types.MarkerType> | types.Response<types.MarkerType | types.WireType>, docs: string) {
+  constructor(name: string, implFor: types.AsyncResponse<types.MarkerType> | types.Response<types.MarkerType | types.WireType>, docs: string, visibility: types.Visibility) {
     this.kind = 'responseHeadersTrait';
     this.name = name;
     this.implFor = implFor;
     this.docs = docs;
     this.headers = new Array<ResponseHeader>();
+    this.visibility = visibility;
   }
 }
 
