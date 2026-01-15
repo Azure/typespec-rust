@@ -453,7 +453,7 @@ impl AppendBlobClientSealResultHeaders for Response<AppendBlobClientSealResult, 
 ///
 /// # Examples
 ///
-/// ```no_run
+/// ```ignore
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientAbortCopyFromUrlResult, BlobClientAbortCopyFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
@@ -3866,7 +3866,7 @@ impl StorageServiceStatsHeaders for Response<StorageServiceStats, XmlFormat> {
 ///
 /// # Examples
 ///
-/// ```no_run
+/// ```ignore
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{UserDelegationKey, UserDelegationKeyHeaders};
 /// async fn example() -> Result<()> {

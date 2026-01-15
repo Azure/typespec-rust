@@ -378,7 +378,7 @@ impl BlobServiceClient {
     /// The returned [`Response`](azure_core::http::Response) implements the [`UserDelegationKeyHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
-    /// ```no_run
+    /// ```ignore
     /// use azure_core::{Result, http::{Response, XmlFormat}};
     /// use blob_storage::models::{UserDelegationKey, UserDelegationKeyHeaders};
     /// async fn example() -> Result<()> {

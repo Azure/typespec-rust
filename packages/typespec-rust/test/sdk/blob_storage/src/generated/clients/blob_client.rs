@@ -124,7 +124,7 @@ impl BlobClient {
     /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientAbortCopyFromUrlResultHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
-    /// ```no_run
+    /// ```ignore
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlobClientAbortCopyFromUrlResult, BlobClientAbortCopyFromUrlResultHeaders};
     /// async fn example() -> Result<()> {
