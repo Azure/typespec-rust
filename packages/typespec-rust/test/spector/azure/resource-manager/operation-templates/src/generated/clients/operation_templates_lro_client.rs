@@ -91,8 +91,8 @@ impl OperationTemplatesLroClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |next_link: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match next_link {
+            move |poller_state: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match poller_state {
                     PollerState::More(next_link) => {
                         let mut next_link = next_link.clone();
                         let mut query_builder = next_link.query_builder();
@@ -241,8 +241,8 @@ impl OperationTemplatesLroClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |next_link: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match next_link {
+            move |poller_state: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match poller_state {
                     PollerState::More(next_link) => {
                         let mut next_link = next_link.clone();
                         let mut query_builder = next_link.query_builder();
@@ -397,8 +397,8 @@ impl OperationTemplatesLroClient {
             }
         }
         Ok(Poller::new(
-            move |state: PollerState<Progress>, poller_options| {
-                let (mut request, progress) = match state {
+            move |poller_state: PollerState<Progress>, poller_options| {
+                let (mut request, progress) = match poller_state {
                     PollerState::More(progress) => {
                         let mut next_link = progress.next_link.clone();
                         let mut query_builder = next_link.query_builder();

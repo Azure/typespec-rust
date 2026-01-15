@@ -97,8 +97,8 @@ impl LargeHeaderLargeHeadersClient {
             }
         }
         Ok(Poller::new(
-            move |state: PollerState<Progress>, poller_options| {
-                let (mut request, progress) = match state {
+            move |poller_state: PollerState<Progress>, poller_options| {
+                let (mut request, progress) = match poller_state {
                     PollerState::More(progress) => {
                         let mut next_link = progress.next_link.clone();
                         let mut query_builder = next_link.query_builder();
