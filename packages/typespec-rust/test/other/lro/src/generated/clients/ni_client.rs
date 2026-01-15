@@ -123,8 +123,8 @@ impl NIClient {
         query_builder.set_pair("api-version", api_version);
         query_builder.build();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
+            move |next_link: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let request = Request::new(next_link.clone(), Method::Get);
                         (request, next_link)
@@ -240,8 +240,8 @@ impl NIClient {
         query_builder.set_pair("api-version", api_version);
         query_builder.build();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
+            move |next_link: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("content-type", "application/json");

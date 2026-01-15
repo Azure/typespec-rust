@@ -159,8 +159,8 @@ impl ResourcesTopLevelClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
+            move |next_link: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let mut next_link = next_link.clone();
                         let mut query_builder = next_link.query_builder();
@@ -312,8 +312,8 @@ impl ResourcesTopLevelClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
+            move |next_link: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let mut next_link = next_link.clone();
                         let mut query_builder = next_link.query_builder();
@@ -652,8 +652,8 @@ impl ResourcesTopLevelClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
+            move |next_link: PollerState<Url>, poller_options| {
+                let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let mut next_link = next_link.clone();
                         let mut query_builder = next_link.query_builder();

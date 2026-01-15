@@ -87,27 +87,47 @@ impl LargeHeaderLargeHeadersClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
+        struct Progress {
+            next_link: Url,
+            final_link: Url,
+        }
+        impl AsRef<str> for Progress {
+            fn as_ref(&self) -> &str {
+                self.next_link.as_ref()
+            }
+        }
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
-                    PollerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+            move |state: PollerState<Progress>, poller_options| {
+                let (mut request, progress) = match state {
+                    PollerState::More(progress) => {
+                        let mut next_link = progress.next_link.clone();
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
-                        (request, next_link)
+                        (
+                            request,
+                            Progress {
+                                next_link,
+                                final_link: progress.final_link,
+                            },
+                        )
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Post);
                         request.insert_header("accept", "application/json");
-                        (request, url.clone())
+                        (
+                            request,
+                            Progress {
+                                next_link: url.clone(),
+                                final_link: url.clone(),
+                            },
+                        )
                     }
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
-                let mut final_link = None;
                 Box::pin(async move {
                     let rsp = pipeline
                         .send(
@@ -129,12 +149,12 @@ impl LargeHeaderLargeHeadersClient {
                         .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
                     {
                         Some(operation_location) => Url::parse(&operation_location)?,
-                        None => next_link,
+                        None => progress.next_link,
                     };
-                    final_link =
+                    let final_link =
                         match headers.get_optional_string(&HeaderName::from_static("location")) {
-                            Some(final_link) => Some(Url::parse(&final_link)?),
-                            None => final_link,
+                            Some(final_link) => Url::parse(&final_link)?,
+                            None => progress.final_link,
                         };
                     let retry_after = get_retry_after(
                         &headers,
@@ -148,13 +168,16 @@ impl LargeHeaderLargeHeadersClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            continuation_token: next_link,
+                            continuation_token: Progress {
+                                next_link,
+                                final_link,
+                            },
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
                                 Box::pin(async move {
-                                    let mut request = Request::new(final_link.unwrap(), Method::Get);
+                                    let mut request = Request::new(final_link, Method::Get);
                                     request.insert_header("accept", "application/json");
                                     Ok(pipeline.send(&ctx, &mut request, None).await?.into())
                                 })
