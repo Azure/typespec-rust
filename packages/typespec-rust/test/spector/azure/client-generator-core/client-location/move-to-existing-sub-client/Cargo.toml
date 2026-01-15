@@ -1,0 +1,17 @@
+[package]
+name = "spector_clientloc_move2"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[features]
+default = ["azure_core/default"]
+
+[dependencies]
+azure_core = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

@@ -1,0 +1,15 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+use spector_clientloc_move3::MoveToNewSubClient;
+
+#[tokio::test]
+async fn test_archive_product() {
+    let client = MoveToNewSubClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_move_to_new_sub_archive_operations_client()
+        .archive_product(None)
+        .await
+        .unwrap();
+}

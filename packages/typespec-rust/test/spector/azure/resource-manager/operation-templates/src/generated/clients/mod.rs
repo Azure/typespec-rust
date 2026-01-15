@@ -6,10 +6,12 @@
 mod operation_templates_check_name_availability_client;
 mod operation_templates_client;
 mod operation_templates_lro_client;
+mod operation_templates_lro_paging_client;
 mod operation_templates_operations_client;
 mod operation_templates_optional_body_client;
 pub use operation_templates_check_name_availability_client::*;
 pub use operation_templates_client::*;
 pub use operation_templates_lro_client::*;
+pub use operation_templates_lro_paging_client::*;
 pub use operation_templates_operations_client::*;
 pub use operation_templates_optional_body_client::*;

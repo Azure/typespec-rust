@@ -162,7 +162,7 @@ pub struct Operation {
     pub origin: Option<Origin>,
 }
 
-/// Localized display information for and operation.
+/// Localized display information for an operation.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationDisplay {
@@ -363,6 +363,64 @@ pub struct OrderProperties {
     pub amount: Option<i32>,
 
     /// The product ID of the order.
+    #[serde(rename = "productId", skip_serializing_if = "Option::is_none")]
+    pub product_id: Option<String>,
+
+    /// The provisioning state of the product.
+    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    pub provisioning_state: Option<String>,
+}
+
+/// Concrete tracked resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct Product {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The geo-location where the resource lives
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+
+    /// The name of the Product
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<ProductProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    pub system_data: Option<SystemData>,
+
+    /// Resource tags.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub type_prop: Option<String>,
+}
+
+/// Paged collection of Product items
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct ProductListResult {
+    /// The link to the next page of items
+    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
+
+    /// The Product items on this page
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<Vec<Product>>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct ProductProperties {
+    /// The product ID.
     #[serde(rename = "productId", skip_serializing_if = "Option::is_none")]
     pub product_id: Option<String>,
 

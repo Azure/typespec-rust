@@ -38,7 +38,7 @@ pub struct Operation {
     pub origin: Option<Origin>,
 }
 
-/// Localized display information for and operation.
+/// Localized display information for an operation.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationDisplay {

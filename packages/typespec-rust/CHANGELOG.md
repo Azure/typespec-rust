@@ -16,6 +16,7 @@
 ### Other Changes
 
 * Enum values that coalesce into the same name no longer cause an error. The names will be flagged for improvement and diagnostics emitted.
+* Updated to the latest tsp toolset.
 
 ## 0.32.0 (2025-12-11)
 

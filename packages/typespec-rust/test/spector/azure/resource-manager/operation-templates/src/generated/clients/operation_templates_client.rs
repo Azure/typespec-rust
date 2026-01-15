@@ -5,7 +5,8 @@
 
 use crate::generated::clients::{
     OperationTemplatesCheckNameAvailabilityClient, OperationTemplatesLroClient,
-    OperationTemplatesOperationsClient, OperationTemplatesOptionalBodyClient,
+    OperationTemplatesLroPagingClient, OperationTemplatesOperationsClient,
+    OperationTemplatesOptionalBodyClient,
 };
 use azure_core::{
     credentials::TokenCredential,
@@ -102,6 +103,17 @@ impl OperationTemplatesClient {
     #[tracing::subclient]
     pub fn get_operation_templates_lro_client(&self) -> OperationTemplatesLroClient {
         OperationTemplatesLroClient {
+            api_version: self.api_version.clone(),
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+            subscription_id: self.subscription_id.clone(),
+        }
+    }
+
+    /// Returns a new instance of OperationTemplatesLroPagingClient.
+    #[tracing::subclient]
+    pub fn get_operation_templates_lro_paging_client(&self) -> OperationTemplatesLroPagingClient {
+        OperationTemplatesLroPagingClient {
             api_version: self.api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
