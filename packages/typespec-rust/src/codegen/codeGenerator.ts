@@ -94,6 +94,7 @@ export class CodeGenerator {
     const unions = emitUnions(this.crate, this.context);
     addModelsFile(unions.public, 'pubUse');
     addModelsFile(unions.impls, 'internal');
+    addModelsFile(unions.serde, 'internal');
 
     const models = emitModels(this.crate, this.context);
     addModelsFile(models.public, 'pubUse');
