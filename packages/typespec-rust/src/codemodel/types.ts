@@ -5,6 +5,8 @@
 
 import { Crate, CrateDependency } from './crate.js';
 
+export type Symbol = () => string;
+
 /** Docs contains the values used in doc comment generation. */
 export interface Docs {
   /** the high level summary */
@@ -15,7 +17,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | AsyncResponse | Box | ClientMethodOptions | ImplTrait | MarkerType | Option | Pager | PagerOptions | Poller | PollerOptions | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType = Arc | AsyncResponse | Box | ClientMethodOptions | ImplTrait | MarkerType | Option | Pager | PagerOptions | Poller | PollerOptions | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | DiscriminatedUnion | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -119,7 +121,7 @@ export interface EnumValue {
   kind: 'enumValue';
 
   /** the name of the enum value */
-  name: string;
+  name: Symbol;
 
   /** any docs for the value */
   docs: Docs;
@@ -749,7 +751,7 @@ export class Enum implements Enum {
 }
 
 export class EnumValue implements EnumValue {
-  constructor(name: string, type: Enum, value: number | string) {
+  constructor(name: Symbol, type: Enum, value: number | string) {
     this.kind = 'enumValue';
     this.name = name;
     this.type = type;

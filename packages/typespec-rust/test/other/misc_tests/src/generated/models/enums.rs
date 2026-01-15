@@ -19,15 +19,15 @@ pub enum Colors {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum HasCollidingNames {
-    COLLIDES_GRP1_ID1_ApplicationJson,
+    COLLIDES_ApplicationJson_ID1,
 
-    COLLIDES_GRP1_ID2_ApplicationJson,
+    COLLIDES_ApplicationJson_ID2,
 
-    COLLIDES_GRP2_ID1_ApplicationXml,
+    COLLIDES_ApplicationXml_ID1,
 
-    COLLIDES_GRP2_ID2_ApplicationXml,
+    COLLIDES_ApplicationXml_ID2,
 
-    COLLIDES_GRP2_ID3_ApplicationXml,
+    COLLIDES_ApplicationXml_ID3,
 
     TextPlain,
 }

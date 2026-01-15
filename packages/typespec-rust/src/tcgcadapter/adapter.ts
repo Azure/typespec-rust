@@ -12,6 +12,7 @@ import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
 import {RustEmitterOptions} from '../lib.js';
+import { SymbolTable } from './symbols.js';
 import * as shared from '../shared/shared.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
@@ -100,6 +101,8 @@ export class Adapter {
   // maps a tcgc model field to the adapted struct field
   private readonly fieldsMap: Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>;
 
+  private readonly symbolTable: SymbolTable;
+
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
@@ -113,6 +116,7 @@ export class Adapter {
     }
 
     this.crate = new rust.Crate(this.options['crate-name'], this.options['crate-version'], serviceType);
+    this.symbolTable = new SymbolTable(this.ctx.program);
   }
 
   /** performs all the steps to convert tcgc to a crate */
@@ -245,16 +249,9 @@ export class Adapter {
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
-    // the first pass is to detect any enum values that coalesce into duplicate entries
-    const nameCache = new naming.NameCache<tcgc.SdkEnumValueType>(this.ctx.program);
-    for (const value of sdkEnum.values) {
-      const enumValueName = naming.fixUpEnumValueName(value);
-      nameCache.add(enumValueName, value);
-    }
-
     // now adapt the values
     for (const value of sdkEnum.values) {
-      const enumValueName = nameCache.get(value);
+      const enumValueName = this.symbolTable.add(naming.fixUpEnumValueName(value), value);
       const rustEnumValue = new rust.EnumValue(enumValueName, rustEnum, value.value);
       rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
       rustEnum.values.push(rustEnumValue);
@@ -274,7 +271,7 @@ export class Adapter {
     const enumType = this.getEnum(sdkEnumValue.enumType);
     // find the specified enum value
     for (const value of enumType.values) {
-      if (value.name === naming.fixUpEnumValueName(sdkEnumValue)) {
+      if (value.name() === naming.fixUpEnumValueName(sdkEnumValue)) {
         return value;
       }
     }
@@ -1234,6 +1231,7 @@ export class Adapter {
         continue;
       }
       this.adaptMethod(method, rustClient);
+      //
     }
 
     // Set the tracing namespace for tracing based on the client's namespace
@@ -1449,7 +1447,7 @@ export class Adapter {
 
           lroFinalResultStrategy.propertyName = method.lroMetadata.finalResultPath;
         }
-        rustMethod = new rust.LroMethod( methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path, lroFinalResultStrategy);
+        rustMethod = new rust.LroMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path, lroFinalResultStrategy);
       }
         break;
       default:
@@ -2433,7 +2431,7 @@ function recursiveKeyName(root: string, type: rust.Box | rust.Payload | rust.Req
     case 'enum':
       return `${root}-${type.kind}-${type.name}`;
     case 'enumValue':
-      return `${root}-${type.type.name}-${type.name}`;
+      return `${root}-${type.type.name}-${type.name()}`;
     case 'hashmap':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'offsetDateTime':

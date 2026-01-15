@@ -95,7 +95,7 @@ export class Crate implements Crate {
     }
     this.enums.sort((a: types.Enum, b: types.Enum) => { return sortAscending(a.name, b.name); });
     for (const rustEnum of this.enums) {
-      rustEnum.values.sort((a: types.EnumValue, b: types.EnumValue) => { return sortAscending(a.name, b.name); });
+      rustEnum.values.sort((a: types.EnumValue, b: types.EnumValue) => { return sortAscending(a.name(), b.name()); });
     }
     this.models.sort((a: types.MarkerType | types.Model, b: types.MarkerType | types.Model) => { return sortAscending(a.name, b.name); });
     for (const model of this.models) {

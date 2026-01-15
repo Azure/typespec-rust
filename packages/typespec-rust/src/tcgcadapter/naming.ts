@@ -83,7 +83,7 @@ export function fixUpEnumValueNameWorker(name: string): string {
  * any names that result in duplicates will have
  * a COLLIDES_* prefix.
  */
-export class NameCache<T extends tcgc.SdkType> {
+export class NameCach1e<T extends tcgc.SdkType> {
   private readonly program: tsp.Program;
   private readonly nameToSdkEntries;
   private readonly sdkTypeToName;

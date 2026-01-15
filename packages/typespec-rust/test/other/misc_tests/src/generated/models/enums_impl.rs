@@ -60,11 +60,11 @@ impl FromStr for HasCollidingNames {
     type Err = Error;
     fn from_str(s: &str) -> ::core::result::Result<Self, <Self as FromStr>::Err> {
         Ok(match s {
-            "application/json" => HasCollidingNames::COLLIDES_GRP1_ID1_ApplicationJson,
-            "application/*+json" => HasCollidingNames::COLLIDES_GRP1_ID2_ApplicationJson,
-            "application/xml" => HasCollidingNames::COLLIDES_GRP2_ID1_ApplicationXml,
-            "application/*xml" => HasCollidingNames::COLLIDES_GRP2_ID2_ApplicationXml,
-            "application/*+xml" => HasCollidingNames::COLLIDES_GRP2_ID3_ApplicationXml,
+            "application/*+json" => HasCollidingNames::COLLIDES_ApplicationJson_ID1,
+            "application/json" => HasCollidingNames::COLLIDES_ApplicationJson_ID2,
+            "application/*+xml" => HasCollidingNames::COLLIDES_ApplicationXml_ID1,
+            "application/*xml" => HasCollidingNames::COLLIDES_ApplicationXml_ID2,
+            "application/xml" => HasCollidingNames::COLLIDES_ApplicationXml_ID3,
             "text/plain" => HasCollidingNames::TextPlain,
             _ => {
                 return Err(Error::with_message_fn(ErrorKind::DataConversion, || {
@@ -78,11 +78,11 @@ impl FromStr for HasCollidingNames {
 impl AsRef<str> for HasCollidingNames {
     fn as_ref(&self) -> &str {
         match self {
-            HasCollidingNames::COLLIDES_GRP1_ID1_ApplicationJson => "application/json",
-            HasCollidingNames::COLLIDES_GRP1_ID2_ApplicationJson => "application/*+json",
-            HasCollidingNames::COLLIDES_GRP2_ID1_ApplicationXml => "application/xml",
-            HasCollidingNames::COLLIDES_GRP2_ID2_ApplicationXml => "application/*xml",
-            HasCollidingNames::COLLIDES_GRP2_ID3_ApplicationXml => "application/*+xml",
+            HasCollidingNames::COLLIDES_ApplicationJson_ID1 => "application/*+json",
+            HasCollidingNames::COLLIDES_ApplicationJson_ID2 => "application/json",
+            HasCollidingNames::COLLIDES_ApplicationXml_ID1 => "application/*+xml",
+            HasCollidingNames::COLLIDES_ApplicationXml_ID2 => "application/*xml",
+            HasCollidingNames::COLLIDES_ApplicationXml_ID3 => "application/xml",
             HasCollidingNames::TextPlain => "text/plain",
         }
     }
@@ -91,21 +91,13 @@ impl AsRef<str> for HasCollidingNames {
 impl Display for HasCollidingNames {
     fn fmt(&self, f: &mut Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            HasCollidingNames::COLLIDES_GRP1_ID1_ApplicationJson => {
-                Display::fmt("application/json", f)
-            }
-            HasCollidingNames::COLLIDES_GRP1_ID2_ApplicationJson => {
+            HasCollidingNames::COLLIDES_ApplicationJson_ID1 => {
                 Display::fmt("application/*+json", f)
             }
-            HasCollidingNames::COLLIDES_GRP2_ID1_ApplicationXml => {
-                Display::fmt("application/xml", f)
-            }
-            HasCollidingNames::COLLIDES_GRP2_ID2_ApplicationXml => {
-                Display::fmt("application/*xml", f)
-            }
-            HasCollidingNames::COLLIDES_GRP2_ID3_ApplicationXml => {
-                Display::fmt("application/*+xml", f)
-            }
+            HasCollidingNames::COLLIDES_ApplicationJson_ID2 => Display::fmt("application/json", f),
+            HasCollidingNames::COLLIDES_ApplicationXml_ID1 => Display::fmt("application/*+xml", f),
+            HasCollidingNames::COLLIDES_ApplicationXml_ID2 => Display::fmt("application/*xml", f),
+            HasCollidingNames::COLLIDES_ApplicationXml_ID3 => Display::fmt("application/xml", f),
             HasCollidingNames::TextPlain => Display::fmt("text/plain", f),
         }
     }

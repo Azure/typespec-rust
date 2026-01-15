@@ -144,7 +144,7 @@ function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.E
     if (docs.length > 0) {
       body += indent.get() + `${docs.substring(0, docs.length - 1)}\n`;
     }
-    body += indent.get() + `${value.name},\n`;
+    body += indent.get() + `${value.name()},\n`;
     body += '\n';
     if (rustEnum.extensible && i + 1 === rustEnum.values.length) {
       body += indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
@@ -192,7 +192,7 @@ function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, ru
     indent.push();
     for (let i = 0; i < rustEnum.values.length; ++i) {
       const value = rustEnum.values[i];
-      body += indent.get() + `${rustEnum.name}::${value.name} => "${value.value}",\n`;
+      body += indent.get() + `${rustEnum.name}::${value.name()} => "${value.value}",\n`;
     }
     body += indent.get() + `${rustEnum.name}::UnknownValue(s) => s.as_ref(),\n`;
     body += indent.pop().get() + `}\n`; // end match
@@ -217,7 +217,7 @@ function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, ru
   indent.push();
   for (let i = 0; i < rustEnum.values.length; ++i) {
     const value = rustEnum.values[i];
-    body += indent.get() + `"${value.value}" => ${rustEnum.name}::${value.name},\n`;
+    body += indent.get() + `"${value.value}" => ${rustEnum.name}::${value.name()},\n`;
   }
   if (rustEnum.extensible) {
     body += indent.get() + `_ => ${rustEnum.name}::UnknownValue(s.to_string()),\n`;
@@ -242,7 +242,7 @@ function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, ru
   indent.push();
   for (let i = 0; i < rustEnum.values.length; ++i) {
     const value = rustEnum.values[i];
-    body += indent.get() + `${rustEnum.name}::${value.name} => "${value.value}",\n`;
+    body += indent.get() + `${rustEnum.name}::${value.name()} => "${value.value}",\n`;
   }
   if (rustEnum.extensible) {
     body += indent.get() + `${rustEnum.name}::UnknownValue(s) => s.as_str(),\n`;
@@ -261,10 +261,10 @@ function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, ru
   for (let i = 0; i < rustEnum.values.length; ++i) {
     const value = rustEnum.values[i];
     if (rustEnum.extensible) {
-      body += indent.get() + `${rustEnum.name}::${value.name} => f.write_str("${value.value}"),\n`;
+      body += indent.get() + `${rustEnum.name}::${value.name()} => f.write_str("${value.value}"),\n`;
     }
     else {
-      body += indent.get() + `${rustEnum.name}::${value.name} => Display::fmt("${value.value}", f),\n`;
+      body += indent.get() + `${rustEnum.name}::${value.name()} => Display::fmt("${value.value}", f),\n`;
     }
   }
   if (rustEnum.extensible) {
@@ -301,7 +301,7 @@ function emitNumericEnumImplDefinitions(indent: helpers.indentation, use: Use, r
     for (const value of rustEnum.values) {
       matchArms.push({
         pattern: value.value.toString(),
-        body: (indent) => `${indent.get()}Ok(${rustEnum.name}::${value.name})\n`,
+        body: (indent) => `${indent.get()}Ok(${rustEnum.name}::${value.name()})\n`,
       });
     }
     matchArms.push({
@@ -326,7 +326,7 @@ function emitNumericEnumImplDefinitions(indent: helpers.indentation, use: Use, r
     const matchArms = new Array<helpers.matchArm>();
     for (const value of rustEnum.values) {
       matchArms.push({
-        pattern: `${rustEnum.name}::${value.name}`,
+        pattern: `${rustEnum.name}::${value.name()}`,
         body: (indent) => `${indent.get()}${value.value}\n`,
       });
     }
@@ -348,7 +348,7 @@ function emitNumericEnumImplDefinitions(indent: helpers.indentation, use: Use, r
     const matchArms = new Array<helpers.matchArm>();
     for (const value of rustEnum.values) {
       matchArms.push({
-        pattern: `${rustEnum.name}::${value.name}`,
+        pattern: `${rustEnum.name}::${value.name()}`,
         body: (indent) => `${indent.get()}Display::fmt(&${value.value}, f)\n`,
       });
     }
