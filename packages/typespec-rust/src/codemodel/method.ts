@@ -8,7 +8,7 @@ import * as types from './types.js';
 /** Method is a Rust method */
 export interface Method<T> {
   /** the name of the method */
-  name: string;
+  name: types.Symbol;
 
   /** the method's language-independent name */
   languageIndependentName: string;
@@ -62,7 +62,7 @@ export interface Self {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class Method<T> implements Method<T> {
-  constructor(name: string, languageIndependentName: string, visibility: types.Visibility, impl: string, self: Self) {
+  constructor(name: types.Symbol, languageIndependentName: string, visibility: types.Visibility, impl: string, self: Self) {
     this.name = name;
     this.languageIndependentName = languageIndependentName;
     this.visibility = visibility;

@@ -1330,7 +1330,7 @@ export class Adapter {
    * @param subClient the sub-client type that the method returns
    */
   private adaptClientAccessor(parentClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, childClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, rustClient: rust.Client, subClient: rust.Client): void {
-    const clientAccessor = new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient);
+    const clientAccessor = new rust.ClientAccessor(this.symbolTable.add(`get_${snakeCaseName(subClient.name)}`, subClient), subClient.languageIndependentName, rustClient, subClient);
     clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
     for (const param of childClient.clientInitialization.parameters) {
       // check if the client's initializer already has this parameter.
@@ -1378,15 +1378,7 @@ export class Adapter {
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;
-    const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
-    if (srcMethodName !== method.name) {
-      // if the method was renamed then ensure it doesn't collide
-      for (const existingMethod of rustClient.methods) {
-        if (existingMethod.name === methodName) {
-          throw new AdapterError('NameCollision', `renamed method ${srcMethodName} collides with an existing method`, method.__raw?.node);
-        }
-      }
-    }
+    const methodName = this.symbolTable.add(naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn'), method);
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName, false)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;

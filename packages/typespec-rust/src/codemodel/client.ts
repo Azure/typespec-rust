@@ -623,7 +623,7 @@ class ClientParameterBase implements ClientParameterBase {
 }
 
 class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase {
-  constructor(name: string, languageIndependentName: string, httpMethod: HTTPMethod, httpPath: string, visibility: types.Visibility, impl: string, self: method.Self) {
+  constructor(name: types.Symbol, languageIndependentName: string, httpMethod: HTTPMethod, httpPath: string, visibility: types.Visibility, impl: string, self: method.Self) {
     super(name, languageIndependentName, visibility, impl, self);
     this.httpMethod = httpMethod;
     this.httpPath = httpPath;
@@ -644,7 +644,7 @@ class HTTPParameterBase extends method.Parameter {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+  constructor(name: types.Symbol, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'async';
     this.params = new Array<MethodParameter>();
@@ -670,8 +670,8 @@ export class Client implements Client {
 }
 
 export class ClientAccessor extends method.Method<Client> implements ClientAccessor {
-  constructor(name: string, client: Client, returns: Client) {
-    super(name, name, 'pub', client.name, new method.Self(false, true));
+  constructor(name: types.Symbol, languageIndependentName: string, client: Client, returns: Client) {
+    super(name, languageIndependentName, 'pub', client.name, new method.Self(false, true));
     this.kind = 'clientaccessor';
     this.params = new Array<MethodParameter>();
     this.returns = returns;
@@ -763,7 +763,7 @@ export class MethodOptions extends types.Option implements MethodOptions {
 }
 
 export class PageableMethod extends HTTPMethodBase implements PageableMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+  constructor(name: types.Symbol, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'pageable';
     this.params = new Array<MethodParameter>();
@@ -785,7 +785,7 @@ export class LroFinalResultStrategyHeader implements LroFinalResultStrategyHeade
 }
 
 export class LroMethod extends HTTPMethodBase implements LroMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultStrategy: LroFinalResultStrategyKind) {
+  constructor(name: types.Symbol, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultStrategy: LroFinalResultStrategyKind) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'lro';
     this.params = new Array<MethodParameter>();
