@@ -1728,7 +1728,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
   body += `${indent.pop().get()}})\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
-  body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::from_callback
+  body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::new
 
   return body;
 }
