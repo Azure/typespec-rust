@@ -184,6 +184,12 @@ pub struct Lambda {
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithList {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub list: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Not {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
