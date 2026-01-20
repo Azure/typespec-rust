@@ -429,15 +429,8 @@ export class Adapter {
       rustModel.fields.push(structField);
     }
 
-    if (addlProps || model.discriminatedSubtypes) {
-      let addlPropsType: rust.HashMap;
-      if (addlProps) {
-        addlPropsType = this.getHashMap(this.typeToWireType(this.getType(addlProps)));
-      } else {
-        // if the base type in a polymorphic discriminated union doesn't
-        // define additional properties then we explicitly add it.
-        addlPropsType = this.getHashMap(this.getUnknownValue());
-      }
+    if (addlProps) {
+      const addlPropsType = this.getHashMap(this.typeToWireType(this.getType(addlProps)));
       const addlPropsField = new rust.ModelAdditionalProperties('additional_properties', 'pub', this.getOptionType(addlPropsType));
       addlPropsField.docs.summary = 'Contains unnamed additional properties.';
       rustModel.fields.push(addlPropsField);
