@@ -11,7 +11,7 @@ use std::collections::HashMap;
 /// This is base model for polymorphic single level inheritance with a discriminator.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Bird {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     #[serde(flatten)]
     pub additional_properties: Option<HashMap<String, Value>>,
 
@@ -26,7 +26,7 @@ pub struct Bird {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct Dinosaur {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     #[serde(flatten)]
     pub additional_properties: Option<HashMap<String, Value>>,
 

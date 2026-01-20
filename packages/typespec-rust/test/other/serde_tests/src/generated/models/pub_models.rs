@@ -11,7 +11,7 @@ use std::collections::HashMap;
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct AddlPropsInt {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     #[serde(flatten)]
     pub additional_properties: Option<HashMap<String, i32>>,
 
@@ -22,7 +22,7 @@ pub struct AddlPropsInt {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct AddlPropsString {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     #[serde(flatten)]
     pub additional_properties: Option<HashMap<String, String>>,
 
@@ -33,7 +33,7 @@ pub struct AddlPropsString {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct AddlPropsUnknown {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     #[serde(flatten)]
     pub additional_properties: Option<HashMap<String, Value>>,
 

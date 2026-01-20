@@ -280,7 +280,7 @@ pub struct BlobItemInternal {
 #[derive(Clone, Default, SafeDebug)]
 #[non_exhaustive]
 pub struct BlobMetadata {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     pub additional_properties: Option<HashMap<String, String>>,
 
     /// Whether the blob metadata is encrypted.
@@ -1081,7 +1081,7 @@ pub struct Metrics {
 #[derive(Clone, Default, SafeDebug)]
 #[non_exhaustive]
 pub struct ObjectReplicationMetadata {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     pub additional_properties: Option<HashMap<String, String>>,
 }
 
@@ -1158,7 +1158,7 @@ pub struct PageRange {
 /// Represents the Parquet configuration.
 #[derive(Clone, Default, SafeDebug)]
 pub struct ParquetConfiguration {
-    /// contains unnamed additional properties
+    /// Contains unnamed additional properties.
     pub additional_properties: Option<HashMap<String, Value>>,
 }
 

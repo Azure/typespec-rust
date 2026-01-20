@@ -439,7 +439,7 @@ export class Adapter {
         addlPropsType = this.getHashMap(this.getUnknownValue());
       }
       const addlPropsField = new rust.ModelAdditionalProperties('additional_properties', 'pub', this.getOptionType(addlPropsType));
-      addlPropsField.docs.summary = 'contains unnamed additional properties';
+      addlPropsField.docs.summary = 'Contains unnamed additional properties.';
       rustModel.fields.push(addlPropsField);
     }
 
