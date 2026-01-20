@@ -19,6 +19,13 @@ pub struct SpecialWordsModelPropertiesClientSameAsModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelPropertiesClient::with_list()`](crate::generated::clients::SpecialWordsModelPropertiesClient::with_list())
+#[derive(Clone, Default, SafeDebug)]
+pub struct SpecialWordsModelPropertiesClientWithListOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`SpecialWordsModelsClient::with_and()`](crate::generated::clients::SpecialWordsModelsClient::with_and())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAndOptions<'a> {

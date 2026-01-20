@@ -4,7 +4,7 @@
 
 use azure_core::http::StatusCode;
 use spector_specialwords::{
-    models::{DictMethods, SameAsModel},
+    models::{DictMethods, ModelWithList, SameAsModel},
     SpecialWordsClient,
 };
 
@@ -44,6 +44,22 @@ async fn dict_methods() {
     let resp = client
         .get_special_words_model_properties_client()
         .dict_methods(req, None)
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), StatusCode::NoContent);
+}
+
+#[tokio::test]
+async fn with_list() {
+    let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let model_with_list = ModelWithList {
+        list: Some(String::from("ok")),
+    };
+    let req = model_with_list.try_into().unwrap();
+    let resp = client
+        .get_special_words_model_properties_client()
+        .with_list(req, None)
         .await
         .unwrap();
 

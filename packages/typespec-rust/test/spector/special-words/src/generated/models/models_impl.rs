@@ -5,8 +5,8 @@
 
 use super::{
     And, As, Assert, Async, Await, Break, Class, Constructor, Continue, Def, Del, DictMethods,
-    Elif, Else, Except, Exec, Finally, For, From, Global, If, Import, In, Is, Lambda, Not, Or,
-    Pass, Raise, Return, SameAsModel, Try, While, With, Yield,
+    Elif, Else, Except, Exec, Finally, For, From, Global, If, Import, In, Is, Lambda,
+    ModelWithList, Not, Or, Pass, Raise, Return, SameAsModel, Try, While, With, Yield,
 };
 use azure_core::{http::RequestContent, json::to_json, Result};
 
@@ -181,6 +181,13 @@ impl TryFrom<Is> for RequestContent<Is> {
 impl TryFrom<Lambda> for RequestContent<Lambda> {
     type Error = azure_core::Error;
     fn try_from(value: Lambda) -> Result<Self> {
+        Ok(to_json(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithList> for RequestContent<ModelWithList> {
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithList) -> Result<Self> {
         Ok(to_json(&value)?.into())
     }
 }
