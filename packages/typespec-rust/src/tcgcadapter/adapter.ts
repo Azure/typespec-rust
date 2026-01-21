@@ -333,7 +333,7 @@ export class Adapter {
    * @param modelName optional parameter to override model name
    * @returns a Rust model
    */
-  private getModel(model: tcgc.SdkModelType, stack?: Array<string>, modelName?: string): rust.Model {
+  private getModel(model: tcgc.SdkModelType, stack?: Array<rust.Type>, modelName?: string): rust.Model {
     modelName = modelName ?? model.name;
     if (modelName.length === 0) {
       throw new AdapterError('InternalError', 'unnamed model', model.__raw?.node); // TODO: this might no longer be an issue
@@ -350,9 +350,8 @@ export class Adapter {
     // no stack means this is the first model in
     // the chain of potentially recursive calls
     if (!stack) {
-      stack = new Array<string>();
+      stack = new Array<rust.Type>();
     }
-    stack.push(modelName);
 
     let modelFlags = rust.ModelFlags.Unspecified;
     if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Input) === tcgc.UsageFlags.Input) {
@@ -366,6 +365,7 @@ export class Adapter {
     rustModel.docs = this.adaptDocs(model.summary, model.doc);
     rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
+    stack.push(rustModel);
 
     // aggregate the properties from the provided type and its parent types
     const allProps = new Array<tcgc.SdkModelPropertyType>();
@@ -556,12 +556,12 @@ export class Adapter {
    *
    * @param property the tcgc model property to convert
    * @param modelVisibility the visibility of the model that contains the property
-   * @param stack is a stack of model type names used to detect recursive type definitions
+   * @param stack is a stack of types used to detect recursive type definitions
    * @returns a Rust model field
    */
-  private getModelField(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<string>): rust.ModelField {
+  private getModelField(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<rust.Type>): rust.ModelField {
     const fieldNeedsBoxing = function(fieldType: rust.Type): fieldType is rust.WireType {
-      if (fieldType.kind === 'model' && stack.includes(fieldType.name)) {
+      if (fieldType.kind === 'model' && stack.includes(fieldType)) {
         // if the field's type is a model and it's in the type stack then
         // box it. this is to avoid infinitely recursive type definitions.
         return true;
@@ -569,7 +569,7 @@ export class Adapter {
         // if the field is a discriminated union whose type
         // is part of the same union then box it.
         for (const member of fieldType.members) {
-          if (stack.includes(member.type.name)) {
+          if (stack.includes(member.type)) {
             return true;
           }
         }
@@ -627,10 +627,10 @@ export class Adapter {
    * converts a tcgc type to a Rust type
    * 
    * @param type the tcgc type to convert
-   * @param stack is a stack of model type names used to detect recursive type definitions
+   * @param stack is a stack of types used to detect recursive type definitions
    * @returns the adapted Rust type
    */
-  private getType(type: tcgc.SdkType, stack?: Array<string>): rust.Type {
+  private getType(type: tcgc.SdkType, stack?: Array<rust.Type>): rust.Type {
     const getDateTimeEncoding = (encoding: string): rust.DateTimeEncoding => {
       switch (encoding) {
         case 'rfc3339-fixed-width':
@@ -1657,7 +1657,7 @@ export class Adapter {
         throw new AdapterError('UnsupportedTsp', `paged method ${method.name} synthesized response type has unexpected kind ${synthesizedType.kind}`, method.__raw?.node);
       }
 
-      const synthesizedModel = this.getModel(synthesizedType, new Array<string>());
+      const synthesizedModel = this.getModel(synthesizedType, new Array<rust.Type>());
       if (!this.crate.models.includes(synthesizedModel)) {
         this.crate.models.push(synthesizedModel);
       }
