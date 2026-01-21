@@ -630,7 +630,7 @@ interface StructBase {
   kind: 'model' | 'struct';
 
   /** the name of the struct */
-  name: string;
+  name: Symbol;
 
   /** any docs for the type */
   docs: Docs;
@@ -664,7 +664,7 @@ interface StructFieldBase {
 }
 
 class StructBase implements StructBase {
-  constructor(kind: 'model' | 'struct', name: string, visibility: Visibility) {
+  constructor(kind: 'model' | 'struct', name: Symbol, visibility: Visibility) {
     this.kind = kind;
     this.name = name;
     this.visibility = visibility;
@@ -855,7 +855,7 @@ export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
 }
 
 export class Model extends StructBase implements Model {
-  constructor(name: string, visibility: Visibility, flags: ModelFlags) {
+  constructor(name: Symbol, visibility: Visibility, flags: ModelFlags) {
     super('model', name, visibility);
     this.fields = new Array<ModelFieldType>();
     this.flags = flags;
@@ -1013,7 +1013,7 @@ export class StringType implements StringType {
 }
 
 export class Struct extends StructBase implements Struct {
-  constructor(name: string, visibility: Visibility) {
+  constructor(name: Symbol, visibility: Visibility) {
     super('struct', name, visibility);
     this.fields = new Array<StructField>();
   }

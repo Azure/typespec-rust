@@ -334,7 +334,7 @@ export class Adapter {
       modelFlags |= rust.ModelFlags.Output;
     }
 
-    rustModel = new rust.Model(modelName, model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags);
+    rustModel = new rust.Model(this.symbolTable.add(modelName, model), model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags);
     rustModel.docs = this.adaptDocs(model.summary, model.doc);
     rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
