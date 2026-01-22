@@ -1,11 +1,16 @@
 # Release History
 
+## 0.33.1 (unreleased)
+
+### Features Added
+
+* Added support for polymorphic discriminated unions.
+
 ## 0.33.0 (2026-01-16)
 
 ### Features Added
 
 * Added support for `text/plain` request and response bodies.
-* Added support for polymorphic discriminated unions.
 
 ### Bugs Fixed
 
