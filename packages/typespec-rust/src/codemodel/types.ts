@@ -155,7 +155,7 @@ export interface DiscriminatedUnion {
 }
 
 /** DiscriminatedUnionKind contains the kinds of discriminated unions */
-export type DiscriminatedUnionKind = DiscriminatedUnionBase | DiscriminatedUnionEnvelope;
+export type DiscriminatedUnionKind = DiscriminatedUnionBase | DiscriminatedUnionEnvelope | DiscriminatedUnionSealed;
 
 /** DiscriminatedUnionMember is a tagged enum member for a specific DiscriminatedUnion */
 export interface DiscriminatedUnionMember {
@@ -185,6 +185,11 @@ export interface DiscriminatedUnionEnvelope {
 
   /** data envelope property name */
   envelopeName: string;
+}
+
+/** DiscriminatedUnionSealed indicates that the union doesn't revert to the base type for unknown discriminants. */
+export interface DiscriminatedUnionSealed {
+  kind: 'discriminatedUnionSealed';
 }
 
 /** Etag is an azure_core::Etag */
@@ -849,6 +854,12 @@ export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
     this.type = type;
     this.discriminantValue = discriminantValue;
     this.docs = {};
+  }
+}
+
+export class DiscriminatedUnionSealed implements DiscriminatedUnionSealed {
+  constructor() {
+    this.kind = 'discriminatedUnionSealed';
   }
 }
 
