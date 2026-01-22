@@ -6,18 +6,18 @@
 /// extensible enum type for discriminator
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
-pub enum COLLIDES_DogKind_1 {
+pub enum COLLIDES_DogKind_2 {
     /// Species golden
     Golden,
 
-    /// Any other value not defined in `COLLIDES_DogKind_1`.
+    /// Any other value not defined in `COLLIDES_DogKind_2`.
     UnknownValue(String),
 }
 
 /// fixed enum type for discriminator
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 #[non_exhaustive]
-pub enum COLLIDES_SnakeKind_1 {
+pub enum COLLIDES_SnakeKind_2 {
     /// Species cobra
     Cobra,
 }
