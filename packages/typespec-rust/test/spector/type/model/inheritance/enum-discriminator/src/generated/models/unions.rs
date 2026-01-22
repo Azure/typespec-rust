@@ -10,7 +10,7 @@ use serde::Serialize;
 #[doc = r#"Test extensible enum type for discriminator"#]
 #[derive(Clone, Serialize, SafeDebug)]
 #[serde(tag = "kind")]
-pub enum COLLIDES_DogKind_2 {
+pub enum COLLIDES_DogKind_1 {
     Dog(Dog),
 
     #[serde(rename = "golden")]
@@ -20,7 +20,7 @@ pub enum COLLIDES_DogKind_2 {
 #[doc = r#"Test fixed enum type for discriminator"#]
 #[derive(Clone, Serialize, SafeDebug)]
 #[serde(tag = "kind")]
-pub enum COLLIDES_SnakeKind_2 {
+pub enum COLLIDES_SnakeKind_1 {
     #[serde(rename = "cobra")]
     Cobra(Cobra),
 }

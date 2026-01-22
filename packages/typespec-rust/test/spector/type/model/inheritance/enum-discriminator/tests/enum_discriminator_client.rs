@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_enumdisc::{
-    models::{COLLIDES_DogKind_2, COLLIDES_SnakeKind_2, Cobra, Golden},
+    models::{COLLIDES_DogKind_1, COLLIDES_SnakeKind_1, Cobra, Golden},
     EnumDiscriminatorClient,
 };
 
@@ -16,7 +16,7 @@ async fn get_extensible_model() {
     assert_eq!(resp.status(), 200);
 
     match resp.into_model().unwrap() {
-        COLLIDES_DogKind_2::Golden(golden) => {
+        COLLIDES_DogKind_1::Golden(golden) => {
             assert_eq!(golden.weight, Some(10));
         }
         other => panic!("expected Golden, found {other:?}"),
@@ -35,7 +35,7 @@ async fn get_extensible_model_missing_discriminator() {
     assert_eq!(resp.status(), 200);
 
     match resp.into_model().unwrap() {
-        COLLIDES_DogKind_2::Dog(dog) => {
+        COLLIDES_DogKind_1::Dog(dog) => {
             assert_eq!(dog.weight, Some(10));
         }
         other => panic!("expected base Dog, found {other:?}"),
@@ -54,7 +54,7 @@ async fn get_extensible_model_wrong_discriminator() {
     assert_eq!(resp.status(), 200);
 
     match resp.into_model().unwrap() {
-        COLLIDES_DogKind_2::Dog(dog) => {
+        COLLIDES_DogKind_1::Dog(dog) => {
             assert_eq!(dog.weight, Some(8));
         }
         other => panic!("expected base Dog, found {other:?}"),
@@ -70,7 +70,7 @@ async fn get_fixed_model() {
     assert_eq!(resp.status(), 200);
 
     match resp.into_model().unwrap() {
-        COLLIDES_SnakeKind_2::Cobra(cobra) => {
+        COLLIDES_SnakeKind_1::Cobra(cobra) => {
             assert_eq!(cobra.length, Some(10));
         }
     }
@@ -92,7 +92,7 @@ async fn get_fixed_model_missing_discriminator() {
     let err = result.unwrap_err();
     assert!(err
         .to_string()
-        .contains("missing discriminator field 'kind' for COLLIDES_SnakeKind_2"));
+        .contains("missing discriminator field 'kind' for COLLIDES_SnakeKind_1"));
 }
 
 #[tokio::test]
@@ -112,7 +112,7 @@ async fn get_fixed_model_wrong_discriminator() {
     let err = result.unwrap_err();
     assert!(err
         .to_string()
-        .contains("unknown variant of COLLIDES_SnakeKind_2 found: wrongKind"));
+        .contains("unknown variant of COLLIDES_SnakeKind_1 found: wrongKind"));
 }
 
 #[tokio::test]
@@ -120,7 +120,7 @@ async fn put_extensible_model() {
     let client =
         EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
 
-    let body = COLLIDES_DogKind_2::Golden(Golden { weight: Some(10) });
+    let body = COLLIDES_DogKind_1::Golden(Golden { weight: Some(10) });
 
     let resp = client
         .put_extensible_model(body.try_into().unwrap(), None)
@@ -135,7 +135,7 @@ async fn put_fixed_model() {
     let client =
         EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
 
-    let body = COLLIDES_SnakeKind_2::Cobra(Cobra { length: Some(10) });
+    let body = COLLIDES_SnakeKind_1::Cobra(Cobra { length: Some(10) });
 
     let resp = client
         .put_fixed_model(body.try_into().unwrap(), None)
