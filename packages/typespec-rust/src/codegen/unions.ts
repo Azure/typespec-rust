@@ -7,6 +7,7 @@ import { Use } from './use.js';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 import {Context} from "./context.js";
+import * as shared from '../shared/shared.js';
 
 /** contains unions to emit */
 export interface Unions {
@@ -56,9 +57,9 @@ export function emitUnions(crate: rust.Crate, context: Context): Unions {
     }
 
     use.add('serde', 'Serialize');
-    const needsDeserialize = !rustUnion.unionKind || rustUnion.unionKind.kind !== 'discriminatedUnionBase';
+    const needsDeserialize = !shared.isPolymorphicDU(rustUnion.unionKind);
     if (needsDeserialize) {
-      // discriminatedUnionBase unions explicitly define Deserialize
+      // polymorphic unions explicitly define Deserialize
       use.add('serde', 'Deserialize');
     }
     use.add('azure_core::fmt', 'SafeDebug');
@@ -163,7 +164,7 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
 
   let body = '';
   for (const rustUnion of crate.unions) {
-    if (!rustUnion.unionKind || rustUnion.unionKind.kind !== 'discriminatedUnionBase') {
+    if (!shared.isPolymorphicDU(rustUnion.unionKind)) {
       continue;
     }
 
@@ -181,12 +182,28 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
       }
     });
 
-    const baseType = rustUnion.unionKind.baseType;
-    use.addForType(baseType);
-    matchArms.push({
-      pattern: '_',
-      body: (indent: helpers.indentation) => `${indent.get()}${baseType.name}::deserialize(&value).map(${rustUnion.name}::${baseType.name}).map_err(serde::de::Error::custom)\n`,
-    });
+    switch (rustUnion.unionKind.kind) {
+      case 'discriminatedUnionBase': {
+        const baseType = rustUnion.unionKind.baseType;
+        use.addForType(baseType);
+        matchArms.push({
+          pattern: '_',
+          body: (indent: helpers.indentation) => `${indent.get()}${baseType.name}::deserialize(&value).map(${rustUnion.name}::${baseType.name}).map_err(serde::de::Error::custom)\n`,
+        });
+        break;
+      }
+      case 'discriminatedUnionSealed': {
+        matchArms.push({
+          pattern: 'None',
+          body: (indent: helpers.indentation) => `${indent.get()}Err(serde::de::Error::custom("missing discriminator field '${rustUnion.discriminant}' for ${rustUnion.name}"))\n`,
+        });
+        matchArms.push({
+          pattern: 'Some(kind)',
+          body: (indent: helpers.indentation) => `${indent.get()}Err(serde::de::Error::custom(format!("unknown variant of ${rustUnion.name} found: {kind}")))\n`,
+        });
+        break;
+      }
+    }
 
     body += `${indent.get()}${helpers.buildMatch(indent, `value.get("${rustUnion.discriminant}").and_then(Value::as_str)`, matchArms)}\n`;
     body += `${indent.pop().get()}}\n`; // end fn

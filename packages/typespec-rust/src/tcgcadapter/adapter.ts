@@ -200,6 +200,58 @@ export class Adapter {
         this.crate.models.push(rustModel);
       }
     }
+
+    if (this.crate.unions.length > 0) {
+      // for polymorphic unions we synthesize the name for the
+      // tagged enum from the base model type name. so, we need
+      // to check for any name collisions.
+      for (const union of this.crate.unions) {
+        if (!shared.isPolymorphicDU(union.unionKind)) {
+          // not a polymorphic DU
+          continue;
+        }
+
+        const polymorphicDU = union;
+        let count = 0;
+        const setCollisionName = (t: rust.DiscriminatedUnion | rust.Enum | rust.Model): void => {
+          this.ctx.program.reportDiagnostic({
+            code: 'NameCollision',
+            severity: 'warning',
+            message: `synthesized tagged enum name ${polymorphicDU.name} collides with an existing ${t.kind} name`,
+            target: tsp.NoTarget,
+          });
+
+          const prefix = 'COLLIDES_';
+          ++count;
+          t.name = `${prefix}${polymorphicDU.name}_${count}`;
+          ++count;
+          polymorphicDU.name = `${prefix}${polymorphicDU.name}_${count}`;
+        };
+
+        // check for collisions with non-polymorphic DUs
+        for (const union of this.crate.unions) {
+          if ((!union.unionKind || union.unionKind.kind === 'discriminatedUnionEnvelope') && union.name === polymorphicDU.name) {
+            setCollisionName(union);
+          }
+        }
+
+        // check for collisions with enums
+        for (const enm of this.crate.enums) {
+          if (enm.name === polymorphicDU.name) {
+            setCollisionName(enm);
+          }
+        }
+
+        // check for collisions with models
+        for (const model of this.crate.models) {
+          if (model.kind === 'marker') {
+            continue;
+          } else if (model.name === polymorphicDU.name) {
+            setCollisionName(model);
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -473,19 +525,25 @@ export class Adapter {
         }
 
         // find the discriminator field
-        let discriminatorPropertyName: string | undefined;
+        let discriminatorProperty: tcgc.SdkModelPropertyType | undefined;
         for (const prop of src.properties) {
           if (prop.kind === 'property' && prop.discriminator) {
-            discriminatorPropertyName = prop.name;
+            discriminatorProperty = prop;
             break;
           }
         }
-        if (!discriminatorPropertyName) {
+        if (!discriminatorProperty) {
           throw new AdapterError('InternalError', `failed to find discriminator field for type ${src.name}`, src.__raw?.node);
         }
 
-        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorPropertyName);
-        rustUnion.unionKind = new rust.DiscriminatedUnionBase(this.getModel(src));
+        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorProperty.name);
+        if (discriminatorProperty.type.kind === 'enum' && discriminatorProperty.type.isFixed) {
+          // when the DU is a fixed enum, it means we don't fall back to the
+          // base type when the discriminator value is unknown or missing.
+          rustUnion.unionKind = new rust.DiscriminatedUnionSealed();
+        } else {
+          rustUnion.unionKind = new rust.DiscriminatedUnionBase(this.getModel(src));
+        }
 
         for (const subType of Object.values(src.discriminatedSubtypes)) {
           if (!subType.discriminatorValue) {
