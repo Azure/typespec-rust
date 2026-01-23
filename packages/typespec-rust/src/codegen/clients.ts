@@ -1856,6 +1856,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         mustBorrow = false;
         break;
       case 'decimal':
+      case 'Etag':
         paramValue = `${param.name}.to_string()`;
         break;
       case 'encodedBytes':

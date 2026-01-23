@@ -27,6 +27,13 @@ pub struct MiscTestsClientCollidingOptionsParamOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::etag_header_parameter()`](crate::generated::clients::MiscTestsClient::etag_header_parameter())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientEtagHeaderParameterOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::literal_with_invalid_char()`](crate::generated::clients::MiscTestsClient::literal_with_invalid_char())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {
