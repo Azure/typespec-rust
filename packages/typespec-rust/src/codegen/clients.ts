@@ -1841,7 +1841,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
           strConv = '|i| i.to_string()';
       }
 
-      paramValue = `${param.name}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
+      paramValue = `${paramName}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
     }
   } else {
     switch (paramType.kind) {
@@ -1857,7 +1857,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         break;
       case 'decimal':
       case 'Etag':
-        paramValue = `${param.name}.to_string()`;
+        paramValue = `${paramName}.to_string()`;
         break;
       case 'encodedBytes':
         paramValue = encodeBytes(paramType, paramName);
@@ -1880,7 +1880,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         paramValue = `"${paramType.value}"`;
         break;
       case 'offsetDateTime':
-        paramValue = encodeDateTime(paramType, param.name);
+        paramValue = encodeDateTime(paramType, paramName);
         break;
       default:
         throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${paramType.kind}`);
