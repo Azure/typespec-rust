@@ -7,14 +7,15 @@ use crate::generated::models::{
     Colors, Indices, LiteralWithInvalidChar, MiscTestsClientAvoidDupeHeadersOneOptions,
     MiscTestsClientAvoidDupeHeadersOneResult, MiscTestsClientAvoidDupeHeadersTwoOptions,
     MiscTestsClientAvoidDupeHeadersTwoResult, MiscTestsClientCollidingOptionsParamOptions,
-    MiscTestsClientLiteralWithInvalidCharOptions, MiscTestsClientVariousExplodedQueryParamsOptions,
+    MiscTestsClientEtagHeaderParameterOptions, MiscTestsClientLiteralWithInvalidCharOptions,
+    MiscTestsClientVariousExplodedQueryParamsOptions,
     MiscTestsClientWithOptionalClientQueryParamOptions,
 };
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
-        Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
-        UrlExt,
+        Etag, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
+        Url, UrlExt,
     },
     tracing, Result,
 };
@@ -154,6 +155,38 @@ impl MiscTestsClient {
         url.append_path("/colliding-options-param");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("options", options_param);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.etagHeaderParameter")]
+    pub async fn etag_header_parameter(
+        &self,
+        etag: &Etag,
+        options: Option<MiscTestsClientEtagHeaderParameterOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/etag-header-parameter");
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("etag", etag.to_string());
         let rsp = self
             .pipeline
             .send(

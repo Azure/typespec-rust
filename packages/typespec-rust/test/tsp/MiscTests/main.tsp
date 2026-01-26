@@ -111,6 +111,9 @@ op withOptionalClientQueryParam(...ExpandParameter): void;
 @route("/various-exploded-query-params")
 op variousExplodedQueryParams(...ExplodedQueryParams): void;
 
+@route("/etag-header-parameter")
+op etagHeaderParameter(@header etag: Azure.Core.eTag): void;
+
 @@clientInitialization(MiscTests,
   {
     parameters: ExpandParameter,
