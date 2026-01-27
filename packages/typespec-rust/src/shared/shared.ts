@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+// cspell: ignore uncapitalize
+
 import * as rust from '../codemodel/index.js';
 
 /**
