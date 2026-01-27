@@ -1,6 +1,6 @@
 parameters:
   nodeVersion: "20.x"
-  rustVersion: "1.85"
+  rustVersion: "1.89"
   pnpmStorePath: $(Pipeline.Workspace)/.pnpm-store
 
 steps:
