@@ -5,8 +5,6 @@
 
 //cspell: ignore addl
 
-import * as codegen from '@azure-tools/codegen';
-import { values } from '@azure-tools/linq';
 import { Context } from './context.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
@@ -92,7 +90,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
     // if the model is XML and contains additional properties,
     // it will need a full custom serde implementation. so, we
     // need to omit any serde derive annotations.
-    const hasXmlAddlProps = bodyFormat === 'xml' ? values(model.fields).where((each) => each.kind === 'additionalProperties').any() : false;
+    const hasXmlAddlProps = bodyFormat === 'xml' ? model.fields.some((each) => each.kind === 'additionalProperties') : false;
 
     body += helpers.formatDocComment(model.docs);
     body += helpers.annotationDerive(!hasXmlAddlProps, 'Default');
@@ -534,17 +532,17 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
    * e.g. vec_offset_date_time, hashmap_vec_encoded_bytes_std etc
    */
   const buildSerDeModName = function (type: rust.Type): string {
-    let name = codegen.deconstruct(type.kind).join('_');
+    let name = shared.deconstruct(type.kind).join('_');
     let unwrapped = type;
     while (unwrapped.kind === 'hashmap' || unwrapped.kind === 'option' || unwrapped.kind === 'Vec') {
       unwrapped = unwrapped.type;
-      name += '_' + codegen.deconstruct(unwrapped.kind).join('_');
+      name += '_' + shared.deconstruct(unwrapped.kind).join('_');
     }
 
     switch (unwrapped.kind) {
       case 'encodedBytes':
       case 'offsetDateTime':
-        name += `_${codegen.deconstruct(unwrapped.encoding).join('_')}`;
+        name += `_${shared.deconstruct(unwrapped.encoding).join('_')}`;
         break;
       default:
         throw new CodegenError('InternalError', `unexpected kind ${unwrapped.kind}`);
@@ -699,7 +697,7 @@ function buildXmlAddlPropsDeserializeForModel(use: Use, model: rust.Model, addlP
   const indent = new helpers.indentation();
   body += `${indent.get()}fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer<'de> {\n`;
 
-  const visitorTypeName = `${codegen.pascalCase(addlProps.name, false)}Visitor`;
+  const visitorTypeName = `${shared.pascalCase(addlProps.name, false)}Visitor`;
   body += `${indent.push().get()}struct ${visitorTypeName};\n`;
   body += `${indent.get()}impl<'de> serde::de::Visitor<'de> for ${visitorTypeName} {\n`;
   body += `${indent.push().get()}type Value = ${model.name};\n`;

@@ -5,8 +5,6 @@
 
 // cspell: ignore addl responseheader subclients lropaging
 
-import * as codegen from '@azure-tools/codegen';
-import {values} from '@azure-tools/linq';
 import * as tsp from '@typespec/compiler';
 import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
@@ -121,7 +119,7 @@ export class Adapter {
     this.adaptClients();
 
     // marker models don't require serde so exclude them from the check
-    if (this.crate.enums.length > 0 || values(this.crate.models).where(e => e.kind === 'model').any()) {
+    if (this.crate.enums.length > 0 || this.crate.models.some(e => e.kind === 'model')) {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
@@ -211,7 +209,7 @@ export class Adapter {
    * @returns a Rust enum
    */
   private getEnum(sdkEnum: tcgc.SdkEnumType): rust.Enum {
-    const enumName = codegen.deconstruct(sdkEnum.name).map((each) => codegen.capitalize(each)).join('');
+    const enumName = shared.deconstruct(sdkEnum.name).map((each) => shared.capitalize(each)).join('');
     let rustEnum = this.types.get(enumName);
     if (rustEnum) {
       return <rust.Enum>rustEnum;
@@ -341,7 +339,7 @@ export class Adapter {
 
     // remove any non-word characters from the name.
     // the most common case is something like Foo.Bar.Baz
-    modelName = codegen.capitalize(modelName).replace(/\W/g, '');
+    modelName = shared.capitalize(modelName).replace(/\W/g, '');
     let rustModel = this.types.get(modelName);
     if (rustModel) {
       return <rust.Model>rustModel;
@@ -383,8 +381,7 @@ export class Adapter {
     let parent = model.baseModel;
     while (parent) {
       for (const parentProp of parent.properties) {
-        const exists = values(allProps).where(p => { return p.name === parentProp.name; }).first();
-        if (exists) {
+        if (allProps.find(p => p.name === parentProp.name)) {
           // don't add the duplicate. the TS compiler has better enforcement than OpenAPI
           // to ensure that duplicate fields with different types aren't added.
           continue;
@@ -452,7 +449,7 @@ export class Adapter {
       throw new AdapterError('InternalError', 'unnamed union', src.__raw?.node);
     }
 
-    const unionName = src.kind === 'model' ? `${codegen.capitalize(src.name)}Kind` : codegen.capitalize(src.name);
+    const unionName = src.kind === 'model' ? `${shared.capitalize(src.name)}Kind` : shared.capitalize(src.name);
     const keyName = `discriminated-union-${unionName}`;
     let rustUnion = this.types.get(keyName);
     if (rustUnion) {
@@ -483,7 +480,7 @@ export class Adapter {
         rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorPropertyName);
         rustUnion.unionKind = new rust.DiscriminatedUnionBase(this.getModel(src));
 
-        for (const subType of values(src.discriminatedSubtypes)) {
+        for (const subType of Object.values(src.discriminatedSubtypes)) {
           if (!subType.discriminatorValue) {
             throw new AdapterError('InternalError', `model ${subType.name} has no discriminator value`, subType.__raw?.node);
           }
@@ -1240,7 +1237,7 @@ export class Adapter {
       throw new AdapterError('InternalError', `uninstantiatable client ${client.name} has no parent`);
     }
 
-    for (const child of values(client.children)) {
+    for (const child of client.children ?? []) {
       const subClient = this.recursiveAdaptClient(child, rustClient);
       this.adaptClientAccessor(client, child, rustClient, subClient);
     }
@@ -1388,13 +1385,13 @@ export class Adapter {
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
-      const chunks = codegen.deconstruct(srcMethodName);
+      const chunks = shared.deconstruct(srcMethodName);
       if (chunks[0] === 'get') {
         chunks[0] = 'list';
       } else {
         chunks.unshift('list');
       }
-      srcMethodName = codegen.camelCase(chunks);
+      srcMethodName = shared.camelCase(chunks);
       this.ctx.program.reportDiagnostic({
         code: 'PagingMethodRename',
         severity: 'warning',
@@ -1414,7 +1411,7 @@ export class Adapter {
       }
     }
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName, false)}Options`, 'pub');
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${shared.pascalCase(srcMethodName, false)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
@@ -1498,13 +1495,11 @@ export class Adapter {
       // most params have a one-to-one mapping. however, for spread params, there will
       // be a many-to-one mapping. i.e. multiple params will map to the same underlying
       // operation param. each param corresponds to a field within the operation param.
-      const opParam = values(allOpParams).where((opParam: tcgc.SdkHttpParameter) => {
-        return values(opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]))
-          .where((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
-            return methodParam.name === param.name;
-          }).any();
-      }).first();
-
+      const opParam = allOpParams.find((opParam: tcgc.SdkHttpParameter) => {
+        return opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).some((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
+          return methodParam.name === param.name;
+        });
+      });
       if (!opParam) {
         throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
       }
@@ -1721,7 +1716,7 @@ export class Adapter {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
 
       const statusType = this.typeToWireType(
-        this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${codegen.pascalCase(rustMethod.name, false)}OperationStatus`));
+        this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${shared.pascalCase(rustMethod.name, false)}OperationStatus`));
 
       if (statusType.kind !== 'model') {
         throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
@@ -1761,7 +1756,7 @@ export class Adapter {
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
-      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name, false)}Result`, rustMethod.visibility);
+      const markerType = new rust.MarkerType(`${rustClient.name}${shared.pascalCase(method.name, false)}Result`, rustMethod.visibility);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
       let resultType: rust.ResultTypes;
@@ -1872,13 +1867,13 @@ export class Adapter {
         case 'ref':
           return `Ref${recursiveTypeName(type.type)}`;
         case 'scalar':
-          return codegen.capitalize(type.type);
+          return shared.capitalize(type.type);
         case 'slice':
           return `Slice${recursiveTypeName(type.type)}`;
         case 'Vec':
           return `${type.kind}${recursiveTypeName(type.type)}`;
         default:
-          return codegen.capitalize(type.kind);
+          return shared.capitalize(type.kind);
       }
     };
 
@@ -2431,7 +2426,7 @@ function removeIllegalChars(name: string): string {
  * @returns name in snake-case format
  */
 function snakeCaseName(name: string): string {
-  return codegen.deconstruct(fixETagName(removeIllegalChars(name))).join('_');
+  return shared.deconstruct(fixETagName(removeIllegalChars(name))).join('_');
 }
 
 /**

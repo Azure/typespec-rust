@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from '@azure-tools/codegen';
 import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
+import * as shared from '../shared/shared.js';
 
 /**
  * returns the emitted header traits, or undefined if there
@@ -187,7 +187,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
  */
 function getHeaderConstName(header: rust.ResponseHeader): string {
   // strip off any x-ms- prefix
-  const chunks = codegen.deconstruct(header.header.replace(/^x-ms-/i, ''));
+  const chunks = shared.deconstruct(header.header.replace(/^x-ms-/i, ''));
   return `${chunks.map(i => i.toUpperCase()).join('_')}`;
 }
 
