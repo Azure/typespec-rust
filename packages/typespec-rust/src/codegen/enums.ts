@@ -8,15 +8,15 @@ import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
-/** contains different types of enumerations to emit */
+/** contains enumerations to emit */
 export interface Enums {
-  /** enumerations that are part of public surface area */
-  public?: helpers.Module;
+  /** enumeration definitions */
+  definitions?: helpers.Module;
 
-  /** serde helpers for public enumerations */
+  /** serde helpers for enumerations */
   serde?: helpers.Module;
 
-  /** trait impls for public enumerations */
+  /** trait impls for enumerations */
   impls?: helpers.Module;
 }
 
@@ -34,19 +34,19 @@ export function emitEnums(crate: rust.Crate, context: Context): Enums {
   }
 
   return {
-    public: emitEnumsPublic(crate),
+    definitions: emitEnumDefinitions(crate),
     serde: emitEnumsSerde(crate),
     impls: emitEnumsImpls(crate, context),
   };
 }
 
 /**
- * emits the public definitions for enums
+ * emits the definitions for enums
  * 
  * @param crate the crate for which to emit enums
- * @returns the public enum definitions
+ * @returns the enum definitions
  */
-function emitEnumsPublic(crate: rust.Crate): helpers.Module {
+function emitEnumDefinitions(crate: rust.Crate): helpers.Module {
   const indent = new helpers.indentation();
 
   let body = '';

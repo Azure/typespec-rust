@@ -8,7 +8,7 @@ use crate::generated::models::{
     BytesQueryClientBase64UrlOptions, BytesQueryClientDefaultOptions,
 };
 use azure_core::{
-    base64::{encode, encode_url_safe},
+    base64,
     error::CheckSuccessOptions,
     http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
@@ -41,7 +41,7 @@ impl BytesQueryClient {
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/query/base64");
         let mut query_builder = url.query_builder();
-        query_builder.set_pair("value", encode(value));
+        query_builder.set_pair("value", base64::encode(value));
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -75,7 +75,7 @@ impl BytesQueryClient {
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/query/base64url");
         let mut query_builder = url.query_builder();
-        query_builder.set_pair("value", encode_url_safe(value));
+        query_builder.set_pair("value", base64::encode_url_safe(value));
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -113,7 +113,7 @@ impl BytesQueryClient {
             "value",
             value
                 .iter()
-                .map(encode_url_safe)
+                .map(base64::encode_url_safe)
                 .collect::<Vec<String>>()
                 .join(","),
         );
@@ -150,7 +150,7 @@ impl BytesQueryClient {
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/query/default");
         let mut query_builder = url.query_builder();
-        query_builder.set_pair("value", encode(value));
+        query_builder.set_pair("value", base64::encode(value));
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self

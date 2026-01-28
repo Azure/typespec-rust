@@ -14,17 +14,14 @@ import * as shared from '../shared/shared.js';
 
 /** contains different types of models to emit */
 export interface Models {
-  /** models that are part of public surface area */
-  public?: helpers.Module;
+  /** model definitions */
+  definitions?: helpers.Module;
 
-  /** serde helpers for public models */
+  /** serde helpers for models */
   serde?: helpers.Module;
 
-  /** trait impls for public models */
+  /** trait impls for models */
   impls?: helpers.Module;
-
-  /** models that are for internal use only */
-  internal?: helpers.Module;
 
   /** XML-specific helpers for internal use only */
   xmlHelpers?: helpers.Module;
@@ -44,10 +41,9 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
   }
 
   return {
-    public: emitModelsInternal(crate, context, 'pub'),
+    definitions: emitModelDefinitions(crate, context),
     serde: emitModelsSerde(),
     impls: emitModelImpls(crate, context),
-    internal: emitModelsInternal(crate, context, 'pubCrate'),
     xmlHelpers: emitXMLListWrappers(),
   };
 }
@@ -57,22 +53,17 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
  * 
  * @param crate the crate for which to emit models
  * @param context the context for the provided crate
- * @param visibility the visibility of the models to emit
  * @returns the model content or empty
  */
-function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rust.Visibility): helpers.Module | undefined {
+function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Module | undefined {
   // for the internal models we might need to use public model types
-  const use = new Use(visibility === 'pub' ? 'models' : 'modelsOther');
+  const use = new Use('models');
   use.add('azure_core::fmt', 'SafeDebug');
 
   const indent = new helpers.indentation();
 
   let body = '';
   for (const model of crate.models) {
-    if (model.visibility !== visibility) {
-      continue;
-    }
-
     if (model.kind === 'marker') {
       body += helpers.formatDocComment(model.docs);
       // marker types don't have any fields
@@ -152,7 +143,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         if (field.type.type.kind !== 'literal' || field.optional) {
           serdeParams.add('skip_serializing_if = "Option::is_none"');
         }
-      } else if (visibility === 'pub') {
+      } else if (model.visibility === 'pub') {
         // for public models, non-optional fields (e.g. Vec<T> in pageable responses) requires default.
         // crate models don't need this as those are used for spread params and the required params map
         // to the required fields in the struct.
@@ -174,29 +165,12 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
     body += '}\n\n';
   }
 
-  if (body === '') {
-    // no models for this value of pub
-    return undefined;
-  }
-
-  // emit TryFrom as required for internal models only.
-  // public models will have their helpers in a separate file.
-  if (visibility !== 'pub') {
-    for (const model of crate.models) {
-      if (model.kind === 'marker' || model.visibility === 'pub') {
-        continue;
-      }
-
-      body += context.getTryFromForRequestContent(model, use);
-    }
-  }
-
   let content = helpers.contentPreamble();
   content += use.text();
   content += body;
 
   return {
-    name: visibility === 'pub' ? 'pub_models' : 'crate_models',
+    name: 'models',
     content: content,
   };
 }
@@ -240,8 +214,8 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
 
   // emit TryFrom as required
   for (const model of crate.models) {
-    if (model.kind === 'marker' || model.visibility !== 'pub') {
-      // skip internal models as their serde helpers are in the same file
+    if (model.kind === 'marker') {
+      // no impls for marker types
       continue;
     }
 
@@ -570,11 +544,11 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
     const format = encoding === 'url' ? '_url_safe' : '';
     const deserializer = `deserialize${format}`;
     const serializer = `serialize${format}`;
-    serdeParams.add('default');
-    serdeParams.add(`deserialize_with = "${deserializer}"`);
-    serdeParams.add(`serialize_with = "${serializer}"`);
     const optionNamespace = forOption ? '::option' : '';
-    use.add('azure_core', `base64${optionNamespace}::${deserializer}`, `base64${optionNamespace}::${serializer}`);
+    serdeParams.add('default');
+    serdeParams.add(`deserialize_with = "base64${optionNamespace}::${deserializer}"`);
+    serdeParams.add(`serialize_with = "base64${optionNamespace}::${serializer}"`);
+    use.add('azure_core', 'base64');
   };
 
   /** non-collection based impl. note that for XML, we don't use the in-box RFC3339 */

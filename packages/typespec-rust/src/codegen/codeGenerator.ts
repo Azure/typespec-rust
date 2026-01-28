@@ -87,20 +87,19 @@ export class CodeGenerator {
     }
 
     const enums = emitEnums(this.crate, this.context);
-    addModelsFile(enums.public, 'pubUse');
+    addModelsFile(enums.definitions, 'pubUse');
     addModelsFile(enums.serde, 'internal');
     addModelsFile(enums.impls, 'internal');
 
     const unions = emitUnions(this.crate, this.context);
-    addModelsFile(unions.public, 'pubUse');
+    addModelsFile(unions.definitions, 'pubUse');
     addModelsFile(unions.impls, 'internal');
     addModelsFile(unions.serde, 'internal');
 
     const models = emitModels(this.crate, this.context);
-    addModelsFile(models.public, 'pubUse');
+    addModelsFile(models.definitions, 'pubUse');
     addModelsFile(models.serde, 'internal');
     addModelsFile(models.impls, 'internal');
-    addModelsFile(models.internal, 'pubCrate');
     addModelsFile(models.xmlHelpers, 'internal');
 
     addModelsFile(emitHeaderTraits(this.crate), 'pubUse');

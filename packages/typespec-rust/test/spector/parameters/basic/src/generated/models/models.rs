@@ -6,6 +6,11 @@
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub(crate) struct SimpleRequest {
+    pub(crate) name: String,
+}
+
 /// This is a simple model.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct User {

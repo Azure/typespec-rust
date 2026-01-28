@@ -15,7 +15,7 @@ use crate::generated::models::{
     SequenceNumberActionType,
 };
 use azure_core::{
-    base64::encode,
+    base64,
     credentials::TokenCredential,
     error::CheckSuccessOptions,
     fmt::SafeDebug,
@@ -428,7 +428,7 @@ impl PageBlobClient {
         }
         request.insert_header("x-ms-blob-content-length", blob_content_length.to_string());
         if let Some(blob_content_md5) = options.blob_content_md5 {
-            request.insert_header("x-ms-blob-content-md5", encode(blob_content_md5));
+            request.insert_header("x-ms-blob-content-md5", base64::encode(blob_content_md5));
         }
         if let Some(blob_content_type) = options.blob_content_type.as_ref() {
             request.insert_header("x-ms-blob-content-type", blob_content_type);
@@ -1010,7 +1010,7 @@ impl PageBlobClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-length", content_length.to_string());
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
-            request.insert_header("content-md5", encode(transactional_content_md5));
+            request.insert_header("content-md5", base64::encode(transactional_content_md5));
         }
         request.insert_header("content-type", "application/octet-stream");
         if let Some(if_match) = options.if_match.as_ref() {
@@ -1026,7 +1026,10 @@ impl PageBlobClient {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
         if let Some(transactional_content_crc64) = options.transactional_content_crc64 {
-            request.insert_header("x-ms-content-crc64", encode(transactional_content_crc64));
+            request.insert_header(
+                "x-ms-content-crc64",
+                base64::encode(transactional_content_crc64),
+            );
         }
         if let Some(encryption_algorithm) = options.encryption_algorithm.as_ref() {
             request.insert_header(
@@ -1233,10 +1236,16 @@ impl PageBlobClient {
         }
         request.insert_header("x-ms-range", range);
         if let Some(source_content_crc64) = options.source_content_crc64 {
-            request.insert_header("x-ms-source-content-crc64", encode(source_content_crc64));
+            request.insert_header(
+                "x-ms-source-content-crc64",
+                base64::encode(source_content_crc64),
+            );
         }
         if let Some(source_content_md5) = options.source_content_md5 {
-            request.insert_header("x-ms-source-content-md5", encode(source_content_md5));
+            request.insert_header(
+                "x-ms-source-content-md5",
+                base64::encode(source_content_md5),
+            );
         }
         if let Some(source_if_match) = options.source_if_match.as_ref() {
             request.insert_header("x-ms-source-if-match", source_if_match);

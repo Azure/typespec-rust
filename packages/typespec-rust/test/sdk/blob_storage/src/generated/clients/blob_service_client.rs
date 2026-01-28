@@ -6,13 +6,12 @@
 use crate::generated::{
     clients::BlobContainerClient,
     models::{
-        crate_models::{KeyInfo, UserDelegationKey},
         BlobServiceClientFilterBlobsOptions, BlobServiceClientGetAccountInfoOptions,
         BlobServiceClientGetAccountInfoResult, BlobServiceClientGetPropertiesOptions,
         BlobServiceClientGetStatisticsOptions, BlobServiceClientGetUserDelegationKeyOptions,
         BlobServiceClientListContainersSegmentOptions, BlobServiceClientSetPropertiesOptions,
-        FilterBlobSegment, ListContainersSegmentResponse, StorageServiceProperties,
-        StorageServiceStats,
+        FilterBlobSegment, KeyInfo, ListContainersSegmentResponse, StorageServiceProperties,
+        StorageServiceStats, UserDelegationKey,
     },
 };
 use azure_core::{

@@ -7,20 +7,10 @@ import * as helpers from './helpers.js';
 import { CodegenError } from './errors.js';
 import * as rust from '../codemodel/index.js';
 
-/** contains configuration options for Use */
-export interface UseOptions {
-  /**
-   * the nested module can assume that all types it
-   * needs to use are in scope in the parent module.
-   */
-  nestedModAssumesTypesInParentScope?: boolean;
-}
-
 /** used to generate use statements */
 export class Use {
   private readonly trees: Array<useTree>;
   private readonly scope: 'clients' | 'models' | 'modelsOther';
-  private readonly options?: UseOptions;
 
   /**
    * instantiates a new instance of the Use type
@@ -30,12 +20,10 @@ export class Use {
    *      clients - we're in generated/clients
    *       models - we're in generated/models/models.rs
    *  modelsOther - we're in generated/models but not models.rs
-   * @param options optional configuration for Use
    */
-  constructor(scope: 'clients' | 'models' | 'modelsOther', options?: UseOptions) {
+  constructor(scope: 'clients' | 'models' | 'modelsOther') {
     this.trees = new Array<useTree>();
     this.scope = scope;
-    this.options = options;
   }
 
   /**
@@ -95,10 +83,10 @@ export class Use {
       case 'marker':
         switch (this.scope) {
           case 'clients':
-            this.add(getClientScopeImportForType(type), type.name);
+            this.add('crate::generated::models', type.name);
             break;
           case 'modelsOther':
-            this.add(this.getModelsOtherScopeImportForType(type), type.name);
+            this.add('super', type.name);
             break;
           default:
             // marker types are only referenced from clients and model
@@ -109,13 +97,13 @@ export class Use {
       case 'model':
         switch (this.scope) {
           case 'clients':
-            this.add(getClientScopeImportForType(type), type.name);
+            this.add('crate::generated::models', type.name);
             break;
           case 'models':
             // we're in models so no need to bring another model into scope
             break;
           case 'modelsOther':
-            this.add(this.getModelsOtherScopeImportForType(type), type.name);
+            this.add('super', type.name);
             break;
         }
         break;
@@ -228,37 +216,6 @@ export class Use {
     content += '\n';
     return content;
   }
-
-  /**
-   * returns the import path for marker and model types.
-   * this should only be called when within the modelsOther scope.
-   * 
-   * @param type the type for which to create the import statement
-   * @returns the import statement
-   */
-  private getModelsOtherScopeImportForType(type: rust.MarkerType | rust.Model): string {
-    // when nestedModAssumesTypesInParentScope is true we
-    // assume that super already has the type in scope.
-    // thus we can omit crate_models for pub(crate) types.
-    const visibility = this.options?.nestedModAssumesTypesInParentScope === true ? 'pub' : type.visibility;
-    switch (visibility) {
-      case 'pub':
-        return 'super';
-      case 'pubCrate':
-        return 'super::crate_models';
-    }
-  }
-}
-
-/**
- * returns the import path for marker and model types.
- * this should only be called when within the client scope.
- * 
- * @param type the type for which to create the import statement
- * @returns the import statement
- */
-function getClientScopeImportForType(type: rust.MarkerType | rust.Model): string {
-  return `crate::generated::models${type.visibility !== 'pub' ? '::crate_models' : ''}`;
 }
 
 /**

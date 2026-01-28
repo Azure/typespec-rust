@@ -8,15 +8,15 @@ import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 import {Context} from "./context.js";
 
-/** contains different types of content to emit */
-export interface Models {
-  /** types that are part of public surface area */
-  public?: helpers.Module;
+/** contains unions to emit */
+export interface Unions {
+  /** union definitions */
+  definitions?: helpers.Module;
 
-  /** trait impls for public types */
+  /** trait impls for union types */
   impls?: helpers.Module;
 
-  /** serde helpers for public models */
+  /** serde helpers for union types */
   serde?: helpers.Module;
 }
 
@@ -28,7 +28,7 @@ export interface Models {
  * @param context the context for the provided crate
  * @returns the union content or undefined
  */
-export function emitUnions(crate: rust.Crate, context: Context): Models {
+export function emitUnions(crate: rust.Crate, context: Context): Unions {
   if (crate.unions.length === 0) {
     return {};
   }
@@ -95,7 +95,7 @@ export function emitUnions(crate: rust.Crate, context: Context): Models {
   content += body;
 
   return {
-    public: {
+    definitions: {
       name: 'unions',
       content: content,
     },

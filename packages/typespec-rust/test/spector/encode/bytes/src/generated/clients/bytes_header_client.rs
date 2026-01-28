@@ -8,7 +8,7 @@ use crate::generated::models::{
     BytesHeaderClientBase64UrlOptions, BytesHeaderClientDefaultOptions,
 };
 use azure_core::{
-    base64::{encode, encode_url_safe},
+    base64,
     error::CheckSuccessOptions,
     http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
@@ -41,7 +41,7 @@ impl BytesHeaderClient {
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/header/base64");
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("value", encode(value));
+        request.insert_header("value", base64::encode(value));
         let rsp = self
             .pipeline
             .send(
@@ -73,7 +73,7 @@ impl BytesHeaderClient {
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/header/base64url");
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("value", encode_url_safe(value));
+        request.insert_header("value", base64::encode_url_safe(value));
         let rsp = self
             .pipeline
             .send(
@@ -109,7 +109,7 @@ impl BytesHeaderClient {
             "value",
             value
                 .iter()
-                .map(encode_url_safe)
+                .map(base64::encode_url_safe)
                 .collect::<Vec<String>>()
                 .join(","),
         );
@@ -144,7 +144,7 @@ impl BytesHeaderClient {
         let mut url = self.endpoint.clone();
         url.append_path("/encode/bytes/header/default");
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("value", encode(value));
+        request.insert_header("value", base64::encode(value));
         let rsp = self
             .pipeline
             .send(

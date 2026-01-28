@@ -10,6 +10,10 @@
 
 * Using `Azure.Core.eTag` as a header parameter no longer causes an internal error.
 
+### Other Changes
+
+* Consolidated `pub` and `pub(crate)` structs into `models.rs` file.
+
 ## 0.33.0 (2026-01-16)
 
 ### Features Added

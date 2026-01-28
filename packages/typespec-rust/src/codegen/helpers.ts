@@ -524,8 +524,8 @@ export function getBytesEncodingMethod(encoding: rust.BytesEncoding, direction: 
       method = `${direction}_url_safe`;
       break;
   }
-  use.add('azure_core', `base64::${method}`);
-  return method;
+  use.add('azure_core', 'base64');
+  return `base64::${method}`;
 }
 
 /**

@@ -5,7 +5,8 @@
 
 mod header_traits;
 mod method_options;
-mod pub_models;
+#[allow(clippy::module_inception)]
+mod models;
 pub use header_traits::*;
 pub use method_options::*;
-pub use pub_models::*;
+pub use models::*;

@@ -5,51 +5,7 @@
 
 pub mod option_hashmap_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::{collections::HashMap, result::Result};
-
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<Option<HashMap<String, Vec<u8>>>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let to_deserialize = <Option<HashMap<String, String>>>::deserialize(deserializer)?;
-        match to_deserialize {
-            Some(to_deserialize) => {
-                let mut decoded0 = <HashMap<String, Vec<u8>>>::new();
-                for kv in to_deserialize {
-                    decoded0.insert(kv.0, decode(kv.1).map_err(serde::de::Error::custom)?);
-                }
-                Ok(Some(decoded0))
-            }
-            None => Ok(None),
-        }
-    }
-
-    pub fn serialize<S>(
-        to_serialize: &Option<HashMap<String, Vec<u8>>>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if let Some(to_serialize) = to_serialize {
-            let mut encoded0 = <HashMap<&String, String>>::new();
-            for kv in to_serialize {
-                encoded0.insert(kv.0, encode(kv.1));
-            }
-            <Option<HashMap<&String, String>>>::serialize(&Some(encoded0), serializer)
-        } else {
-            serializer.serialize_none()
-        }
-    }
-}
-
-pub mod option_hashmap_encoded_bytes_url {
-    #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
 
@@ -66,7 +22,7 @@ pub mod option_hashmap_encoded_bytes_url {
                 for kv in to_deserialize {
                     decoded0.insert(
                         kv.0,
-                        decode_url_safe(kv.1).map_err(serde::de::Error::custom)?,
+                        base64::decode(kv.1).map_err(serde::de::Error::custom)?,
                     );
                 }
                 Ok(Some(decoded0))
@@ -85,7 +41,54 @@ pub mod option_hashmap_encoded_bytes_url {
         if let Some(to_serialize) = to_serialize {
             let mut encoded0 = <HashMap<&String, String>>::new();
             for kv in to_serialize {
-                encoded0.insert(kv.0, encode_url_safe(kv.1));
+                encoded0.insert(kv.0, base64::encode(kv.1));
+            }
+            <Option<HashMap<&String, String>>>::serialize(&Some(encoded0), serializer)
+        } else {
+            serializer.serialize_none()
+        }
+    }
+}
+
+pub mod option_hashmap_encoded_bytes_url {
+    #![allow(clippy::type_complexity)]
+    use azure_core::base64;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::{collections::HashMap, result::Result};
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<HashMap<String, Vec<u8>>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize = <Option<HashMap<String, String>>>::deserialize(deserializer)?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let mut decoded0 = <HashMap<String, Vec<u8>>>::new();
+                for kv in to_deserialize {
+                    decoded0.insert(
+                        kv.0,
+                        base64::decode_url_safe(kv.1).map_err(serde::de::Error::custom)?,
+                    );
+                }
+                Ok(Some(decoded0))
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn serialize<S>(
+        to_serialize: &Option<HashMap<String, Vec<u8>>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if let Some(to_serialize) = to_serialize {
+            let mut encoded0 = <HashMap<&String, String>>::new();
+            for kv in to_serialize {
+                encoded0.insert(kv.0, base64::encode_url_safe(kv.1));
             }
             <Option<HashMap<&String, String>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -96,63 +99,7 @@ pub mod option_hashmap_encoded_bytes_url {
 
 pub mod option_hashmap_hashmap_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::{collections::HashMap, result::Result};
-
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<Option<HashMap<String, HashMap<String, Vec<u8>>>>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let to_deserialize =
-            <Option<HashMap<String, HashMap<String, String>>>>::deserialize(deserializer)?;
-        match to_deserialize {
-            Some(to_deserialize) => {
-                let mut decoded0 = <HashMap<String, HashMap<String, Vec<u8>>>>::new();
-                for kv in to_deserialize {
-                    let mut decoded1 = <HashMap<String, Vec<u8>>>::new();
-                    for kv in kv.1 {
-                        decoded1.insert(kv.0, decode(kv.1).map_err(serde::de::Error::custom)?);
-                    }
-                    decoded0.insert(kv.0, decoded1);
-                }
-                Ok(Some(decoded0))
-            }
-            None => Ok(None),
-        }
-    }
-
-    pub fn serialize<S>(
-        to_serialize: &Option<HashMap<String, HashMap<String, Vec<u8>>>>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if let Some(to_serialize) = to_serialize {
-            let mut encoded0 = <HashMap<&String, HashMap<&String, String>>>::new();
-            for kv in to_serialize {
-                let mut encoded1 = <HashMap<&String, String>>::new();
-                for kv in kv.1 {
-                    encoded1.insert(kv.0, encode(kv.1));
-                }
-                encoded0.insert(kv.0, encoded1);
-            }
-            <Option<HashMap<&String, HashMap<&String, String>>>>::serialize(
-                &Some(encoded0),
-                serializer,
-            )
-        } else {
-            serializer.serialize_none()
-        }
-    }
-}
-
-pub mod option_hashmap_hashmap_encoded_bytes_url {
-    #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
 
@@ -172,7 +119,7 @@ pub mod option_hashmap_hashmap_encoded_bytes_url {
                     for kv in kv.1 {
                         decoded1.insert(
                             kv.0,
-                            decode_url_safe(kv.1).map_err(serde::de::Error::custom)?,
+                            base64::decode(kv.1).map_err(serde::de::Error::custom)?,
                         );
                     }
                     decoded0.insert(kv.0, decoded1);
@@ -195,7 +142,66 @@ pub mod option_hashmap_hashmap_encoded_bytes_url {
             for kv in to_serialize {
                 let mut encoded1 = <HashMap<&String, String>>::new();
                 for kv in kv.1 {
-                    encoded1.insert(kv.0, encode_url_safe(kv.1));
+                    encoded1.insert(kv.0, base64::encode(kv.1));
+                }
+                encoded0.insert(kv.0, encoded1);
+            }
+            <Option<HashMap<&String, HashMap<&String, String>>>>::serialize(
+                &Some(encoded0),
+                serializer,
+            )
+        } else {
+            serializer.serialize_none()
+        }
+    }
+}
+
+pub mod option_hashmap_hashmap_encoded_bytes_url {
+    #![allow(clippy::type_complexity)]
+    use azure_core::base64;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::{collections::HashMap, result::Result};
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<HashMap<String, HashMap<String, Vec<u8>>>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize =
+            <Option<HashMap<String, HashMap<String, String>>>>::deserialize(deserializer)?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let mut decoded0 = <HashMap<String, HashMap<String, Vec<u8>>>>::new();
+                for kv in to_deserialize {
+                    let mut decoded1 = <HashMap<String, Vec<u8>>>::new();
+                    for kv in kv.1 {
+                        decoded1.insert(
+                            kv.0,
+                            base64::decode_url_safe(kv.1).map_err(serde::de::Error::custom)?,
+                        );
+                    }
+                    decoded0.insert(kv.0, decoded1);
+                }
+                Ok(Some(decoded0))
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn serialize<S>(
+        to_serialize: &Option<HashMap<String, HashMap<String, Vec<u8>>>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if let Some(to_serialize) = to_serialize {
+            let mut encoded0 = <HashMap<&String, HashMap<&String, String>>>::new();
+            for kv in to_serialize {
+                let mut encoded1 = <HashMap<&String, String>>::new();
+                for kv in kv.1 {
+                    encoded1.insert(kv.0, base64::encode_url_safe(kv.1));
                 }
                 encoded0.insert(kv.0, encoded1);
             }
@@ -211,75 +217,7 @@ pub mod option_hashmap_hashmap_encoded_bytes_url {
 
 pub mod option_hashmap_hashmap_hashmap_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::{collections::HashMap, result::Result};
-
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<Option<HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let to_deserialize =
-            <Option<HashMap<String, HashMap<String, HashMap<String, String>>>>>::deserialize(
-                deserializer,
-            )?;
-        match to_deserialize {
-            Some(to_deserialize) => {
-                let mut decoded0 =
-                    <HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>::new();
-                for kv in to_deserialize {
-                    let mut decoded1 = <HashMap<String, HashMap<String, Vec<u8>>>>::new();
-                    for kv in kv.1 {
-                        let mut decoded2 = <HashMap<String, Vec<u8>>>::new();
-                        for kv in kv.1 {
-                            decoded2.insert(kv.0, decode(kv.1).map_err(serde::de::Error::custom)?);
-                        }
-                        decoded1.insert(kv.0, decoded2);
-                    }
-                    decoded0.insert(kv.0, decoded1);
-                }
-                Ok(Some(decoded0))
-            }
-            None => Ok(None),
-        }
-    }
-
-    pub fn serialize<S>(
-        to_serialize: &Option<HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if let Some(to_serialize) = to_serialize {
-            let mut encoded0 =
-                <HashMap<&String, HashMap<&String, HashMap<&String, String>>>>::new();
-            for kv in to_serialize {
-                let mut encoded1 = <HashMap<&String, HashMap<&String, String>>>::new();
-                for kv in kv.1 {
-                    let mut encoded2 = <HashMap<&String, String>>::new();
-                    for kv in kv.1 {
-                        encoded2.insert(kv.0, encode(kv.1));
-                    }
-                    encoded1.insert(kv.0, encoded2);
-                }
-                encoded0.insert(kv.0, encoded1);
-            }
-            <Option<HashMap<&String, HashMap<&String, HashMap<&String, String>>>>>::serialize(
-                &Some(encoded0),
-                serializer,
-            )
-        } else {
-            serializer.serialize_none()
-        }
-    }
-}
-
-pub mod option_hashmap_hashmap_hashmap_encoded_bytes_url {
-    #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
 
@@ -304,7 +242,7 @@ pub mod option_hashmap_hashmap_hashmap_encoded_bytes_url {
                         for kv in kv.1 {
                             decoded2.insert(
                                 kv.0,
-                                decode_url_safe(kv.1).map_err(serde::de::Error::custom)?,
+                                base64::decode(kv.1).map_err(serde::de::Error::custom)?,
                             );
                         }
                         decoded1.insert(kv.0, decoded2);
@@ -332,7 +270,78 @@ pub mod option_hashmap_hashmap_hashmap_encoded_bytes_url {
                 for kv in kv.1 {
                     let mut encoded2 = <HashMap<&String, String>>::new();
                     for kv in kv.1 {
-                        encoded2.insert(kv.0, encode_url_safe(kv.1));
+                        encoded2.insert(kv.0, base64::encode(kv.1));
+                    }
+                    encoded1.insert(kv.0, encoded2);
+                }
+                encoded0.insert(kv.0, encoded1);
+            }
+            <Option<HashMap<&String, HashMap<&String, HashMap<&String, String>>>>>::serialize(
+                &Some(encoded0),
+                serializer,
+            )
+        } else {
+            serializer.serialize_none()
+        }
+    }
+}
+
+pub mod option_hashmap_hashmap_hashmap_encoded_bytes_url {
+    #![allow(clippy::type_complexity)]
+    use azure_core::base64;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::{collections::HashMap, result::Result};
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize =
+            <Option<HashMap<String, HashMap<String, HashMap<String, String>>>>>::deserialize(
+                deserializer,
+            )?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let mut decoded0 =
+                    <HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>::new();
+                for kv in to_deserialize {
+                    let mut decoded1 = <HashMap<String, HashMap<String, Vec<u8>>>>::new();
+                    for kv in kv.1 {
+                        let mut decoded2 = <HashMap<String, Vec<u8>>>::new();
+                        for kv in kv.1 {
+                            decoded2.insert(
+                                kv.0,
+                                base64::decode_url_safe(kv.1).map_err(serde::de::Error::custom)?,
+                            );
+                        }
+                        decoded1.insert(kv.0, decoded2);
+                    }
+                    decoded0.insert(kv.0, decoded1);
+                }
+                Ok(Some(decoded0))
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn serialize<S>(
+        to_serialize: &Option<HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if let Some(to_serialize) = to_serialize {
+            let mut encoded0 =
+                <HashMap<&String, HashMap<&String, HashMap<&String, String>>>>::new();
+            for kv in to_serialize {
+                let mut encoded1 = <HashMap<&String, HashMap<&String, String>>>::new();
+                for kv in kv.1 {
+                    let mut encoded2 = <HashMap<&String, String>>::new();
+                    for kv in kv.1 {
+                        encoded2.insert(kv.0, base64::encode_url_safe(kv.1));
                     }
                     encoded1.insert(kv.0, encoded2);
                 }
@@ -883,7 +892,7 @@ pub mod option_hashmap_offset_date_time_unix_time {
 
 pub mod option_hashmap_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
 
@@ -900,7 +909,7 @@ pub mod option_hashmap_vec_encoded_bytes_std {
                 for kv in to_deserialize {
                     let mut decoded1 = <Vec<Vec<u8>>>::new();
                     for v in kv.1 {
-                        decoded1.push(decode(v).map_err(serde::de::Error::custom)?);
+                        decoded1.push(base64::decode(v).map_err(serde::de::Error::custom)?);
                     }
                     decoded0.insert(kv.0, decoded1);
                 }
@@ -920,7 +929,7 @@ pub mod option_hashmap_vec_encoded_bytes_std {
         if let Some(to_serialize) = to_serialize {
             let mut encoded0 = <HashMap<&String, Vec<String>>>::new();
             for kv in to_serialize {
-                encoded0.insert(kv.0, kv.1.iter().map(encode).collect());
+                encoded0.insert(kv.0, kv.1.iter().map(base64::encode).collect());
             }
             <Option<HashMap<&String, Vec<String>>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -931,7 +940,7 @@ pub mod option_hashmap_vec_encoded_bytes_std {
 
 pub mod option_hashmap_vec_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
 
@@ -948,7 +957,8 @@ pub mod option_hashmap_vec_encoded_bytes_url {
                 for kv in to_deserialize {
                     let mut decoded1 = <Vec<Vec<u8>>>::new();
                     for v in kv.1 {
-                        decoded1.push(decode_url_safe(v).map_err(serde::de::Error::custom)?);
+                        decoded1
+                            .push(base64::decode_url_safe(v).map_err(serde::de::Error::custom)?);
                     }
                     decoded0.insert(kv.0, decoded1);
                 }
@@ -968,7 +978,7 @@ pub mod option_hashmap_vec_encoded_bytes_url {
         if let Some(to_serialize) = to_serialize {
             let mut encoded0 = <HashMap<&String, Vec<String>>>::new();
             for kv in to_serialize {
-                encoded0.insert(kv.0, kv.1.iter().map(encode_url_safe).collect());
+                encoded0.insert(kv.0, kv.1.iter().map(base64::encode_url_safe).collect());
             }
             <Option<HashMap<&String, Vec<String>>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -1078,7 +1088,7 @@ pub mod option_hashmap_vec_offset_date_time_unix_time {
 
 pub mod option_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
 
@@ -1091,7 +1101,7 @@ pub mod option_vec_encoded_bytes_std {
             Some(to_deserialize) => {
                 let mut decoded0 = <Vec<Vec<u8>>>::new();
                 for v in to_deserialize {
-                    decoded0.push(decode(v).map_err(serde::de::Error::custom)?);
+                    decoded0.push(base64::decode(v).map_err(serde::de::Error::custom)?);
                 }
                 Ok(Some(decoded0))
             }
@@ -1107,7 +1117,7 @@ pub mod option_vec_encoded_bytes_std {
         S: Serializer,
     {
         if let Some(to_serialize) = to_serialize {
-            let encoded0 = to_serialize.iter().map(encode).collect();
+            let encoded0 = to_serialize.iter().map(base64::encode).collect();
             <Option<Vec<String>>>::serialize(&Some(encoded0), serializer)
         } else {
             serializer.serialize_none()
@@ -1117,7 +1127,7 @@ pub mod option_vec_encoded_bytes_std {
 
 pub mod option_vec_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
 
@@ -1130,7 +1140,7 @@ pub mod option_vec_encoded_bytes_url {
             Some(to_deserialize) => {
                 let mut decoded0 = <Vec<Vec<u8>>>::new();
                 for v in to_deserialize {
-                    decoded0.push(decode_url_safe(v).map_err(serde::de::Error::custom)?);
+                    decoded0.push(base64::decode_url_safe(v).map_err(serde::de::Error::custom)?);
                 }
                 Ok(Some(decoded0))
             }
@@ -1146,7 +1156,7 @@ pub mod option_vec_encoded_bytes_url {
         S: Serializer,
     {
         if let Some(to_serialize) = to_serialize {
-            let encoded0 = to_serialize.iter().map(encode_url_safe).collect();
+            let encoded0 = to_serialize.iter().map(base64::encode_url_safe).collect();
             <Option<Vec<String>>>::serialize(&Some(encoded0), serializer)
         } else {
             serializer.serialize_none()
@@ -1156,7 +1166,7 @@ pub mod option_vec_encoded_bytes_url {
 
 pub mod option_vec_hashmap_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
 
@@ -1176,7 +1186,7 @@ pub mod option_vec_hashmap_vec_encoded_bytes_std {
                     for kv in v {
                         let mut decoded2 = <Vec<Vec<u8>>>::new();
                         for v in kv.1 {
-                            decoded2.push(decode(v).map_err(serde::de::Error::custom)?);
+                            decoded2.push(base64::decode(v).map_err(serde::de::Error::custom)?);
                         }
                         decoded1.insert(kv.0, decoded2);
                     }
@@ -1201,7 +1211,7 @@ pub mod option_vec_hashmap_vec_encoded_bytes_std {
                 .map(|v| {
                     let mut encoded1 = <HashMap<&String, Vec<String>>>::new();
                     for kv in v {
-                        encoded1.insert(kv.0, kv.1.iter().map(encode).collect());
+                        encoded1.insert(kv.0, kv.1.iter().map(base64::encode).collect());
                     }
                     encoded1
                 })
@@ -1215,7 +1225,7 @@ pub mod option_vec_hashmap_vec_encoded_bytes_std {
 
 pub mod option_vec_hashmap_vec_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
 
@@ -1235,7 +1245,9 @@ pub mod option_vec_hashmap_vec_encoded_bytes_url {
                     for kv in v {
                         let mut decoded2 = <Vec<Vec<u8>>>::new();
                         for v in kv.1 {
-                            decoded2.push(decode_url_safe(v).map_err(serde::de::Error::custom)?);
+                            decoded2.push(
+                                base64::decode_url_safe(v).map_err(serde::de::Error::custom)?,
+                            );
                         }
                         decoded1.insert(kv.0, decoded2);
                     }
@@ -1260,7 +1272,7 @@ pub mod option_vec_hashmap_vec_encoded_bytes_url {
                 .map(|v| {
                     let mut encoded1 = <HashMap<&String, Vec<String>>>::new();
                     for kv in v {
-                        encoded1.insert(kv.0, kv.1.iter().map(encode_url_safe).collect());
+                        encoded1.insert(kv.0, kv.1.iter().map(base64::encode_url_safe).collect());
                     }
                     encoded1
                 })
@@ -1513,7 +1525,7 @@ pub mod option_vec_offset_date_time_unix_time {
 
 pub mod option_vec_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
 
@@ -1528,7 +1540,7 @@ pub mod option_vec_vec_encoded_bytes_std {
                 for v in to_deserialize {
                     let mut decoded1 = <Vec<Vec<u8>>>::new();
                     for v in v {
-                        decoded1.push(decode(v).map_err(serde::de::Error::custom)?);
+                        decoded1.push(base64::decode(v).map_err(serde::de::Error::custom)?);
                     }
                     decoded0.push(decoded1);
                 }
@@ -1548,7 +1560,7 @@ pub mod option_vec_vec_encoded_bytes_std {
         if let Some(to_serialize) = to_serialize {
             let encoded0 = to_serialize
                 .iter()
-                .map(|v| v.iter().map(encode).collect())
+                .map(|v| v.iter().map(base64::encode).collect())
                 .collect();
             <Option<Vec<Vec<String>>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -1559,7 +1571,7 @@ pub mod option_vec_vec_encoded_bytes_std {
 
 pub mod option_vec_vec_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
 
@@ -1574,7 +1586,8 @@ pub mod option_vec_vec_encoded_bytes_url {
                 for v in to_deserialize {
                     let mut decoded1 = <Vec<Vec<u8>>>::new();
                     for v in v {
-                        decoded1.push(decode_url_safe(v).map_err(serde::de::Error::custom)?);
+                        decoded1
+                            .push(base64::decode_url_safe(v).map_err(serde::de::Error::custom)?);
                     }
                     decoded0.push(decoded1);
                 }
@@ -1594,7 +1607,7 @@ pub mod option_vec_vec_encoded_bytes_url {
         if let Some(to_serialize) = to_serialize {
             let encoded0 = to_serialize
                 .iter()
-                .map(|v| v.iter().map(encode_url_safe).collect())
+                .map(|v| v.iter().map(base64::encode_url_safe).collect())
                 .collect();
             <Option<Vec<Vec<String>>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -1752,7 +1765,7 @@ pub mod option_vec_vec_offset_date_time_unix_time {
 
 pub mod option_vec_vec_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode, encode};
+    use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
 
@@ -1769,57 +1782,7 @@ pub mod option_vec_vec_vec_encoded_bytes_std {
                     for v in v {
                         let mut decoded2 = <Vec<Vec<u8>>>::new();
                         for v in v {
-                            decoded2.push(decode(v).map_err(serde::de::Error::custom)?);
-                        }
-                        decoded1.push(decoded2);
-                    }
-                    decoded0.push(decoded1);
-                }
-                Ok(Some(decoded0))
-            }
-            None => Ok(None),
-        }
-    }
-
-    pub fn serialize<S>(
-        to_serialize: &Option<Vec<Vec<Vec<Vec<u8>>>>>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if let Some(to_serialize) = to_serialize {
-            let encoded0 = to_serialize
-                .iter()
-                .map(|v| v.iter().map(|v| v.iter().map(encode).collect()).collect())
-                .collect();
-            <Option<Vec<Vec<Vec<String>>>>>::serialize(&Some(encoded0), serializer)
-        } else {
-            serializer.serialize_none()
-        }
-    }
-}
-
-pub mod option_vec_vec_vec_encoded_bytes_url {
-    #![allow(clippy::type_complexity)]
-    use azure_core::base64::{decode_url_safe, encode_url_safe};
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::result::Result;
-
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<Vec<Vec<Vec<u8>>>>>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let to_deserialize = <Option<Vec<Vec<Vec<String>>>>>::deserialize(deserializer)?;
-        match to_deserialize {
-            Some(to_deserialize) => {
-                let mut decoded0 = <Vec<Vec<Vec<Vec<u8>>>>>::new();
-                for v in to_deserialize {
-                    let mut decoded1 = <Vec<Vec<Vec<u8>>>>::new();
-                    for v in v {
-                        let mut decoded2 = <Vec<Vec<u8>>>::new();
-                        for v in v {
-                            decoded2.push(decode_url_safe(v).map_err(serde::de::Error::custom)?);
+                            decoded2.push(base64::decode(v).map_err(serde::de::Error::custom)?);
                         }
                         decoded1.push(decoded2);
                     }
@@ -1843,7 +1806,63 @@ pub mod option_vec_vec_vec_encoded_bytes_url {
                 .iter()
                 .map(|v| {
                     v.iter()
-                        .map(|v| v.iter().map(encode_url_safe).collect())
+                        .map(|v| v.iter().map(base64::encode).collect())
+                        .collect()
+                })
+                .collect();
+            <Option<Vec<Vec<Vec<String>>>>>::serialize(&Some(encoded0), serializer)
+        } else {
+            serializer.serialize_none()
+        }
+    }
+}
+
+pub mod option_vec_vec_vec_encoded_bytes_url {
+    #![allow(clippy::type_complexity)]
+    use azure_core::base64;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::result::Result;
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<Vec<Vec<Vec<u8>>>>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize = <Option<Vec<Vec<Vec<String>>>>>::deserialize(deserializer)?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let mut decoded0 = <Vec<Vec<Vec<Vec<u8>>>>>::new();
+                for v in to_deserialize {
+                    let mut decoded1 = <Vec<Vec<Vec<u8>>>>::new();
+                    for v in v {
+                        let mut decoded2 = <Vec<Vec<u8>>>::new();
+                        for v in v {
+                            decoded2.push(
+                                base64::decode_url_safe(v).map_err(serde::de::Error::custom)?,
+                            );
+                        }
+                        decoded1.push(decoded2);
+                    }
+                    decoded0.push(decoded1);
+                }
+                Ok(Some(decoded0))
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn serialize<S>(
+        to_serialize: &Option<Vec<Vec<Vec<Vec<u8>>>>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if let Some(to_serialize) = to_serialize {
+            let encoded0 = to_serialize
+                .iter()
+                .map(|v| {
+                    v.iter()
+                        .map(|v| v.iter().map(base64::encode_url_safe).collect())
                         .collect()
                 })
                 .collect();

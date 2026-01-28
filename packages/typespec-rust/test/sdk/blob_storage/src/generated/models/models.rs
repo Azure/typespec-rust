@@ -14,12 +14,7 @@ use super::{
     GeoReplicationStatusType, LeaseDuration, LeaseState, LeaseStatus, PublicAccessType,
     QueryRequestType, QueryType, RehydratePriority,
 };
-use azure_core::{
-    base64::option::{deserialize, serialize},
-    fmt::SafeDebug,
-    time::OffsetDateTime,
-    Value,
-};
+use azure_core::{base64, fmt::SafeDebug, time::OffsetDateTime, Value};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -99,6 +94,10 @@ pub struct ArrowField {
     #[serde(rename = "Type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
+
+/// Contains results for `BlobClient::abort_copy_from_url()`
+#[derive(SafeDebug)]
+pub(crate) struct BlobClientAbortCopyFromUrlResult;
 
 /// Contains results for `BlobClient::acquire_lease()`
 #[derive(SafeDebug)]
@@ -372,9 +371,9 @@ pub struct BlobPropertiesInternal {
     /// The content MD5 of the blob.
     #[serde(
         default,
-        deserialize_with = "deserialize",
+        deserialize_with = "base64::option::deserialize",
         rename = "Content-MD5",
-        serialize_with = "serialize",
+        serialize_with = "base64::option::serialize",
         skip_serializing_if = "Option::is_none"
     )]
     pub content_md5: Option<Vec<u8>>,
@@ -581,9 +580,9 @@ pub struct Block {
     /// The base64 encoded block ID.
     #[serde(
         default,
-        deserialize_with = "deserialize",
+        deserialize_with = "base64::option::deserialize",
         rename = "Name",
-        serialize_with = "serialize",
+        serialize_with = "base64::option::serialize",
         skip_serializing_if = "Option::is_none"
     )]
     pub name: Option<Vec<u8>>,
@@ -924,6 +923,18 @@ pub struct JsonTextConfiguration {
     /// The string used to separate records.
     #[serde(rename = "RecordSeparator", skip_serializing_if = "Option::is_none")]
     pub record_separator: Option<String>,
+}
+
+/// Key information
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub(crate) struct KeyInfo {
+    /// The date-time the key expires.
+    #[serde(rename = "Expiry")]
+    pub(crate) expiry: String,
+
+    /// The date-time the key is active.
+    #[serde(rename = "Start")]
+    pub(crate) start: String,
 }
 
 /// An enumeration of blobs.
@@ -1342,4 +1353,42 @@ pub struct StorageServiceStats {
     /// The geo replication stats.
     #[serde(rename = "GeoReplication", skip_serializing_if = "Option::is_none")]
     pub geo_replication: Option<GeoReplication>,
+}
+
+/// A user delegation key.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub(crate) struct UserDelegationKey {
+    /// The date-time the key expires.
+    #[serde(rename = "SignedExpiry")]
+    pub(crate) signed_expiry: String,
+
+    /// The Azure Active Directory object ID in GUID format.
+    #[serde(rename = "SignedOid")]
+    pub(crate) signed_oid: String,
+
+    /// Abbreviation of the Azure Storage service that accepts the key.
+    #[serde(rename = "SignedService")]
+    pub(crate) signed_service: String,
+
+    /// The date-time the key is active.
+    #[serde(rename = "SignedStart")]
+    pub(crate) signed_start: String,
+
+    /// The Azure Active Directory tenant ID in GUID format.
+    #[serde(rename = "SignedTid")]
+    pub(crate) signed_tid: String,
+
+    /// The service version that created the key.
+    #[serde(rename = "SignedVersion")]
+    pub(crate) signed_version: String,
+
+    /// The key as a base64 string.
+    #[serde(
+        default,
+        deserialize_with = "base64::deserialize",
+        rename = "Value",
+        serialize_with = "base64::serialize"
+    )]
+    pub(crate) value: Vec<u8>,
 }
