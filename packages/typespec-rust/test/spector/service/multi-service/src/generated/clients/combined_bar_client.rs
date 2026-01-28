@@ -12,7 +12,7 @@ use azure_core::{
 
 #[tracing::client]
 pub struct CombinedBarClient {
-    pub(crate) api_version: &str,
+    pub(crate) api_version: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
 }
@@ -37,7 +37,7 @@ impl CombinedBarClient {
         let mut url = self.endpoint.clone();
         url.append_path("/service/multi-service/service-b/bar/test");
         let mut query_builder = url.query_builder();
-        query_builder.set_pair("api-version", self.api_version.as_ref());
+        query_builder.set_pair("api-version", self.api_version.as_str());
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self

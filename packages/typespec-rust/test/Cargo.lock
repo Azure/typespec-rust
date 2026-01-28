@@ -1940,6 +1940,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_multi_service"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_multiclient"
 version = "0.1.0"
 dependencies = [

@@ -12,7 +12,7 @@ use azure_core::{
 
 #[tracing::client]
 pub struct CombinedClient {
-    pub(crate) api_version: &str,
+    pub(crate) api_version: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
 }
@@ -46,7 +46,7 @@ impl CombinedClient {
             ));
         }
         Ok(Self {
-            api_version,
+            api_version: api_version.to_string(),
             endpoint,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -68,7 +68,7 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_bar_client(&self) -> CombinedBarClient {
         CombinedBarClient {
-            api_version: self.api_version,
+            api_version: self.api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }
@@ -78,7 +78,7 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_foo_client(&self) -> CombinedFooClient {
         CombinedFooClient {
-            api_version: self.api_version,
+            api_version: self.api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }
