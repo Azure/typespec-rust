@@ -23,6 +23,11 @@ impl CombinedBarClient {
         &self.endpoint
     }
 
+    /// Test that a client can expose operations from multiple services. This operation should be called like this: `client.bar.test(...)`.
+    ///
+    /// Expected path: /service/multi-service/service-b/bar/test
+    /// Expected query parameter: api-version=bv2
+    /// Expected 204 response.
     ///
     /// # Arguments
     ///
