@@ -116,6 +116,7 @@ const azureHttpSpecsGroup = {
   'spector_twoop': {input: 'client/structure/two-operation-group/client.tsp'},
   'spector_srvdrivenold': {input: 'resiliency/srv-driven/old.tsp', output: 'resiliency/srv-driven/old'},
   'spector_srvdrivennew': {input: 'resiliency/srv-driven', output: 'resiliency/srv-driven/new'},
+  'spector_multi_service': {input: 'service/multi-service/client.tsp'},
 };
 
 const args = process.argv.slice(2);
