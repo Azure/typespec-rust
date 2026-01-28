@@ -30,6 +30,7 @@ impl CombinedClient {
     /// # Arguments
     ///
     /// * `endpoint` - Service host
+    /// * `api_version` - The API version to use for requests
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Service.MultiService.Combined")]
     pub fn with_no_credential(
