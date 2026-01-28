@@ -135,7 +135,6 @@ function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.E
   }
   // extensible enums that are numeric can derive Copy
   body += indent.get() + `#[derive(Clone, ${rustEnum.extensible && rustEnum.type === 'String' ? '' : 'Copy, '}Debug, Eq, PartialEq)]\n`;
-  body += indent.get() + `#[non_exhaustive]\n`;
   body += indent.get() + `pub enum ${rustEnum.name} {\n`;
   indent.push();
   for (let i = 0; i < rustEnum.values.length; ++i) {

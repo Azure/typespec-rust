@@ -5,7 +5,6 @@
 
 /// Enum describing allowed operation states.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum OperationState {
     /// The operation has been canceled by the user.
     Canceled,
