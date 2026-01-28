@@ -5,7 +5,6 @@
 
 /// Days of the week
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum DaysOfWeekEnum {
     /// Friday.
     Friday,

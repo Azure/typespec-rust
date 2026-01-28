@@ -13,6 +13,7 @@
 ### Other Changes
 
 * Consolidated `pub` and `pub(crate)` structs into `models.rs` file.
+* Removed `#[non_exhaustive]` from enum definitions.
 
 ## 0.33.0 (2026-01-16)
 

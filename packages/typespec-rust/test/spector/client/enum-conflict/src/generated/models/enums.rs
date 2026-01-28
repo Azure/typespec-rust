@@ -5,7 +5,6 @@
 
 /// Status enum in second namespace
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum SecondStatus {
     /// Running status
     Running,
@@ -16,7 +15,6 @@ pub enum SecondStatus {
 
 /// Status enum in first namespace
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum Status {
     /// Active status
     Active,

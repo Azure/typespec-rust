@@ -5,7 +5,6 @@
 
 /// The kind of entity that created the resource.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum CreatedByType {
     /// The entity was created by an application.
     Application,
@@ -25,7 +24,6 @@ pub enum CreatedByType {
 
 /// Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum ManagedServiceIdentityType {
     /// No managed identity.
     None,
