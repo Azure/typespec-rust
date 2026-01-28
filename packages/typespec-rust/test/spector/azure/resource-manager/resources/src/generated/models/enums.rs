@@ -5,7 +5,6 @@
 
 /// The kind of entity that created the resource.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum CreatedByType {
     /// The entity was created by an application.
     Application,
@@ -24,7 +23,6 @@ pub enum CreatedByType {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum ProvisioningState {
     Accepted,
 
@@ -49,7 +47,6 @@ pub enum ProvisioningState {
 
 /// The provisioning state of a resource type.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum ResourceProvisioningState {
     /// Resource creation was canceled.
     Canceled,

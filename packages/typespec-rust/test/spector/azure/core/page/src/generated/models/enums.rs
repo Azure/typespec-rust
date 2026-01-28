@@ -5,7 +5,6 @@
 
 /// An extensible enum input parameter.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum ListItemInputExtensibleEnum {
     /// The first enum value.
     First,

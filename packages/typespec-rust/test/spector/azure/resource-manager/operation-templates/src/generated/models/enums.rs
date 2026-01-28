@@ -5,7 +5,6 @@
 
 /// Extensible enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum ActionType {
     /// Actions are for internal-only APIs.
     Internal,
@@ -16,7 +15,6 @@ pub enum ActionType {
 
 /// Possible reasons for a name not being available.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum CheckNameAvailabilityReason {
     /// Name already exists.
     AlreadyExists,
@@ -30,7 +28,6 @@ pub enum CheckNameAvailabilityReason {
 
 /// The kind of entity that created the resource.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum CreatedByType {
     /// The entity was created by an application.
     Application,
@@ -51,7 +48,6 @@ pub enum CreatedByType {
 /// The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is
 /// "user,system"
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum Origin {
     /// Indicates the operation is initiated by a system.
     System,
@@ -68,7 +64,6 @@ pub enum Origin {
 
 /// The provisioning state of a resource type.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum ResourceProvisioningState {
     /// Resource creation was canceled.
     Canceled,

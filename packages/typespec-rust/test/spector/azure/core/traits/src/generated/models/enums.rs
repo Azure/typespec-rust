@@ -5,7 +5,6 @@
 
 /// Repeatability Result header options
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum RepeatabilityResult {
     /// If the request was accepted and the server guarantees that the server state reflects a single execution of the operation.
     Accepted,

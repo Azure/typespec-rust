@@ -5,7 +5,6 @@
 
 /// Composition types.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum CompositionType {
     /// The 'key' composition type.
     Key,
@@ -18,7 +17,6 @@ pub enum CompositionType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum CreateSnapshotRequestContentType {
     ApplicationJson,
 
@@ -26,7 +24,6 @@ pub enum CreateSnapshotRequestContentType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum GetKeyValueResponseContentType {
     ApplicationProblemJson,
 
@@ -34,7 +31,6 @@ pub enum GetKeyValueResponseContentType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum GetKeyValuesResponseContentType {
     ApplicationProblemJson,
 
@@ -42,7 +38,6 @@ pub enum GetKeyValuesResponseContentType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum GetKeysResponseContentType {
     ApplicationProblemJson,
 
@@ -50,7 +45,6 @@ pub enum GetKeysResponseContentType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum GetLabelsResponseContentType {
     ApplicationProblemJson,
 
@@ -58,7 +52,6 @@ pub enum GetLabelsResponseContentType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum GetSnapshotResponseContentType {
     ApplicationProblemJson,
 
@@ -66,7 +59,6 @@ pub enum GetSnapshotResponseContentType {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum GetSnapshotsResponseContentType {
     ApplicationProblemJson,
 
@@ -75,7 +67,6 @@ pub enum GetSnapshotsResponseContentType {
 
 /// Key-value fields.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum KeyValueFields {
     /// Content type field.
     ContentType,
@@ -107,7 +98,6 @@ pub enum KeyValueFields {
 
 /// Label fields.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum LabelFields {
     /// Name field.
     Name,
@@ -118,7 +108,6 @@ pub enum LabelFields {
 
 /// Enum describing allowed operation states.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum OperationState {
     /// The operation has been canceled by the user.
     Canceled,
@@ -140,7 +129,6 @@ pub enum OperationState {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum PutKeyValueRequestContentType {
     ApplicationAnyJson,
 
@@ -157,7 +145,6 @@ pub enum PutKeyValueRequestContentType {
 
 /// Snapshot fields.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum SnapshotFields {
     /// Composition type field.
     CompositionType,
@@ -198,7 +185,6 @@ pub enum SnapshotFields {
 
 /// Snapshot status.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum SnapshotStatus {
     /// Archived
     Archived,
@@ -217,7 +203,6 @@ pub enum SnapshotStatus {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum UpdateSnapshotRequestContentType {
     ApplicationJson,
 

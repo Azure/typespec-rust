@@ -5,7 +5,6 @@
 
 /// The provisioning state of a resource type.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum ResourceProvisioningState {
     /// Resource creation was canceled.
     Canceled,
