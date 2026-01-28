@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@azure-tools/codegen':
-        specifier: ~2.10.1
-        version: 2.10.1
-      '@azure-tools/linq':
-        specifier: ~3.1.263
-        version: 3.1.263
       '@types/turndown':
         specifier: ^5.0.6
         version: 5.0.6
@@ -33,9 +27,6 @@ importers:
       '@azure-tools/azure-http-specs':
         specifier: 0.1.0-alpha.36
         version: 0.1.0-alpha.36(b417f51d6fbc41c11eee3a24371892dc)
-      '@azure-tools/typespec-autorest':
-        specifier: ~0.64.0
-        version: 0.64.0(14567b26ecf17b774d02066e86eb3ddf)
       '@azure-tools/typespec-azure-core':
         specifier: ~0.64.0
         version: 0.64.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30))))(@typespec/rest@0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30)))))
@@ -99,10 +90,6 @@ importers:
 
 packages:
 
-  '@azure-tools/async-io@3.0.254':
-    resolution: {integrity: sha512-X1C7XdyCuo50ch9FzKtTvmK18FgDxxf1Bbt3cSoknQqeDaRegHSSCO+zByq2YA4NvUzKXeZ1engh29IDxZXgpQ==}
-    engines: {node: '>=10.12.0'}
-
   '@azure-tools/azure-http-specs@0.1.0-alpha.36':
     resolution: {integrity: sha512-tn6qiiTA+ToLmOqj4CSJNAbeuSUj6hIRiXzDhR8b7jilFLnXQ2MYKnJNnjL2O/CDd0utWUqg/2kNlQitSLnxmA==}
     engines: {node: '>=20.0.0'}
@@ -113,35 +100,6 @@ packages:
       '@typespec/rest': ^0.78.0
       '@typespec/versioning': ^0.78.0
       '@typespec/xml': ^0.78.0
-
-  '@azure-tools/codegen@2.10.1':
-    resolution: {integrity: sha512-fZfREKjQnBTscjObgK4LuyZNFaofoCNQDNz0jl1i8fYNwCM5EOF9BXwtEtobuEyCpPUNDxQ/KKO65eWzirqk4w==}
-    engines: {node: '>=12.0.0'}
-
-  '@azure-tools/linq@3.1.263':
-    resolution: {integrity: sha512-r104pkF96Sk8MW+PgxWqwiwNXhPbJSkMDcmShu9EDEJem04SM7DnHWmDo8JZR08vHYaecZA126OoGQFe7WikSA==}
-    engines: {node: '>=10.12.0'}
-
-  '@azure-tools/tasks@3.0.255':
-    resolution: {integrity: sha512-GjALNLz7kWMEdRVbaN5g0cJHNAr3XVTbP0611Mv2UzMgGL6FOhNZJK+oPHJKLDR8EEDZNnkwPlyi7B+INXUSQA==}
-    engines: {node: '>=10.12.0'}
-
-  '@azure-tools/typespec-autorest@0.64.0':
-    resolution: {integrity: sha512-zC2e3px+BqGJvE9DeW00S0PZmkydorB3Hm6Fb2vlJUdmHuTTSochPiZFJF7LHNsAL8sDu7azSHzypESFdN0FmA==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      '@azure-tools/typespec-azure-core': ^0.64.0
-      '@azure-tools/typespec-azure-resource-manager': ^0.64.0
-      '@azure-tools/typespec-client-generator-core': ^0.64.0
-      '@typespec/compiler': ^1.8.0
-      '@typespec/http': ^1.8.0
-      '@typespec/openapi': ^1.8.0
-      '@typespec/rest': ^0.78.0
-      '@typespec/versioning': ^0.78.0
-      '@typespec/xml': ^0.78.0
-    peerDependenciesMeta:
-      '@typespec/xml':
-        optional: true
 
   '@azure-tools/typespec-azure-core@0.64.0':
     resolution: {integrity: sha512-BXiHc5oayhMsG1dHFU1aFK/ZQX2Gl0dKB0FAFceapaFV9093J2obbsdhIDR3Tl0qei9g3Ha+iWKZ4KgnLdhv4w==}
@@ -1495,9 +1453,6 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  graceful-fs@4.2.11:
-    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
-
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
     engines: {node: '>= 0.4'}
@@ -1987,10 +1942,6 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  proper-lockfile@2.0.1:
-    resolution: {integrity: sha512-rjaeGbsmhNDcDInmwi4MuI6mRwJu6zq8GjYCLuSuE7GF+4UjgzkL69sVKKJ2T2xH61kK7rXvGYpvaTu909oXaQ==}
-    engines: {node: '>=4.0.0'}
-
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
     engines: {node: '>= 0.10'}
@@ -2037,9 +1988,6 @@ packages:
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
-
-  retry@0.10.1:
-    resolution: {integrity: sha512-ZXUSQYTHdl3uS7IuCehYfMzKyIDBNoAuUblvy5oGO5UJSUTmStUUVPXbA9Qxd173Bgre53yCQczQuHgRWAdvJQ==}
 
   reusify@1.1.0:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
@@ -2502,11 +2450,6 @@ packages:
 
 snapshots:
 
-  '@azure-tools/async-io@3.0.254':
-    dependencies:
-      '@azure-tools/tasks': 3.0.255
-      proper-lockfile: 2.0.1
-
   '@azure-tools/azure-http-specs@0.1.0-alpha.36(b417f51d6fbc41c11eee3a24371892dc)':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.64.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30))))(@typespec/rest@0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30)))))
@@ -2521,29 +2464,6 @@ snapshots:
       - '@types/node'
       - '@typespec/streams'
       - supports-color
-
-  '@azure-tools/codegen@2.10.1':
-    dependencies:
-      '@azure-tools/async-io': 3.0.254
-      js-yaml: 4.1.1
-      semver: 7.7.3
-
-  '@azure-tools/linq@3.1.263': {}
-
-  '@azure-tools/tasks@3.0.255': {}
-
-  '@azure-tools/typespec-autorest@0.64.0(14567b26ecf17b774d02066e86eb3ddf)':
-    dependencies:
-      '@azure-tools/typespec-azure-core': 0.64.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30))))(@typespec/rest@0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30)))))
-      '@azure-tools/typespec-azure-resource-manager': 0.64.0(4713b48279731cb85aa09e79ee5435a9)
-      '@azure-tools/typespec-client-generator-core': 0.64.4(b8bcb225b2ae50370e7308662c2500b9)
-      '@typespec/compiler': 1.8.0(@types/node@20.19.30)
-      '@typespec/http': 1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30)))
-      '@typespec/openapi': 1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30))))
-      '@typespec/rest': 0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30))))
-      '@typespec/versioning': 0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))
-    optionalDependencies:
-      '@typespec/xml': 0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))
 
   '@azure-tools/typespec-azure-core@0.64.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30))))(@typespec/rest@0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30)))))':
     dependencies:
@@ -3995,8 +3915,6 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  graceful-fs@4.2.11: {}
-
   has-bigints@1.1.0: {}
 
   has-flag@4.0.0: {}
@@ -4449,11 +4367,6 @@ snapshots:
 
   prettier@3.7.4: {}
 
-  proper-lockfile@2.0.1:
-    dependencies:
-      graceful-fs: 4.2.11
-      retry: 0.10.1
-
   proxy-addr@2.0.7:
     dependencies:
       forwarded: 0.2.0
@@ -4502,8 +4415,6 @@ snapshots:
   require-from-string@2.0.2: {}
 
   resolve-from@4.0.0: {}
-
-  retry@0.10.1: {}
 
   reusify@1.1.0: {}
 

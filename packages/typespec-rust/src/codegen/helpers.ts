@@ -3,11 +3,10 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from '@azure-tools/codegen';
-import { values } from '@azure-tools/linq';
 import { CodegenError } from './errors.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
+import * as shared from '../shared/shared.js';
 
 const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
 //
@@ -73,14 +72,14 @@ export function formatDocComment(docs: rust.Docs, forDocAttr = false, prefix?: s
       //
       // * foo - some comment first line
       // and it finishes here.
-      let formattedLine = codegen.comment(line.trim(), `${indentLevel}/// `, undefined, 120);
+      let formattedLine = shared.comment(line.trim(), `${indentLevel}/// `, undefined, 120);
 
       // transform the above to look like this:
       //
       // * foo - some comment first line
       //   and it finishes here.
       const blockStartMatch = formattedLine.match(/^\/\/\/\s+([*-]|(?:\d+\.))/);
-      if (blockStartMatch && values(formattedLine).where((c) => c === '\n').count() > 0) {
+      if (blockStartMatch && formattedLine.split('\n').length > 1) {
         const chunks = formattedLine.split('\n');
         for (let i = 1; i < chunks.length; ++i) {
           // indent size is based on the size of the captured starting block minus 3 for the /// chars
@@ -460,7 +459,7 @@ export function buildWhile(indent: indentation, condition: string, body: (indent
  * @returns the capitalized value
  */
 export function capitalize(str: string): string {
-  return codegen.capitalize(str);
+  return shared.capitalize(str);
 }
 
 /**

@@ -5,8 +5,6 @@
 
 // cspell: ignore conv
 
-import * as codegen from '@azure-tools/codegen';
-import { values } from '@azure-tools/linq';
 import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
@@ -39,9 +37,13 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   const clientOptionsImplDefault = function (constructable: rust.ClientConstruction): boolean {
     // only implement Default when there's more than one field (i.e. more than just client_options)
     // and the field(s) contain a client default value.
-    return !constructable.suppressed && constructable.options.type.fields.length > 1 && values(constructable.options.type.fields)
-      .where((field) => field.name !== 'client_options')
-      .where((field) => field.defaultValue !== undefined).any();
+    if (constructable.suppressed) {
+      return false;
+    }
+    const optionsType = constructable.options.type;
+    return optionsType.fields.length > 1 && optionsType.fields.some((field) => {
+      return field.name !== 'client_options' && field.defaultValue !== undefined;
+    });
   };
 
   const clientModules = new Array<helpers.Module>();
@@ -135,9 +137,9 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // propagate the required client params to the initializer
         // NOTE: we do this on a sorted copy of the client params as we must preserve their order.
         // exclude endpoint params as they aren't propagated to clients (they're consumed when creating the complete endpoint)
-        const sortedParams = values([...constructor.params]
-          .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); }))
-          .where((each) => each.kind !== 'clientSupplementalEndpoint' && each.kind !== 'clientCredential').toArray();
+        const sortedParams = [...constructor.params]
+          .filter((each) => each.kind !== 'clientSupplementalEndpoint' && each.kind !== 'clientCredential')
+          .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); });
 
         for (const param of sortedParams) {
           if (param.optional) {
@@ -301,7 +303,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     content += use.text();
     content += body;
 
-    const clientMod = codegen.deconstruct(client.name).join('_');
+    const clientMod = shared.deconstruct(client.name).join('_');
     clientModules.push({ name: clientMod, content: content });
   }
 
@@ -1040,7 +1042,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   // when constructing the request var name we need to ensure
   // that it doesn't collide with any parameter name.
   const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
-  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
+  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${shared.capitalize(method.httpMethod)});\n`;
 
   body += applyHeaderParams(indent, use, method, paramGroups, inClosure, requestVarName);
 

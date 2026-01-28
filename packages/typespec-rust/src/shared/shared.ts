@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+// cspell: ignore uncapitalize
+
 import * as rust from '../codemodel/index.js';
 
 /**
@@ -113,3 +115,166 @@ function unwrap(type: rust.Type): rust.Type | undefined {
       return undefined;
   }
 }
+
+// the following was copied from @azure-tools/codegen as it's deprecated
+
+/**
+ * returns the camel-cased version of identifier.
+ * e.g. "myVariableName" -> "myVariableName"
+ * 
+ * @param identifier the identifier to convert
+ * @returns the camel-cased identifier
+ */
+export function camelCase(identifier: string | Array<string>): string {
+  if (typeof identifier === "string") {
+    return camelCase(deconstruct(identifier));
+  }
+  switch (identifier.length) {
+    case 0:
+      return "";
+    case 1:
+      return uncapitalize(identifier[0]);
+  }
+  return `${uncapitalize(identifier[0])}${pascalCase(identifier.slice(1))}`;
+}
+
+/**
+ * returns the capitalized version of a string.
+ * e.g. "myVariableName" -> "MyVariableName"
+ * 
+ * @param str the string to capitalize
+ * @returns the capitalized string
+ */
+export function capitalize(str: string): string {
+  if (acronyms.has(str)) {
+    return str.toUpperCase();
+  }
+  return str ? `${str.charAt(0).toUpperCase()}${str.slice(1)}` : str;
+}
+
+/**
+ * returns a formatted comment string.
+ * 
+ * @param content the content of the comment
+ * @param prefix the prefix for each line of the comment
+ * @param factor the indentation factor
+ * @param maxLength the maximum length of each line
+ * @returns the formatted comment string
+ */
+export function comment(content: string, prefix = lineCommentPrefix, factor = 0, maxLength = 120) {
+  const result = new Array<string>();
+  let line = "";
+  prefix = indent(prefix, factor);
+
+  content = content.trim();
+  if (content) {
+    for (const word of content.replace(/\n+/g, ' » ').split(/\s+/g)) {
+      if (word === '»') {
+        result.push(line);
+        line = prefix;
+        continue;
+      }
+
+      if (maxLength < line.length) {
+        result.push(line);
+        line = '';
+      }
+
+      if (!line) {
+        line = prefix;
+      }
+
+      line += ` ${word}`;
+    }
+    if (line) {
+      result.push(line);
+    }
+
+    return result.join('\n');
+  }
+  return '';
+}
+
+/**
+ * returns the deconstructed version of an identifier.
+ * e.g. "myVariableName" -> ["my", "variable", "name"]
+ * 
+ * @param identifier the identifier to deconstruct
+ * @returns an array of strings representing the deconstructed identifier
+ */
+export function deconstruct(identifier: string | Array<string>): Array<string> {
+  if (Array.isArray(identifier)) {
+    return identifier.flatMap(deconstruct);
+  }
+  return `${identifier}`
+    .replace(/([a-z]+)([A-Z])/g, "$1 $2")
+    .replace(/(\d+)([a-z|A-Z]+)/g, "$1 $2")
+    .replace(/\b([A-Z]+)([A-Z])([a-z])/, "$1 $2$3")
+    .split(/[\W|_]+/)
+    .map((each) => each.toLowerCase());
+}
+
+/**
+ * returns the Pascal-cased version of an identifier.
+ * e.g. "myVariableName" -> "MyVariableName"
+ * 
+ * @param identifier the identifier to convert
+ * @param removeDuplicates whether to remove sequential duplicate words
+ * @returns the Pascal-cased identifier
+ */
+export function pascalCase(identifier: string | Array<string>, removeDuplicates = true): string {
+  return identifier === undefined
+    ? ""
+    : typeof identifier === "string"
+      ? pascalCase(deconstruct(identifier), removeDuplicates)
+      : (removeDuplicates ? [...removeSequentialDuplicates(identifier)] : identifier)
+          .map((each) => capitalize(each))
+          .join("");
+}
+
+/**
+ * returns the uncapitalized version of a string.
+ * e.g. "MyVariableName" -> "myVariableName"
+ * 
+ * @param str the string to uncapitalize
+ * @returns the uncapitalized string
+ */
+export function uncapitalize(str: string): string {
+  return str ? `${str.charAt(0).toLowerCase()}${str.slice(1)}` : str;
+}
+
+const acronyms = new Set([
+  'ip',
+  'os',
+  'ms',
+  'vm',
+]);
+
+const lineCommentPrefix = "//";
+
+function indent(content: string, factor = 1): string {
+  const i = '    '.repeat(factor);
+  content = i + content.trim().replace(/\r\n/g, '\n');
+  return content.split(/\n/g).join(`\n${i}`);
+}
+
+function isEqual(s1: string, s2: string): boolean {
+  // when s2 is undefined and s1 is the string 'undefined', it returns 0, making this true.
+  // To prevent that, first we need to check if s2 is undefined.
+  return s2 !== undefined && !!s1 && !s1.localeCompare(s2, undefined, { sensitivity: "base" });
+}
+
+function removeSequentialDuplicates(identifier: Iterable<string>) {
+  const ids = [...identifier].filter((each) => !!each);
+  for (let i = 0; i < ids.length; i++) {
+    while (isEqual(ids[i], ids[i - 1])) {
+      ids.splice(i, 1);
+    }
+    while (isEqual(ids[i], ids[i - 2]) && isEqual(ids[i + 1], ids[i - 1])) {
+      ids.splice(i, 2);
+    }
+  }
+
+  return ids;
+}
+// end ports from @azure-tools/codegen
