@@ -17,6 +17,9 @@ export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
 export const AnonymousLifetimeAnnotation = '<\'_>';
 
+/** defines the possible visibilites for a module */
+export type ModuleVisibility = 'internal' | 'pubUse' | 'pubCrate';
+
 /** a module to emit */
 export interface Module {
   /** the name of the module */
@@ -24,6 +27,41 @@ export interface Module {
 
   /** the contents of the module */
   readonly content: string;
+
+  /** the visibility of the module */
+  readonly visibility: ModuleVisibility;
+}
+
+/** used to track the visibility of types within a module */
+export class VisibilityTracker {
+  private visibility: ModuleVisibility;
+  constructor() {
+    // default to pub(crate). if at least one item
+    // is pub then we'll flip this to pubUse
+    this.visibility = 'pubCrate';
+  }
+
+  /**
+   * gets the module visibility status.
+   * this should be called after update()
+   * has been called for all items.
+   * 
+   * @returns the module visibility
+   */
+  get(): ModuleVisibility {
+    return this.visibility;
+  }
+
+  /**
+   * updates the state of the visibility tracker.
+   * 
+   * @param visibility the visibility of an item
+   */
+  update(visibility: rust.Visibility): void {
+    if (visibility === 'pub') {
+      this.visibility = 'pubUse';
+    }
+  }
 }
 
 /**

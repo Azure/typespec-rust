@@ -9,6 +9,7 @@
 ### Bugs Fixed
 
 * Using `Azure.Core.eTag` as a header parameter no longer causes an internal error.
+* Fixed bad codegen for remaining cases when an operation is annotated with `Access.internal` (the original fix for this was incomplete).
 
 ### Other Changes
 

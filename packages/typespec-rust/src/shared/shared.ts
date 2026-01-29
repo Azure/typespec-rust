@@ -228,8 +228,8 @@ export function pascalCase(identifier: string | Array<string>, removeDuplicates 
     : typeof identifier === "string"
       ? pascalCase(deconstruct(identifier), removeDuplicates)
       : (removeDuplicates ? [...removeSequentialDuplicates(identifier)] : identifier)
-          .map((each) => capitalize(each))
-          .join("");
+        .map((each) => capitalize(each))
+        .join("");
 }
 
 /**

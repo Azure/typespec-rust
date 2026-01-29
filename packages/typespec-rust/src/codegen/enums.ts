@@ -48,9 +48,11 @@ export function emitEnums(crate: rust.Crate, context: Context): Enums {
  */
 function emitEnumDefinitions(crate: rust.Crate): helpers.Module {
   const indent = new helpers.indentation();
+  const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
   for (const rustEnum of crate.enums) {
+    visTracker.update(rustEnum.visibility);
     body += emitEnumPublicDefinitions(indent, rustEnum);
   }
 
@@ -60,6 +62,7 @@ function emitEnumDefinitions(crate: rust.Crate): helpers.Module {
   return {
     name: 'enums',
     content: content,
+    visibility: visTracker.get(),
   };
 }
 
@@ -85,6 +88,7 @@ function emitEnumsSerde(crate: rust.Crate): helpers.Module {
   return {
     name: 'enums_serde',
     content: content,
+    visibility: 'internal',
   };
 }
 
@@ -116,6 +120,7 @@ function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module {
   return {
     name: 'enums_impl',
     content: content,
+    visibility: 'internal',
   };
 }
 
@@ -135,7 +140,7 @@ function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.E
   }
   // extensible enums that are numeric can derive Copy
   body += indent.get() + `#[derive(Clone, ${rustEnum.extensible && rustEnum.type === 'String' ? '' : 'Copy, '}Debug, Eq, PartialEq)]\n`;
-  body += indent.get() + `pub enum ${rustEnum.name} {\n`;
+  body += indent.get() + `${helpers.emitVisibility(rustEnum.visibility)}enum ${rustEnum.name} {\n`;
   indent.push();
   for (let i = 0; i < rustEnum.values.length; ++i) {
     const value = rustEnum.values[i];

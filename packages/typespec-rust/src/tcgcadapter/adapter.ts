@@ -422,7 +422,8 @@ export class Adapter {
           throw new AdapterError('UnsupportedTsp', `model property kind ${property.__raw?.kind} NYI`, property.__raw?.node);
         }
       }
-      const structField = this.getModelField(property, rustModel.visibility, stack);
+
+      const structField = this.getModelField(model.usage, property, rustModel.visibility, stack);
       rustModel.fields.push(structField);
     }
 
@@ -551,12 +552,13 @@ export class Adapter {
   /**
    * converts a tcgc model property to a model field
    *
+   * @param modelFlags the flags for the model to which the field belongs
    * @param property the tcgc model property to convert
    * @param modelVisibility the visibility of the model that contains the property
    * @param stack is a stack of types used to detect recursive type definitions
    * @returns a Rust model field
    */
-  private getModelField(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<rust.Type>): rust.ModelField {
+  private getModelField(modelFlags: tcgc.UsageFlags, property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<rust.Type>): rust.ModelField {
     const fieldNeedsBoxing = function(fieldType: rust.Type): fieldType is rust.WireType {
       if (fieldType.kind === 'model' && stack.includes(fieldType)) {
         // if the field's type is a model and it's in the type stack then
@@ -579,8 +581,11 @@ export class Adapter {
       fieldType = this.getBoxType(fieldType);
     }
 
-    // for public models each field is always an Option<T>.
-    if (modelVisibility === 'pub' || property.optional) {
+    // for non-spread models each field is always an Option<T>.
+    // NOTE: models can be used for both spread and I/O, so when
+    // restricting for spread it must be ONLY used for spread.
+    const notSpreadOnly = (modelFlags & tcgc.UsageFlags.Spread) === 0 || (modelFlags & tcgc.UsageFlags.Input) || (modelFlags & tcgc.UsageFlags.Output);
+    if (notSpreadOnly || property.optional) {
       fieldType = this.getOptionType(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 
@@ -1402,6 +1407,8 @@ export class Adapter {
 
     const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
+    const pub: rust.Visibility = adaptAccessFlags(method.access);
+
     if (srcMethodName !== method.name) {
       // if the method was renamed then ensure it doesn't collide
       for (const existingMethod of rustClient.methods) {
@@ -1411,7 +1418,7 @@ export class Adapter {
       }
     }
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${shared.pascalCase(srcMethodName, false)}Options`, 'pub');
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${shared.pascalCase(srcMethodName, false)}Options`, pub);
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
@@ -1428,12 +1435,10 @@ export class Adapter {
         clientMethodOptions = new rust.ClientMethodOptions(this.crate, optionsLifetime);
     }
 
-    const methodOptionsField = new rust.StructField('method_options', 'pub', clientMethodOptions);
+    const methodOptionsField = new rust.StructField('method_options', pub, clientMethodOptions);
     methodOptionsField.docs.summary = 'Allows customization of the method call.';
     methodOptionsStruct.fields.push(methodOptionsField);
 
-
-    const pub: rust.Visibility = adaptAccessFlags(method.access);
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
 
@@ -1553,7 +1558,7 @@ export class Adapter {
           fieldType = this.getOptionType(adaptedParam.type);
         }
 
-        const optionsField = new rust.StructField(adaptedParam.name, 'pub', fieldType);
+        const optionsField = new rust.StructField(adaptedParam.name, pub, fieldType);
         optionsField.docs = adaptedParam.docs;
         rustMethod.options.type.fields.push(optionsField);
       }

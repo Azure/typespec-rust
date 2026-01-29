@@ -35,9 +35,11 @@ export function emitUnions(crate: rust.Crate, context: Context): Unions {
 
   const use = new Use('modelsOther');
   const indent = new helpers.indentation();
+  const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
   for (const rustUnion of crate.unions) {
+    visTracker.update(rustUnion.visibility);
     const docs = helpers.formatDocComment(rustUnion.docs, true);
     if (docs.length > 0) {
       body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
@@ -63,7 +65,7 @@ export function emitUnions(crate: rust.Crate, context: Context): Unions {
     body += `#[derive(Clone, ${needsDeserialize ? 'Deserialize, ' : ''}Serialize, SafeDebug)]\n`;
     const content = rustUnion.unionKind?.kind === 'discriminatedUnionEnvelope' ? `content = "${rustUnion.unionKind.envelopeName}"` : '';
     body += `#[serde(${[content, `tag = "${rustUnion.discriminant}"`].filter(x => x !== '').join(', ')})]\n`;
-    body += `pub enum ${rustUnion.name} {\n`;
+    body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
 
     for (const member of unionMembers) {
       const memberType = member.kind === 'discriminatedUnionMember' ? member.type : member;
@@ -98,6 +100,7 @@ export function emitUnions(crate: rust.Crate, context: Context): Unions {
     definitions: {
       name: 'unions',
       content: content,
+      visibility: visTracker.get(),
     },
     impls: emitUnionImpls(crate, context),
     serde: emitUnionSerde(crate),
@@ -139,6 +142,7 @@ function emitUnionImpls(crate: rust.Crate, context: Context): helpers.Module | u
   return {
     name: 'unions_impl',
     content: content,
+    visibility: 'internal',
   };
 }
 
@@ -204,5 +208,6 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
   return {
     name: 'unions_serde',
     content: content,
+    visibility: 'internal',
   };
 }

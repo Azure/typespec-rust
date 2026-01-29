@@ -74,5 +74,5 @@ export function emitGeneratedModRs(crate: rust.Crate): string {
 export function emitModelsModRs(modules: Array<string>): string {
   // clippy complains about "mod models;" inside the models directory
   return helpers.contentPreamble()
-    + modules.sort().map((module) => module === 'mod models' ? `#[allow(clippy::module_inception)]\n${module}` : module).join(';\n') + ';\n';
+    + modules.sort().map((module) => module.match(/mod models$/) ? `#[allow(clippy::module_inception)]\n${module}` : module).join(';\n') + ';\n';
 }

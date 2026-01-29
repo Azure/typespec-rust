@@ -178,6 +178,9 @@ generate('lro', lro, 'test/other/lro');
 const misc_tests = pkgRoot + 'test/tsp/MiscTests';
 generate('misc_tests', misc_tests, 'test/other/misc_tests', ['omit-constructors=true']);
 
+const pub_crate = pkgRoot + 'test/tsp/PubCrate';
+generate('pub_crate', pub_crate, 'test/other/pub_crate');
+
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
 

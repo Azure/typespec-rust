@@ -68,14 +68,14 @@ export class CodeGenerator {
     const clientsSubDir = 'clients';
     const modelsSubDir = 'models';
 
-    const addModelsFile = function (module: Module | undefined, visibility: 'internal' | 'pubUse' | 'pubCrate'): void {
+    const addModelsFile = function (module: Module | undefined): void {
       if (!module) {
         return;
       }
       files.push({ name: `${modelsSubDir}/${module.name}.rs`, content: module.content });
-      modelsModRS.push(`${visibility === 'pubCrate' ? 'pub(crate) ' : ''}mod ${module.name}`);
-      if (visibility === 'pubUse') {
-        modelsModRS.push(`pub use ${module.name}::*`);
+      modelsModRS.push(`${module.visibility === 'pubCrate' ? 'pub(crate) ' : ''}mod ${module.name}`);
+      if (module.visibility !== 'internal') {
+        modelsModRS.push(`pub${module.visibility === 'pubCrate' ? '(crate)' : ''} use ${module.name}::*`);
       }
     };
 
@@ -83,26 +83,26 @@ export class CodeGenerator {
     if (clientModules) {
       files.push(...clientModules.modules.map((module) => { return { name: `${clientsSubDir}/${module.name}.rs`, content: module.content }; }));
       files.push({ name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name)) });
-      addModelsFile(clientModules.options, 'pubUse');
+      addModelsFile(clientModules.options);
     }
 
     const enums = emitEnums(this.crate, this.context);
-    addModelsFile(enums.definitions, 'pubUse');
-    addModelsFile(enums.serde, 'internal');
-    addModelsFile(enums.impls, 'internal');
+    addModelsFile(enums.definitions);
+    addModelsFile(enums.serde);
+    addModelsFile(enums.impls);
 
     const unions = emitUnions(this.crate, this.context);
-    addModelsFile(unions.definitions, 'pubUse');
-    addModelsFile(unions.impls, 'internal');
-    addModelsFile(unions.serde, 'internal');
+    addModelsFile(unions.definitions);
+    addModelsFile(unions.impls);
+    addModelsFile(unions.serde);
 
     const models = emitModels(this.crate, this.context);
-    addModelsFile(models.definitions, 'pubUse');
-    addModelsFile(models.serde, 'internal');
-    addModelsFile(models.impls, 'internal');
-    addModelsFile(models.xmlHelpers, 'internal');
+    addModelsFile(models.definitions);
+    addModelsFile(models.serde);
+    addModelsFile(models.impls);
+    addModelsFile(models.xmlHelpers);
 
-    addModelsFile(emitHeaderTraits(this.crate), 'pubUse');
+    addModelsFile(emitHeaderTraits(this.crate));
 
     if (modelsModRS.length > 0) {
       files.push({ name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS) })

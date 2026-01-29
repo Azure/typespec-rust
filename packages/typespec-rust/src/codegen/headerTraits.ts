@@ -175,6 +175,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   return {
     name: 'header_traits',
     content: content,
+    visibility: 'pubUse',
   };
 }
 
