@@ -97,12 +97,47 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
       body += helpers.AnnotationNonExhaustive;
     }
 
+    // if the model is a discriminated type, fetch its discriminator
+    let discriminator: rust.ModelField | undefined;
+    if (model.flags & rust.ModelFlags.PolymorphicSubtype) {
+      for (const field of model.fields) {
+        if (field.kind === 'modelField' && (field.flags & rust.ModelFieldFlags.Discriminator)) {
+          discriminator = field;
+          break;
+        }
+      }
+      if (!discriminator) {
+        throw new CodegenError('InternalError', `didn't find discriminator field for model ${model.name}`);
+      }
+    }
+
     if (!hasXmlAddlProps && model.xmlName) {
       body += `#[serde(rename = "${model.xmlName}")]\n`;
+    } else if (discriminator) {
+      // find the matching DU member for this model
+      let duMember: rust.DiscriminatedUnionMember | undefined;
+      for (const union of crate.unions) {
+        for (const member of union.members) {
+          if (member.type === model) {
+            duMember = member;
+            break;
+          }
+        }
+      }
+      if (!duMember) {
+        throw new CodegenError('InternalError', `didn't find discriminated union member for model ${model.name}`);
+      }
+      body += `#[serde(rename = "${duMember.discriminantValue}", tag = "${discriminator.serde}")]\n`;
     }
+
     body += `${helpers.emitVisibility(model.visibility)}struct ${model.name} {\n`;
 
     for (const field of model.fields) {
+      if (field.kind === 'modelField' && (field.flags & rust.ModelFieldFlags.Discriminator)) {
+        // we skip emitting the discriminant as serde handles it for us
+        continue;
+      }
+
       if (bodyFormat === 'xml' && field.kind === 'additionalProperties') {
         // will need to emit some serde helpers for this type.
         // JSON doesn't need a helper, we can use serde's flatten.
@@ -220,6 +255,21 @@ function emitModelsSerde(): helpers.Module | undefined {
 function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
   const use = new Use('modelsOther');
   const entries = new Array<string>();
+
+  // emit From<model> for tagged enum types
+  for (const union of crate.unions) {
+    const indent = new helpers.indentation();
+    use.addForType(union);
+    for (const member of union.members) {
+      use.addForType(member.type);
+      let from = `impl From<${member.type.name}> for ${union.name} {\n`;
+      from += `${indent.get()}fn from(value: ${member.type.name}) -> Self {\n`;
+      from += `${indent.push().get()}Self::${member.type.name}(value)\n`;
+      from += `${indent.pop().get()}}\n`; // end fn
+      from += '}\n\n'; // end impl
+      entries.push(from);
+    }
+  }
 
   // emit TryFrom as required
   for (const model of crate.models) {

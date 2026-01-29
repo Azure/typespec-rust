@@ -6,6 +6,7 @@
 mod method_options;
 #[allow(clippy::module_inception)]
 mod models;
+mod models_impl;
 mod unions;
 mod unions_impl;
 mod unions_serde;

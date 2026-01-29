@@ -15,16 +15,16 @@ use spector_union_discriminated::DiscriminatedClient;
 
 #[tokio::test]
 async fn no_envelope_default_put() {
-    let cat = PetInline::Cat(Cat {
+    let cat = Cat {
         name: Some(String::from("Whiskers")),
         meow: Some(true),
-    });
+    };
 
     let client = DiscriminatedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_discriminated_no_envelope_client()
         .get_discriminated_no_envelope_default_client()
-        .put(cat.try_into().unwrap(), None)
+        .put(PetInline::from(cat).try_into().unwrap(), None)
         .await
         .unwrap();
 
@@ -42,16 +42,21 @@ async fn no_envelope_default_put() {
 
 #[tokio::test]
 async fn no_envelope_custom_put() {
-    let cat = PetInlineWithCustomDiscriminator::Cat(Cat {
+    let cat = Cat {
         name: Some(String::from("Whiskers")),
         meow: Some(true),
-    });
+    };
 
     let client = DiscriminatedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_discriminated_no_envelope_client()
         .get_discriminated_no_envelope_custom_discriminator_client()
-        .put(cat.try_into().unwrap(), None)
+        .put(
+            PetInlineWithCustomDiscriminator::from(cat)
+                .try_into()
+                .unwrap(),
+            None,
+        )
         .await
         .unwrap();
 
@@ -69,17 +74,17 @@ async fn no_envelope_custom_put() {
 
 #[tokio::test]
 async fn envelope_default_put() {
-    let cat = PetWithEnvelope::Cat(Cat {
+    let cat = Cat {
         name: Some(String::from("Whiskers")),
         meow: Some(true),
-    });
+    };
 
     let client = DiscriminatedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_discriminated_envelope_client()
         .get_discriminated_envelope_object_client()
         .get_discriminated_envelope_object_default_client()
-        .put(cat.try_into().unwrap(), None)
+        .put(PetWithEnvelope::from(cat).try_into().unwrap(), None)
         .await
         .unwrap();
 
@@ -97,17 +102,17 @@ async fn envelope_default_put() {
 
 #[tokio::test]
 async fn envelope_custom_put() {
-    let cat = PetWithCustomNames::Cat(Cat {
+    let cat = Cat {
         name: Some(String::from("Whiskers")),
         meow: Some(true),
-    });
+    };
 
     let client = DiscriminatedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_discriminated_envelope_client()
         .get_discriminated_envelope_object_client()
         .get_discriminated_envelope_object_custom_properties_client()
-        .put(cat.try_into().unwrap(), None)
+        .put(PetWithCustomNames::from(cat).try_into().unwrap(), None)
         .await
         .unwrap();
 

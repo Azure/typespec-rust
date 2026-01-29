@@ -191,6 +191,11 @@ export class Adapter {
       if (model.discriminatedSubtypes) {
         const rustUnion = this.getDiscriminatedUnion(model);
         this.crate.unions.push(rustUnion);
+
+        // we don't want to add the base type to the array
+        // of models to emit as we hijack its name to be used
+        // for the associated tagged enum type.
+        continue;
       }
 
       if (model.external) {
@@ -206,7 +211,7 @@ export class Adapter {
       // tagged enum from the base model type name. so, we need
       // to check for any name collisions.
       for (const union of this.crate.unions) {
-        if (!shared.isPolymorphicDU(union.unionKind)) {
+        if (!utils.isPolymorphicDU(union.unionKind)) {
           // not a polymorphic DU
           continue;
         }
@@ -436,9 +441,7 @@ export class Adapter {
     const allProps = new Array<tcgc.SdkModelPropertyType>();
     for (const prop of model.properties) {
       if (prop.discriminator && !model.discriminatedSubtypes) {
-        // omit the discriminator field from child types
-        // as it's not very useful (or necessary)
-        continue;
+        rustModel.flags |= rust.ModelFlags.PolymorphicSubtype;
       }
       allProps.push(prop);
     }
@@ -517,7 +520,7 @@ export class Adapter {
       throw new AdapterError('InternalError', 'unnamed union', src.__raw?.node);
     }
 
-    const unionName = src.kind === 'model' ? `${utils.capitalize(src.name)}Kind` : utils.capitalize(src.name);
+    const unionName = utils.deconstruct(src.name).map((each) => utils.capitalize(each)).join('');
     const keyName = `discriminated-union-${unionName}`;
     let rustUnion = this.types.get(keyName);
     if (rustUnion) {
@@ -702,6 +705,8 @@ export class Adapter {
 
     if (property.decorators.find((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@deserializeEmptyStringAsNull') !== undefined) {
       modelField.flags |= rust.ModelFieldFlags.DeserializeEmptyStringAsNone;
+    } else if (property.kind === 'property' && property.discriminator) {
+      modelField.flags |= rust.ModelFieldFlags.Discriminator;
     }
 
     return modelField;

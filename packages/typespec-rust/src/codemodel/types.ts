@@ -319,6 +319,9 @@ export enum ModelFieldFlags {
 
   /** deserialize an empty string as None for Option<String> */
   DeserializeEmptyStringAsNone = 2,
+
+  /** field is the discriminator in a discriminated union */
+  Discriminator = 4,
 }
 
 /** ModelFlags contains bit flags describing model usage */
@@ -330,6 +333,9 @@ export enum ModelFlags {
 
   /** model is used as output from a method */
   Output = 2,
+
+  /** model is a sub-type in a polymorphic discriminated union */
+  PolymorphicSubtype = 4,
 }
 
 /** DateTimeEncoding is the wire format of the date/time */
