@@ -61,9 +61,11 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
   use.add('azure_core::fmt', 'SafeDebug');
 
   const indent = new helpers.indentation();
+  const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
   for (const model of crate.models) {
+    visTracker.update(model.visibility);
     if (model.kind === 'marker') {
       body += helpers.formatDocComment(model.docs);
       // marker types don't have any fields
@@ -172,6 +174,7 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
   return {
     name: 'models',
     content: content,
+    visibility: visTracker.get(),
   };
 }
 
@@ -197,6 +200,7 @@ function emitModelsSerde(): helpers.Module | undefined {
   return {
     name: 'models_serde',
     content: content,
+    visibility: 'internal',
   };
 }
 
@@ -253,6 +257,7 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
   return {
     name: 'models_impl',
     content: content,
+    visibility: 'internal',
   };
 }
 
@@ -458,6 +463,7 @@ function emitXMLListWrappers(): helpers.Module | undefined {
   return {
     name: 'xml_helpers',
     content: content,
+    visibility: 'internal',
   };
 }
 
