@@ -1865,6 +1865,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_enumdisc"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_extensible"
 version = "0.1.0"
 dependencies = [
