@@ -17,7 +17,7 @@ export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
 export const AnonymousLifetimeAnnotation = '<\'_>';
 
-/** defines the possible visibilites for a module */
+/** defines the possible visibilities for a module */
 export type ModuleVisibility = 'internal' | 'pubUse' | 'pubCrate';
 
 /** a module to emit */
