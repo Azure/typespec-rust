@@ -929,12 +929,12 @@ pub struct JsonTextConfiguration {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct KeyInfo {
     /// The date-time the key expires.
-    #[serde(rename = "Expiry")]
-    pub(crate) expiry: String,
+    #[serde(rename = "Expiry", skip_serializing_if = "Option::is_none")]
+    pub(crate) expiry: Option<String>,
 
     /// The date-time the key is active.
-    #[serde(rename = "Start")]
-    pub(crate) start: String,
+    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
+    pub(crate) start: Option<String>,
 }
 
 /// An enumeration of blobs.
@@ -1360,35 +1360,36 @@ pub struct StorageServiceStats {
 #[non_exhaustive]
 pub(crate) struct UserDelegationKey {
     /// The date-time the key expires.
-    #[serde(rename = "SignedExpiry")]
-    pub(crate) signed_expiry: String,
+    #[serde(rename = "SignedExpiry", skip_serializing_if = "Option::is_none")]
+    pub(crate) signed_expiry: Option<String>,
 
     /// The Azure Active Directory object ID in GUID format.
-    #[serde(rename = "SignedOid")]
-    pub(crate) signed_oid: String,
+    #[serde(rename = "SignedOid", skip_serializing_if = "Option::is_none")]
+    pub(crate) signed_oid: Option<String>,
 
     /// Abbreviation of the Azure Storage service that accepts the key.
-    #[serde(rename = "SignedService")]
-    pub(crate) signed_service: String,
+    #[serde(rename = "SignedService", skip_serializing_if = "Option::is_none")]
+    pub(crate) signed_service: Option<String>,
 
     /// The date-time the key is active.
-    #[serde(rename = "SignedStart")]
-    pub(crate) signed_start: String,
+    #[serde(rename = "SignedStart", skip_serializing_if = "Option::is_none")]
+    pub(crate) signed_start: Option<String>,
 
     /// The Azure Active Directory tenant ID in GUID format.
-    #[serde(rename = "SignedTid")]
-    pub(crate) signed_tid: String,
+    #[serde(rename = "SignedTid", skip_serializing_if = "Option::is_none")]
+    pub(crate) signed_tid: Option<String>,
 
     /// The service version that created the key.
-    #[serde(rename = "SignedVersion")]
-    pub(crate) signed_version: String,
+    #[serde(rename = "SignedVersion", skip_serializing_if = "Option::is_none")]
+    pub(crate) signed_version: Option<String>,
 
     /// The key as a base64 string.
     #[serde(
         default,
-        deserialize_with = "base64::deserialize",
+        deserialize_with = "base64::option::deserialize",
         rename = "Value",
-        serialize_with = "base64::serialize"
+        serialize_with = "base64::option::serialize",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub(crate) value: Vec<u8>,
+    pub(crate) value: Option<Vec<u8>>,
 }

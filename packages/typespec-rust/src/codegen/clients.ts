@@ -304,7 +304,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     content += body;
 
     const clientMod = shared.deconstruct(client.name).join('_');
-    clientModules.push({ name: clientMod, content: content });
+    clientModules.push({
+      name: clientMod,
+      content: content,
+      visibility: 'pubUse',
+    });
   }
 
   return {
@@ -316,6 +320,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 function getMethodOptions(crate: rust.Crate): helpers.Module {
   const use = new Use('modelsOther');
   const indent = new helpers.indentation();
+  const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
   for (const client of crate.clients) {
@@ -328,7 +333,8 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
       body += helpers.formatDocComment(method.options.type.docs);
       use.add('azure_core::fmt', 'SafeDebug');
       body += '#[derive(Clone, Default, SafeDebug)]\n';
-      body += `${helpers.emitVisibility(method.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
+      body += `${helpers.emitVisibility(method.options.type.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
+      visTracker.update(method.options.type.visibility);
       for (let i = 0; i < method.options.type.fields.length; ++i) {
         const field = method.options.type.fields[i];
         use.addForType(field.type);
@@ -378,6 +384,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
   return {
     name: 'method_options',
     content: content,
+    visibility: visTracker.get(),
   };
 }
 
