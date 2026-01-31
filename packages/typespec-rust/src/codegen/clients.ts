@@ -1868,7 +1868,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
       case 'scalar':
         if (isEnumString(paramType) && (helpers.isPathParameter(param) || helpers.isQueryParameter(param))) {
           // append_pair and path.replace() want a reference to the string
-          paramValue = `${paramName}.as_ref()`;
+          paramValue = (param.location === 'client' && fromSelf) ? `${paramName}.as_str()` : `${paramName}.as_ref()`;
           // as_ref() elides the need to borrow
           mustBorrow = false;
         } else {

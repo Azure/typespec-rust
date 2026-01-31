@@ -30,12 +30,11 @@ impl CombinedClient {
     /// # Arguments
     ///
     /// * `endpoint` - Service host
-    /// * `api_version` - The API version to use for requests
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Service.MultiService.Combined")]
     pub fn with_no_credential(
         endpoint: &str,
-        api_version: &str,
+        api_version: String,
         options: Option<CombinedClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
@@ -47,7 +46,7 @@ impl CombinedClient {
             ));
         }
         Ok(Self {
-            api_version: api_version.to_string(),
+            api_version,
             endpoint,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),

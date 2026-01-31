@@ -23,11 +23,6 @@ impl CombinedFooClient {
         &self.endpoint
     }
 
-    /// Test that a client can expose operations from multiple services. This operation should be called like this: `client.foo.test(...)`.
-    ///
-    /// Expected path: /service/multi-service/service-a/foo/test
-    /// Expected query parameter: api-version=av2
-    /// Expected 204 response.
     ///
     /// # Arguments
     ///
