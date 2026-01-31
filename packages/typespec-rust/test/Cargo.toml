@@ -75,6 +75,7 @@ members = [
     "spector/server/path/single",
     "spector/server/versions/not-versioned",
     "spector/server/versions/versioned",
+    "spector/service/multi-service",
     "spector/special-words",
     "spector/type/array",
     "spector/type/dictionary",
