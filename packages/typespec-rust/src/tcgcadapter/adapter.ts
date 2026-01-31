@@ -596,8 +596,17 @@ export class Adapter {
 
     // if this is a literal, add a doc comment explaining its behavior
     const unwrappedType = shared.unwrapOption(fieldType);
-    if (unwrappedType.kind === 'literal') {
-      const literalDoc = `${modelField.optional ? 'When Some, field' : 'Field'} has constant value ${unwrappedType.value}. Any specified value will be ignored.`;
+    if (unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal') {
+      let constValue: string | number | boolean;
+      switch (unwrappedType.kind) {
+        case 'enumValue':
+          constValue = `${unwrappedType.type.name}::${unwrappedType.name}`;
+          break;
+        case 'literal':
+          constValue = unwrappedType.value;
+          break;
+      }
+      const literalDoc = `${modelField.optional ? 'When Some, field' : 'Field'} has constant value ${constValue}. Any specified value will be ignored.`;
       if (!modelField.docs.description) {
         modelField.docs.description = '';
       } else {

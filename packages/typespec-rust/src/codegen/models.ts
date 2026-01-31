@@ -124,7 +124,7 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
       // NOTE: usage of serde annotations like this means that base64 encoded bytes and
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       const unwrappedType = helpers.unwrapType(field.type);
-      if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
+      if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
         addSerDeHelper(field, serdeParams, bodyFormat, use);
       } else if (bodyFormat === 'xml' && shared.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
@@ -142,7 +142,7 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
       // https://github.com/Azure/typespec-rust/issues/78
       if (field.type.kind === 'option') {
         // optional literals need to skip serializing when it's None
-        if (field.type.type.kind !== 'literal' || field.optional) {
+        if ((field.type.type.kind !== 'enumValue' && field.type.type.kind !== 'literal') || field.optional) {
           serdeParams.add('skip_serializing_if = "Option::is_none"');
         }
       } else if (model.visibility === 'pub') {
@@ -488,6 +488,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
   const unwrapped = helpers.unwrapType(field.type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
+    case 'enumValue':
     case 'literal':
     case 'offsetDateTime':
     case 'safeint':
@@ -564,17 +565,31 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
   };
 
   /** serializing literal values */
-  const serdeLiteral = function (literal: rust.Literal): void {
-    let literalValueName = literal.value.toString();
-    if (literal.valueKind.kind === 'scalar') {
-      // if the scalar is a float, replace the . as it's illegal in an identifier
-      literalValueName = literalValueName.replace('.', 'point');
-    } else if (literal.valueKind.kind === 'String') {
-      literalValueName = literalValueName.replace(/\W/g, '_');
+  const serdeLiteral = function (literal: rust.EnumValue | rust.Literal): void {
+    let literalValueName: string;
+    let typeName: string;
+    switch (literal.kind) {
+      case 'enumValue':
+        literalValueName = `${literal.type.name}_${literal.name}`;
+        typeName = literal.kind.toLowerCase();
+        break;
+      default:
+        literalValueName = literal.value.toString();
+        typeName = literal.valueKind.kind === 'scalar' ? literal.valueKind.type : literal.valueKind.kind.toLowerCase();
+        switch (literal.valueKind.kind) {
+          case 'String':
+            literalValueName = literalValueName.replace(/\W/g, '_');
+            break;
+          case 'scalar':
+            // if the scalar is a float, replace the . as it's illegal in an identifier
+            literalValueName = literalValueName.replace('.', 'point');
+            break;
+          default:
+            literal.valueKind satisfies never;
+        }
     }
 
     const optional = field.optional ? 'optional_' : '';
-    const typeName = literal.valueKind.kind === 'scalar' ? literal.valueKind.type : literal.valueKind.kind.toLowerCase();
     const name = `serialize_${optional}${typeName}_literal_${literalValueName}`.replace(/_+/g, '_');
     serdeParams.add(`serialize_with = "models_serde::${name}"`);
 
@@ -597,6 +612,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
   switch (field.type.kind) {
     case 'encodedBytes':
       return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding, false);
+    case 'enumValue':
     case 'literal':
       return serdeLiteral(field.type);
     case 'offsetDateTime':
@@ -609,6 +625,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
         switch (field.type.type.kind) {
           case 'encodedBytes':
             return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding, true);
+          case 'enumValue':
           case 'literal':
             return serdeLiteral(field.type.type);
           case 'offsetDateTime':
@@ -798,7 +815,7 @@ function buildXmlAddlPropsSerializeForModel(model: rust.Model, addlProps: rust.M
  */
 function buildLiteralSerialize(indent: helpers.indentation, name: string, field: rust.ModelField, use: Use): string {
   const literal = shared.unwrapOption(field.type);
-  if (literal.kind !== 'literal') {
+  if (literal.kind !== 'enumValue' && literal.kind !== 'literal') {
     throw new CodegenError('InternalError', `unexpected kind ${literal.kind}`);
   }
 
@@ -812,15 +829,24 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, field:
   content += `pub(crate) fn ${name}<S>(${fieldVar}: &${helpers.getTypeDeclaration(field.type)}, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
 
   let serializeMethod: string;
-  let serializeValue = literal.value;
-  switch (literal.valueKind.kind) {
-    case 'String':
+  let serializeValue: string | number | boolean;
+  switch (literal.kind) {
+    case 'enumValue':
+      use.addForType(literal);
       serializeMethod = 'str';
-      serializeValue = `"${literal.value}"`;
+      serializeValue = `${literal.type.name}::${literal.name}.as_ref()`;
       break;
-    case 'scalar':
-      serializeMethod = literal.valueKind.type;
-      break;
+    default:
+      serializeValue = literal.value;
+      switch (literal.valueKind.kind) {
+        case 'String':
+          serializeMethod = 'str';
+          serializeValue = `"${literal.value}"`;
+          break;
+        case 'scalar':
+          serializeMethod = literal.valueKind.type;
+          break;
+      }
   }
 
   const toSerialize = `serializer.serialize_${serializeMethod}(${serializeValue})\n`;

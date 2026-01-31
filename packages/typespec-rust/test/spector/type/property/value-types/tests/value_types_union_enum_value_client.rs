@@ -27,7 +27,7 @@ async fn put() {
         .get_value_types_union_enum_value_client()
         .put(
             UnionEnumValueProperty {
-                property: Some(ExtendedEnum::EnumValue2),
+                property: Some(ExtendedEnum::UnknownValue("this-is-ignored".to_string())),
             }
             .try_into()
             .unwrap(),

@@ -211,7 +211,9 @@ pub struct StringProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct UnionEnumValueProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    ///
+    /// Field has constant value ExtendedEnum::EnumValue2. Any specified value will be ignored.
+    #[serde(serialize_with = "models_serde::serialize_enumvalue_literal_ExtendedEnum_EnumValue2")]
     pub property: Option<ExtendedEnum>,
 }
 
