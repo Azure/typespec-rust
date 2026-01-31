@@ -886,7 +886,7 @@ async fn create_or_update() {
 
     let poller = client
         .create_or_update(
-            "subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg",
+            "subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/top",
             "extension",
             create_or_update_request,
             options,
