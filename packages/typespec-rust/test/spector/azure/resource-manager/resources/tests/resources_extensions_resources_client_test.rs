@@ -858,7 +858,7 @@ async fn create_or_update() {
 
     let mut poller = client
         .create_or_update(
-            "subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/top",
+            RESOURCE.trim_start_matches('/'),
             "extension",
             create_or_update_request.clone(),
             options.clone(),
