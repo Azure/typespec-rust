@@ -886,7 +886,7 @@ async fn create_or_update() {
 
     let poller = client
         .create_or_update(
-            "subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/top",
+            RESOURCE.trim_start_matches('/'),
             "extension",
             create_or_update_request,
             options,
@@ -894,7 +894,7 @@ async fn create_or_update() {
         .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
 
-    assert_eq!(final_result.id, Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.Resources/extensionsResources/extension".to_string()));
+    assert_eq!(final_result.id, Some(format!("{}/providers/Azure.ResourceManager.Resources/extensionsResources/extension", RESOURCE)));
     assert_eq!(final_result.name, Some("extension".to_string()));
     assert_eq!(
         final_result.type_prop,
