@@ -894,7 +894,13 @@ async fn create_or_update() {
         .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
 
-    assert_eq!(final_result.id, Some(format!("{}/providers/Azure.ResourceManager.Resources/extensionsResources/extension", RESOURCE)));
+    assert_eq!(
+        final_result.id,
+        Some(format!(
+            "{}/providers/Azure.ResourceManager.Resources/extensionsResources/extension",
+            RESOURCE
+        ))
+    );
     assert_eq!(final_result.name, Some("extension".to_string()));
     assert_eq!(
         final_result.type_prop,
