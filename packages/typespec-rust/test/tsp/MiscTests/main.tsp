@@ -48,6 +48,10 @@ model ExplodedQueryParams {
   optIndices?: Indices[];
 }
 
+model LiteralNumericEnum {
+  property: Indices.two;
+}
+
 model LiteralWithInvalidChar {
   name: string;
   thing?: "Foo.Bar" = "Foo.Bar";
@@ -79,6 +83,9 @@ union HasCollidingNames {
   "application/*+xml",
   "text/plain",
 };
+
+@@access(LiteralNumericEnum, Access.public);
+@@usage(LiteralNumericEnum, Usage.output);
 
 @@access(LiteralWithInvalidChar, Access.public);
 @@usage(LiteralWithInvalidChar, Usage.output);

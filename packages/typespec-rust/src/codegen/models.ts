@@ -833,8 +833,16 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, field:
   switch (literal.kind) {
     case 'enumValue':
       use.addForType(literal);
-      serializeMethod = 'str';
-      serializeValue = `${literal.type.name}::${literal.name}.as_ref()`;
+      switch (literal.type.type) {
+        case 'String':
+          serializeMethod = 'str';
+          serializeValue = `${literal.type.name}::${literal.name}.as_ref()`;
+          break;
+        default:
+          serializeMethod = literal.type.type;
+          serializeValue = `${literal.type.name}::${literal.name}.into()`;
+          break;
+      }
       break;
     default:
       serializeValue = literal.value;
