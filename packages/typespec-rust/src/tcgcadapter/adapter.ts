@@ -1194,7 +1194,6 @@ export class Adapter {
           }
           case 'method': {
             const clientParam = this.adaptClientParameter(param, rustClient.constructable);
-            clientParam.type = (clientParam.type.kind === 'ref' && clientParam.type.type.kind === 'str') ? this.getStringType() : clientParam.type;
             rustClient.fields.push(new rust.StructField(clientParam.name, 'pubCrate', clientParam.type));
             ctorParams.push(clientParam);
             break;
@@ -1299,20 +1298,7 @@ export class Adapter {
    * @returns the Rust client parameter
    */
   private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction): rust.ClientParameter {
-    let paramType: rust.Type;
-    // the second clause is a workaround for https://github.com/Azure/typespec-azure/issues/2745
-    if (param.isApiVersionParam || (param.type.kind === 'enum' && <tcgc.UsageFlags>(param.type.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum)) {
-      if (param.clientDefaultValue) {
-        // this is optional so it goes into the client options type as a String
-        paramType = this.getStringType();
-      } else {
-        // this is a required param so its type is a &str
-        paramType = this.getRefType(this.getStringSlice());
-      }
-    } else {
-      paramType = this.getType(param.type);
-    }
-
+    let paramType: rust.Type = param.isApiVersionParam ? this.getStringType() : this.getType(param.type);
     const paramName = snakeCaseName(param.name);
 
     let optional = false;
