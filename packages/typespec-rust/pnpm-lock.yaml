@@ -31,10 +31,10 @@ importers:
         specifier: ~0.64.0
         version: 0.64.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30))))(@typespec/rest@0.78.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/http@1.8.0(@typespec/compiler@1.8.0(@types/node@20.19.30))(@typespec/streams@0.68.0(@typespec/compiler@1.8.0(@types/node@20.19.30)))))
       '@azure-tools/typespec-azure-resource-manager':
-        specifier: ~0.64.0
+        specifier: ~0.64.1
         version: 0.64.1(4713b48279731cb85aa09e79ee5435a9)
       '@azure-tools/typespec-client-generator-core':
-        specifier: ~0.64.4
+        specifier: ~0.64.5
         version: 0.64.5(b8bcb225b2ae50370e7308662c2500b9)
       '@eslint/js':
         specifier: ^9.39.1
@@ -1340,8 +1340,8 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fast-xml-parser@5.3.2:
-    resolution: {integrity: sha512-n8v8b6p4Z1sMgqRmqLJm3awW4NX7NkaKPfb3uJIBTSH7Pdvufi3PQ3/lJLQrvxcMYl7JI2jnDO90siPEpD8JBA==}
+  fast-xml-parser@5.3.4:
+    resolution: {integrity: sha512-EFd6afGmXlCx8H8WTZHhAoDaWaGyuIBoZJ2mknrNxug+aZKjkp0a0dlars9Izl+jF+7Gu1/5f/2h68cQpe0IiA==}
     hasBin: true
 
   fastq@1.19.1:
@@ -2155,10 +2155,9 @@ packages:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
 
-  tar@7.5.6:
-    resolution: {integrity: sha512-xqUeu2JAIJpXyvskvU3uvQW8PAmHrtXp2KDuMJwQqW8Sqq0CaZBAQ+dKS3RBXVhU4wC5NjAdKrmh84241gO9cA==}
+  tar@7.5.7:
+    resolution: {integrity: sha512-fov56fJiRuThVFXD6o6/Q354S7pnWMJIVlDBYijsTNx6jKSE4pvrDTs6lUnmGvNyfJwFQQwWy3owKz1ucIhveQ==}
     engines: {node: '>=18'}
-    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temporal-polyfill@0.3.0:
     resolution: {integrity: sha512-qNsTkX9K8hi+FHDfHmf22e/OGuXmfBm9RqNismxBrnSmZVJKegQ+HYYXT+R7Ha8F/YSm2Y34vmzD4cxMu2u95g==}
@@ -2570,7 +2569,7 @@ snapshots:
 
   '@azure/core-xml@1.5.0':
     dependencies:
-      fast-xml-parser: 5.3.2
+      fast-xml-parser: 5.3.4
       tslib: 2.8.1
 
   '@azure/identity@4.13.0':
@@ -3161,7 +3160,7 @@ snapshots:
       picocolors: 1.1.1
       prettier: 3.7.4
       semver: 7.7.3
-      tar: 7.5.6
+      tar: 7.5.7
       temporal-polyfill: 0.3.0
       vscode-languageserver: 9.0.1
       vscode-languageserver-textdocument: 1.0.12
@@ -3797,7 +3796,7 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
-  fast-xml-parser@5.3.2:
+  fast-xml-parser@5.3.4:
     dependencies:
       strnum: 2.1.1
 
@@ -4630,7 +4629,7 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
-  tar@7.5.6:
+  tar@7.5.7:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
