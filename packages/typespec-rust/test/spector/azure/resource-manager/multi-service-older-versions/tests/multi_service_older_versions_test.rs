@@ -5,7 +5,9 @@
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_arm_multi_service_older_versions::models::{Disk, DiskProperties, VirtualMachine, VirtualMachineProperties, ResourceProvisioningState};
+use spector_arm_multi_service_older_versions::models::{
+    Disk, DiskProperties, ResourceProvisioningState, VirtualMachine, VirtualMachineProperties,
+};
 use spector_arm_multi_service_older_versions::CombinedClient;
 use std::sync::Arc;
 
@@ -60,11 +62,17 @@ async fn virtual_machine_get() {
         vm.id
     );
     assert_eq!(Some("vm1".to_string()), vm.name);
-    assert_eq!(Some("Microsoft.Compute/virtualMachines".to_string()), vm.type_prop);
+    assert_eq!(
+        Some("Microsoft.Compute/virtualMachines".to_string()),
+        vm.type_prop
+    );
     assert_eq!(Some("eastus".to_string()), vm.location);
-    
+
     let properties = vm.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
 }
 
 #[tokio::test]
@@ -80,7 +88,7 @@ async fn virtual_machine_create_or_update() {
         .get_combined_virtual_machines_client()
         .create_or_update("test-rg", "vm1", resource.try_into().unwrap(), None)
         .unwrap();
-    
+
     let resp = poller.await.unwrap();
 
     let vm: VirtualMachine = resp.into_model().unwrap();
@@ -89,11 +97,17 @@ async fn virtual_machine_create_or_update() {
         vm.id
     );
     assert_eq!(Some("vm1".to_string()), vm.name);
-    assert_eq!(Some("Microsoft.Compute/virtualMachines".to_string()), vm.type_prop);
+    assert_eq!(
+        Some("Microsoft.Compute/virtualMachines".to_string()),
+        vm.type_prop
+    );
     assert_eq!(Some("eastus".to_string()), vm.location);
-    
+
     let properties = vm.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
 }
 
 #[tokio::test]
@@ -113,9 +127,12 @@ async fn disk_get() {
     assert_eq!(Some("disk1".to_string()), disk.name);
     assert_eq!(Some("Microsoft.Compute/disks".to_string()), disk.type_prop);
     assert_eq!(Some("eastus".to_string()), disk.location);
-    
+
     let properties = disk.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
 }
 
 #[tokio::test]
@@ -131,7 +148,7 @@ async fn disk_create_or_update() {
         .get_combined_disks_client()
         .create_or_update("test-rg", "disk1", resource.try_into().unwrap(), None)
         .unwrap();
-    
+
     let resp = poller.await.unwrap();
 
     let disk: Disk = resp.into_model().unwrap();
@@ -142,7 +159,10 @@ async fn disk_create_or_update() {
     assert_eq!(Some("disk1".to_string()), disk.name);
     assert_eq!(Some("Microsoft.Compute/disks".to_string()), disk.type_prop);
     assert_eq!(Some("eastus".to_string()), disk.location);
-    
+
     let properties = disk.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
 }

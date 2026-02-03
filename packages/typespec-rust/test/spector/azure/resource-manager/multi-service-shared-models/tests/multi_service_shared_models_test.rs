@@ -6,7 +6,8 @@ use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions}
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
 use spector_arm_multi_service_shared_models::models::{
-    SharedMetadata, StorageAccount, StorageAccountProperties, VirtualMachine, VirtualMachineProperties, ResourceProvisioningState,
+    ResourceProvisioningState, SharedMetadata, StorageAccount, StorageAccountProperties,
+    VirtualMachine, VirtualMachineProperties,
 };
 use spector_arm_multi_service_shared_models::CombinedClient;
 use std::collections::HashMap;
@@ -63,12 +64,18 @@ async fn virtual_machine_get() {
         vm.id
     );
     assert_eq!(Some("vm-shared1".to_string()), vm.name);
-    assert_eq!(Some("Microsoft.Compute/virtualMachinesShared".to_string()), vm.type_prop);
+    assert_eq!(
+        Some("Microsoft.Compute/virtualMachinesShared".to_string()),
+        vm.type_prop
+    );
     assert_eq!(Some("eastus".to_string()), vm.location);
-    
+
     let properties = vm.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
-    
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
+
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
     assert_eq!(Some("user@example.com".to_string()), metadata.created_by);
@@ -80,7 +87,7 @@ async fn virtual_machine_get() {
 async fn virtual_machine_create_or_update() {
     let mut tags = HashMap::new();
     tags.insert("environment".to_string(), "production".to_string());
-    
+
     let resource = VirtualMachine {
         location: Some("eastus".to_string()),
         properties: Some(VirtualMachineProperties {
@@ -99,7 +106,7 @@ async fn virtual_machine_create_or_update() {
         .get_combined_virtual_machines_client()
         .create_or_update("test-rg", "vm-shared1", resource.try_into().unwrap(), None)
         .unwrap();
-    
+
     let resp = poller.await.unwrap();
 
     let vm: VirtualMachine = resp.into_model().unwrap();
@@ -108,12 +115,18 @@ async fn virtual_machine_create_or_update() {
         vm.id
     );
     assert_eq!(Some("vm-shared1".to_string()), vm.name);
-    assert_eq!(Some("Microsoft.Compute/virtualMachinesShared".to_string()), vm.type_prop);
+    assert_eq!(
+        Some("Microsoft.Compute/virtualMachinesShared".to_string()),
+        vm.type_prop
+    );
     assert_eq!(Some("eastus".to_string()), vm.location);
-    
+
     let properties = vm.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
-    
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
+
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
     assert_eq!(Some("user@example.com".to_string()), metadata.created_by);
@@ -136,12 +149,18 @@ async fn storage_account_get() {
         account.id
     );
     assert_eq!(Some("account1".to_string()), account.name);
-    assert_eq!(Some("Microsoft.Storage/storageAccounts".to_string()), account.type_prop);
+    assert_eq!(
+        Some("Microsoft.Storage/storageAccounts".to_string()),
+        account.type_prop
+    );
     assert_eq!(Some("westus".to_string()), account.location);
-    
+
     let properties = account.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
-    
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
+
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
     assert_eq!(Some("admin@example.com".to_string()), metadata.created_by);
@@ -153,7 +172,7 @@ async fn storage_account_get() {
 async fn storage_account_create_or_update() {
     let mut tags = HashMap::new();
     tags.insert("department".to_string(), "engineering".to_string());
-    
+
     let resource = StorageAccount {
         location: Some("westus".to_string()),
         properties: Some(StorageAccountProperties {
@@ -172,7 +191,7 @@ async fn storage_account_create_or_update() {
         .get_combined_storage_accounts_client()
         .create_or_update("test-rg", "account1", resource.try_into().unwrap(), None)
         .unwrap();
-    
+
     let resp = poller.await.unwrap();
 
     let account: StorageAccount = resp.into_model().unwrap();
@@ -181,12 +200,18 @@ async fn storage_account_create_or_update() {
         account.id
     );
     assert_eq!(Some("account1".to_string()), account.name);
-    assert_eq!(Some("Microsoft.Storage/storageAccounts".to_string()), account.type_prop);
+    assert_eq!(
+        Some("Microsoft.Storage/storageAccounts".to_string()),
+        account.type_prop
+    );
     assert_eq!(Some("westus".to_string()), account.location);
-    
+
     let properties = account.properties.unwrap();
-    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
-    
+    assert_eq!(
+        Some(ResourceProvisioningState::Succeeded),
+        properties.provisioning_state
+    );
+
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
     assert_eq!(Some("admin@example.com".to_string()), metadata.created_by);
