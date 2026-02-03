@@ -109,7 +109,7 @@ azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "7
     "decimal",
     "reqwest",
 ] }
-bytes = "1.10.1"
+bytes = "1.11.1"
 futures = "0.3.31"
 rust_decimal = "1.37.2"
 serde = { version = "1.0.219", features = ["derive"] }
