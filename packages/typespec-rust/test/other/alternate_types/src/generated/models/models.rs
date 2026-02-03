@@ -20,3 +20,10 @@ pub struct ExternalType {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub thing: Option<HandWrittenType>,
 }
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct ReplaceScalarType {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub range: Option<HandWrittenType>,
+}
