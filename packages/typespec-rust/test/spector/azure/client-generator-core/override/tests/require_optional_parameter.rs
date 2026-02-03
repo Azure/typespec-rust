@@ -2,7 +2,9 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_coreoverride::{models::OverrideRequireOptionalParameterClientRequireOptionalOptions, OverrideClient};
+use spector_coreoverride::{
+    models::OverrideRequireOptionalParameterClientRequireOptionalOptions, OverrideClient,
+};
 
 #[tokio::test]
 async fn require_optional() {

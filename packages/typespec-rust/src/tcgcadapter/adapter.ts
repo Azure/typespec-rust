@@ -1502,12 +1502,15 @@ export class Adapter {
         });
       });
       if (!opParam) {
-        // When using @override with parameter grouping, the method parameter may be a model
-        // that groups multiple operation parameters. In this case, we need to handle each
-        // property of the model as a separate parameter.
+        // Special handling for @override with parameter grouping:
+        // When the @override decorator groups multiple operation parameters into a single model parameter
+        // (e.g., grouping query params param1 and param2 into a GroupParametersOptions model),
+        // the method parameter is a model type but there's no single corresponding operation parameter.
+        // Instead, each property of the model corresponds to a distinct operation parameter.
+        // We need to iterate through the model's properties and process each one individually.
         if (param.type.kind === 'model') {
           // For grouped parameters, process each property of the model
-          for (const property of (param.type as tcgc.SdkModelType).properties) {
+          for (const property of param.type.properties) {
             const propertyOpParam = allOpParams.find((opParam: tcgc.SdkHttpParameter) => {
               return opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).some((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
                 return methodParam.name === property.name;
@@ -1521,12 +1524,8 @@ export class Adapter {
               adaptedParam.docs = this.adaptDocs(property.summary, property.doc);
               rustMethod.params.push(adaptedParam);
 
-              switch (adaptedParam.kind) {
-                case 'headerScalar':
-                case 'queryScalar':
-                  paramsMap.set(property as any, adaptedParam);
-                  break;
-              }
+              // Note: we don't add properties to paramsMap since they are not method parameters
+              // and won't be needed for pageable parameter reinjection
 
               if (adaptedParam.optional && (adaptedParam.kind !== 'headerScalar' || adaptedParam.header.toLowerCase() !== 'content-type')) {
                 const fieldType = this.getOptionType(adaptedParam.type);
