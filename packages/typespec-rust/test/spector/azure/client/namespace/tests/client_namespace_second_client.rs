@@ -11,7 +11,7 @@ async fn client_namespace_second() {
     let resp = client.get_second(None).await.unwrap();
     let result = resp.into_model().unwrap();
     assert_eq!(
-        result.r#type,
+        result.type_prop,
         Some(spector_azure_client_namespace::models::SecondClientEnumType::Second)
     );
 }
