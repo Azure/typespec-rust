@@ -1502,6 +1502,42 @@ export class Adapter {
         });
       });
       if (!opParam) {
+        // When using @override with parameter grouping, the method parameter may be a model
+        // that groups multiple operation parameters. In this case, we need to handle each
+        // property of the model as a separate parameter.
+        if (param.type.kind === 'model') {
+          // For grouped parameters, process each property of the model
+          for (const property of (param.type as tcgc.SdkModelType).properties) {
+            const propertyOpParam = allOpParams.find((opParam: tcgc.SdkHttpParameter) => {
+              return opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).some((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
+                return methodParam.name === property.name;
+              });
+            });
+            if (propertyOpParam) {
+              if (propertyOpParam.kind === 'header' && propertyOpParam.serializedName.toLowerCase() === 'x-ms-client-request-id') {
+                continue;
+              }
+              const adaptedParam = this.adaptMethodParameter(propertyOpParam);
+              adaptedParam.docs = this.adaptDocs(property.summary, property.doc);
+              rustMethod.params.push(adaptedParam);
+
+              switch (adaptedParam.kind) {
+                case 'headerScalar':
+                case 'queryScalar':
+                  paramsMap.set(property as any, adaptedParam);
+                  break;
+              }
+
+              if (adaptedParam.optional && (adaptedParam.kind !== 'headerScalar' || adaptedParam.header.toLowerCase() !== 'content-type')) {
+                const fieldType = this.getOptionType(adaptedParam.type);
+                const optionsField = new rust.StructField(adaptedParam.name, pub, fieldType);
+                optionsField.docs = adaptedParam.docs;
+                rustMethod.options.type.fields.push(optionsField);
+              }
+            }
+          }
+          continue;
+        }
         throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
       }
 
