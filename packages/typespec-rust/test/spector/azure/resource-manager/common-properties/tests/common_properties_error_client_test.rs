@@ -83,7 +83,7 @@ async fn create_for_user_defined_error() {
 
     let confidential_resource: ConfidentialResource = resp.into_model().unwrap();
     let expected_resource = get_valid_confidential_resource();
-    
+
     assert_eq!(expected_resource.id, confidential_resource.id);
     assert_eq!(expected_resource.location, confidential_resource.location);
     assert_eq!(expected_resource.name, confidential_resource.name);
@@ -113,7 +113,7 @@ async fn get_for_predefined_error() {
 
     let confidential_resource: ConfidentialResource = resp.into_model().unwrap();
     let expected_resource = get_valid_confidential_resource();
-    
+
     assert_eq!(expected_resource.id, confidential_resource.id);
     assert_eq!(expected_resource.location, confidential_resource.location);
     assert_eq!(expected_resource.name, confidential_resource.name);
