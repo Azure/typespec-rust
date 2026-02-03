@@ -29,7 +29,7 @@ To enable this test, one of the following approaches is needed:
 ## Reference
 
 - TypeSpec spec: `@azure-tools/azure-http-specs/specs/azure/client-generator-core/alternate-type`
-- Related entry in tspcompile.js: `spector_alternatetype` (commented out)
+- Related entry in `tspcompile.js`: `spector_alternatetype` (commented out)
 
 ## See Also
 
