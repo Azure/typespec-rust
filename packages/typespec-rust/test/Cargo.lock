@@ -1498,6 +1498,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_arm_multi_service"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
+name = "spector_arm_multi_service_older_versions"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
+name = "spector_arm_multi_service_shared_models"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_armcommon"
 version = "0.1.0"
 dependencies = [
