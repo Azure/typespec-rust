@@ -858,7 +858,7 @@ async fn create_or_update() {
 
     let mut poller = client
         .create_or_update(
-            RESOURCE.trim_start_matches('/'),
+            RESOURCE_GROUP.trim_start_matches('/'),
             "extension",
             create_or_update_request.clone(),
             options.clone(),
@@ -886,7 +886,7 @@ async fn create_or_update() {
 
     let poller = client
         .create_or_update(
-            RESOURCE.trim_start_matches('/'),
+            RESOURCE_GROUP.trim_start_matches('/'),
             "extension",
             create_or_update_request,
             options,
@@ -898,7 +898,7 @@ async fn create_or_update() {
         final_result.id,
         Some(format!(
             "{}/providers/Azure.ResourceManager.Resources/extensionsResources/extension",
-            RESOURCE
+            RESOURCE_GROUP
         ))
     );
     assert_eq!(final_result.name, Some("extension".to_string()));

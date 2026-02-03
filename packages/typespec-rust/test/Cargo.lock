@@ -209,9 +209,9 @@ dependencies = [
 
 [[package]]
 name = "bytes"
-version = "1.10.1"
+version = "1.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d71b6127be86fdcfddb610f7182ac57211d4b18a3e9c82eb2d17662f2227ad6a"
+checksum = "1e748733b7cbc798e1434b6ac524f0c1ff2ab456fe201501e6497c8417a4fc33"
 
 [[package]]
 name = "cc"
@@ -1593,6 +1593,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_azure_client_namespace"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_azurebasic"
 version = "0.1.0"
 dependencies = [
@@ -1738,13 +1747,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_corenextlinkverb"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "azure_core",
+ "futures",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_coreoverride"
 version = "0.1.0"
 dependencies = [
  "azure_core",
  "serde",
  "time",
- "tokio",
 ]
 
 [[package]]

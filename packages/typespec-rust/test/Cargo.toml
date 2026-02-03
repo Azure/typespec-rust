@@ -25,8 +25,10 @@ members = [
     "spector/azure/client-generator-core/client-location/move-to-root-client",
     "spector/azure/client-generator-core/deserialize-empty-string-as-null",
     "spector/azure/client-generator-core/flatten-property",
+    "spector/azure/client-generator-core/next-link-verb",
     "spector/azure/client-generator-core/override",
     "spector/azure/client-generator-core/usage",
+    "spector/azure/client/namespace",
     "spector/azure/core/basic",
     "spector/azure/core/lro/standard",
     "spector/azure/core/lro/rpc",
@@ -109,7 +111,7 @@ azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "7
     "decimal",
     "reqwest",
 ] }
-bytes = "1.10.1"
+bytes = "1.11.1"
 futures = "0.3.31"
 rust_decimal = "1.37.2"
 serde = { version = "1.0.219", features = ["derive"] }

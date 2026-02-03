@@ -642,6 +642,10 @@ export class Adapter {
    * @returns the adapted Rust type
    */
   private getType(type: tcgc.SdkType, stack?: Array<rust.Type>): rust.Type {
+    if (type.external) {
+      return this.getExternalType(type.external);
+    }
+
     const getDateTimeEncoding = (encoding: string): rust.DateTimeEncoding => {
       switch (encoding) {
         case 'rfc3339-fixed-width':

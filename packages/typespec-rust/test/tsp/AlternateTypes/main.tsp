@@ -22,6 +22,12 @@ model ExternalType {
 
 model ExternalTypeToReplace{};
 
+scalar HttpRangeString extends string;
+
+model ReplaceScalarType {
+    range: HttpRangeString;
+};
+
 @route("/handwritten-type")
 op bodyWithHandwrittenType(@body body: CrateTypeToReplace): void;
 
@@ -34,6 +40,9 @@ op bodyWithExternalType(@body body: ExternalTypeToReplace): void;
 @@access(AlternateTypes.ExternalType, Access.public);
 @@usage(AlternateTypes.ExternalType, Usage.output);
 
+@@access(AlternateTypes.ReplaceScalarType, Access.public);
+@@usage(AlternateTypes.ReplaceScalarType, Usage.output);
+
 @@alternateType(CrateTypeToReplace,
   {
     identity: "crate::models::HandWrittenType",
@@ -44,6 +53,13 @@ op bodyWithExternalType(@body body: ExternalTypeToReplace): void;
 @@alternateType(ExternalTypeToReplace,
   {
     identity: "time::Duration",
+  },
+  "rust"
+);
+
+@@alternateType(HttpRangeString,
+  {
+    identity: "http::models::HandWrittenType",
   },
   "rust"
 );
