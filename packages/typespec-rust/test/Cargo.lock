@@ -1758,6 +1758,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_coreoverride"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "time",
+]
+
+[[package]]
 name = "spector_corepage"
 version = "0.1.0"
 dependencies = [
