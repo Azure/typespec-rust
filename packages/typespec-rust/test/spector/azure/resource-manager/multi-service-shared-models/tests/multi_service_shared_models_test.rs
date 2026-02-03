@@ -6,7 +6,7 @@ use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions}
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
 use spector_arm_multi_service_shared_models::models::{
-    SharedMetadata, StorageAccount, StorageAccountProperties, VirtualMachine, VirtualMachineProperties,
+    SharedMetadata, StorageAccount, StorageAccountProperties, VirtualMachine, VirtualMachineProperties, ResourceProvisioningState,
 };
 use spector_arm_multi_service_shared_models::CombinedClient;
 use std::collections::HashMap;
@@ -67,7 +67,7 @@ async fn virtual_machine_get() {
     assert_eq!(Some("eastus".to_string()), vm.location);
     
     let properties = vm.properties.unwrap();
-    assert_eq!(Some("Succeeded".to_string()), properties.provisioning_state);
+    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
     
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
@@ -98,10 +98,9 @@ async fn virtual_machine_create_or_update() {
     let poller = client
         .get_combined_virtual_machines_client()
         .create_or_update("test-rg", "vm-shared1", resource.try_into().unwrap(), None)
-        .await
         .unwrap();
     
-    let resp = poller.wait_for_completion(None).await.unwrap();
+    let resp = poller.await.unwrap();
 
     let vm: VirtualMachine = resp.into_model().unwrap();
     assert_eq!(
@@ -113,7 +112,7 @@ async fn virtual_machine_create_or_update() {
     assert_eq!(Some("eastus".to_string()), vm.location);
     
     let properties = vm.properties.unwrap();
-    assert_eq!(Some("Succeeded".to_string()), properties.provisioning_state);
+    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
     
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
@@ -141,7 +140,7 @@ async fn storage_account_get() {
     assert_eq!(Some("westus".to_string()), account.location);
     
     let properties = account.properties.unwrap();
-    assert_eq!(Some("Succeeded".to_string()), properties.provisioning_state);
+    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
     
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
@@ -172,10 +171,9 @@ async fn storage_account_create_or_update() {
     let poller = client
         .get_combined_storage_accounts_client()
         .create_or_update("test-rg", "account1", resource.try_into().unwrap(), None)
-        .await
         .unwrap();
     
-    let resp = poller.wait_for_completion(None).await.unwrap();
+    let resp = poller.await.unwrap();
 
     let account: StorageAccount = resp.into_model().unwrap();
     assert_eq!(
@@ -187,7 +185,7 @@ async fn storage_account_create_or_update() {
     assert_eq!(Some("westus".to_string()), account.location);
     
     let properties = account.properties.unwrap();
-    assert_eq!(Some("Succeeded".to_string()), properties.provisioning_state);
+    assert_eq!(Some(ResourceProvisioningState::Succeeded), properties.provisioning_state);
     
     // Check shared metadata
     let metadata = properties.metadata.unwrap();
