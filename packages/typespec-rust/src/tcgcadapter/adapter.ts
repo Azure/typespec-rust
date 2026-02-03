@@ -1021,7 +1021,7 @@ export class Adapter {
    * formats input as a doc link.
    * e.g. [`${id}`](${link})
    * if doc links are disabled, id is returned
-   * 
+   *
    * @param id the ID of the doc link
    * @param link the target of the doc link
    * @returns the doc link or id
@@ -1036,7 +1036,7 @@ export class Adapter {
   /**
    * recursively converts a client and its methods.
    * this simplifies the case for hierarchical clients.
-   * 
+   *
    * @param client the tcgc client to recursively convert
    * @param parent contains the parent Rust client when converting a child client
    * @returns a Rust client
@@ -1281,7 +1281,7 @@ export class Adapter {
   /**
    * creates a client constructor for the TokenCredential type.
    * the constructor is named new.
-   * 
+   *
    * @param cred the OAuth2 credential to adapt
    * @returns a client constructor for TokenCredential
    */
@@ -1306,26 +1306,13 @@ export class Adapter {
 
   /**
    * converts a tcgc client parameter to a Rust client parameter
-   * 
+   *
    * @param param the tcgc client parameter to convert
    * @param constructable contains client construction info. if the param is optional, it will go in the options type
    * @returns the Rust client parameter
    */
   private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction): rust.ClientParameter {
-    let paramType: rust.Type;
-    // the second clause is a workaround for https://github.com/Azure/typespec-azure/issues/2745
-    if (param.isApiVersionParam || (param.type.kind === 'enum' && <tcgc.UsageFlags>(param.type.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum)) {
-      if (param.clientDefaultValue) {
-        // this is optional so it goes into the client options type as a String
-        paramType = this.getStringType();
-      } else {
-        // this is a required param so its type is a &str
-        paramType = this.getRefType(this.getStringSlice());
-      }
-    } else {
-      paramType = this.getType(param.type);
-    }
-
+    let paramType: rust.Type = param.isApiVersionParam ? this.getStringType() : this.getType(param.type);
     const paramName = snakeCaseName(param.name);
 
     let optional = false;
@@ -1360,7 +1347,7 @@ export class Adapter {
 
   /**
    * converts a tcgc client accessor method to a Rust method
-   * 
+   *
    * @param client the tcgc client that contains the accessor method
    * @param method the tcgc client accessor method to convert
    * @param rustClient the client to which the method belongs
@@ -1392,7 +1379,7 @@ export class Adapter {
 
   /**
    * converts a tcgc method to a Rust method for the specified client
-   * 
+   *
    * @param method the tcgc method to convert
    * @param rustClient the client to which the method belongs
    */
