@@ -6,7 +6,7 @@
 import { CodegenError } from './errors.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import * as shared from '../shared/shared.js';
+import * as utils from '../utils/utils.js';
 
 const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
 //
@@ -110,7 +110,7 @@ export function formatDocComment(docs: rust.Docs, forDocAttr = false, prefix?: s
       //
       // * foo - some comment first line
       // and it finishes here.
-      let formattedLine = shared.comment(line.trim(), `${indentLevel}/// `, undefined, 120);
+      let formattedLine = utils.comment(line.trim(), `${indentLevel}/// `, undefined, 120);
 
       // transform the above to look like this:
       //
@@ -497,7 +497,7 @@ export function buildWhile(indent: indentation, condition: string, body: (indent
  * @returns the capitalized value
  */
 export function capitalize(str: string): string {
-  return shared.capitalize(str);
+  return utils.capitalize(str);
 }
 
 /**

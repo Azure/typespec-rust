@@ -11,7 +11,7 @@ import * as helpers from './helpers.js';
 import queryString from 'query-string';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import * as shared from '../shared/shared.js';
+import * as utils from '../utils/utils.js';
 
 /** the client modules */
 export interface ClientModules {
@@ -303,7 +303,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     content += use.text();
     content += body;
 
-    const clientMod = shared.deconstruct(client.name).join('_');
+    const clientMod = utils.deconstruct(client.name).join('_');
     clientModules.push({
       name: clientMod,
       content: content,
@@ -568,7 +568,7 @@ function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate
  */
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.params) {
-    const arcTokenCred = shared.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
+    const arcTokenCred = utils.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
     if (arcTokenCred) {
       use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
       const scopes = new Array<string>();
@@ -933,7 +933,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
         // if queryParam is a &[&str] then we'll need to deref the iterator
-        const deref = shared.asTypeOf(queryParam.type, 'str', 'ref', 'slice', 'ref') ? '*' : '';
+        const deref = utils.asTypeOf(queryParam.type, 'str', 'ref', 'slice', 'ref') ? '*' : '';
         text += `${indent.push().get()}query_builder.append_pair("${queryParam.key}", ${deref}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false, valueVar)});\n`;
         text += `${indent.pop().get()}}\n`;
         return text;
@@ -1049,7 +1049,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   // when constructing the request var name we need to ensure
   // that it doesn't collide with any parameter name.
   const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
-  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${shared.capitalize(method.httpMethod)});\n`;
+  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${utils.capitalize(method.httpMethod)});\n`;
 
   body += applyHeaderParams(indent, use, method, paramGroups, inClosure, requestVarName);
 
@@ -1930,7 +1930,7 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
 
 /** returns true if the type isn't copyable thus needs to be cloned or borrowed */
 function nonCopyableType(type: rust.Type): boolean {
-  const unwrappedType = shared.unwrapOption(type);
+  const unwrappedType = utils.unwrapOption(type);
   switch (unwrappedType.kind) {
     case 'String':
     case 'Url':

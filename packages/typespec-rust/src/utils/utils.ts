@@ -278,3 +278,40 @@ function removeSequentialDuplicates(identifier: Iterable<string>) {
   return ids;
 }
 // end ports from @azure-tools/codegen
+
+/**
+ * transforms Etag etc to all lower case.
+ * this is to prevent inadvertently snake-casing
+ * Etag to e_tag.
+ * 
+ * if name isn't some variant of Etag the
+ * original value is returned.
+ * 
+ * @param name the name to transform
+ * @returns etag or the original value
+ */
+export function fixETagName(name: string): string {
+  return name.match(/^etag$/i) ? 'etag' : name;
+}
+
+/**
+ * removes any illegal characters from the provided name.
+ * note that characters _ and - are preserved so that the
+ * proper snake-casing can be performed.
+ * 
+ * @param name the name to transform
+ * @returns the transformed name or the original value
+ */
+function removeIllegalChars(name: string): string {
+  return name.replace(/[!@#$%^&*()+=]/g, '');
+}
+
+/**
+ * snake-cases the provided name
+ * 
+ * @param name the name to snake-case
+ * @returns name in snake-case format
+ */
+export function snakeCaseName(name: string): string {
+  return deconstruct(fixETagName(removeIllegalChars(name))).join('_');
+}

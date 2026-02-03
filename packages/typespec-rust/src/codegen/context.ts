@@ -7,7 +7,7 @@ import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import { getPayloadFormatType } from '../shared/shared.js';
+import { getPayloadFormatType } from '../utils/utils.js';
 
 /**
  * Context contains contextual information about how types are used.

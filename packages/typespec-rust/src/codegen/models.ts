@@ -10,7 +10,7 @@ import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import * as shared from '../shared/shared.js';
+import * as utils from '../utils/utils.js';
 
 /** contains different types of models to emit */
 export interface Models {
@@ -126,7 +126,7 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
       const unwrappedType = helpers.unwrapType(field.type);
       if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
         addSerDeHelper(field, serdeParams, bodyFormat, use);
-      } else if (bodyFormat === 'xml' && shared.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
+      } else if (bodyFormat === 'xml' && utils.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
         serdeParams.add('default');
@@ -513,17 +513,17 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
    * e.g. vec_offset_date_time, hashmap_vec_encoded_bytes_std etc
    */
   const buildSerDeModName = function (type: rust.Type): string {
-    let name = shared.deconstruct(type.kind).join('_');
+    let name = utils.deconstruct(type.kind).join('_');
     let unwrapped = type;
     while (unwrapped.kind === 'hashmap' || unwrapped.kind === 'option' || unwrapped.kind === 'Vec') {
       unwrapped = unwrapped.type;
-      name += '_' + shared.deconstruct(unwrapped.kind).join('_');
+      name += '_' + utils.deconstruct(unwrapped.kind).join('_');
     }
 
     switch (unwrapped.kind) {
       case 'encodedBytes':
       case 'offsetDateTime':
-        name += `_${shared.deconstruct(unwrapped.encoding).join('_')}`;
+        name += `_${utils.deconstruct(unwrapped.encoding).join('_')}`;
         break;
       default:
         throw new CodegenError('InternalError', `unexpected kind ${unwrapped.kind}`);
@@ -694,7 +694,7 @@ function buildXmlAddlPropsDeserializeForModel(use: Use, model: rust.Model, addlP
   const indent = new helpers.indentation();
   body += `${indent.get()}fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer<'de> {\n`;
 
-  const visitorTypeName = `${shared.pascalCase(addlProps.name, false)}Visitor`;
+  const visitorTypeName = `${utils.pascalCase(addlProps.name, false)}Visitor`;
   body += `${indent.push().get()}struct ${visitorTypeName};\n`;
   body += `${indent.get()}impl<'de> serde::de::Visitor<'de> for ${visitorTypeName} {\n`;
   body += `${indent.push().get()}type Value = ${model.name};\n`;
@@ -814,7 +814,7 @@ function buildXmlAddlPropsSerializeForModel(model: rust.Model, addlProps: rust.M
  * @returns the pub(crate) serialize function definition
  */
 function buildLiteralSerialize(indent: helpers.indentation, name: string, field: rust.ModelField, use: Use): string {
-  const literal = shared.unwrapOption(field.type);
+  const literal = utils.unwrapOption(field.type);
   if (literal.kind !== 'enumValue' && literal.kind !== 'literal') {
     throw new CodegenError('InternalError', `unexpected kind ${literal.kind}`);
   }
