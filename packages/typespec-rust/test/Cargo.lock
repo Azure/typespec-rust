@@ -1738,6 +1738,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_corenextlinkverb"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "azure_core",
+ "futures",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_corepage"
 version = "0.1.0"
 dependencies = [
