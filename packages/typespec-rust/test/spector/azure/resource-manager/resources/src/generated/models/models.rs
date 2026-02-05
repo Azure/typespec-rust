@@ -9,7 +9,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// The resource management error additional info.
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ErrorAdditionalInfo {
     /// The additional info.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -21,7 +22,8 @@ pub struct ErrorAdditionalInfo {
 }
 
 /// The error detail.
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ErrorDetail {
     /// The error additional info.
     #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
@@ -204,7 +206,8 @@ pub struct NotificationDetails {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus {
     /// Operation complete time
     #[serde(
@@ -246,7 +249,8 @@ pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesNestedClientCreateOrReplaceOperationStatus {
     /// Operation complete time
     #[serde(
@@ -288,7 +292,8 @@ pub struct ResourcesNestedClientCreateOrReplaceOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesNestedClientDeleteOperationStatus {
     /// Operation complete time
     #[serde(
@@ -330,7 +335,8 @@ pub struct ResourcesNestedClientDeleteOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesNestedClientUpdateOperationStatus {
     /// Operation complete time
     #[serde(
@@ -372,7 +378,8 @@ pub struct ResourcesNestedClientUpdateOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesSingletonClientCreateOrUpdateOperationStatus {
     /// Operation complete time
     #[serde(
@@ -414,7 +421,8 @@ pub struct ResourcesSingletonClientCreateOrUpdateOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesTopLevelClientCreateOrReplaceOperationStatus {
     /// Operation complete time
     #[serde(
@@ -456,7 +464,8 @@ pub struct ResourcesTopLevelClientCreateOrReplaceOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesTopLevelClientDeleteOperationStatus {
     /// Operation complete time
     #[serde(
@@ -498,7 +507,8 @@ pub struct ResourcesTopLevelClientDeleteOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ResourcesTopLevelClientUpdateOperationStatus {
     /// Operation complete time
     #[serde(

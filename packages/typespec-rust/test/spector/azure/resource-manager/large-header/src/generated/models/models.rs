@@ -15,7 +15,8 @@ pub struct CancelResult {
 }
 
 /// The resource management error additional info.
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ErrorAdditionalInfo {
     /// The additional info.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -27,7 +28,8 @@ pub struct ErrorAdditionalInfo {
 }
 
 /// The error detail.
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ErrorDetail {
     /// The error additional info.
     #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
@@ -51,7 +53,8 @@ pub struct ErrorDetail {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     /// Operation complete time
     #[serde(

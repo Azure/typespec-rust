@@ -8,7 +8,8 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 /// The error object.
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct Error {
     /// One of a server-defined set of error codes.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -49,7 +50,8 @@ pub struct GenerationResult {
 }
 
 /// An object containing more specific information about the error. As per Azure REST API guidelines - <https://aka.ms/AzureRestApiGuidelines#handling-errors>.
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct InnerError {
     /// One of a server-defined set of error codes.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -61,7 +63,8 @@ pub struct InnerError {
 }
 
 /// Provides status details for long running operations.
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct RpcClientLongRunningRpcOperationStatus {
     /// Error object that describes the error when status is "Failed".
     #[serde(skip_serializing_if = "Option::is_none")]
