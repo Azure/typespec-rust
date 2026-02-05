@@ -191,7 +191,7 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
 
   let body = '';
   for (const rustUnion of crate.unions) {
-    if (!utils.isPolymorphicDU(rustUnion.unionKind) || rustUnion.unionKind.kind !== 'discriminatedUnionBase') {
+    if (!isPolymorphicDU(rustUnion.unionKind) || rustUnion.unionKind.kind !== 'discriminatedUnionBase') {
       continue;
     }
 
@@ -250,4 +250,18 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
     content: content,
     visibility: 'internal',
   };
+}
+
+/** narrows duKind to the applicable DU type within the conditional block */
+function isPolymorphicDU(duKind?: rust.DiscriminatedUnionKind): duKind is rust.DiscriminatedUnionBase | rust.DiscriminatedUnionSealed {
+  if (!duKind) {
+    return false;
+  }
+  switch (duKind.kind) {
+    case 'discriminatedUnionBase':
+    case 'discriminatedUnionSealed':
+      return true;
+    default:
+      return false;
+  }
 }

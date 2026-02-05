@@ -72,20 +72,6 @@ export function getPayloadFormatType(format: rust.PayloadFormat): rust.PayloadFo
   }
 }
 
-/** narrows duKind to the applicable DU type within the conditional block */
-export function isPolymorphicDU(duKind?: rust.DiscriminatedUnionKind): duKind is rust.DiscriminatedUnionBase | rust.DiscriminatedUnionSealed {
-  if (!duKind) {
-    return false;
-  }
-  switch (duKind.kind) {
-    case 'discriminatedUnionBase':
-    case 'discriminatedUnionSealed':
-      return true;
-    default:
-      return false;
-  }
-}
-
 /**
  * returns a wrapper type's inner type.
  * e.g. for a rust.Vector, return's the value of Vector.type.
