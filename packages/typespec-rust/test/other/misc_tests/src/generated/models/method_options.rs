@@ -41,6 +41,17 @@ pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::spread_param_with_enum()`](crate::generated::clients::MiscTestsClient::spread_param_with_enum())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientSpreadParamWithEnumOptions<'a> {
+    pub index: Option<Indices>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub sides: Option<i32>,
+}
+
 /// Options to be passed to [`MiscTestsClient::various_exploded_query_params()`](crate::generated::clients::MiscTestsClient::various_exploded_query_params())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientVariousExplodedQueryParamsOptions<'a> {

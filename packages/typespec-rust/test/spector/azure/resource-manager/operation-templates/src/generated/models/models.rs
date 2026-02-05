@@ -82,7 +82,7 @@ pub struct CheckNameAvailabilityResponse {
 }
 
 /// The resource management error additional info.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct ErrorAdditionalInfo {
     /// The additional info.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -94,7 +94,7 @@ pub struct ErrorAdditionalInfo {
 }
 
 /// The error detail.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct ErrorDetail {
     /// The error additional info.
     #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
@@ -199,7 +199,7 @@ pub struct OperationListResult {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
     /// Operation complete time
     #[serde(
@@ -241,7 +241,7 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct OperationTemplatesLroClientDeleteOperationStatus {
     /// Operation complete time
     #[serde(
@@ -283,7 +283,7 @@ pub struct OperationTemplatesLroClientDeleteOperationStatus {
 }
 
 /// Standard Azure Resource Manager operation status response
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct OperationTemplatesLroClientExportOperationStatus {
     /// Operation complete time
     #[serde(

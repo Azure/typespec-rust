@@ -8,8 +8,8 @@ use crate::generated::models::{
     MiscTestsClientAvoidDupeHeadersOneResult, MiscTestsClientAvoidDupeHeadersTwoOptions,
     MiscTestsClientAvoidDupeHeadersTwoResult, MiscTestsClientCollidingOptionsParamOptions,
     MiscTestsClientEtagHeaderParameterOptions, MiscTestsClientLiteralWithInvalidCharOptions,
-    MiscTestsClientVariousExplodedQueryParamsOptions,
-    MiscTestsClientWithOptionalClientQueryParamOptions,
+    MiscTestsClientSpreadParamWithEnumOptions, MiscTestsClientVariousExplodedQueryParamsOptions,
+    MiscTestsClientWithOptionalClientQueryParamOptions, SpreadWithEnum,
 };
 use azure_core::{
     error::CheckSuccessOptions,
@@ -219,6 +219,47 @@ impl MiscTestsClient {
         url.append_path("/literal-with-invalid-char");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.spreadParamWithEnum")]
+    pub async fn spread_param_with_enum(
+        &self,
+        name: String,
+        color: Colors,
+        options: Option<MiscTestsClientSpreadParamWithEnumOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/spread-params-with-enum");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("content-type", "application/json");
+        let body: RequestContent<SpreadWithEnum> = SpreadWithEnum {
+            name,
+            color,
+            index: options.index,
+            sides: options.sides,
+        }
+        .try_into()?;
         request.set_body(body);
         let rsp = self
             .pipeline

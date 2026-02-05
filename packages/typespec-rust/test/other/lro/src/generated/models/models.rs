@@ -27,7 +27,7 @@ pub struct NIClientPartialBodyOperationStatus {
     pub status: Option<S>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct PartialBodyRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) b: Option<String>,

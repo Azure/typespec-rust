@@ -126,3 +126,13 @@ op etagHeaderParameter(@header etag: Azure.Core.eTag): void;
     parameters: ExpandParameter,
   }
 );
+
+model SpreadWithEnum {
+  name: string;
+  color: Colors;
+  index?: Indices;
+  sides?: int32;
+}
+
+@route("/spread-params-with-enum")
+op spreadParamWithEnum(...SpreadWithEnum): void;

@@ -86,7 +86,12 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
     const hasXmlAddlProps = bodyFormat === 'xml' ? model.fields.some((each) => each.kind === 'additionalProperties') : false;
 
     body += helpers.formatDocComment(model.docs);
-    body += helpers.annotationDerive(!hasXmlAddlProps, 'Default');
+
+    // skip deriving Default for spread param models.
+    // it's not necessary and will cause compilation failures
+    // when the type contains something that doesn't have a
+    // default impl (e.g. enum types).
+    body += helpers.annotationDerive(!hasXmlAddlProps, model.flags !== rust.ModelFlags.Unspecified ? 'Default' : '');
     if (<rust.ModelFlags>(model.flags & rust.ModelFlags.Output) === rust.ModelFlags.Output && (model.flags & rust.ModelFlags.Input) === 0) {
       // output-only models get the non_exhaustive annotation
       body += helpers.AnnotationNonExhaustive;
