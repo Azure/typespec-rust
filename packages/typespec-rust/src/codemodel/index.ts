@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 export * from './client.js';
+export * from './customizations.js';
 export * from './crate.js';
 export * from './method.js';
 export * from './types.js';
