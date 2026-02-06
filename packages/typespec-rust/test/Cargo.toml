@@ -102,7 +102,7 @@ authors = ["Microsoft"]
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/azure/typespec-rust"
-rust-version = "1.85"
+rust-version = "1.88"
 
 [workspace.dependencies]
 # Third-party dependencies should be kept up to date with https://github.com/Azure/azure-sdk-for-rust/blob/main/Cargo.lock
