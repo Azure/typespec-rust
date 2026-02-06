@@ -17,7 +17,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        pager::{PagerResult, PagerState},
+        pager::{PagerContinuation, PagerResult, PagerState},
         policies::{auth::BearerTokenAuthorizationPolicy, Policy},
         ClientOptions, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse,
         Request, Response, Url, UrlExt,
@@ -361,7 +361,7 @@ impl CollidingLocalsClient {
         path_var = path_var.replace("{url}", url);
         url_var.append_path(&path_var);
         Ok(Pager::new(
-            move |_: PagerState<Url>, pager_options| {
+            move |_: PagerState, pager_options| {
                 let mut core_req_0 = Request::new(url_var.clone(), Method::Get);
                 core_req_0.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
@@ -434,9 +434,9 @@ impl CollidingLocalsClient {
         path_var = path_var.replace("{url}", url);
         first_url.append_path(&path_var);
         Ok(Pager::new(
-            move |next_link: PagerState<Url>, pager_options| {
+            move |next_link: PagerState, pager_options| {
                 let url = match next_link {
-                    PagerState::More(next_link) => next_link,
+                    PagerState::More(next_link) => next_link.try_into().expect("expected Url"),
                     PagerState::Initial => first_url.clone(),
                 };
                 let mut core_req_0 = Request::new(url, Method::Get);
@@ -461,7 +461,7 @@ impl CollidingLocalsClient {
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next_link.parse()?,
+                            continuation: PagerContinuation::Link(next_link.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })

@@ -1232,7 +1232,7 @@ pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
     pub maxresults: Option<i32>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     /// Filters the results to return only containers whose name begins with the specified prefix.
     pub prefix: Option<String>,
@@ -1275,7 +1275,7 @@ pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
     pub maxresults: Option<i32>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     /// Filters the results to return only containers whose name begins with the specified prefix.
     pub prefix: Option<String>,
@@ -1486,7 +1486,7 @@ pub struct BlobServiceClientListContainersSegmentOptions<'a> {
     pub maxresults: Option<i32>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     /// Filters the results to return only containers whose name begins with the specified prefix.
     pub prefix: Option<String>,

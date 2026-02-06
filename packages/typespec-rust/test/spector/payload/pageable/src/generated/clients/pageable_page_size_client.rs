@@ -48,7 +48,7 @@ impl PageablePageSizeClient {
         }
         query_builder.build();
         Ok(Pager::new(
-            move |_: PagerState<Url>, pager_options| {
+            move |_: PagerState, pager_options| {
                 let mut request = Request::new(url.clone(), Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
@@ -88,7 +88,7 @@ impl PageablePageSizeClient {
         let mut url = self.endpoint.clone();
         url.append_path("/payload/pageable/pagesize/without-continuation");
         Ok(Pager::new(
-            move |_: PagerState<Url>, pager_options| {
+            move |_: PagerState, pager_options| {
                 let mut request = Request::new(url.clone(), Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();

@@ -8,7 +8,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        pager::{PagerResult, PagerState},
+        pager::{PagerContinuation, PagerResult, PagerState},
         ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
         UrlExt,
     },
@@ -84,9 +84,9 @@ impl PageableClient {
         }
         query_builder.build();
         Ok(Pager::new(
-            move |next_link: PagerState<Url>, pager_options| {
+            move |next_link: PagerState, pager_options| {
                 let url = match next_link {
-                    PagerState::More(next_link) => next_link,
+                    PagerState::More(next_link) => next_link.try_into().expect("expected Url"),
                     PagerState::Initial => first_url.clone(),
                 };
                 let mut request = Request::new(url, Method::Get);
@@ -111,7 +111,7 @@ impl PageableClient {
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next_link.parse()?,
+                            continuation: PagerContinuation::Link(next_link.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })

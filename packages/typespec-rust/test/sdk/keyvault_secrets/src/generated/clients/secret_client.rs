@@ -16,7 +16,7 @@ use crate::generated::models::{
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
-        pager::{PagerResult, PagerState},
+        pager::{PagerContinuation, PagerResult, PagerState},
         Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse, Request,
         RequestContent, Response, Url, UrlExt,
     },
@@ -257,10 +257,10 @@ impl SecretClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::new(
-            move |next_link: PagerState<Url>, pager_options| {
+            move |next_link: PagerState, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+                        let mut next_link: Url = next_link.try_into().expect("expected Url");
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
@@ -290,7 +290,7 @@ impl SecretClient {
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next_link.parse()?,
+                            continuation: PagerContinuation::Link(next_link.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
@@ -326,10 +326,10 @@ impl SecretClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::new(
-            move |next_link: PagerState<Url>, pager_options| {
+            move |next_link: PagerState, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+                        let mut next_link: Url = next_link.try_into().expect("expected Url");
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
@@ -359,7 +359,7 @@ impl SecretClient {
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next_link.parse()?,
+                            continuation: PagerContinuation::Link(next_link.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
@@ -404,10 +404,10 @@ impl SecretClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::new(
-            move |next_link: PagerState<Url>, pager_options| {
+            move |next_link: PagerState, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+                        let mut next_link: Url = next_link.try_into().expect("expected Url");
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
@@ -437,7 +437,7 @@ impl SecretClient {
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next_link.parse()?,
+                            continuation: PagerContinuation::Link(next_link.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })

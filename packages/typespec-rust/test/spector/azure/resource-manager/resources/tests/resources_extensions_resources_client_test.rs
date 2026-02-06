@@ -897,8 +897,7 @@ async fn create_or_update() {
     assert_eq!(
         final_result.id,
         Some(format!(
-            "{}/providers/Azure.ResourceManager.Resources/extensionsResources/extension",
-            RESOURCE_GROUP
+            "{RESOURCE_GROUP}/providers/Azure.ResourceManager.Resources/extensionsResources/extension",
         ))
     );
     assert_eq!(final_result.name, Some("extension".to_string()));

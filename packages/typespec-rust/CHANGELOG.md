@@ -1,6 +1,12 @@
 # Release History
 
-## 0.33.1 (unreleased)
+## 0.34.0 (unreleased)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Updated to new usage of `Pager` and `Poller` types.
 
 ### Features Added
 

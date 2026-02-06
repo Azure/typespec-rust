@@ -15,8 +15,11 @@ use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        pager::{PagerResult, PagerState},
-        poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
+        pager::{PagerContinuation, PagerResult, PagerState},
+        poller::{
+            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
+            StatusMonitor,
+        },
         Method, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
         Response, StatusCode, Url, UrlExt,
     },
@@ -99,24 +102,44 @@ impl ResourcesNestedClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
-                    PollerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-                        (request, next_link)
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Put);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(resource.clone());
-                        (request, url.clone())
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
                     }
                 };
                 let ctx = poller_options.context.clone();
@@ -136,11 +159,29 @@ impl ResourcesNestedClient {
                         )
                         .await?;
                     let (status, headers, mut body) = rsp.deconstruct();
-                    let next_link = match headers
+                    let continuation = if let Some(operation_location) = headers
                         .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
                     {
-                        Some(operation_location) => Url::parse(&operation_location)?,
-                        None => next_link,
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let next_link = match &continuation {
+                        PollerContinuation::Links { next_link, .. } => next_link,
+                        _ => {
+                            unreachable!()
+                        }
                     };
                     let mut final_body = None;
                     if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
@@ -173,7 +214,7 @@ impl ResourcesNestedClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            continuation_token: next_link,
+                            continuation,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
@@ -255,19 +296,39 @@ impl ResourcesNestedClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
-                    PollerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation.clone() {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
                         let request = Request::new(next_link.clone(), Method::Get);
-                        (request, next_link)
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
                     }
                     PollerState::Initial => {
                         let request = Request::new(url.clone(), Method::Delete);
-                        (request, url.clone())
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
                     }
                 };
                 let ctx = poller_options.context.clone();
@@ -295,11 +356,24 @@ impl ResourcesNestedClient {
                             },
                         );
                     }
-                    let next_link =
-                        match headers.get_optional_string(&HeaderName::from_static("location")) {
-                            Some(operation_location) => Url::parse(&operation_location)?,
-                            None => next_link,
-                        };
+                    let continuation = if let Some(operation_location) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
@@ -319,7 +393,7 @@ impl ResourcesNestedClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            continuation_token: next_link,
+                            continuation,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
@@ -450,10 +524,10 @@ impl ResourcesNestedClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Pager::new(
-            move |next_link: PagerState<Url>, pager_options| {
+            move |next_link: PagerState, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+                        let mut next_link: Url = next_link.try_into().expect("expected Url");
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
@@ -483,7 +557,7 @@ impl ResourcesNestedClient {
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next_link.parse()?,
+                            continuation: PagerContinuation::Link(next_link.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
@@ -555,24 +629,44 @@ impl ResourcesNestedClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
-                    PollerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-                        (request, next_link)
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Patch);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(properties.clone());
-                        (request, url.clone())
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
                     }
                 };
                 let ctx = poller_options.context.clone();
@@ -592,11 +686,30 @@ impl ResourcesNestedClient {
                         )
                         .await?;
                     let (status, headers, mut body) = rsp.deconstruct();
-                    let next_link =
-                        match headers.get_optional_string(&HeaderName::from_static("location")) {
-                            Some(operation_location) => Url::parse(&operation_location)?,
-                            None => next_link,
-                        };
+                    let continuation = if let Some(operation_location) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let next_link = match &continuation {
+                        PollerContinuation::Links { next_link, .. } => next_link,
+                        _ => {
+                            unreachable!()
+                        }
+                    };
                     let mut final_body = None;
                     if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
                         final_body = Some(body);
@@ -627,7 +740,7 @@ impl ResourcesNestedClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            continuation_token: next_link,
+                            continuation,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,

@@ -14,7 +14,10 @@ use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
+        poller::{
+            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
+            StatusMonitor,
+        },
         Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
         StatusCode, Url, UrlExt,
     },
@@ -91,24 +94,44 @@ impl OperationTemplatesLroClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
-                    PollerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-                        (request, next_link)
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Put);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(resource.clone());
-                        (request, url.clone())
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
                     }
                 };
                 let ctx = poller_options.context.clone();
@@ -128,11 +151,29 @@ impl OperationTemplatesLroClient {
                         )
                         .await?;
                     let (status, headers, mut body) = rsp.deconstruct();
-                    let next_link = match headers
+                    let continuation = if let Some(operation_location) = headers
                         .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
                     {
-                        Some(operation_location) => Url::parse(&operation_location)?,
-                        None => next_link,
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let next_link = match &continuation {
+                        PollerContinuation::Links { next_link, .. } => next_link,
+                        _ => {
+                            unreachable!()
+                        }
                     };
                     let mut final_body = None;
                     if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
@@ -165,7 +206,7 @@ impl OperationTemplatesLroClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            continuation_token: next_link,
+                            continuation,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
@@ -241,19 +282,39 @@ impl OperationTemplatesLroClient {
         query_builder.build();
         let api_version = self.api_version.clone();
         Ok(Poller::new(
-            move |poller_state: PollerState<Url>, poller_options| {
-                let (mut request, next_link) = match poller_state {
-                    PollerState::More(next_link) => {
-                        let mut next_link = next_link.clone();
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation.clone() {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
                         let request = Request::new(next_link.clone(), Method::Get);
-                        (request, next_link)
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
                     }
                     PollerState::Initial => {
                         let request = Request::new(url.clone(), Method::Delete);
-                        (request, url.clone())
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
                     }
                 };
                 let ctx = poller_options.context.clone();
@@ -281,11 +342,24 @@ impl OperationTemplatesLroClient {
                             },
                         );
                     }
-                    let next_link =
-                        match headers.get_optional_string(&HeaderName::from_static("location")) {
-                            Some(operation_location) => Url::parse(&operation_location)?,
-                            None => next_link,
-                        };
+                    let continuation = if let Some(operation_location) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
@@ -306,7 +380,7 @@ impl OperationTemplatesLroClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            continuation_token: next_link,
+                            continuation,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
@@ -387,20 +461,19 @@ impl OperationTemplatesLroClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        struct Progress {
-            next_link: Url,
-            final_link: Url,
-        }
-        impl AsRef<str> for Progress {
-            fn as_ref(&self) -> &str {
-                self.next_link.as_ref()
-            }
-        }
         Ok(Poller::new(
-            move |poller_state: PollerState<Progress>, poller_options| {
-                let (mut request, progress) = match poller_state {
-                    PollerState::More(progress) => {
-                        let mut next_link = progress.next_link.clone();
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
                         let mut query_builder = next_link.query_builder();
                         query_builder.set_pair("api-version", &api_version);
                         query_builder.build();
@@ -409,9 +482,9 @@ impl OperationTemplatesLroClient {
                         request.insert_header("content-type", "application/json");
                         (
                             request,
-                            Progress {
+                            PollerContinuation::Links {
                                 next_link,
-                                final_link: progress.final_link,
+                                final_link,
                             },
                         )
                     }
@@ -422,15 +495,16 @@ impl OperationTemplatesLroClient {
                         request.set_body(body.clone());
                         (
                             request,
-                            Progress {
+                            PollerContinuation::Links {
                                 next_link: url.clone(),
-                                final_link: url.clone(),
+                                final_link: None,
                             },
                         )
                     }
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
+                let url = url.clone();
                 Box::pin(async move {
                     let rsp = pipeline
                         .send(
@@ -448,17 +522,50 @@ impl OperationTemplatesLroClient {
                     if body.is_empty() {
                         body = azure_core::http::response::ResponseBody::from_bytes("{}");
                     }
-                    let next_link = match headers
+                    let continuation = if let Some(operation_location) = headers
                         .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
                     {
-                        Some(operation_location) => Url::parse(&operation_location)?,
-                        None => progress.next_link,
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
                     };
-                    let final_link =
-                        match headers.get_optional_string(&HeaderName::from_static("location")) {
-                            Some(final_link) => Url::parse(&final_link)?,
-                            None => progress.final_link,
-                        };
+                    let continuation = if let Some(final_link) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let final_link = Url::parse(&final_link)?;
+                        match continuation {
+                            PollerContinuation::Links { next_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link: Some(final_link),
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let final_link = match &continuation {
+                        PollerContinuation::Links { final_link, .. } => {
+                            final_link.clone().unwrap_or_else(|| url.clone())
+                        }
+                        _ => {
+                            unreachable!()
+                        }
+                    };
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
@@ -471,10 +578,7 @@ impl OperationTemplatesLroClient {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            continuation_token: Progress {
-                                next_link,
-                                final_link,
-                            },
+                            continuation,
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,

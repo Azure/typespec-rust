@@ -15,7 +15,7 @@ use crate::generated::{
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
-        pager::{PagerResult, PagerState},
+        pager::{PagerContinuation, PagerResult, PagerState},
         Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url, UrlExt,
     },
     json, tracing, Result,
@@ -58,9 +58,9 @@ impl PageableServerDrivenPaginationClient {
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link");
         Ok(Pager::new(
-            move |next: PagerState<Url>, pager_options| {
+            move |next: PagerState, pager_options| {
                 let url = match next {
-                    PagerState::More(next) => next,
+                    PagerState::More(next) => next.try_into().expect("expected Url"),
                     PagerState::Initial => first_url.clone(),
                 };
                 let mut request = Request::new(url, Method::Get);
@@ -85,7 +85,7 @@ impl PageableServerDrivenPaginationClient {
                     Ok(match res.next {
                         Some(next) if !next.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next.parse()?,
+                            continuation: PagerContinuation::Link(next.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
@@ -109,9 +109,9 @@ impl PageableServerDrivenPaginationClient {
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link-string");
         Ok(Pager::new(
-            move |next: PagerState<Url>, pager_options| {
+            move |next: PagerState, pager_options| {
                 let url = match next {
-                    PagerState::More(next) => next,
+                    PagerState::More(next) => next.try_into().expect("expected Url"),
                     PagerState::Initial => first_url.clone(),
                 };
                 let mut request = Request::new(url, Method::Get);
@@ -136,7 +136,7 @@ impl PageableServerDrivenPaginationClient {
                     Ok(match res.next {
                         Some(next) if !next.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: next.parse()?,
+                            continuation: PagerContinuation::Link(next.parse()?),
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
@@ -160,9 +160,9 @@ impl PageableServerDrivenPaginationClient {
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/nested-link");
         Ok(Pager::new(
-            move |next: PagerState<Url>, pager_options| {
+            move |next: PagerState, pager_options| {
                 let url = match next {
-                    PagerState::More(next) => next,
+                    PagerState::More(next) => next.try_into().expect("expected Url"),
                     PagerState::Initial => first_url.clone(),
                 };
                 let mut request = Request::new(url, Method::Get);
@@ -188,7 +188,7 @@ impl PageableServerDrivenPaginationClient {
                         match res.nested_next.and_then(|nested_next| nested_next.next) {
                             Some(next) if !next.is_empty() => PagerResult::More {
                                 response: rsp,
-                                continuation: next.parse()?,
+                                continuation: PagerContinuation::Link(next.parse()?),
                             },
                             _ => PagerResult::Done { response: rsp },
                         },

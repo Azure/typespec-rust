@@ -111,7 +111,7 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeade
     pub foo: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     pub token: Option<String>,
 }
@@ -145,7 +145,7 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeade
     pub foo: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     pub token: Option<String>,
 }
@@ -175,7 +175,7 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeade
     pub foo: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     pub token: Option<String>,
 }
@@ -207,7 +207,7 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestQuery
     pub foo: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     pub token: Option<String>,
 }
@@ -241,7 +241,7 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestQuery
     pub foo: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     pub token: Option<String>,
 }
@@ -271,7 +271,7 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestQuery
     pub foo: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: PagerOptions<'a, String>,
+    pub method_options: PagerOptions<'a>,
 
     pub token: Option<String>,
 }

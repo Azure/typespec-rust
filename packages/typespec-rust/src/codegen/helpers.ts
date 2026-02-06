@@ -220,20 +220,14 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return `Option<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'pager': {
       let formatParam = '';
-      let continuationParam = '';
-      // we need a third generic type param when the continuation isn't a next link
-      if (type.continuation !== 'nextLink') {
-        formatParam = `, ${type.type.format}`;
-        continuationParam = ', String';
-      } else if (type.type.format !== 'JsonFormat') {
+      if (type.type.format !== 'JsonFormat') {
         formatParam =  `, ${type.type.format}`;
       }
       // we explicitly omit the Response<T> from the type decl
-      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}${formatParam}${continuationParam}>`;
+      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}${formatParam}>`;
     }
     case 'pagerOptions':
-      // for continuation tokens we need an extra generic type parameter
-      return `${type.name}<${type.lifetime.name}${type.continuation === 'nextLink' ? '' : ', String'}>`;
+      return `${type.name}<${type.lifetime.name}>`;
     case 'poller':
       // we explicitly omit the Response<T> from the type decl
       return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;

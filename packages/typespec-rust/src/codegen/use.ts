@@ -117,10 +117,8 @@ export class Use {
         this.addForType(type.type);
         break;
       case 'pager':
-        if (type.continuation !== 'nextLink') {
-          // continuation token strategy will require the C
-          // type param in Pager<'a, F, C> so we must bring
-          // the format type into scope
+        if (type.type.format !== 'JsonFormat') {
+          // JsonFormat is the default so no need to bring it into scope
           this.add('azure_core::http', type.type.format);
         }
         break;
