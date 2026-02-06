@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { Crate, CrateDependency } from './crate.js';
+import { ModelFieldCustomizations } from './customizations.js';
 
 /** Docs contains the values used in doc comment generation. */
 export interface Docs {
@@ -305,6 +306,9 @@ export interface ModelField extends StructFieldBase {
 
   /** indicates if the field is optional */
   optional: boolean;
+
+  /** any customizations for this field. can be empty */
+  customizations: Array<ModelFieldCustomizations>;
 
   /** contains XML-specific serde info */
   xmlKind?: XMLKind;
@@ -891,6 +895,7 @@ export class ModelField extends StructFieldBase implements ModelField {
     this.flags = ModelFieldFlags.Unspecified;
     this.optional = optional;
     this.serde = serde;
+    this.customizations = new Array<ModelFieldCustomizations>;
   }
 }
 

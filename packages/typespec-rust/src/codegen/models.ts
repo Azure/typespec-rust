@@ -164,7 +164,12 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
       // NOTE: usage of serde annotations like this means that base64 encoded bytes and
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       const unwrappedType = helpers.unwrapType(field.type);
-      if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
+
+      // check for custom deserialize_with.  if present, it will override what we'd normally emit
+      const deserializeWith = field.customizations.find((each) => each.kind === 'deserializeWith');
+      if (deserializeWith) {
+        serdeParams.add(`deserialize_with = "${deserializeWith.name}"`);
+      } else if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
         addSerDeHelper(field, serdeParams, bodyFormat, use);
       } else if (bodyFormat === 'xml' && utils.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde

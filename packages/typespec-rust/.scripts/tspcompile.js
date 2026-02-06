@@ -184,6 +184,9 @@ generate('misc_tests', misc_tests, 'test/other/misc_tests', ['omit-constructors=
 const pub_crate = pkgRoot + 'test/tsp/PubCrate';
 generate('pub_crate', pub_crate, 'test/other/pub_crate');
 
+const client_option = pkgRoot + 'test/tsp/ClientOption';
+generate('client_option', client_option, 'test/other/client_option');
+
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
 
