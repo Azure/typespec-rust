@@ -5,6 +5,7 @@
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
+#[allow(dead_code)]
 mod generated;
 pub use generated::*;
 
