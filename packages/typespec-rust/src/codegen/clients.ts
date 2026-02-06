@@ -990,7 +990,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
       body += `${indent.get()}let ${headerParam.name} = ` + helpers.buildMatch(indent, headerParam.name, [
         {
           pattern: `PagerState::More(${headerParam.name})`,
-          body: (indent) => `${indent.get()}&Some(${headerParam.name}.to_string())\n`,
+          body: (indent) => `${indent.get()}&Some(${headerParam.name}.into())\n`,
         },
         {
           pattern: 'PagerState::Initial',

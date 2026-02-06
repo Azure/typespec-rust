@@ -65,7 +65,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("foo", foo);
                 }
                 let token = match token {
-                    PagerState::More(token) => &Some(token.to_string()),
+                    PagerState::More(token) => &Some(token.into()),
                     PagerState::Initial => &options.token,
                 };
                 if let Some(token) = token {
@@ -135,7 +135,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("foo", foo);
                 }
                 let token = match token {
-                    PagerState::More(token) => &Some(token.to_string()),
+                    PagerState::More(token) => &Some(token.into()),
                     PagerState::Initial => &options.token,
                 };
                 if let Some(token) = token {
@@ -223,7 +223,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     request.insert_header("foo", foo);
                 }
                 let token = match token {
-                    PagerState::More(token) => &Some(token.to_string()),
+                    PagerState::More(token) => &Some(token.into()),
                     PagerState::Initial => &options.token,
                 };
                 if let Some(token) = token {
