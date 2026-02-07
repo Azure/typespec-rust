@@ -5,7 +5,6 @@
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-#[allow(dead_code)]
 mod generated;
 pub use generated::*;
 
@@ -13,8 +12,7 @@ pub use generated::*;
 #[allow(dead_code)]
 const _: () = {
     fn _touch_misc_tests_client_list_widgets_options() {
-        let mut o = crate::generated::models::MiscTestsClientListWidgetsOptions::default();
-        let _ = &mut o.method_options;
-        let _ = o.into_owned();
+        let client = MiscTestsClient::with_no_credential("https://contoso.com", None).unwrap();
+        let _ = client.list_widgets(None);
     }
 };
