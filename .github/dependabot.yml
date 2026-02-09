@@ -8,6 +8,10 @@ updates:
     ignore:
       # Updated manually to align with minimum supported Node version
       - dependency-name: "@types/node"
+      # Never open PRs that cross major versions (breaking changes).
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
     groups:
       typespec:
         patterns:
