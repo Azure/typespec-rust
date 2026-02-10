@@ -570,11 +570,11 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
 
   if (unwrapped.kind === 'safeint' || unwrapped.kind === 'scalar') {
     if (unwrapped.stringEncoding) {
-      const fmtAsStrig = 'azure_core::fmt::as_string';
+      const fmtAsString = 'azure_core::fmt::as_string';
       if (deserializeWith) {
-        serdeParams.add(`serialize_with = "${fmtAsStrig}::serialize"`);
+        serdeParams.add(`serialize_with = "${fmtAsString}::serialize"`);
       } else {
-        serdeParams.add(`with = "${fmtAsStrig}"`);
+        serdeParams.add(`with = "${fmtAsString}"`);
       }
     }
     // no other processing for these types is required
