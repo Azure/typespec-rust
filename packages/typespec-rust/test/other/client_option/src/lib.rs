@@ -9,8 +9,34 @@ mod generated;
 
 pub mod models {
     pub use crate::generated::models::*;
+    use azure_core::time::OffsetDateTime;
+    use serde_json::Number;
+
+    pub fn deserialize_base64<'de, D>(deserializer: D) -> Result<Option<Vec<u8>>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let _ = deserializer;
+        todo!()
+    }
 
     pub fn deserialize_name<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let _ = deserializer;
+        todo!()
+    }
+
+    pub fn deserialize_safeint<'de, D>(deserializer: D) -> Result<Option<Number>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let _ = deserializer;
+        todo!()
+    }
+
+    pub fn deserialize_time<'de, D>(deserializer: D) -> Result<Option<OffsetDateTime>, D::Error>
     where
         D: serde::Deserializer<'de>,
     {

@@ -241,6 +241,7 @@ version = "0.1.0"
 dependencies = [
  "azure_core",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
