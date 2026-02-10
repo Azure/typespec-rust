@@ -106,8 +106,6 @@ const azureHttpSpecsGroup = {
   'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
   'spector_armresources': {input: 'azure/resource-manager/resources'},
   'spector_arm_multi_service': {input: 'azure/resource-manager/multi-service/client.tsp'},
-  'spector_arm_multi_service_older_versions': {input: 'azure/resource-manager/multi-service-older-versions/client.tsp'},
-  'spector_arm_multi_service_shared_models': {input: 'azure/resource-manager/multi-service-shared-models/client.tsp'},
   'spector_requestidheader': {input: 'azure/special-headers/client-request-id'},
   'spector_azpreviewversion': {input: 'azure/versioning/previewVersion'},
   'spector_azure_client_namespace': {input: 'client/namespace/client.tsp', output: 'azure/client/namespace'},

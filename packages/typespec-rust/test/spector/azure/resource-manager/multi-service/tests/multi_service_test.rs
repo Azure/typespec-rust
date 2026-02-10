@@ -36,11 +36,11 @@ impl TokenCredential for FakeTokenCredential {
     }
 }
 
-fn create_client() -> CombinedClient {
+fn create_client(api_version: &str) -> CombinedClient {
     CombinedClient::new(
         "http://localhost:3000",
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
-        "2025-04-01".to_string(),
+        api_version.to_string(),
         "00000000-0000-0000-0000-000000000000".to_string(),
         None,
     )
@@ -49,7 +49,7 @@ fn create_client() -> CombinedClient {
 
 #[tokio::test]
 async fn virtual_machine_get() {
-    let client = create_client();
+    let client = create_client("2025-04-01");
     let resp = client
         .get_combined_virtual_machines_client()
         .get("test-rg", "vm1", None)
@@ -83,7 +83,7 @@ async fn virtual_machine_create_or_update() {
         ..Default::default()
     };
 
-    let client = create_client();
+    let client = create_client("2025-04-01");
     let poller = client
         .get_combined_virtual_machines_client()
         .create_or_update("test-rg", "vm1", resource.try_into().unwrap(), None)
@@ -112,7 +112,7 @@ async fn virtual_machine_create_or_update() {
 
 #[tokio::test]
 async fn disk_get() {
-    let client = create_client();
+    let client = create_client("2025-01-02");
     let resp = client
         .get_combined_disks_client()
         .get("test-rg", "disk1", None)
@@ -143,7 +143,7 @@ async fn disk_create_or_update() {
         ..Default::default()
     };
 
-    let client = create_client();
+    let client = create_client("2025-01-02");
     let poller = client
         .get_combined_disks_client()
         .create_or_update("test-rg", "disk1", resource.try_into().unwrap(), None)
