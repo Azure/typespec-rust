@@ -8,7 +8,6 @@ use azure_core::time::OffsetDateTime;
 use azure_core::Result;
 use spector_armcommon::models::{ConfidentialResource, ConfidentialResourceProperties};
 use spector_armcommon::CommonPropertiesClient;
-use std::collections::HashMap;
 use std::sync::Arc;
 
 #[derive(Debug)]
