@@ -46,24 +46,6 @@ fn create_client() -> CommonPropertiesClient {
     .unwrap()
 }
 
-fn get_valid_confidential_resource() -> ConfidentialResource {
-    ConfidentialResource {
-        id: Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.CommonProperties/confidentialResources/resource".to_string()),
-        location: Some("eastus".to_string()),
-        name: Some("resource".to_string()),
-        properties: Some(ConfidentialResourceProperties {
-            provisioning_state: Some("Succeeded".to_string()),
-            username: Some("testuser".to_string()),
-        }),
-        tags: Some(HashMap::from([(
-            "tagKey1".to_string(),
-            "tagValue1".to_string(),
-        )])),
-        type_prop: Some("Azure.ResourceManager.CommonProperties/confidentialResources".to_string()),
-        ..Default::default()
-    }
-}
-
 #[tokio::test]
 async fn create_for_user_defined_error() {
     let resource = ConfidentialResource {
