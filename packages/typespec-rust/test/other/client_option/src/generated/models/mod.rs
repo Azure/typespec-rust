@@ -5,4 +5,5 @@
 
 #[allow(clippy::module_inception)]
 mod models;
+mod models_serde;
 pub use models::*;

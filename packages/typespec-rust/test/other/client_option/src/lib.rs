@@ -43,4 +43,14 @@ pub mod models {
         let _ = deserializer;
         todo!()
     }
+
+    pub fn deserialize_times<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<Vec<OffsetDateTime>>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let _ = deserializer;
+        todo!()
+    }
 }

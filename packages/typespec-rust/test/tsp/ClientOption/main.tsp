@@ -17,6 +17,9 @@ model DeserializeWith {
 
     #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
     time: offsetDateTime;
+
+    #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
+    times: offsetDateTime[];
 }
 
 @@access(DeserializeWith, Access.public);
@@ -26,3 +29,4 @@ model DeserializeWith {
 @@clientOption(DeserializeWith.safeInt, "deserialize_with", "crate::models::deserialize_safeint", "rust");
 @@clientOption(DeserializeWith.base64, "deserialize_with", "crate::models::deserialize_base64", "rust");
 @@clientOption(DeserializeWith.time, "deserialize_with", "crate::models::deserialize_time", "rust");
+@@clientOption(DeserializeWith.times, "deserialize_with", "crate::models::deserialize_times", "rust");
