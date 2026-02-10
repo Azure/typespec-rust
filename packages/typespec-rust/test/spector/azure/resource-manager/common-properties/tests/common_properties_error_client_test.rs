@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
+use azure_core::http::StatusCode;
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
 use spector_armcommon::models::{ConfidentialResource, ConfidentialResourceProperties};
@@ -75,59 +76,21 @@ async fn create_for_user_defined_error() {
     };
 
     let client = create_client();
-    let resp = client
+    let rsp = client
         .get_common_properties_error_client()
         .create_for_user_defined_error("test-rg", "resource", resource.try_into().unwrap(), None)
-        .await
-        .unwrap();
+        .await;
 
-    let confidential_resource: ConfidentialResource = resp.into_model().unwrap();
-    let expected_resource = get_valid_confidential_resource();
-
-    assert_eq!(expected_resource.id, confidential_resource.id);
-    assert_eq!(expected_resource.location, confidential_resource.location);
-    assert_eq!(expected_resource.name, confidential_resource.name);
-    assert_eq!(expected_resource.tags, confidential_resource.tags);
-    assert_eq!(expected_resource.type_prop, confidential_resource.type_prop);
-
-    let expected_properties = expected_resource.properties.unwrap();
-    let confidential_properties = confidential_resource.properties.unwrap();
-    assert_eq!(
-        expected_properties.provisioning_state,
-        confidential_properties.provisioning_state,
-    );
-    assert_eq!(
-        expected_properties.username,
-        confidential_properties.username,
-    );
+    assert_eq!(rsp.unwrap_err().http_status(), Some(StatusCode::BadRequest));
 }
 
 #[tokio::test]
 async fn get_for_predefined_error() {
     let client = create_client();
-    let resp = client
+    let rsp = client
         .get_common_properties_error_client()
         .get_for_predefined_error("test-rg", "resource", None)
-        .await
-        .unwrap();
+        .await;
 
-    let confidential_resource: ConfidentialResource = resp.into_model().unwrap();
-    let expected_resource = get_valid_confidential_resource();
-
-    assert_eq!(expected_resource.id, confidential_resource.id);
-    assert_eq!(expected_resource.location, confidential_resource.location);
-    assert_eq!(expected_resource.name, confidential_resource.name);
-    assert_eq!(expected_resource.tags, confidential_resource.tags);
-    assert_eq!(expected_resource.type_prop, confidential_resource.type_prop);
-
-    let expected_properties = expected_resource.properties.unwrap();
-    let confidential_properties = confidential_resource.properties.unwrap();
-    assert_eq!(
-        expected_properties.provisioning_state,
-        confidential_properties.provisioning_state,
-    );
-    assert_eq!(
-        expected_properties.username,
-        confidential_properties.username,
-    );
+    assert_eq!(rsp.unwrap_err().http_status(), Some(StatusCode::NotFound));
 }
