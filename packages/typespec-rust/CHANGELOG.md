@@ -7,6 +7,10 @@
 * Added support for `@clientOption` decorator on model fields to specify custom deserializers.
   * The format is `@@clientOption(ModelName.field, "deserialize_with", "path::to::deserializer_fn", "rust")`.
 
+### Other Changes
+
+* Cleaned up MIT license header code comment text.
+
 ## 0.34.0 (2026-02-06)
 
 ### Breaking Changes
