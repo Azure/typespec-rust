@@ -1061,7 +1061,7 @@ export class Adapter {
   private adaptClients(): void {
     for (const client of this.ctx.sdkPackage.clients) {
       // start with instantiable clients and recursively work down
-      if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
+      if (isInstantiableClient(client.clientInitialization.initializedBy)) {
         this.recursiveAdaptClient(client);
       }
     }
@@ -1122,8 +1122,7 @@ export class Adapter {
     rustClient.parent = parent;
     rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'Pipeline', 'azure_core::http')));
 
-    // anything other than public means non-instantiable client
-    if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
+    if (isInstantiableClient(client.clientInitialization.initializedBy)) {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, 'pub');
       const clientOptionsField = new rust.StructField('client_options', 'pub', new rust.ExternalType(this.crate, 'ClientOptions', 'azure_core::http'));
       clientOptionsField.docs.summary = 'Allows customization of the client.';
@@ -2580,6 +2579,17 @@ function isHttpStatusCodeRange(statusCode: http.HttpStatusCodeRange | number): s
  */
 function adaptAccessFlags(access: tcgc.AccessFlags): rust.Visibility {
   return access === 'public' ? 'pub' : 'pubCrate';
+}
+
+/**
+ * returns true if bit tcgc.InitializedByFlags.Individually is set
+ * 
+ * @param initializedBy the value to test
+ * @returns true for instantiable clients
+ */
+function isInstantiableClient(initializedBy: tcgc.InitializedByFlags): boolean {
+  // NOTE: tcgc.InitializedByFlags.Default has value -1 (i.e. all bits set)
+  return initializedBy !== tcgc.InitializedByFlags.Default && (initializedBy & tcgc.InitializedByFlags.Individually) !== 0;
 }
 
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;

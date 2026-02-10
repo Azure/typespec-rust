@@ -10,6 +10,7 @@
 ### Other Changes
 
 * Cleaned up MIT license header code comment text.
+* Updated to the latest tsp toolset.
 
 ## 0.34.0 (2026-02-06)
 

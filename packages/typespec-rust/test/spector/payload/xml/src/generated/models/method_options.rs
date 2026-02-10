@@ -172,3 +172,10 @@ pub struct XmlSimpleModelValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
+
+/// Options to be passed to [`XmlXmlErrorValueClient::get()`](crate::generated::clients::XmlXmlErrorValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlXmlErrorValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
