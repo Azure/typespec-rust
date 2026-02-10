@@ -648,6 +648,35 @@ export class Adapter {
       modelField.flags |= rust.ModelFieldFlags.Discriminator;
     }
 
+    // check for any client options on the field
+    const clientOptions = property.decorators.filter((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@clientOption');
+    for (const clientOption of clientOptions) {
+      const optionName = <string>clientOption.arguments['name'];
+      const optionValue = <string>clientOption.arguments['value'];
+      switch (optionName) {
+        case 'deserialize_with':
+          if (modelField.customizations.find((each) => each.kind === 'deserializeWith')) {
+            // ignore any duplicates and warn about it
+            this.ctx.program.reportDiagnostic({
+              code: 'DuplicateClientOption',
+              severity: 'warning',
+              message: `duplicate client option ${optionName} on model field ${property.name} will be ignored`,
+              target: property.__raw?.node ?? tsp.NoTarget,
+            });
+            continue;
+          }
+          modelField.customizations.push(new rust.DeserializeWith(optionValue));
+          break;
+        default:
+          this.ctx.program.reportDiagnostic({
+            code: 'InvalidClientOption',
+            severity: 'warning',
+            message: `invalid client option ${optionName} on model field ${property.name}`,
+            target: property.__raw?.node ?? tsp.NoTarget,
+          });
+      }
+    }
+
     return modelField;
   }
 

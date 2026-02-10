@@ -164,15 +164,22 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
       // NOTE: usage of serde annotations like this means that base64 encoded bytes and
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       const unwrappedType = helpers.unwrapType(field.type);
+
+      // check for custom deserialize_with.  if present, it will override what we'd normally emit
+      const deserializeWith = field.customizations.find((each) => each.kind === 'deserializeWith');
+
       if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
-        addSerDeHelper(field, serdeParams, bodyFormat, use);
+        addSerDeHelper(field, serdeParams, bodyFormat, use, deserializeWith);
       } else if (bodyFormat === 'xml' && utils.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
         serdeParams.add('default');
-        serdeParams.add(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
+        serdeParams.add(`deserialize_with = ${deserializeWith ? `"${deserializeWith.name}"` : `"${xmlListWrapper.name}::unwrap"`}`);
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
         use.add('super::xml_helpers', xmlListWrapper.name);
+      } else if (deserializeWith) {
+        // this comes before DeserializeEmptyStringAsNone since it just replaces it
+        serdeParams.add(`deserialize_with = "${deserializeWith.name}"`);
       } else if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) === rust.ModelFieldFlags.DeserializeEmptyStringAsNone) {
         use.add('azure_core::fmt', 'empty_as_null');
         serdeParams.add(`deserialize_with = "empty_as_null::deserialize"`);
@@ -538,8 +545,9 @@ const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProp
  * @param serdeParams the params that will be passed to the serde annotation
  * @param format the (de)serialization format of the data
  * @param use the use statement builder currently in scope
+ * @param deserializeWith optional custom deserializer to use in lieu of the emitted variant
  */
-function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format: helpers.ModelFormat, use: Use): void {
+function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format: helpers.ModelFormat, use: Use, deserializeWith?: rust.DeserializeWith): void {
   const unwrapped = helpers.unwrapType(field.type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
@@ -553,9 +561,21 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
       throw new CodegenError('InternalError', `getSerDeHelper unexpected kind ${unwrapped.kind}`);
   }
 
+  // if there's a custom deserializer then use that.
+  // it also means we need to skip emitting any custom
+  // deserializer, and change and "with" to "serialize_with".
+  if (deserializeWith) {
+    serdeParams.add(`deserialize_with = "${deserializeWith.name}"`);
+  }
+
   if (unwrapped.kind === 'safeint' || unwrapped.kind === 'scalar') {
     if (unwrapped.stringEncoding) {
-      serdeParams.add(`with = "azure_core::fmt::as_string"`);
+      const fmtAsString = 'azure_core::fmt::as_string';
+      if (deserializeWith) {
+        serdeParams.add(`serialize_with = "${fmtAsString}::serialize"`);
+      } else {
+        serdeParams.add(`with = "${fmtAsString}"`);
+      }
     }
     // no other processing for these types is required
     return;
@@ -590,10 +610,10 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
         const modUse = new Use('modelsOther');
         let modContent = `pub mod ${name} {\n`;
         modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
-        const deserialize = buildDeserialize(indent, field.type, modUse);
+        const deserialize = deserializeWith ? '' : `${buildDeserialize(indent, field.type, modUse)}\n`;
         const serialize = buildSerialize(indent, field.type, modUse);
         modContent += modUse.text(indent);
-        modContent += `${deserialize}\n${serialize}`;
+        modContent += `${deserialize}${serialize}`;
         modContent += '}\n\n'; // end pub mod
         return modContent;
       });
@@ -604,11 +624,13 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
   /** non-collection based impl */
   const serdeEncodedBytes = function (encoding: rust.BytesEncoding, forOption: boolean): void {
     const format = encoding === 'url' ? '_url_safe' : '';
-    const deserializer = `deserialize${format}`;
     const serializer = `serialize${format}`;
     const optionNamespace = forOption ? '::option' : '';
     serdeParams.add('default');
-    serdeParams.add(`deserialize_with = "base64${optionNamespace}::${deserializer}"`);
+    if (!deserializeWith) {
+      const deserializer = `deserialize${format}`;
+      serdeParams.add(`deserialize_with = "base64${optionNamespace}::${deserializer}"`);
+    }
     serdeParams.add(`serialize_with = "base64${optionNamespace}::${serializer}"`);
     use.add('azure_core', 'base64');
   };
@@ -616,7 +638,12 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
   /** non-collection based impl. note that for XML, we don't use the in-box RFC3339 */
   const serdeOffsetDateTime = function (encoding: rust.DateTimeEncoding, optional: boolean): void {
     serdeParams.add('default');
-    serdeParams.add(`with = "azure_core::time::${encoding}${optional ? '::option' : ''}"`);
+    const coreTime = 'azure_core::time';
+    if (deserializeWith) {
+      serdeParams.add(`serialize_with = "${coreTime}::${encoding}${optional ? '::option' : ''}::serialize"`);
+    } else {
+      serdeParams.add(`with = "${coreTime}::${encoding}${optional ? '::option' : ''}"`);
+    }
   };
 
   /** serializing literal values */
@@ -660,7 +687,11 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
   const addSerDeHelper = function(): void {
     use.add('super', 'models_serde');
     serdeParams.add('default');
-    serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
+    if (deserializeWith) {
+      serdeParams.add(`serialize_with = "models_serde::${buildSerDeModName(field.type)}::serialize"`);
+    } else {
+      serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
+    }
   };
 
   // the first three cases are for spread params where the internal model's field isn't Option<T>

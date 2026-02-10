@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "other/alternate_types",
+    "other/client_option",
     "other/colliding_locals",
     "other/doc_tests",
     "other/enum_path_params",
