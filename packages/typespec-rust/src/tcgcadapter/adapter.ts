@@ -1256,6 +1256,12 @@ export class Adapter {
             break;
           }
           case 'method': {
+            // https://github.com/Azure/typespec-rust/issues/849
+            // Azure doesn't use optional (with no explicit default value) API versions anyway.
+            if (param.isApiVersionParam && param.optional && !param.clientDefaultValue) {
+              param.optional = false;
+            }
+
             const clientParam = this.adaptClientParameter(param, rustClient.constructable);
             rustClient.fields.push(new rust.StructField(clientParam.name, 'pubCrate', clientParam.type));
             ctorParams.push(clientParam);
