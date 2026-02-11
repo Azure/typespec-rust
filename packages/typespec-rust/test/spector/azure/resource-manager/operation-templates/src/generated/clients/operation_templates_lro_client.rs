@@ -7,6 +7,8 @@ use crate::generated::models::{
     ExportRequest, OperationTemplatesLroClientCreateOrReplaceOperationStatus,
     OperationTemplatesLroClientCreateOrReplaceOptions,
     OperationTemplatesLroClientDeleteOperationStatus, OperationTemplatesLroClientDeleteOptions,
+    OperationTemplatesLroClientExportArrayOperationStatus,
+    OperationTemplatesLroClientExportArrayOptions,
     OperationTemplatesLroClientExportOperationStatus, OperationTemplatesLroClientExportOptions,
     Order,
 };
@@ -572,6 +574,193 @@ impl OperationTemplatesLroClient {
                         &poller_options,
                     );
                     let res: OperationTemplatesLroClientExportOperationStatus =
+                        json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(match res.status() {
+                        PollerStatus::InProgress => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
+                        PollerStatus::Succeeded => PollerResult::Succeeded {
+                            response: rsp,
+                            target: Box::new(move || {
+                                Box::pin(async move {
+                                    let mut request = Request::new(final_link, Method::Get);
+                                    request.insert_header("accept", "application/json");
+                                    request.insert_header("content-type", "application/json");
+                                    Ok(pipeline.send(&ctx, &mut request, None).await?.into())
+                                })
+                            }),
+                        },
+                        _ => PollerResult::Done { response: rsp },
+                    })
+                })
+            },
+            Some(options.method_options),
+        ))
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `body` - The request body
+    /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`OperationTemplatesLroClientExportArrayOperationStatusHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{OperationTemplatesLroClientExportArrayOperationStatus, OperationTemplatesLroClientExportArrayOperationStatusHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<OperationTemplatesLroClientExportArrayOperationStatus> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(location) = response.location()? {
+    ///         println!("location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("retry-after: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](crate::generated::models::OperationTemplatesLroClientExportArrayOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`location`()](crate::generated::models::OperationTemplatesLroClientExportArrayOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientExportArrayOperationStatusHeaders::retry_after) - retry-after
+    ///
+    /// [`OperationTemplatesLroClientExportArrayOperationStatusHeaders`]: crate::generated::models::OperationTemplatesLroClientExportArrayOperationStatusHeaders
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.exportArray")]
+    pub fn export_array(
+        &self,
+        body: RequestContent<ExportRequest>,
+        options: Option<OperationTemplatesLroClientExportArrayOptions<'_>>,
+    ) -> Result<Poller<OperationTemplatesLroClientExportArrayOperationStatus>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/exportArray");
+        path = path.replace("{subscriptionId}", &self.subscription_id);
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
+        let api_version = self.api_version.clone();
+        Ok(Poller::new(
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
+                        let mut request = Request::new(next_link.clone(), Method::Get);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
+                    }
+                    PollerState::Initial => {
+                        let mut request = Request::new(url.clone(), Method::Post);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+                        request.set_body(body.clone());
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
+                    }
+                };
+                let ctx = poller_options.context.clone();
+                let pipeline = pipeline.clone();
+                let url = url.clone();
+                Box::pin(async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, body) = rsp.deconstruct();
+                    let continuation = if let Some(operation_location) = headers
+                        .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
+                    {
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let continuation = if let Some(final_link) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let final_link = Url::parse(&final_link)?;
+                        match continuation {
+                            PollerContinuation::Links { next_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link: Some(final_link),
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let final_link = match &continuation {
+                        PollerContinuation::Links { final_link, .. } => {
+                            final_link.clone().unwrap_or_else(|| url.clone())
+                        }
+                        _ => {
+                            unreachable!()
+                        }
+                    };
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &poller_options,
+                    );
+                    let res: OperationTemplatesLroClientExportArrayOperationStatus =
                         json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {

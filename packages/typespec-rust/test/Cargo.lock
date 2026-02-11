@@ -1672,7 +1672,27 @@ dependencies = [
 ]
 
 [[package]]
-name = "spector_clientinit"
+name = "spector_clientinit_default"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "time",
+ "tokio",
+]
+
+[[package]]
+name = "spector_clientinit_individually"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "time",
+ "tokio",
+]
+
+[[package]]
+name = "spector_clientinit_individually_parent"
 version = "0.1.0"
 dependencies = [
  "azure_core",

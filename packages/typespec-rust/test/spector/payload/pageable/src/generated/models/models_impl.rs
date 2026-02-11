@@ -8,7 +8,7 @@ use super::{
     NestedLinkResponse, Pet, RequestHeaderNestedResponseBodyResponse,
     RequestHeaderResponseBodyResponse, RequestHeaderResponseHeaderResponse,
     RequestQueryNestedResponseBodyResponse, RequestQueryResponseBodyResponse,
-    RequestQueryResponseHeaderResponse,
+    RequestQueryResponseHeaderResponse, XmlPet, XmlPetListResult, XmlPetListResultWithNextLink,
 };
 use async_trait::async_trait;
 use azure_core::{http::pager::Page, Result};
@@ -118,6 +118,26 @@ impl Page for RequestQueryResponseBodyResponse {
 impl Page for RequestQueryResponseHeaderResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
+    async fn into_items(self) -> Result<Self::IntoIter> {
+        Ok(self.pets.into_iter())
+    }
+}
+
+#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
+#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+impl Page for XmlPetListResult {
+    type Item = XmlPet;
+    type IntoIter = <Vec<XmlPet> as IntoIterator>::IntoIter;
+    async fn into_items(self) -> Result<Self::IntoIter> {
+        Ok(self.pets.into_iter())
+    }
+}
+
+#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
+#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+impl Page for XmlPetListResultWithNextLink {
+    type Item = XmlPet;
+    type IntoIter = <Vec<XmlPet> as IntoIterator>::IntoIter;
     async fn into_items(self) -> Result<Self::IntoIter> {
         Ok(self.pets.into_iter())
     }

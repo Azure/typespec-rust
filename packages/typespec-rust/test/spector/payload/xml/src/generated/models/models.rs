@@ -160,3 +160,14 @@ pub struct SimpleModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
+
+/// The body of an XML error response.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct XmlErrorBody {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub code: Option<i32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
+}

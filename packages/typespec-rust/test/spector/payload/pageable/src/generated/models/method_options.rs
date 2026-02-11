@@ -292,3 +292,43 @@ impl
         }
     }
 }
+/// Options to be passed to [`PageableXmlPaginationClient::list_with_continuation()`](crate::generated::clients::PageableXmlPaginationClient::list_with_continuation())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageableXmlPaginationClientListWithContinuationOptions<'a> {
+    pub marker: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: PagerOptions<'a>,
+}
+
+impl PageableXmlPaginationClientListWithContinuationOptions<'_> {
+    /// Transforms this [`PageableXmlPaginationClientListWithContinuationOptions`] into a new `PageableXmlPaginationClientListWithContinuationOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableXmlPaginationClientListWithContinuationOptions<'static> {
+        PageableXmlPaginationClientListWithContinuationOptions {
+            marker: self.marker,
+            method_options: PagerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
+/// Options to be passed to [`PageableXmlPaginationClient::list_with_next_link()`](crate::generated::clients::PageableXmlPaginationClient::list_with_next_link())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageableXmlPaginationClientListWithNextLinkOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PagerOptions<'a>,
+}
+
+impl PageableXmlPaginationClientListWithNextLinkOptions<'_> {
+    /// Transforms this [`PageableXmlPaginationClientListWithNextLinkOptions`] into a new `PageableXmlPaginationClientListWithNextLinkOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableXmlPaginationClientListWithNextLinkOptions<'static> {
+        PageableXmlPaginationClientListWithNextLinkOptions {
+            method_options: PagerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}

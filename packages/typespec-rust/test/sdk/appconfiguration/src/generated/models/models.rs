@@ -43,7 +43,7 @@ pub struct AzureAppConfigurationClientCreateSnapshotOperationStatus {
     /// An error, available when the status is `Failed`, describing why the operation
     /// failed.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub error: Option<Error>,
+    pub error: Option<CoreError>,
 
     /// The unique id of the operation.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -57,14 +57,14 @@ pub struct AzureAppConfigurationClientCreateSnapshotOperationStatus {
 /// The error object.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct Error {
+pub struct CoreError {
     /// One of a server-defined set of error codes.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
 
     /// An array of details about specific errors that led to this reported error.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub details: Option<Vec<Error>>,
+    pub details: Option<Vec<CoreError>>,
 
     /// An object containing more specific information than the current object about the error.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -217,7 +217,7 @@ pub struct OperationDetails {
     /// An error, available when the status is `Failed`, describing why the operation
     /// failed.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub error: Option<Error>,
+    pub error: Option<CoreError>,
 
     /// The unique id of the operation.
     #[serde(skip_serializing_if = "Option::is_none")]

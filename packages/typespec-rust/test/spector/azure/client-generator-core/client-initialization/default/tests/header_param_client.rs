@@ -1,0 +1,33 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+use spector_clientinit_default::{models::Input, HeaderParamClient};
+
+#[tokio::test]
+async fn with_body() {
+    let client = HeaderParamClient::with_no_credential(
+        "http://localhost:3000",
+        "test-name-value".to_string(),
+        None,
+    )
+    .unwrap();
+    let body = Input {
+        name: Some("test-name".to_string()),
+    };
+    client
+        .with_body(body.try_into().unwrap(), None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+async fn with_query() {
+    let client = HeaderParamClient::with_no_credential(
+        "http://localhost:3000",
+        "test-name-value".to_string(),
+        None,
+    )
+    .unwrap();
+    client.with_query("test-id", None).await.unwrap();
+}

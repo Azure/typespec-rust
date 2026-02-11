@@ -6,6 +6,7 @@
 use super::{
     OperationTemplatesLroClientCreateOrReplaceOperationStatus,
     OperationTemplatesLroClientDeleteOperationStatus,
+    OperationTemplatesLroClientExportArrayOperationStatus,
     OperationTemplatesLroClientExportOperationStatus,
 };
 use azure_core::{
@@ -98,6 +99,53 @@ impl OperationTemplatesLroClientDeleteOperationStatusHeaders
     }
 }
 
+/// Provides access to typed response headers for [`OperationTemplatesLroClient::export_array()`](crate::generated::clients::OperationTemplatesLroClient::export_array())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_armoptemplates::models::{OperationTemplatesLroClientExportArrayOperationStatus, OperationTemplatesLroClientExportArrayOperationStatusHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<OperationTemplatesLroClientExportArrayOperationStatus> = unimplemented!();
+///     // Access response headers
+///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+///         println!("azure-asyncoperation: {:?}", azure_async_operation);
+///     }
+///     if let Some(location) = response.location()? {
+///         println!("location: {:?}", location);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("retry-after: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
+pub trait OperationTemplatesLroClientExportArrayOperationStatusHeaders: private::Sealed {
+    fn azure_async_operation(&self) -> Result<Option<String>>;
+    fn location(&self) -> Result<Option<String>>;
+    fn retry_after(&self) -> Result<Option<i32>>;
+}
+
+impl OperationTemplatesLroClientExportArrayOperationStatusHeaders
+    for Response<OperationTemplatesLroClientExportArrayOperationStatus>
+{
+    /// A link to the status monitor
+    fn azure_async_operation(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &AZURE_ASYNCOPERATION)
+    }
+
+    /// The Location header contains the URL where the status of the long running operation can be checked.
+    fn location(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &LOCATION)
+    }
+
+    /// The Retry-After header can indicate how long the client should wait before polling the operation status.
+    fn retry_after(&self) -> Result<Option<i32>> {
+        Headers::get_optional_as(self.headers(), &RETRY_AFTER)
+    }
+}
+
 /// Provides access to typed response headers for [`OperationTemplatesLroClient::export()`](crate::generated::clients::OperationTemplatesLroClient::export())
 ///
 /// # Examples
@@ -149,6 +197,7 @@ mod private {
     use super::{
         OperationTemplatesLroClientCreateOrReplaceOperationStatus,
         OperationTemplatesLroClientDeleteOperationStatus,
+        OperationTemplatesLroClientExportArrayOperationStatus,
         OperationTemplatesLroClientExportOperationStatus,
     };
     use azure_core::http::Response;
@@ -157,5 +206,6 @@ mod private {
 
     impl Sealed for Response<OperationTemplatesLroClientCreateOrReplaceOperationStatus> {}
     impl Sealed for Response<OperationTemplatesLroClientDeleteOperationStatus> {}
+    impl Sealed for Response<OperationTemplatesLroClientExportArrayOperationStatus> {}
     impl Sealed for Response<OperationTemplatesLroClientExportOperationStatus> {}
 }

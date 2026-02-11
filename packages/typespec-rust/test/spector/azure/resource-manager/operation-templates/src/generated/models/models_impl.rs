@@ -8,6 +8,7 @@ use super::{
     ExportResult, Operation, OperationListResult,
     OperationTemplatesLroClientCreateOrReplaceOperationStatus,
     OperationTemplatesLroClientDeleteOperationStatus,
+    OperationTemplatesLroClientExportArrayOperationStatus,
     OperationTemplatesLroClientExportOperationStatus, Order, Widget,
 };
 use async_trait::async_trait;
@@ -43,6 +44,17 @@ impl StatusMonitor for OperationTemplatesLroClientCreateOrReplaceOperationStatus
 }
 
 impl StatusMonitor for OperationTemplatesLroClientDeleteOperationStatus {
+    type Output = ();
+    type Format = JsonFormat;
+    fn status(&self) -> PollerStatus {
+        match &self.status {
+            Some(v) => PollerStatus::from(v.as_ref()),
+            None => PollerStatus::InProgress,
+        }
+    }
+}
+
+impl StatusMonitor for OperationTemplatesLroClientExportArrayOperationStatus {
     type Output = ();
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {

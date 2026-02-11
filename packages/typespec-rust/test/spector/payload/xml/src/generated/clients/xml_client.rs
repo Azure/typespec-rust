@@ -9,7 +9,7 @@ use crate::generated::clients::{
     XmlModelWithEncodedNamesValueClient, XmlModelWithOptionalFieldValueClient,
     XmlModelWithRenamedArraysValueClient, XmlModelWithRenamedFieldsValueClient,
     XmlModelWithSimpleArraysValueClient, XmlModelWithTextValueClient,
-    XmlModelWithUnwrappedArrayValueClient, XmlSimpleModelValueClient,
+    XmlModelWithUnwrappedArrayValueClient, XmlSimpleModelValueClient, XmlXmlErrorValueClient,
 };
 use azure_core::{
     fmt::SafeDebug,
@@ -183,6 +183,15 @@ impl XmlClient {
     #[tracing::subclient]
     pub fn get_xml_simple_model_value_client(&self) -> XmlSimpleModelValueClient {
         XmlSimpleModelValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlXmlErrorValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_xml_error_value_client(&self) -> XmlXmlErrorValueClient {
+        XmlXmlErrorValueClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }

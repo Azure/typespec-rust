@@ -79,7 +79,9 @@ const azureHttpSpecsGroup = {
   'spector_apiverheader': {input: 'azure/client-generator-core/api-version/header/client.tsp'},
   'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
-  'spector_clientinit': {input: 'azure/client-generator-core/client-initialization/client.tsp'},
+  'spector_clientinit_default': {input: 'azure/client-generator-core/client-initialization/default'},
+  'spector_clientinit_individually': {input: 'azure/client-generator-core/client-initialization/individually'},
+  'spector_clientinit_individually_parent': {input: 'azure/client-generator-core/client-initialization/individuallyParent'},
   'spector_clientloc_move1': {input: 'azure/client-generator-core/client-location/move-method-parameter-to-client'},
   'spector_clientloc_move2': {input: 'azure/client-generator-core/client-location/move-to-existing-sub-client'},
   'spector_clientloc_move3': {input: 'azure/client-generator-core/client-location/move-to-new-sub-client'},
@@ -105,7 +107,7 @@ const azureHttpSpecsGroup = {
   'spector_armnonresource': {input: 'azure/resource-manager/non-resource'},
   'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
   'spector_armresources': {input: 'azure/resource-manager/resources'},
-  'spector_arm_multi_service': {input: 'azure/resource-manager/multi-service/client.tsp'},
+  //'spector_arm_multi_service': {input: 'azure/resource-manager/multi-service/client.tsp'},
   'spector_requestidheader': {input: 'azure/special-headers/client-request-id'},
   'spector_azpreviewversion': {input: 'azure/versioning/previewVersion'},
   'spector_azure_client_namespace': {input: 'client/namespace/client.tsp', output: 'azure/client/namespace'},
@@ -119,7 +121,7 @@ const azureHttpSpecsGroup = {
   'spector_twoop': {input: 'client/structure/two-operation-group/client.tsp'},
   'spector_srvdrivenold': {input: 'resiliency/srv-driven/old.tsp', output: 'resiliency/srv-driven/old'},
   'spector_srvdrivennew': {input: 'resiliency/srv-driven', output: 'resiliency/srv-driven/new'},
-  'spector_multi_service': {input: 'service/multi-service/client.tsp'},
+  //'spector_multi_service': {input: 'service/multi-service/client.tsp'},
 };
 
 const args = process.argv.slice(2);

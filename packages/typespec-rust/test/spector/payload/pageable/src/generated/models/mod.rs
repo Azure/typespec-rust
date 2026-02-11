@@ -8,6 +8,7 @@ mod method_options;
 #[allow(clippy::module_inception)]
 mod models;
 mod models_impl;
+mod xml_helpers;
 pub use header_traits::*;
 pub use method_options::*;
 pub use models::*;
