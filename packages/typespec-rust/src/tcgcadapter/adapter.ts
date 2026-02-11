@@ -774,19 +774,11 @@ export class Adapter {
       case 'plainDate':
       case 'plainTime':
       case 'string':
-      case 'url': {
+      case 'url':
         if (type.kind === 'string' && type.crossLanguageDefinitionId === 'Azure.Core.eTag') {
-          const etagKey = 'Etag';
-          let etagType = this.types.get(etagKey);
-          if (etagType) {
-            return etagType;
-          }
-          etagType = new rust.Etag(this.crate);
-          this.types.set(etagKey, etagType);
-          return etagType;
+          return this.getEtag();
         }
         return this.getStringType();
-      }
       case 'nullable':
         if (type.type.kind === 'model' && type.type.isGeneratedName) {
           // if the nullable type's target type is a synthesized
@@ -860,6 +852,18 @@ export class Adapter {
     encodedBytesType = new rust.EncodedBytes(encoding, asSlice);
     this.types.set(keyName, encodedBytesType);
     return encodedBytesType;
+  }
+
+  /** returns a Etag type */
+  private getEtag(): rust.Etag {
+    const etagKey = 'Etag';
+    let etagType = this.types.get(etagKey);
+    if (etagType) {
+      return <rust.Etag>etagType;
+    }
+    etagType = new rust.Etag(this.crate);
+    this.types.set(etagKey, etagType);
+    return etagType;
   }
 
   /** returns a HashMap<String, type> */
@@ -1876,7 +1880,8 @@ export class Adapter {
         }
         responseHeader = new rust.ResponseHeaderHashMap(utils.snakeCaseName(header.name), lowerCasedHeader);
       } else {
-        responseHeader = new rust.ResponseHeaderScalar(utils.snakeCaseName(header.name), utils.fixETagName(lowerCasedHeader), this.typeToWireType(this.getType(header.type)));
+        const headerType = lowerCasedHeader.match(/^etag$/) ? this.getEtag() : this.typeToWireType(this.getType(header.type));
+        responseHeader = new rust.ResponseHeaderScalar(utils.snakeCaseName(header.name), utils.fixETagName(lowerCasedHeader), headerType);
       }
 
       responseHeader.docs = this.adaptDocs(header.summary, header.doc);

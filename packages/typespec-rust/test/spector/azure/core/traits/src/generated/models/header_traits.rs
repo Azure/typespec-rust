@@ -7,7 +7,7 @@ use super::{RepeatabilityResult, User, UserActionResponse};
 use azure_core::{
     http::{
         headers::{HeaderName, Headers},
-        Response,
+        Etag, Response,
     },
     Result,
 };
@@ -68,7 +68,7 @@ impl UserActionResponseHeaders for Response<UserActionResponse> {
 /// ```
 pub trait UserHeaders: private::Sealed {
     fn bar(&self) -> Result<Option<String>>;
-    fn etag_header(&self) -> Result<Option<String>>;
+    fn etag_header(&self) -> Result<Option<Etag>>;
     fn client_request_id(&self) -> Result<Option<String>>;
 }
 
@@ -78,7 +78,7 @@ impl UserHeaders for Response<User> {
     }
 
     /// The entity tag for the response.
-    fn etag_header(&self) -> Result<Option<String>> {
+    fn etag_header(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 

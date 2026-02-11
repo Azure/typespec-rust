@@ -33,7 +33,7 @@ use azure_core::{
     base64,
     http::{
         headers::{HeaderName, Headers},
-        AsyncResponse, NoFormat, Response, XmlFormat,
+        AsyncResponse, Etag, NoFormat, Response, XmlFormat,
     },
     time::{parse_rfc7231, OffsetDateTime},
     Result,
@@ -137,7 +137,7 @@ const VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
 pub trait AppendBlobClientAppendBlockFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_append_offset(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
@@ -162,7 +162,7 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -236,7 +236,7 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
 pub trait AppendBlobClientAppendBlockResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_append_offset(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
@@ -262,7 +262,7 @@ impl AppendBlobClientAppendBlockResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -341,7 +341,7 @@ impl AppendBlobClientAppendBlockResultHeaders
 pub trait AppendBlobClientCreateResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -362,7 +362,7 @@ impl AppendBlobClientCreateResultHeaders for Response<AppendBlobClientCreateResu
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -423,7 +423,7 @@ impl AppendBlobClientCreateResultHeaders for Response<AppendBlobClientCreateResu
 /// ```
 pub trait AppendBlobClientSealResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn is_sealed(&self) -> Result<Option<bool>>;
 }
@@ -435,7 +435,7 @@ impl AppendBlobClientSealResultHeaders for Response<AppendBlobClientSealResult, 
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -505,7 +505,7 @@ impl BlobClientAbortCopyFromUrlResultHeaders
 /// ```
 pub trait BlobClientAcquireLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
@@ -517,7 +517,7 @@ impl BlobClientAcquireLeaseResultHeaders for Response<BlobClientAcquireLeaseResu
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -558,7 +558,7 @@ impl BlobClientAcquireLeaseResultHeaders for Response<BlobClientAcquireLeaseResu
 /// ```
 pub trait BlobClientBreakLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_time(&self) -> Result<Option<i32>>;
 }
@@ -570,7 +570,7 @@ impl BlobClientBreakLeaseResultHeaders for Response<BlobClientBreakLeaseResult, 
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -611,7 +611,7 @@ impl BlobClientBreakLeaseResultHeaders for Response<BlobClientBreakLeaseResult, 
 /// ```
 pub trait BlobClientChangeLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
@@ -623,7 +623,7 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -665,7 +665,7 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
 pub trait BlobClientCopyFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
     fn copy_id(&self) -> Result<Option<String>>;
@@ -687,7 +687,7 @@ impl BlobClientCopyFromUrlResultHeaders for Response<BlobClientCopyFromUrlResult
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -754,7 +754,7 @@ impl BlobClientCopyFromUrlResultHeaders for Response<BlobClientCopyFromUrlResult
 /// ```
 pub trait BlobClientCreateSnapshotResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn snapshot(&self) -> Result<Option<String>>;
@@ -768,7 +768,7 @@ impl BlobClientCreateSnapshotResultHeaders for Response<BlobClientCreateSnapshot
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -858,7 +858,7 @@ pub trait BlobClientDownloadResultHeaders: private::Sealed {
     fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn content_range(&self) -> Result<Option<String>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>>;
@@ -938,7 +938,7 @@ impl BlobClientDownloadResultHeaders for AsyncResponse<BlobClientDownloadResult>
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -1223,7 +1223,7 @@ pub trait BlobClientGetPropertiesResultHeaders: private::Sealed {
     fn content_language(&self) -> Result<Option<String>>;
     fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn tier(&self) -> Result<Option<AccessTier>>;
     fn access_tier_change_time(&self) -> Result<Option<OffsetDateTime>>;
@@ -1298,7 +1298,7 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -1558,7 +1558,7 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
 /// ```
 pub trait BlobClientReleaseLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
@@ -1569,7 +1569,7 @@ impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResu
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -1605,7 +1605,7 @@ impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResu
 /// ```
 pub trait BlobClientRenewLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
@@ -1617,7 +1617,7 @@ impl BlobClientRenewLeaseResultHeaders for Response<BlobClientRenewLeaseResult, 
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -1658,7 +1658,7 @@ impl BlobClientRenewLeaseResultHeaders for Response<BlobClientRenewLeaseResult, 
 /// ```
 pub trait BlobClientSetExpiryResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
@@ -1669,7 +1669,7 @@ impl BlobClientSetExpiryResultHeaders for Response<BlobClientSetExpiryResult, No
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -1817,7 +1817,7 @@ impl BlobClientSetTagsResultHeaders for Response<BlobClientSetTagsResult, NoForm
 /// ```
 pub trait BlobClientStartCopyFromUrlResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn copy_id(&self) -> Result<Option<String>>;
     fn copy_status(&self) -> Result<Option<CopyStatus>>;
@@ -1833,7 +1833,7 @@ impl BlobClientStartCopyFromUrlResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -1913,7 +1913,7 @@ impl BlobClientUndeleteResultHeaders for Response<BlobClientUndeleteResult, NoFo
 /// ```
 pub trait BlobContainerClientAcquireLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
@@ -1927,7 +1927,7 @@ impl BlobContainerClientAcquireLeaseResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -1968,7 +1968,7 @@ impl BlobContainerClientAcquireLeaseResultHeaders
 /// ```
 pub trait BlobContainerClientBreakLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn lease_time(&self) -> Result<Option<i32>>;
@@ -1983,7 +1983,7 @@ impl BlobContainerClientBreakLeaseResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2029,7 +2029,7 @@ impl BlobContainerClientBreakLeaseResultHeaders
 /// ```
 pub trait BlobContainerClientChangeLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
@@ -2043,7 +2043,7 @@ impl BlobContainerClientChangeLeaseResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2136,7 +2136,7 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 /// }
 /// ```
 pub trait BlobContainerClientGetPropertiesResultHeaders: private::Sealed {
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn access(&self) -> Result<Option<PublicAccessType>>;
     fn default_encryption_scope(&self) -> Result<Option<String>>;
@@ -2154,7 +2154,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     for Response<BlobContainerClientGetPropertiesResult, NoFormat>
 {
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2249,7 +2249,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 /// ```
 pub trait BlobContainerClientReleaseLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
@@ -2262,7 +2262,7 @@ impl BlobContainerClientReleaseLeaseResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2327,7 +2327,7 @@ impl BlobContainerClientRenameResultHeaders
 /// ```
 pub trait BlobContainerClientRenewLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn lease_id(&self) -> Result<Option<String>>;
 }
@@ -2341,7 +2341,7 @@ impl BlobContainerClientRenewLeaseResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2411,7 +2411,7 @@ impl BlobContainerClientRestoreResultHeaders
 /// ```
 pub trait BlobContainerClientSetAccessPolicyResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
 }
 
@@ -2424,7 +2424,7 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2540,7 +2540,7 @@ impl BlobTagsHeaders for Response<BlobTags, XmlFormat> {
 /// ```
 pub trait BlockBlobClientCommitBlockListResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
@@ -2559,7 +2559,7 @@ impl BlockBlobClientCommitBlockListResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2628,7 +2628,7 @@ impl BlockBlobClientCommitBlockListResultHeaders
 pub trait BlockBlobClientPutBlobFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -2651,7 +2651,7 @@ impl BlockBlobClientPutBlobFromUrlResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -2720,7 +2720,7 @@ pub trait BlockBlobClientQueryResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn content_range(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>>;
@@ -2794,7 +2794,7 @@ impl BlockBlobClientQueryResultHeaders for AsyncResponse<BlockBlobClientQueryRes
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3090,7 +3090,7 @@ impl BlockBlobClientStageBlockResultHeaders
 /// ```
 pub trait BlockBlobClientUploadResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -3106,7 +3106,7 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3166,14 +3166,14 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
 /// }
 /// ```
 pub trait BlockListHeaders: private::Sealed {
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_content_length(&self) -> Result<Option<u64>>;
 }
 
 impl BlockListHeaders for Response<BlockList, XmlFormat> {
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3286,7 +3286,7 @@ impl ListBlobsHierarchySegmentResponseHeaders
 pub trait PageBlobClientClearPagesResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
@@ -3305,7 +3305,7 @@ impl PageBlobClientClearPagesResultHeaders for Response<PageBlobClientClearPages
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3353,7 +3353,7 @@ impl PageBlobClientClearPagesResultHeaders for Response<PageBlobClientClearPages
 /// ```
 pub trait PageBlobClientCopyIncrementalResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn copy_id(&self) -> Result<Option<String>>;
     fn copy_status(&self) -> Result<Option<CopyStatus>>;
@@ -3368,7 +3368,7 @@ impl PageBlobClientCopyIncrementalResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3416,7 +3416,7 @@ impl PageBlobClientCopyIncrementalResultHeaders
 pub trait PageBlobClientCreateResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -3437,7 +3437,7 @@ impl PageBlobClientCreateResultHeaders for Response<PageBlobClientCreateResult, 
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3498,7 +3498,7 @@ impl PageBlobClientCreateResultHeaders for Response<PageBlobClientCreateResult, 
 /// ```
 pub trait PageBlobClientResizeResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
 }
@@ -3510,7 +3510,7 @@ impl PageBlobClientResizeResultHeaders for Response<PageBlobClientResizeResult, 
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3551,7 +3551,7 @@ impl PageBlobClientResizeResultHeaders for Response<PageBlobClientResizeResult, 
 /// ```
 pub trait PageBlobClientUpdateSequenceNumberResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
 }
@@ -3565,7 +3565,7 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3607,7 +3607,7 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
 pub trait PageBlobClientUploadPagesFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
@@ -3631,7 +3631,7 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3699,7 +3699,7 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
 pub trait PageBlobClientUploadPagesResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
@@ -3724,7 +3724,7 @@ impl PageBlobClientUploadPagesResultHeaders
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3777,7 +3777,7 @@ impl PageBlobClientUploadPagesResultHeaders
 /// * `PageBlobClient::get_page_ranges_diff()`
 pub trait PageListHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn blob_content_length(&self) -> Result<Option<u64>>;
 }
@@ -3789,7 +3789,7 @@ impl PageListHeaders for Response<PageList, XmlFormat> {
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 
@@ -3831,7 +3831,7 @@ impl PageListHeaders for Response<PageList, XmlFormat> {
 /// ```
 pub trait SignedIdentifiersHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn etag(&self) -> Result<Option<String>>;
+    fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
     fn access(&self) -> Result<Option<PublicAccessType>>;
 }
@@ -3843,7 +3843,7 @@ impl SignedIdentifiersHeaders for Response<SignedIdentifiers, XmlFormat> {
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
-    fn etag(&self) -> Result<Option<String>> {
+    fn etag(&self) -> Result<Option<Etag>> {
         Headers::get_optional_as(self.headers(), &ETAG)
     }
 

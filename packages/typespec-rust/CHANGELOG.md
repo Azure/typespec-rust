@@ -1,6 +1,10 @@
 # Release History
 
-## 0.34.1 (unreleased)
+## 0.35.0 (unreleased)
+
+### Breaking Changes
+
+* Fixed header response type for `etag` headers.
 
 ### Features Added
 

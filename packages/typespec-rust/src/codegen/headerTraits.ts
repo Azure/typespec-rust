@@ -223,6 +223,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
       const decoder = helpers.getBytesEncodingMethod(header.type.encoding, 'decode', use);
       return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| ${decoder}(h.as_str()))\n`;
     }
+    case 'Etag':
     case 'enum':
     case 'scalar':
     case 'String':
