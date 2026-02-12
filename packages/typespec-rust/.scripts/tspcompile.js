@@ -89,7 +89,7 @@ const azureHttpSpecsGroup = {
   'spector_emptystringasnone': {input: 'azure/client-generator-core/deserialize-empty-string-as-null'},
   'spector_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
   'spector_corenextlinkverb': {input: 'azure/client-generator-core/next-link-verb'},
-  //'spector_coreoverride': {input: 'azure/client-generator-core/override/client.tsp'},
+  'spector_coreoverride': {input: 'azure/client-generator-core/override/client.tsp'},
   'spector_coreusage': {input: 'azure/client-generator-core/usage'},
   'spector_basic': {input: 'azure/core/basic'},
   'spector_lrorpc': {input: 'azure/core/lro/rpc'},
