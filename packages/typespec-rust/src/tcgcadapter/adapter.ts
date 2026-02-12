@@ -1060,10 +1060,7 @@ export class Adapter {
   /** converts all tcgc clients and their methods into Rust clients/methods */
   private adaptClients(): void {
     for (const client of this.ctx.sdkPackage.clients) {
-      // start with instantiable clients and recursively work down
-      if (isInstantiableClient(client.clientInitialization.initializedBy)) {
-        this.recursiveAdaptClient(client);
-      }
+      this.recursiveAdaptClient(client);
     }
   }
 
@@ -1122,15 +1119,22 @@ export class Adapter {
     rustClient.parent = parent;
     rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'Pipeline', 'azure_core::http')));
 
-    if (isInstantiableClient(client.clientInitialization.initializedBy)) {
+    // InitializedByFlags.CustomizeCode means the client is instantiable
+    // but the constructor is to be omitted (i.e. hand-written).
+    if (client.clientInitialization.initializedBy === tcgc.InitializedByFlags.CustomizeCode || client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, 'pub');
       const clientOptionsField = new rust.StructField('client_options', 'pub', new rust.ExternalType(this.crate, 'ClientOptions', 'azure_core::http'));
       clientOptionsField.docs.summary = 'Allows customization of the client.';
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
-      rustClient.constructable.suppressed = this.options['omit-constructors'];
       clientOptionsStruct.docs.summary = `Options used when creating a ${this.asDocLink(rustClient.name, rustClient.name)}`;
+
+      if (this.options['omit-constructors']) {
+        rustClient.constructable.suppressed = 'yes';
+      } else if (client.clientInitialization.initializedBy === tcgc.InitializedByFlags.CustomizeCode) {
+        rustClient.constructable.suppressed = 'ctor';
+      }
 
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
@@ -2585,17 +2589,6 @@ function isHttpStatusCodeRange(statusCode: http.HttpStatusCodeRange | number): s
  */
 function adaptAccessFlags(access: tcgc.AccessFlags): rust.Visibility {
   return access === 'public' ? 'pub' : 'pubCrate';
-}
-
-/**
- * returns true if bit tcgc.InitializedByFlags.Individually is set
- * 
- * @param initializedBy the value to test
- * @returns true for instantiable clients
- */
-function isInstantiableClient(initializedBy: tcgc.InitializedByFlags): boolean {
-  // NOTE: tcgc.InitializedByFlags.Default has value -1 (i.e. all bits set)
-  return initializedBy !== tcgc.InitializedByFlags.Default && (initializedBy & tcgc.InitializedByFlags.Individually) !== 0;
 }
 
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;

@@ -6,6 +6,7 @@
 
 * Added support for `@clientOption` decorator on model fields to specify custom deserializers.
   * The format is `@@clientOption(ModelName.field, "deserialize_with", "path::to::deserializer_fn", "rust")`.
+* Added support for omitting client constructors via the `InitializedBy.customizeCode` setting.
 
 ### Other Changes
 
