@@ -52,3 +52,9 @@ op optionalFixed(@path shape: FixedShape, @path value?: FixedValues): NoContentR
 
 @route("/numeric/{value}")
 op numeric(@path value: NumericValues): NoContentResponse;
+
+@@clientInitialization(EnumPathParams,
+  {
+    initializedBy: InitializedBy.customizeCode,
+  }
+);

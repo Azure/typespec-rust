@@ -54,7 +54,7 @@ export function emitGeneratedModRs(crate: rust.Crate): string {
         clientsAndClientOptions.push(client.name);
 
         // skip emitting the client options type (we always want to emit the client type)
-        if (!client.constructable.suppressed) {
+        if (client.constructable.suppressed !== 'yes') {
           clientsAndClientOptions.push(client.constructable.options.type.name);
         }
       }

@@ -37,7 +37,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   const clientOptionsImplDefault = function (constructable: rust.ClientConstruction): boolean {
     // only implement Default when there's more than one field (i.e. more than just client_options)
     // and the field(s) contain a client default value.
-    if (constructable.suppressed) {
+    if (constructable.suppressed === 'yes') {
       return false;
     }
     const optionsType = constructable.options.type;
@@ -63,7 +63,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     }
     body += '}\n\n'; // end client
 
-    if (client.constructable && !client.constructable.suppressed) {
+    if (client.constructable && client.constructable.suppressed !== 'yes') {
       // if client options doesn't require an impl for Default then just derive it
       let deriveDefault = 'Default, ';
       if (clientOptionsImplDefault(client.constructable)) {
@@ -88,7 +88,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
     body += `impl ${client.name} {\n`;
 
-    if (client.constructable && !client.constructable.suppressed) {
+    if (client.constructable && client.constructable.suppressed === 'no') {
       // this is an instantiable client, so we need to emit client options and constructors
       use.add('azure_core', 'Result');
 

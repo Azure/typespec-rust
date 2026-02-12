@@ -31,38 +31,6 @@ pub struct EnumPathParamsClientOptions {
 }
 
 impl EnumPathParamsClient {
-    /// Creates a new EnumPathParamsClient requiring no authentication.
-    ///
-    /// # Arguments
-    ///
-    /// * `bogus_url` - Service host
-    /// * `options` - Optional configuration for the client.
-    #[tracing::new("EnumPathParams")]
-    pub fn with_no_credential(
-        bogus_url: &str,
-        options: Option<EnumPathParamsClientOptions>,
-    ) -> Result<Self> {
-        let options = options.unwrap_or_default();
-        let bogus_url = Url::parse(bogus_url)?;
-        if !bogus_url.scheme().starts_with("http") {
-            return Err(azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{bogus_url} must use http(s)"),
-            ));
-        }
-        Ok(Self {
-            bogus_url,
-            pipeline: Pipeline::new(
-                option_env!("CARGO_PKG_NAME"),
-                option_env!("CARGO_PKG_VERSION"),
-                options.client_options,
-                Vec::default(),
-                Vec::default(),
-                None,
-            ),
-        })
-    }
-
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
         &self.bogus_url

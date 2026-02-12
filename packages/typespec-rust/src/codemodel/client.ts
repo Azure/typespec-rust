@@ -62,10 +62,12 @@ export interface ClientConstruction {
   endpoint?: SupplementalEndpoint;
 
   /**
-   * indicates that any constructors and client options type be omitted.
-   * set via the omit-constructors switch (default is false).
+   * indicates that any constructors and possibly client options type be omitted.
+   *    no - don't suppress any content (this is the default)
+   *  ctor - suppress all constructors (set via @@clientInitialization decorator)
+   *   yes - suppress all constructors and client options (set via the omit-constructors switch)
    */
-  suppressed: boolean;
+  suppressed: 'no' | 'ctor' | 'yes';
 }
 
 /** ClientOptions is the struct containing optional client params */
@@ -682,7 +684,7 @@ export class ClientConstruction implements ClientConstruction {
   constructor(options: ClientOptions) {
     this.options = options;
     this.constructors = new Array<Constructor>();
-    this.suppressed = false;
+    this.suppressed = 'no';
   }
 }
 
