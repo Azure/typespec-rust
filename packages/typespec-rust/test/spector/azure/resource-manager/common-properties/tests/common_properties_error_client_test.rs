@@ -2,48 +2,10 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
+mod common;
+
 use azure_core::http::StatusCode;
-use azure_core::time::OffsetDateTime;
-use azure_core::Result;
 use spector_armcommon::models::{ConfidentialResource, ConfidentialResourceProperties};
-use spector_armcommon::CommonPropertiesClient;
-use std::sync::Arc;
-
-#[derive(Debug)]
-struct FakeTokenCredential {
-    pub token: String,
-}
-
-impl FakeTokenCredential {
-    pub fn new(token: String) -> Self {
-        FakeTokenCredential { token }
-    }
-}
-
-#[async_trait::async_trait]
-impl TokenCredential for FakeTokenCredential {
-    async fn get_token(
-        &self,
-        _scopes: &[&str],
-        _options: Option<TokenRequestOptions<'_>>,
-    ) -> Result<AccessToken> {
-        Ok(AccessToken::new(
-            self.token.clone(),
-            OffsetDateTime::now_utc(),
-        ))
-    }
-}
-
-fn create_client() -> CommonPropertiesClient {
-    CommonPropertiesClient::new(
-        "http://localhost:3000",
-        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
-        "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
-    )
-    .unwrap()
-}
 
 #[tokio::test]
 async fn create_for_user_defined_error() {
@@ -56,7 +18,7 @@ async fn create_for_user_defined_error() {
         ..Default::default()
     };
 
-    let client = create_client();
+    let client = common::create_client();
     let rsp = client
         .get_common_properties_error_client()
         .create_for_user_defined_error("test-rg", "resource", resource.try_into().unwrap(), None)
@@ -67,7 +29,7 @@ async fn create_for_user_defined_error() {
 
 #[tokio::test]
 async fn get_for_predefined_error() {
-    let client = create_client();
+    let client = common::create_client();
     let rsp = client
         .get_common_properties_error_client()
         .get_for_predefined_error("test-rg", "resource", None)
