@@ -5,7 +5,6 @@
 mod common;
 
 use azure_core::http::StatusCode;
-use azure_core::Error;
 use spector_armcommon::models::{ConfidentialResource, ConfidentialResourceProperties};
 
 #[tokio::test]
