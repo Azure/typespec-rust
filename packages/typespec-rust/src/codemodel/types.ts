@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Crate, CrateDependency } from './crate.js';
+import { Crate, CrateDependency, ModuleContainer } from './crate.js';
 import { ModelFieldCustomizations } from './customizations.js';
 
 /** Docs contains the values used in doc comment generation. */
@@ -113,6 +113,9 @@ export interface Enum {
 
   /** the underlying type of the enum */
   type: EnumType;
+
+  /** the module to which this enum belongs */
+  module: ModuleContainer;
 }
 
 /** EnumValue is an enum value for a specific Enum */
@@ -153,6 +156,9 @@ export interface DiscriminatedUnion {
 
   /** the kind of discriminated union */
   unionKind?: DiscriminatedUnionKind;
+
+  /** the module to which this discriminated union belongs */
+  module: ModuleContainer;
 }
 
 /** DiscriminatedUnionKind contains the kinds of discriminated unions */
@@ -278,6 +284,9 @@ export interface Model extends StructBase {
 
   /** the flags set for this model */
   flags: ModelFlags;
+
+  /** the module to which this model belongs */
+  module: ModuleContainer;
 
   /**
    * the name of the type over the wire if it's
@@ -752,13 +761,14 @@ export class EncodedBytes implements EncodedBytes {
 }
 
 export class Enum implements Enum {
-  constructor(name: string, visibility: Visibility, extensible: boolean, type: EnumType) {
+  constructor(name: string, visibility: Visibility, extensible: boolean, type: EnumType, module: ModuleContainer) {
     this.kind = 'enum';
     this.name = name;
     this.visibility = visibility;
     this.values = new Array<EnumValue>();
     this.extensible = extensible;
     this.type = type;
+    this.module = module;
     this.docs = {};
   }
 }
@@ -834,12 +844,13 @@ export class MarkerType implements MarkerType {
 }
 
 export class DiscriminatedUnion implements DiscriminatedUnion {
-  constructor(name: string, visibility: Visibility, discriminant: string) {
+  constructor(name: string, visibility: Visibility, discriminant: string, module: ModuleContainer) {
     this.kind = 'discriminatedUnion';
     this.name = name;
     this.visibility = visibility;
     this.members = new Array<DiscriminatedUnionMember>();
     this.discriminant = discriminant;
+    this.module = module;
     this.docs = {};
   }
 }
@@ -874,10 +885,11 @@ export class DiscriminatedUnionSealed implements DiscriminatedUnionSealed {
 }
 
 export class Model extends StructBase implements Model {
-  constructor(name: string, visibility: Visibility, flags: ModelFlags) {
+  constructor(name: string, visibility: Visibility, flags: ModelFlags, module: ModuleContainer) {
     super('model', name, visibility);
     this.fields = new Array<ModelFieldType>();
     this.flags = flags;
+    this.module = module;
   }
 }
 

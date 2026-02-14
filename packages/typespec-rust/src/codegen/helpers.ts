@@ -666,3 +666,17 @@ export function isQueryParameter(param: rust.MethodParameter): param is rust.Que
       return false;
   }
 }
+
+/**
+ * returns the containing crate for a module.
+ * 
+ * @param module the module
+ * @returns the containing crate
+ */
+export function getCrate(module: rust.ModuleContainer): rust.Crate {
+  let cur = module;
+  while (cur.kind !== 'crate') {
+    cur = cur.parent;
+  }
+  return cur;
+}

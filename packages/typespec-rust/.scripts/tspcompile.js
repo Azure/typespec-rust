@@ -253,7 +253,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       const maxRmRetries = 4;
       const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
       for (let attempt = 0; attempt < maxRmRetries; ++attempt) {
-        const rmPath = path.join(fullOutputDir, 'src', 'generated')
+        const rmPath = path.join(fullOutputDir, 'src', 'generated');
         try {
           fs.rmSync(rmPath, { force: true, recursive: true });
           break;
