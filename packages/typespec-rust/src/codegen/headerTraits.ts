@@ -15,13 +15,13 @@ import * as utils from '../utils/utils.js';
  * are no header traits.
  * the header traits provide access to typed response headers
  * 
- * @param crate the crate for which to emit header traits
+ * @param module the module for which to emit header traits
  * @returns the header traits content or undefined
  */
-export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined {
+export function emitHeaderTraits(module: rust.ModuleContainer): helpers.Module | undefined {
   const srcTraits = new Map<string, Array<rust.ResponseHeadersTrait>>();
 
-  for (const client of crate.clients) {
+  for (const client of module.clients) {
     for (const method of client.methods) {
       if (method.kind === 'clientaccessor') {
         continue;
@@ -119,7 +119,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     return `fn ${header.name}(&self) -> Result<${resultType}>`;
   };
 
-  const use = new Use('modelsOther');
+  const use = new Use(module, 'modelsOther');
   use.add('azure_core', 'Result');
   use.add('azure_core::http', 'headers::HeaderName', 'Response');
 
@@ -147,7 +147,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += `///\n`;
       body += `/// # Examples\n`;
       body += `///\n`;
-      body += emitHeaderTraitDocExample(crate.name, trait);
+      body += emitHeaderTraitDocExample(helpers.getCrate(module).name, trait);
     }
     body += `${helpers.emitVisibility(trait.visibility)}trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {
@@ -170,7 +170,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   let content = helpers.contentPreamble();
   content += use.text();
   content += body;
-  content += getSealedImpls(traits);
+  content += getSealedImpls(module, traits);
 
   return {
     name: 'header_traits',
@@ -241,13 +241,14 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
 /**
  * returns the mod private {...} section used to seal the header traits.
  * 
+ * @param module the module being processed
  * @param traitDefs the trait definitions to seal
  * @returns the private mod definition
  */
-function getSealedImpls(traitDefs: Array<rust.ResponseHeadersTrait>): string {
+function getSealedImpls(module: rust.ModuleContainer, traitDefs: Array<rust.ResponseHeadersTrait>): string {
   // we set nestedModAssumesTypesInParentScope to true as all of the types
   // required in this mod are already in scope within our parent mod.
-  const use = new Use('modelsOther');
+  const use = new Use(module, 'modelsOther');
   const indent = new helpers.indentation();
   use.add('azure_core::http', 'Response');
 

@@ -11,7 +11,7 @@ import { Adapter, AdapterError, ExternalError } from './tcgcadapter/adapter.js';
 import { reportDiagnostic, RustEmitterOptions } from './lib.js';
 import { execSync } from 'child_process';
 import { existsSync, rmSync } from 'fs';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, readdir, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { EmitContext, NoTarget } from '@typespec/compiler';
 import 'source-map-support/register.js';
@@ -26,12 +26,12 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   try {
     const adapter = await Adapter.create(context);
     const crate = adapter.tcgcToCrate();
-
-    await mkdir(`${context.emitterOutputDir}/src`, { recursive: true });
-
     const codegen = new CodeGenerator(crate);
 
-    const libRsPath = `${context.emitterOutputDir}/src/lib.rs`;
+    const srcDir = path.join(context.emitterOutputDir, 'src');
+    await mkdir(srcDir, { recursive: true });
+
+    const libRsPath = path.join(srcDir, 'lib.rs');
     if (existsSync(libRsPath) && context.options['overwrite-lib-rs'] !== true) {
       context.program.reportDiagnostic({
         code: 'FileAlreadyExists',
@@ -43,10 +43,18 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
       await writeFile(libRsPath, codegen.emitLibRs());
     }
 
+    // remove all directories under src
+    const srcEntries = await readdir(srcDir, { withFileTypes: true });
+    for (const entry of srcEntries) {
+      if (!entry.isDirectory()) {
+        continue;
+      }
+      rmSync(path.join(srcDir, entry.name), { force: true, recursive: true });
+    }
+
     const files = codegen.emitContent();
-    rmSync(path.join(context.emitterOutputDir, 'src', 'generated'), { force: true, recursive: true });
     for (const file of files) {
-      await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
+      await writeToCrateDir(context.emitterOutputDir, file.name, file.content);
     }
 
     // NOTE: To allow the generated code to add cargo dependencies as needed (by calling crate.addDependency()),
@@ -56,7 +64,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     // don't overwrite an existing Cargo.toml file by default
     // TODO: consider merging existing dependencies with emitted dependencies when overwriting
     // https://github.com/Azure/typespec-rust/issues/22
-    const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
+    const cargoTomlPath = path.join(context.emitterOutputDir, 'Cargo.toml');
     if (existsSync(cargoTomlPath) && context.options['overwrite-cargo-toml'] !== true) {
       context.program.reportDiagnostic({
         code: 'FileAlreadyExists',
@@ -138,8 +146,8 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
  * @param filename the name of the file to write. can contain sub-directories
  * @param content the contents of the file
  */
-async function writeToGeneratedDir(outDir: string, filename: string, content: string): Promise<void> {
-  const fullFilePath = path.join(outDir, 'src', 'generated', filename);
+async function writeToCrateDir(outDir: string, filename: string, content: string): Promise<void> {
+  const fullFilePath = path.join(outDir, 'src', filename);
   const fullDirPath = fullFilePath.substring(0, fullFilePath.lastIndexOf(path.sep));
   await mkdir(fullDirPath, { recursive: true });
   await writeFile(fullFilePath, content);

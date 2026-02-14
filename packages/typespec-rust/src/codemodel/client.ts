@@ -3,6 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { ModuleContainer } from './crate.js';
 import * as method from './method.js';
 import * as types from './types.js';
 
@@ -42,6 +43,9 @@ export interface Client {
 
   /** all the methods for this client */
   methods: Array<MethodType>;
+
+  /** the module to which this client belongs */
+  module: ModuleContainer;
 
   /** the parent client in a hierarchical client */
   parent?: Client;
@@ -662,11 +666,12 @@ export class BodyParameter extends HTTPParameterBase implements BodyParameter {
 }
 
 export class Client implements Client {
-  constructor(name: string) {
+  constructor(name: string, module: ModuleContainer) {
     this.kind = 'client';
     this.name = name;
     this.fields = new Array<types.StructField>();
     this.methods = new Array<MethodType>();
+    this.module = module;
     this.docs = {};
   }
 }

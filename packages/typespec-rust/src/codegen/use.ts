@@ -9,19 +9,22 @@ import * as rust from '../codemodel/index.js';
 
 /** used to generate use statements */
 export class Use {
+  private readonly module: rust.ModuleContainer;
   private readonly trees: Array<useTree>;
   private readonly scope: 'clients' | 'models' | 'modelsOther';
 
   /**
    * instantiates a new instance of the Use type
    * 
+   * @param module the module that contains the files in scope
    * @param scope indicates a scope in which use statements are constructed.
    * this is only applicable when constructing the path to generated types.
    *      clients - we're in generated/clients
    *       models - we're in generated/models/models.rs
    *  modelsOther - we're in generated/models but not models.rs
    */
-  constructor(scope: 'clients' | 'models' | 'modelsOther') {
+  constructor(module: rust.ModuleContainer, scope: 'clients' | 'models' | 'modelsOther') {
+    this.module = module;
     this.trees = new Array<useTree>();
     this.scope = scope;
   }
@@ -70,12 +73,16 @@ export class Use {
         return this.addForType(type.type);
       case 'client': {
         // client type are only referenced from other things in generated/clients so we ignore any scope
-        this.add('crate::generated::clients', type.name);
+        this.add(`${buildImportPath(this.module, type.module)}::clients`, type.name);
         break;
       }
       case 'discriminatedUnion':
       case 'enum':
-        this.add(this.scope === 'clients' ? 'crate::generated::models' : 'super', type.name);
+        if (this.scope === 'clients' || this.module !== type.module) {
+          this.add(`${buildImportPath(this.module, type.module)}::models`, type.name);
+        } else {
+          this.add('super', type.name);
+        }
         break;
       case 'enumValue':
         this.addForType(type.type);
@@ -83,7 +90,8 @@ export class Use {
       case 'marker':
         switch (this.scope) {
           case 'clients':
-            this.add('crate::generated::models', type.name);
+            // marker types are always in the same module as their client method
+            this.add(`${buildImportPath(this.module, this.module)}::models`, type.name);
             break;
           case 'modelsOther':
             this.add('super', type.name);
@@ -95,16 +103,10 @@ export class Use {
         }
         break;
       case 'model':
-        switch (this.scope) {
-          case 'clients':
-            this.add('crate::generated::models', type.name);
-            break;
-          case 'models':
-            // we're in models so no need to bring another model into scope
-            break;
-          case 'modelsOther':
-            this.add('super', type.name);
-            break;
+        if (this.scope === 'clients' || this.module !== type.module) {
+          this.add(`${buildImportPath(this.module, type.module)}::models`, type.name);
+        } else if (this.scope === 'modelsOther') {
+          this.add('super', type.name);
         }
         break;
       case 'asyncResponse':
@@ -149,7 +151,8 @@ export class Use {
       case 'responseHeadersTrait':
         switch (this.scope) {
           case 'clients':
-            this.add(`crate::generated::models`, type.name);
+            // header response traits are always in the same module as their client method
+            this.add(`${buildImportPath(this.module, this.module)}::models`, type.name);
             break;
           case 'models':
           case 'modelsOther':
@@ -213,6 +216,30 @@ export class Use {
 
     content += '\n';
     return content;
+  }
+}
+
+/**
+ * builds the complete import path based on src and dst.
+ * 
+ * @param dst the module where the import statement will be used
+ * @param src the module that contains the type being referenced
+ * @returns the fully qualified import path
+ */
+export function buildImportPath(dst: rust.ModuleContainer, src: rust.ModuleContainer): string {
+  const chunks = new Array<string>();
+  let cur = src;
+  while (cur.kind === 'module') {
+    chunks.unshift(cur.name);
+    cur = cur.parent;
+  }
+  chunks.unshift('crate');
+  const path = chunks.join('::');
+
+  if (dst === src) {
+    return `${path}::generated`;
+  } else {
+    return path;
   }
 }
 

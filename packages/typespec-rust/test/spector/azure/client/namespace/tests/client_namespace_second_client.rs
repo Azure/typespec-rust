@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-//
-// Licensed under the MIT License. See License.txt in the project root for license information.
+// Licensed under the MIT License.
 
-use spector_azure_client_namespace::ClientNamespaceSecondClient;
+use spector_azure_client_namespace::second::sub::models::SecondClientEnumType;
+use spector_azure_client_namespace::second::ClientNamespaceSecondClient;
 
 #[tokio::test]
 async fn client_namespace_second() {
@@ -10,8 +10,5 @@ async fn client_namespace_second() {
         ClientNamespaceSecondClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.get_second(None).await.unwrap();
     let result = resp.into_model().unwrap();
-    assert_eq!(
-        result.type_prop,
-        Some(spector_azure_client_namespace::models::SecondClientEnumType::Second)
-    );
+    assert_eq!(result.type_prop, Some(SecondClientEnumType::Second));
 }
