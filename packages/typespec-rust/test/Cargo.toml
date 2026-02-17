@@ -16,6 +16,7 @@ members = [
     "spector/authentication/http/custom",
     "spector/authentication/oauth2",
     "spector/authentication/union",
+    "spector/azure/client-generator-core/access",
     "spector/azure/client-generator-core/api-version/header",
     "spector/azure/client-generator-core/api-version/path",
     "spector/azure/client-generator-core/api-version/query",
