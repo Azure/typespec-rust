@@ -5,7 +5,7 @@
 
 use azure_core::fmt::SafeDebug;
 use geojson::Feature;
-use serde::{Deserialize, Serialize, };
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Geometry {
@@ -14,7 +14,6 @@ pub struct Geometry {
 
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
-
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
@@ -24,6 +23,4 @@ pub struct ModelWithFeatureProperty {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub feature: Option<Feature>,
-
 }
-

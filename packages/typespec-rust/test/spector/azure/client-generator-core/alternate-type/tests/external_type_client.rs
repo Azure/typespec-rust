@@ -18,7 +18,10 @@ fn create_feature() -> Feature {
         "category".to_string(),
         serde_json::Value::String("landmark".to_string()),
     );
-    properties.insert("elevation".to_string(), serde_json::Value::Number(100.into()));
+    properties.insert(
+        "elevation".to_string(),
+        serde_json::Value::Number(100.into()),
+    );
 
     Feature {
         bbox: None,
@@ -39,7 +42,10 @@ async fn get_model() {
         .unwrap();
     let feature: Feature = resp.into_model().unwrap();
     assert!(feature.geometry.is_some());
-    assert_eq!(feature.id, Some(geojson::feature::Id::String("feature-1".to_string())));
+    assert_eq!(
+        feature.id,
+        Some(geojson::feature::Id::String("feature-1".to_string()))
+    );
 }
 
 #[tokio::test]
