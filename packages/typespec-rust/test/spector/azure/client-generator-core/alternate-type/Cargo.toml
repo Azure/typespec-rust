@@ -14,3 +14,7 @@ default = ["azure_core/default"]
 azure_core = { workspace = true }
 geojson = { workspace = true }
 serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

@@ -19,6 +19,7 @@ members = [
     "spector/azure/client-generator-core/api-version/header",
     "spector/azure/client-generator-core/api-version/path",
     "spector/azure/client-generator-core/api-version/query",
+    "spector/azure/client-generator-core/alternate-type",
     "spector/azure/client-generator-core/client-initialization/default",
     "spector/azure/client-generator-core/client-initialization/individually",
     "spector/azure/client-generator-core/client-initialization/individuallyParent",
@@ -117,6 +118,7 @@ azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "6
 ] }
 bytes = "1.11.1"
 futures = "0.3.31"
+geojson = "0.24.1"
 rust_decimal = "1.37.2"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.142"
