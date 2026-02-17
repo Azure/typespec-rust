@@ -150,7 +150,7 @@ export class Adapter {
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
       if (!sdkUnion.discriminatedOptions) {
         // Skip unions without discriminated options. These are non-discriminated unions
-        // which are not currently supported. This can happen when a union is part of 
+        // which are not currently supported. This can happen when a union is part of
         // an external type that will be replaced, so we skip it rather than failing.
         continue;
       }
