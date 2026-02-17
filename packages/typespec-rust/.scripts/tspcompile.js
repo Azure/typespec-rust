@@ -190,6 +190,9 @@ generate('pub_crate', pub_crate, 'test/other/pub_crate');
 const client_option = pkgRoot + 'test/tsp/ClientOption';
 generate('client_option', client_option, 'test/other/client_option');
 
+const spector_alternatetype = pkgRoot + 'test/spector/azure/client-generator-core/alternate-type/client.tsp';
+generate('spector_alternatetype', spector_alternatetype, 'test/spector/azure/client-generator-core/alternate-type');
+
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
 
