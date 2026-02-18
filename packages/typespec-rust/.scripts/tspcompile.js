@@ -75,7 +75,7 @@ const httpSpecsGroup = {
 };
 
 const azureHttpSpecsGroup = {
-  //'spector_access': {input: 'azure/client-generator-core/access'},
+  'spector_access': {input: 'azure/client-generator-core/access'},
   'spector_apiverheader': {input: 'azure/client-generator-core/api-version/header/client.tsp'},
   'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},

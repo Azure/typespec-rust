@@ -1465,6 +1465,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_access"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_apikey"
 version = "0.1.0"
 dependencies = [
