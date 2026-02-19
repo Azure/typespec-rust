@@ -150,6 +150,7 @@ export class Adapter {
   private adaptTypes(context: EmitContext<RustEmitterOptions>): void {
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
       if (!sdkUnion.discriminatedOptions) {
+        // When https://github.com/microsoft/typespec/issues/9749 is fixed, we can return to throwing an exception here.
         context.program.reportDiagnostic({
           code: 'UnsupportedTsp',
           severity: 'warning',

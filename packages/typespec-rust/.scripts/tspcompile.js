@@ -154,6 +154,9 @@ function should_generate(name) {
   return true
 }
 
+// When https://github.com/Azure/typespec-azure/pull/3950 is merged, and we use the newer version of @azure-tools/azure-http-specs,
+// we can remove alternate_types from below, add it to azureHttpSpecsGroup above, and remove the checked-in tsp files
+// from packages\typespec-rust\test\spector\azure\client-generator-core\alternate-type\.
 const alternate_types = pkgRoot + 'test/tsp/AlternateTypes';
 generate('alternate_types', alternate_types, 'test/other/alternate_types');
 

@@ -53,6 +53,7 @@ using Azure.ClientGenerator.Core;
   "rust"
 );
 
+// When https://github.com/microsoft/typespec/issues/9749 is fixed, the statement below is no longer needed.
 @@alternateType(_Specs_.Azure.ClientGenerator.Core.AlternateType.ExternalType.Geometry,
   {
     identity: "geojson::Geometry",
