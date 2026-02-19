@@ -25,7 +25,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   let failed = false;
   try {
     const adapter = await Adapter.create(context);
-    const crate = adapter.tcgcToCrate();
+    const crate = adapter.tcgcToCrate(context);
 
     await mkdir(`${context.emitterOutputDir}/src`, { recursive: true });
 
