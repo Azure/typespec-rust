@@ -8,15 +8,6 @@ use geojson::Feature;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct Geometry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub coordinates: Option<Vec<f64>>,
-
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
-    pub type_prop: Option<String>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithFeatureProperty {
     #[serde(rename = "additionalProperty", skip_serializing_if = "Option::is_none")]
     pub additional_property: Option<String>,

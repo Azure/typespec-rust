@@ -44,12 +44,20 @@ using Azure.ClientGenerator.Core;
   "typescript"
 );
 
-// Add Rust-specific alternate type decorator
 @@alternateType(_Specs_.Azure.ClientGenerator.Core.AlternateType.ExternalType.Feature,
   {
     identity: "geojson::Feature",
     package: "geojson",
-    minVersion: "0.24.0",
+    minVersion: "0.24.2",
+  },
+  "rust"
+);
+
+@@alternateType(_Specs_.Azure.ClientGenerator.Core.AlternateType.ExternalType.Geometry,
+  {
+    identity: "geojson::Geometry",
+    package: "geojson",
+    minVersion: "0.24.2",
   },
   "rust"
 );

@@ -14,6 +14,7 @@ import * as utils from '../utils/utils.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
 import {FinalStateValue} from "@azure-tools/typespec-azure-core";
+import {EmitContext, NoTarget} from "@typespec/compiler";
 
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
@@ -114,8 +115,8 @@ export class Adapter {
   }
 
   /** performs all the steps to convert tcgc to a crate */
-  tcgcToCrate(): rust.Crate {
-    this.adaptTypes();
+  tcgcToCrate(context: EmitContext<RustEmitterOptions>): rust.Crate {
+    this.adaptTypes(context);
     this.adaptClients();
 
     // marker models don't require serde so exclude them from the check
@@ -146,12 +147,15 @@ export class Adapter {
   }
 
   /** converts all tcgc types to their Rust type equivalent */
-  private adaptTypes(): void {
+  private adaptTypes(context: EmitContext<RustEmitterOptions>): void {
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
       if (!sdkUnion.discriminatedOptions) {
-        // Skip unions without discriminated options. These are non-discriminated unions
-        // which are not currently supported. This can happen when a union is part of
-        // an external type that will be replaced, so we skip it rather than failing.
+        context.program.reportDiagnostic({
+          code: 'UnsupportedTsp',
+          severity: 'warning',
+          message: `Non-discriminated unions ('${sdkUnion.name}') are not supported. No type will be generated.`,
+          target: NoTarget,
+        })
         continue;
       }
       const rustUnion = this.getDiscriminatedUnion(sdkUnion);
@@ -759,9 +763,6 @@ export class Adapter {
       case 'uint64':
       case 'uint8':
         return this.getScalar(type.kind, type.encode);
-      case 'numeric':
-        // numeric is a base type for all numeric types, treat it as float64
-        return this.getScalar('float64', type.encode);
       case 'enum':
         if (type.external) {
           return this.getExternalType(type.external);
@@ -828,10 +829,7 @@ export class Adapter {
       }
       case 'union': {
         if (!type.discriminatedOptions) {
-          // Non-discriminated unions are not supported. However, if this union is part
-          // of an external type that will be replaced, we should not fail here.
-          // Return a placeholder scalar type to allow compilation to continue.
-          return this.getStringType();
+          throw new AdapterError('UnsupportedTsp', 'non-discriminated unions are not supported', type.__raw?.node);
         }
         return this.getDiscriminatedUnion(type);
       }
