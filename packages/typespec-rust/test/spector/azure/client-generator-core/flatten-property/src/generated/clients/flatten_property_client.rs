@@ -5,7 +5,10 @@
 
 use crate::generated::models::{
     FlattenModel, FlattenPropertyClientPutFlattenModelOptions,
-    FlattenPropertyClientPutNestedFlattenModelOptions, NestedFlattenModel,
+    FlattenPropertyClientPutFlattenReadOnlyModelOptions,
+    FlattenPropertyClientPutFlattenUnknownModelOptions,
+    FlattenPropertyClientPutNestedFlattenModelOptions, FlattenUnknownModel, NestedFlattenModel,
+    Solution,
 };
 use azure_core::{
     error::CheckSuccessOptions,
@@ -83,6 +86,78 @@ impl FlattenPropertyClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/azure/client-generator-core/flatten-property/flattenModel");
+        let mut request = Request::new(url, Method::Put);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(input);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.FlattenProperty.putFlattenReadOnlyModel"
+    )]
+    pub async fn put_flatten_read_only_model(
+        &self,
+        body: RequestContent<Solution>,
+        options: Option<FlattenPropertyClientPutFlattenReadOnlyModelOptions<'_>>,
+    ) -> Result<Response<Solution>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/azure/client-generator-core/flatten-property/flattenReadOnlyModel");
+        let mut request = Request::new(url, Method::Put);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.FlattenProperty.putFlattenUnknownModel"
+    )]
+    pub async fn put_flatten_unknown_model(
+        &self,
+        input: RequestContent<FlattenUnknownModel>,
+        options: Option<FlattenPropertyClientPutFlattenUnknownModelOptions<'_>>,
+    ) -> Result<Response<FlattenUnknownModel>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/azure/client-generator-core/flatten-property/flattenUnknownModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

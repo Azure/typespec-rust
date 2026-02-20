@@ -33,6 +33,20 @@ pub struct XmlModelWithAttributesValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithDatetimeValueClient::get()`](crate::generated::clients::XmlModelWithDatetimeValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithDatetimeValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithDatetimeValueClient::put()`](crate::generated::clients::XmlModelWithDatetimeValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithDatetimeValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`XmlModelWithDictionaryValueClient::get()`](crate::generated::clients::XmlModelWithDictionaryValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithDictionaryValueClientGetOptions<'a> {
@@ -71,6 +85,20 @@ pub struct XmlModelWithEncodedNamesValueClientGetOptions<'a> {
 /// Options to be passed to [`XmlModelWithEncodedNamesValueClient::put()`](crate::generated::clients::XmlModelWithEncodedNamesValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithEncodedNamesValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithEnumValueClient::get()`](crate::generated::clients::XmlModelWithEnumValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithEnumValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithEnumValueClient::put()`](crate::generated::clients::XmlModelWithEnumValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithEnumValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

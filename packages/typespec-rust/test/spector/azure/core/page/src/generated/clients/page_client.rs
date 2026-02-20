@@ -8,7 +8,8 @@ use crate::generated::{
     models::{
         ListItemInputBody, PageClientListWithCustomPageModelOptions, PageClientListWithPageOptions,
         PageClientListWithParameterizedNextLinkOptions, PageClientListWithParametersOptions,
-        PagedUser, ParameterizedNextLinkPagingResult, UserListResults,
+        PageClientListWithRelativeNextLinkOptions, PagedUser, ParameterizedNextLinkPagingResult,
+        UserListResults,
     },
 };
 use azure_core::{
@@ -118,29 +119,40 @@ impl PageClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let res: UserListResults = json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.next_link {
-                        Some(next_link) if !next_link.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: PagerContinuation::Link(next_link.parse()?),
-                        },
-                        _ => PagerResult::Done { response: rsp },
-                    })
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: UserListResults = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next_link {
+                            Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    if let Ok(next_link) = next_link.parse() {
+                                        next_link
+                                    } else {
+                                        let mut url = first_url.clone();
+                                        url.set_path(next_link.as_ref());
+                                        url
+                                    },
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
                 })
             },
             Some(options.method_options),
@@ -180,29 +192,40 @@ impl PageClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let res: PagedUser = json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.next_link {
-                        Some(next_link) if !next_link.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: PagerContinuation::Link(next_link.parse()?),
-                        },
-                        _ => PagerResult::Done { response: rsp },
-                    })
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: PagedUser = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next_link {
+                            Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    if let Ok(next_link) = next_link.parse() {
+                                        next_link
+                                    } else {
+                                        let mut url = first_url.clone();
+                                        url.set_path(next_link.as_ref());
+                                        url
+                                    },
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
                 })
             },
             Some(options.method_options),
@@ -247,29 +270,40 @@ impl PageClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let res: ParameterizedNextLinkPagingResult = json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.next_link {
-                        Some(next_link) if !next_link.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: PagerContinuation::Link(next_link.parse()?),
-                        },
-                        _ => PagerResult::Done { response: rsp },
-                    })
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: ParameterizedNextLinkPagingResult = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next_link {
+                            Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    if let Ok(next_link) = next_link.parse() {
+                                        next_link
+                                    } else {
+                                        let mut url = first_url.clone();
+                                        url.set_path(next_link.as_ref());
+                                        url
+                                    },
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
                 })
             },
             Some(options.method_options),
@@ -316,29 +350,103 @@ impl PageClient {
                 request.insert_header("content-type", "application/json");
                 request.set_body(body_input.clone());
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let res: PagedUser = json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.next_link {
-                        Some(next_link) if !next_link.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: PagerContinuation::Link(next_link.parse()?),
-                        },
-                        _ => PagerResult::Done { response: rsp },
-                    })
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: PagedUser = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next_link {
+                            Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    if let Ok(next_link) = next_link.parse() {
+                                        next_link
+                                    } else {
+                                        let mut url = first_url.clone();
+                                        url.set_path(next_link.as_ref());
+                                        url
+                                    },
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
+                })
+            },
+            Some(options.method_options),
+        ))
+    }
+
+    /// List with relative nextLink URL that requires endpoint resolution.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.withRelativeNextLink")]
+    pub fn list_with_relative_next_link(
+        &self,
+        options: Option<PageClientListWithRelativeNextLinkOptions<'_>>,
+    ) -> Result<Pager<PagedUser>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url.append_path("/azure/core/page/with-relative-next-link");
+        Ok(Pager::new(
+            move |next_link: PagerState, pager_options| {
+                let url = match next_link {
+                    PagerState::More(next_link) => next_link.try_into().expect("expected Url"),
+                    PagerState::Initial => first_url.clone(),
+                };
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", "application/json");
+                let pipeline = pipeline.clone();
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: PagedUser = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next_link {
+                            Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    if let Ok(next_link) = next_link.parse() {
+                                        next_link
+                                    } else {
+                                        let mut url = first_url.clone();
+                                        url.set_path(next_link.as_ref());
+                                        url
+                                    },
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
                 })
             },
             Some(options.method_options),

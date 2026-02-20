@@ -225,3 +225,25 @@ async fn list_with_parameters_pages() {
         }
     }
 }
+
+#[tokio::test]
+async fn list_with_relative_next_link() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut iter = client.list_with_relative_next_link(None).unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.id, Some(1));
+                assert_eq!(item.name, Some("User1".to_string()));
+            }
+            2 => {
+                assert_eq!(item.id, Some(2));
+                assert_eq!(item.name, Some("User2".to_string()));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
