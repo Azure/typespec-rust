@@ -88,13 +88,7 @@ impl PageableServerDrivenPaginationClient {
                             Some(next) if !next.is_empty() => PagerResult::More {
                                 response: rsp,
                                 continuation: PagerContinuation::Link(
-                                    if let Ok(next) = next.parse() {
-                                        next
-                                    } else {
-                                        let mut url = first_url.clone();
-                                        url.set_path(next.as_ref());
-                                        url
-                                    },
+                                    first_url.join(next.as_ref())?,
                                 ),
                             },
                             _ => PagerResult::Done { response: rsp },
@@ -150,13 +144,7 @@ impl PageableServerDrivenPaginationClient {
                             Some(next) if !next.is_empty() => PagerResult::More {
                                 response: rsp,
                                 continuation: PagerContinuation::Link(
-                                    if let Ok(next) = next.parse() {
-                                        next
-                                    } else {
-                                        let mut url = first_url.clone();
-                                        url.set_path(next.as_ref());
-                                        url
-                                    },
+                                    first_url.join(next.as_ref())?,
                                 ),
                             },
                             _ => PagerResult::Done { response: rsp },
@@ -213,13 +201,7 @@ impl PageableServerDrivenPaginationClient {
                                 Some(next) if !next.is_empty() => PagerResult::More {
                                     response: rsp,
                                     continuation: PagerContinuation::Link(
-                                        if let Ok(next) = next.parse() {
-                                            next
-                                        } else {
-                                            let mut url = first_url.clone();
-                                            url.set_path(next.as_ref());
-                                            url
-                                        },
+                                        first_url.join(next.as_ref())?,
                                     ),
                                 },
                                 _ => PagerResult::Done { response: rsp },

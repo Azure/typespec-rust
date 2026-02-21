@@ -1420,7 +1420,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
         const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         nextPageValue = lastFieldName;
         srcNextPage = `res.${buildNextLinkPath(method.strategy.nextLinkPath)}`;
-        continuation = `PagerContinuation::Link(if let Ok(${lastFieldName}) = ${lastFieldName}.parse() { ${lastFieldName} } else { let mut url = first_url.clone(); url.set_path(${lastFieldName}.as_ref()); url })`;
+        continuation = `PagerContinuation::Link(first_url.join(${lastFieldName}.as_ref())?)`;
         break;
       }
     }

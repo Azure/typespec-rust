@@ -1451,13 +1451,7 @@ impl AzureAppConfigurationClient {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
                                 response: rsp,
                                 continuation: PagerContinuation::Link(
-                                    if let Ok(next_link) = next_link.parse() {
-                                        next_link
-                                    } else {
-                                        let mut url = first_url.clone();
-                                        url.set_path(next_link.as_ref());
-                                        url
-                                    },
+                                    first_url.join(next_link.as_ref())?,
                                 ),
                             },
                             _ => PagerResult::Done { response: rsp },
@@ -1566,13 +1560,7 @@ impl AzureAppConfigurationClient {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
                                 response: rsp,
                                 continuation: PagerContinuation::Link(
-                                    if let Ok(next_link) = next_link.parse() {
-                                        next_link
-                                    } else {
-                                        let mut url = first_url.clone();
-                                        url.set_path(next_link.as_ref());
-                                        url
-                                    },
+                                    first_url.join(next_link.as_ref())?,
                                 ),
                             },
                             _ => PagerResult::Done { response: rsp },
@@ -1691,13 +1679,7 @@ impl AzureAppConfigurationClient {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
                                 response: rsp,
                                 continuation: PagerContinuation::Link(
-                                    if let Ok(next_link) = next_link.parse() {
-                                        next_link
-                                    } else {
-                                        let mut url = first_url.clone();
-                                        url.set_path(next_link.as_ref());
-                                        url
-                                    },
+                                    first_url.join(next_link.as_ref())?,
                                 ),
                             },
                             _ => PagerResult::Done { response: rsp },
@@ -1828,13 +1810,7 @@ impl AzureAppConfigurationClient {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
                                 response: rsp,
                                 continuation: PagerContinuation::Link(
-                                    if let Ok(next_link) = next_link.parse() {
-                                        next_link
-                                    } else {
-                                        let mut url = first_url.clone();
-                                        url.set_path(next_link.as_ref());
-                                        url
-                                    },
+                                    first_url.join(next_link.as_ref())?,
                                 ),
                             },
                             _ => PagerResult::Done { response: rsp },
@@ -1960,13 +1936,7 @@ impl AzureAppConfigurationClient {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
                                 response: rsp,
                                 continuation: PagerContinuation::Link(
-                                    if let Ok(next_link) = next_link.parse() {
-                                        next_link
-                                    } else {
-                                        let mut url = first_url.clone();
-                                        url.set_path(next_link.as_ref());
-                                        url
-                                    },
+                                    first_url.join(next_link.as_ref())?,
                                 ),
                             },
                             _ => PagerResult::Done { response: rsp },
