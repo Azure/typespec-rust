@@ -5,8 +5,9 @@
 
 use crate::generated::clients::{
     XmlModelWithArrayOfModelValueClient, XmlModelWithAttributesValueClient,
-    XmlModelWithDictionaryValueClient, XmlModelWithEmptyArrayValueClient,
-    XmlModelWithEncodedNamesValueClient, XmlModelWithOptionalFieldValueClient,
+    XmlModelWithDatetimeValueClient, XmlModelWithDictionaryValueClient,
+    XmlModelWithEmptyArrayValueClient, XmlModelWithEncodedNamesValueClient,
+    XmlModelWithEnumValueClient, XmlModelWithOptionalFieldValueClient,
     XmlModelWithRenamedArraysValueClient, XmlModelWithRenamedFieldsValueClient,
     XmlModelWithSimpleArraysValueClient, XmlModelWithTextValueClient,
     XmlModelWithUnwrappedArrayValueClient, XmlSimpleModelValueClient, XmlXmlErrorValueClient,
@@ -86,6 +87,15 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithDatetimeValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_datetime_value_client(&self) -> XmlModelWithDatetimeValueClient {
+        XmlModelWithDatetimeValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
     /// Returns a new instance of XmlModelWithDictionaryValueClient.
     #[tracing::subclient]
     pub fn get_xml_model_with_dictionary_value_client(&self) -> XmlModelWithDictionaryValueClient {
@@ -110,6 +120,15 @@ impl XmlClient {
         &self,
     ) -> XmlModelWithEncodedNamesValueClient {
         XmlModelWithEncodedNamesValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithEnumValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_enum_value_client(&self) -> XmlModelWithEnumValueClient {
+        XmlModelWithEnumValueClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }

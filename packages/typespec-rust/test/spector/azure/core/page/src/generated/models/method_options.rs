@@ -88,6 +88,25 @@ impl PageClientListWithParametersOptions<'_> {
         }
     }
 }
+
+/// Options to be passed to [`PageClient::list_with_relative_next_link()`](crate::generated::clients::PageClient::list_with_relative_next_link())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageClientListWithRelativeNextLinkOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PagerOptions<'a>,
+}
+
+impl PageClientListWithRelativeNextLinkOptions<'_> {
+    /// Transforms this [`PageClientListWithRelativeNextLinkOptions`] into a new `PageClientListWithRelativeNextLinkOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageClientListWithRelativeNextLinkOptions<'static> {
+        PageClientListWithRelativeNextLinkOptions {
+            method_options: PagerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
 /// Options to be passed to [`PageTwoModelsAsPageItemClient::list_first_item()`](crate::generated::clients::PageTwoModelsAsPageItemClient::list_first_item())
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageTwoModelsAsPageItemClientListFirstItemOptions<'a> {
