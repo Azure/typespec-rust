@@ -2,51 +2,13 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
-use azure_core::time::OffsetDateTime;
-use azure_core::Result;
+mod common;
+
 use spector_armcommon::models::{
     ManagedIdentityTrackedResource, ManagedIdentityTrackedResourceProperties,
     ManagedServiceIdentity, ManagedServiceIdentityType, UserAssignedIdentity,
 };
-use spector_armcommon::CommonPropertiesClient;
 use std::collections::HashMap;
-use std::sync::Arc;
-
-#[derive(Debug)]
-struct FakeTokenCredential {
-    pub token: String,
-}
-
-impl FakeTokenCredential {
-    pub fn new(token: String) -> Self {
-        FakeTokenCredential { token }
-    }
-}
-
-#[async_trait::async_trait]
-impl TokenCredential for FakeTokenCredential {
-    async fn get_token(
-        &self,
-        _scopes: &[&str],
-        _options: Option<TokenRequestOptions<'_>>,
-    ) -> Result<AccessToken> {
-        Ok(AccessToken::new(
-            self.token.clone(),
-            OffsetDateTime::now_utc(),
-        ))
-    }
-}
-
-fn create_client() -> CommonPropertiesClient {
-    CommonPropertiesClient::new(
-        "http://localhost:3000",
-        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
-        "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
-    )
-    .unwrap()
-}
 
 fn get_valid_mi_resource() -> ManagedIdentityTrackedResource {
     ManagedIdentityTrackedResource {
@@ -55,7 +17,7 @@ fn get_valid_mi_resource() -> ManagedIdentityTrackedResource {
             principal_id: Some("00000000-0000-0000-0000-000000000000".to_string()),
             tenant_id: Some("00000000-0000-0000-0000-000000000000".to_string()),
             type_prop:
-                Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned),
+                Some(ManagedServiceIdentityType::SystemAssigned),
             ..Default::default()
         }),
         location: Some("eastus".to_string()),
@@ -74,14 +36,14 @@ fn get_valid_mi_resource() -> ManagedIdentityTrackedResource {
 async fn create_with_system_assigned() {
     let resource = ManagedIdentityTrackedResource {
         identity: Some(ManagedServiceIdentity {
-            type_prop: Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned),
+            type_prop: Some(ManagedServiceIdentityType::SystemAssigned),
             ..Default::default()
         }),
         location: Some("eastus".to_string()),
         ..Default::default()
     };
 
-    let client = create_client();
+    let client = common::create_client();
     let resp = client
         .get_common_properties_managed_identity_client()
         .create_with_system_assigned("test-rg", "identity", resource.try_into().unwrap(), None)
@@ -111,7 +73,7 @@ async fn create_with_system_assigned() {
 
 #[tokio::test]
 async fn get() {
-    let client = create_client();
+    let client = common::create_client();
     let resp = client
         .get_common_properties_managed_identity_client()
         .get("test-rg", "identity", None)
@@ -153,7 +115,7 @@ async fn update_with_user_assigned_and_system_assigned() {
             ..Default::default()
     };
 
-    let client = create_client();
+    let client = common::create_client();
     let resp = client
         .get_common_properties_managed_identity_client()
         .update_with_user_assigned_and_system_assigned(
