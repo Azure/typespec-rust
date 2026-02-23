@@ -1364,7 +1364,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}Box::pin(`;
   if (method.strategy?.kind === 'nextLink') {
-    body += `{\n${indent.push().get()}let first_url = first_url.clone();\n${indent.get()}`
+    body += `{\n${indent.push().get()}let first_url = first_url.clone();\n${indent.get()}`;
   }
   body += `async move {\n`;
   body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&pager_options.context, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
