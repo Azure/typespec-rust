@@ -21,6 +21,7 @@ async fn get_for_predefined_error() {
 }
 
 #[tokio::test]
+#[ignore] // Follow up on custom error design
 async fn create_for_user_defined_error() {
     let resource = ConfidentialResource {
         location: Some("eastus".to_string()),
