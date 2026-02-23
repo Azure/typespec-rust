@@ -5,6 +5,7 @@
 ### Breaking Changes
 
 * Fixed header response type for `etag` headers.
+* Removed `wasm32`-conditional `async_trait` attribute macro ([Azure/azure-sdk-for-rust#3377](https://github.com/Azure/azure-sdk-for-rust/issues/3377)).
 
 ### Features Added
 

@@ -14,8 +14,7 @@ use azure_core::{
     Result,
 };
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for PagedFirstItem {
     type Item = FirstItem;
     type IntoIter = <Vec<FirstItem> as IntoIterator>::IntoIter;
@@ -24,8 +23,7 @@ impl Page for PagedFirstItem {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for PagedSecondItem {
     type Item = SecondItem;
     type IntoIter = <Vec<SecondItem> as IntoIterator>::IntoIter;
@@ -34,8 +32,7 @@ impl Page for PagedSecondItem {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for PagedUser {
     type Item = User;
     type IntoIter = <Vec<User> as IntoIterator>::IntoIter;
@@ -44,8 +41,7 @@ impl Page for PagedUser {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ParameterizedNextLinkPagingResult {
     type Item = User;
     type IntoIter = <Vec<User> as IntoIterator>::IntoIter;
@@ -54,8 +50,7 @@ impl Page for ParameterizedNextLinkPagingResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for UserListResults {
     type Item = User;
     type IntoIter = <Vec<User> as IntoIterator>::IntoIter;

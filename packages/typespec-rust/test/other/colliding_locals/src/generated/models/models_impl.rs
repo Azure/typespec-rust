@@ -11,8 +11,7 @@ use azure_core::{
     Result,
 };
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for WidgetPage {
     type Item = Widget;
     type IntoIter = <Vec<Widget> as IntoIterator>::IntoIter;
@@ -21,8 +20,7 @@ impl Page for WidgetPage {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for WidgetPages {
     type Item = Widget;
     type IntoIter = <Vec<Widget> as IntoIterator>::IntoIter;
