@@ -5,7 +5,7 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`DiscriminatedEnvelopeObjectCustomPropertiesClient::get()`](crate::generated::clients::DiscriminatedEnvelopeObjectCustomPropertiesClient::get())
+/// Options to be passed to [`DiscriminatedEnvelopeObjectCustomPropertiesClient::get()`](crate::envelope::object::generated::clients::DiscriminatedEnvelopeObjectCustomPropertiesClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedEnvelopeObjectCustomPropertiesClientGetOptions<'a> {
     /// Allows customization of the method call.
@@ -14,14 +14,14 @@ pub struct DiscriminatedEnvelopeObjectCustomPropertiesClientGetOptions<'a> {
     pub pet_type: Option<String>,
 }
 
-/// Options to be passed to [`DiscriminatedEnvelopeObjectCustomPropertiesClient::put()`](crate::generated::clients::DiscriminatedEnvelopeObjectCustomPropertiesClient::put())
+/// Options to be passed to [`DiscriminatedEnvelopeObjectCustomPropertiesClient::put()`](crate::envelope::object::generated::clients::DiscriminatedEnvelopeObjectCustomPropertiesClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedEnvelopeObjectCustomPropertiesClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DiscriminatedEnvelopeObjectDefaultClient::get()`](crate::generated::clients::DiscriminatedEnvelopeObjectDefaultClient::get())
+/// Options to be passed to [`DiscriminatedEnvelopeObjectDefaultClient::get()`](crate::envelope::object::generated::clients::DiscriminatedEnvelopeObjectDefaultClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedEnvelopeObjectDefaultClientGetOptions<'a> {
     pub kind: Option<String>,
@@ -30,7 +30,7 @@ pub struct DiscriminatedEnvelopeObjectDefaultClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DiscriminatedEnvelopeObjectDefaultClient::put()`](crate::generated::clients::DiscriminatedEnvelopeObjectDefaultClient::put())
+/// Options to be passed to [`DiscriminatedEnvelopeObjectDefaultClient::put()`](crate::envelope::object::generated::clients::DiscriminatedEnvelopeObjectDefaultClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedEnvelopeObjectDefaultClientPutOptions<'a> {
     /// Allows customization of the method call.

@@ -116,6 +116,30 @@ function unwrap(type: rust.Type): rust.Type | undefined {
   }
 }
 
+/**
+ * builds the complete import path based on src and dst.
+ * 
+ * @param dst the module where the import statement will be used
+ * @param src the module that contains the type being referenced
+ * @returns the fully qualified import path
+ */
+export function buildImportPath(dst: rust.ModuleContainer, src: rust.ModuleContainer): string {
+  const chunks = new Array<string>();
+  let cur = src;
+  while (cur.kind === 'module') {
+    chunks.unshift(cur.name);
+    cur = cur.parent;
+  }
+  chunks.unshift('crate');
+  const path = chunks.join('::');
+
+  if (dst === src) {
+    return `${path}::generated`;
+  } else {
+    return path;
+  }
+}
+
 // the following was copied from @azure-tools/codegen as it's deprecated
 
 /**

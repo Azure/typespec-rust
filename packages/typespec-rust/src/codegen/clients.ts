@@ -9,7 +9,7 @@ import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import queryString from 'query-string';
-import { Use, buildImportPath } from './use.js';
+import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 import * as utils from '../utils/utils.js';
 
@@ -298,7 +298,7 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
         // client method options types are always in the same module as their client method
-        use.add(`${buildImportPath(client.module, client.module)}::models`, method.options.type.name);
+        use.add(`${utils.buildImportPath(client.module, client.module)}::models`, method.options.type.name);
       }
     }
 
@@ -557,11 +557,11 @@ function getHeaderTraitDocComment(indent: helpers.indentation, module: rust.Modu
 
   // List all available headers
   for (const header of method.responseHeaders.headers) {
-    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](${buildImportPath(module, module)}::models::${traitName}::${header.name}) - ${header.header}\n`;
+    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](${utils.buildImportPath(module, module)}::models::${traitName}::${header.name}) - ${header.header}\n`;
   }
 
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += `${indent.get()}/// [${helpers.wrapInBackTicks(traitName)}]: ${buildImportPath(module, module)}::models::${traitName}\n`;
+  headerDocs += `${indent.get()}/// [${helpers.wrapInBackTicks(traitName)}]: ${utils.buildImportPath(module, module)}::models::${traitName}\n`;
 
   return headerDocs;
 }

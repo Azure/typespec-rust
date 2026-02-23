@@ -5,7 +5,7 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`ClientNamespaceSecondClient::get_second()`](crate::generated::clients::ClientNamespaceSecondClient::get_second())
+/// Options to be passed to [`ClientNamespaceSecondClient::get_second()`](crate::second::generated::clients::ClientNamespaceSecondClient::get_second())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientNamespaceSecondClientGetSecondOptions<'a> {
     /// Allows customization of the method call.

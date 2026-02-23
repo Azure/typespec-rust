@@ -5,7 +5,7 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`DiscriminatedNoEnvelopeCustomDiscriminatorClient::get()`](crate::generated::clients::DiscriminatedNoEnvelopeCustomDiscriminatorClient::get())
+/// Options to be passed to [`DiscriminatedNoEnvelopeCustomDiscriminatorClient::get()`](crate::no_envelope::generated::clients::DiscriminatedNoEnvelopeCustomDiscriminatorClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedNoEnvelopeCustomDiscriminatorClientGetOptions<'a> {
     /// Allows customization of the method call.
@@ -14,14 +14,14 @@ pub struct DiscriminatedNoEnvelopeCustomDiscriminatorClientGetOptions<'a> {
     pub type_param: Option<String>,
 }
 
-/// Options to be passed to [`DiscriminatedNoEnvelopeCustomDiscriminatorClient::put()`](crate::generated::clients::DiscriminatedNoEnvelopeCustomDiscriminatorClient::put())
+/// Options to be passed to [`DiscriminatedNoEnvelopeCustomDiscriminatorClient::put()`](crate::no_envelope::generated::clients::DiscriminatedNoEnvelopeCustomDiscriminatorClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedNoEnvelopeCustomDiscriminatorClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DiscriminatedNoEnvelopeDefaultClient::get()`](crate::generated::clients::DiscriminatedNoEnvelopeDefaultClient::get())
+/// Options to be passed to [`DiscriminatedNoEnvelopeDefaultClient::get()`](crate::no_envelope::generated::clients::DiscriminatedNoEnvelopeDefaultClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedNoEnvelopeDefaultClientGetOptions<'a> {
     pub kind: Option<String>,
@@ -30,7 +30,7 @@ pub struct DiscriminatedNoEnvelopeDefaultClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DiscriminatedNoEnvelopeDefaultClient::put()`](crate::generated::clients::DiscriminatedNoEnvelopeDefaultClient::put())
+/// Options to be passed to [`DiscriminatedNoEnvelopeDefaultClient::put()`](crate::no_envelope::generated::clients::DiscriminatedNoEnvelopeDefaultClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DiscriminatedNoEnvelopeDefaultClientPutOptions<'a> {
     /// Allows customization of the method call.

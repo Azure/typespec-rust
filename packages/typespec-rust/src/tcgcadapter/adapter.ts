@@ -1547,7 +1547,7 @@ export class Adapter {
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${utils.pascalCase(srcMethodName, false)}Options`, pub);
     methodOptionsStruct.lifetime = optionsLifetime;
-    methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
+    methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `${utils.buildImportPath(rustClient.module, rustClient.module)}::clients::${rustClient.name}::${methodName}()`)}`;
 
     let clientMethodOptions: rust.ClientMethodOptions | rust.PagerOptions | rust.PollerOptions;
     switch (method.kind) {

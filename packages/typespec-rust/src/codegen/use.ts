@@ -6,6 +6,7 @@
 import * as helpers from './helpers.js';
 import { CodegenError } from './errors.js';
 import * as rust from '../codemodel/index.js';
+import * as utils from '../utils/utils.js';
 
 /** used to generate use statements */
 export class Use {
@@ -73,13 +74,13 @@ export class Use {
         return this.addForType(type.type);
       case 'client': {
         // client type are only referenced from other things in generated/clients so we ignore any scope
-        this.add(`${buildImportPath(this.module, type.module)}::clients`, type.name);
+        this.add(`${utils.buildImportPath(this.module, type.module)}::clients`, type.name);
         break;
       }
       case 'discriminatedUnion':
       case 'enum':
         if (this.scope === 'clients' || this.module !== type.module) {
-          this.add(`${buildImportPath(this.module, type.module)}::models`, type.name);
+          this.add(`${utils.buildImportPath(this.module, type.module)}::models`, type.name);
         } else {
           this.add('super', type.name);
         }
@@ -91,7 +92,7 @@ export class Use {
         switch (this.scope) {
           case 'clients':
             // marker types are always in the same module as their client method
-            this.add(`${buildImportPath(this.module, this.module)}::models`, type.name);
+            this.add(`${utils.buildImportPath(this.module, this.module)}::models`, type.name);
             break;
           case 'modelsOther':
             this.add('super', type.name);
@@ -104,7 +105,7 @@ export class Use {
         break;
       case 'model':
         if (this.scope === 'clients' || this.module !== type.module) {
-          this.add(`${buildImportPath(this.module, type.module)}::models`, type.name);
+          this.add(`${utils.buildImportPath(this.module, type.module)}::models`, type.name);
         } else if (this.scope === 'modelsOther') {
           this.add('super', type.name);
         }
@@ -152,7 +153,7 @@ export class Use {
         switch (this.scope) {
           case 'clients':
             // header response traits are always in the same module as their client method
-            this.add(`${buildImportPath(this.module, this.module)}::models`, type.name);
+            this.add(`${utils.buildImportPath(this.module, this.module)}::models`, type.name);
             break;
           case 'models':
           case 'modelsOther':
@@ -216,30 +217,6 @@ export class Use {
 
     content += '\n';
     return content;
-  }
-}
-
-/**
- * builds the complete import path based on src and dst.
- * 
- * @param dst the module where the import statement will be used
- * @param src the module that contains the type being referenced
- * @returns the fully qualified import path
- */
-export function buildImportPath(dst: rust.ModuleContainer, src: rust.ModuleContainer): string {
-  const chunks = new Array<string>();
-  let cur = src;
-  while (cur.kind === 'module') {
-    chunks.unshift(cur.name);
-    cur = cur.parent;
-  }
-  chunks.unshift('crate');
-  const path = chunks.join('::');
-
-  if (dst === src) {
-    return `${path}::generated`;
-  } else {
-    return path;
   }
 }
 
