@@ -7,8 +7,7 @@ use super::{ListTestResult, Test};
 use async_trait::async_trait;
 use azure_core::{http::pager::Page, Result};
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ListTestResult {
     type Item = Test;
     type IntoIter = <Vec<Test> as IntoIterator>::IntoIter;

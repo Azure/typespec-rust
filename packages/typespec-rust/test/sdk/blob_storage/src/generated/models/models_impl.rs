@@ -15,8 +15,7 @@ use azure_core::{
     Result,
 };
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ListBlobsFlatSegmentResponse {
     type Item = BlobItemInternal;
     type IntoIter = <Vec<BlobItemInternal> as IntoIterator>::IntoIter;
@@ -25,8 +24,7 @@ impl Page for ListBlobsFlatSegmentResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ListBlobsHierarchySegmentResponse {
     type Item = BlobItemInternal;
     type IntoIter = <Vec<BlobItemInternal> as IntoIterator>::IntoIter;
@@ -35,8 +33,7 @@ impl Page for ListBlobsHierarchySegmentResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ListContainersSegmentResponse {
     type Item = ContainerItem;
     type IntoIter = <Vec<ContainerItem> as IntoIterator>::IntoIter;

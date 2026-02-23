@@ -19,8 +19,7 @@ use azure_core::{
     Result,
 };
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for KeyListResult {
     type Item = Key;
     type IntoIter = <Vec<Key> as IntoIterator>::IntoIter;
@@ -29,8 +28,7 @@ impl Page for KeyListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for KeyValueListResult {
     type Item = KeyValue;
     type IntoIter = <Vec<KeyValue> as IntoIterator>::IntoIter;
@@ -39,8 +37,7 @@ impl Page for KeyValueListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for LabelListResult {
     type Item = Label;
     type IntoIter = <Vec<Label> as IntoIterator>::IntoIter;
@@ -49,8 +46,7 @@ impl Page for LabelListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for SnapshotListResult {
     type Item = Snapshot;
     type IntoIter = <Vec<Snapshot> as IntoIterator>::IntoIter;

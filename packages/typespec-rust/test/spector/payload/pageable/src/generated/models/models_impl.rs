@@ -13,8 +13,7 @@ use super::{
 use async_trait::async_trait;
 use azure_core::{http::pager::Page, Result};
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for LinkResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -23,8 +22,7 @@ impl Page for LinkResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for LinkStringResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -33,8 +31,7 @@ impl Page for LinkStringResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ListWithPageSizeResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -43,8 +40,7 @@ impl Page for ListWithPageSizeResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ListWithoutContinuationResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -53,8 +49,7 @@ impl Page for ListWithoutContinuationResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for NestedLinkResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -63,8 +58,7 @@ impl Page for NestedLinkResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for RequestHeaderNestedResponseBodyResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -73,8 +67,7 @@ impl Page for RequestHeaderNestedResponseBodyResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for RequestHeaderResponseBodyResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -83,8 +76,7 @@ impl Page for RequestHeaderResponseBodyResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for RequestHeaderResponseHeaderResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -93,8 +85,7 @@ impl Page for RequestHeaderResponseHeaderResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for RequestQueryNestedResponseBodyResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -103,8 +94,7 @@ impl Page for RequestQueryNestedResponseBodyResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for RequestQueryResponseBodyResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -113,8 +103,7 @@ impl Page for RequestQueryResponseBodyResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for RequestQueryResponseHeaderResponse {
     type Item = Pet;
     type IntoIter = <Vec<Pet> as IntoIterator>::IntoIter;
@@ -123,8 +112,7 @@ impl Page for RequestQueryResponseHeaderResponse {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for XmlPetListResult {
     type Item = XmlPet;
     type IntoIter = <Vec<XmlPet> as IntoIterator>::IntoIter;
@@ -133,8 +121,7 @@ impl Page for XmlPetListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for XmlPetListResultWithNextLink {
     type Item = XmlPet;
     type IntoIter = <Vec<XmlPet> as IntoIterator>::IntoIter;

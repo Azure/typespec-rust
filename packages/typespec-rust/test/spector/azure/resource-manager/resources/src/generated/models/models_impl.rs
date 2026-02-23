@@ -26,8 +26,7 @@ use azure_core::{
     Result,
 };
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for ExtensionsResourceListResult {
     type Item = ExtensionsResource;
     type IntoIter = <Vec<ExtensionsResource> as IntoIterator>::IntoIter;
@@ -36,8 +35,7 @@ impl Page for ExtensionsResourceListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for LocationResourceListResult {
     type Item = LocationResource;
     type IntoIter = <Vec<LocationResource> as IntoIterator>::IntoIter;
@@ -46,8 +44,7 @@ impl Page for LocationResourceListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for NestedProxyResourceListResult {
     type Item = NestedProxyResource;
     type IntoIter = <Vec<NestedProxyResource> as IntoIterator>::IntoIter;
@@ -56,8 +53,7 @@ impl Page for NestedProxyResourceListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for SingletonTrackedResourceListResult {
     type Item = SingletonTrackedResource;
     type IntoIter = <Vec<SingletonTrackedResource> as IntoIterator>::IntoIter;
@@ -66,8 +62,7 @@ impl Page for SingletonTrackedResourceListResult {
     }
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for TopLevelTrackedResourceListResult {
     type Item = TopLevelTrackedResource;
     type IntoIter = <Vec<TopLevelTrackedResource> as IntoIterator>::IntoIter;

@@ -22,8 +22,7 @@ use azure_core::{
     Result,
 };
 
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[async_trait]
 impl Page for OperationListResult {
     type Item = Operation;
     type IntoIter = <Vec<Operation> as IntoIterator>::IntoIter;
