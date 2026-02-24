@@ -278,10 +278,10 @@ function generate(crate, input, outputDir, additionalArgs) {
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
+        sem.leave();
       });
     } catch (err) {
       console.error('\x1b[91m%s\x1b[0m', err);
-    } finally {
       sem.leave();
     }
   });
