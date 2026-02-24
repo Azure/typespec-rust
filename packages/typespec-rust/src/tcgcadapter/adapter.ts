@@ -14,6 +14,7 @@ import * as utils from '../utils/utils.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
 import {FinalStateValue} from "@azure-tools/typespec-azure-core";
+import {EmitContext, NoTarget} from "@typespec/compiler";
 
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
@@ -114,8 +115,8 @@ export class Adapter {
   }
 
   /** performs all the steps to convert tcgc to a crate */
-  tcgcToCrate(): rust.Crate {
-    this.adaptTypes();
+  tcgcToCrate(context: EmitContext<RustEmitterOptions>): rust.Crate {
+    this.adaptTypes(context);
     this.adaptClients();
 
     // marker models don't require serde so exclude them from the check
@@ -146,10 +147,17 @@ export class Adapter {
   }
 
   /** converts all tcgc types to their Rust type equivalent */
-  private adaptTypes(): void {
+  private adaptTypes(context: EmitContext<RustEmitterOptions>): void {
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
       if (!sdkUnion.discriminatedOptions) {
-        throw new AdapterError('UnsupportedTsp', 'non-discriminated unions are not supported', sdkUnion.__raw?.node);
+        // When https://github.com/microsoft/typespec/issues/9749 is fixed, we can return to throwing an exception here.
+        context.program.reportDiagnostic({
+          code: 'UnsupportedTsp',
+          severity: 'warning',
+          message: `Non-discriminated unions ('${sdkUnion.name}') are not supported. No type will be generated.`,
+          target: NoTarget,
+        })
+        continue;
       }
       const rustUnion = this.getDiscriminatedUnion(sdkUnion);
       this.crate.unions.push(rustUnion);
