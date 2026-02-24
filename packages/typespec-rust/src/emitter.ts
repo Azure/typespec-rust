@@ -7,6 +7,7 @@
 
 import { CodeGenerator } from './codegen/codeGenerator.js';
 import { CodegenError } from './codegen/errors.js';
+import { generatedCodeKeyPhrase } from './codegen/helpers.js';
 import { Adapter, AdapterError, ExternalError } from './tcgcadapter/adapter.js';
 import { reportDiagnostic, RustEmitterOptions } from './lib.js';
 import { execSync } from 'child_process';
@@ -188,5 +189,5 @@ function shouldRmDir(dirName: string): boolean {
     return false;
   }
   const content = fs.readFileSync(modRs, { encoding: 'utf-8' });
-  return content.match(/Rust Code Generator/) !== null;
+  return content.match(generatedCodeKeyPhrase) !== null;
 }
