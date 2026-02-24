@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use futures::StreamExt;
-use spector_corepageable::{models::LinkResponse, PageableClient};
+use spector_corepageable::{server_driven_pagination::models::LinkResponse, PageableClient};
 
 #[tokio::test]
 async fn list_link() {

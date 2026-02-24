@@ -9,64 +9,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct LinkResponse {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub next: Option<String>,
-
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct LinkStringResponse {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub next: Option<String>,
-
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct ListWithPageSizeResponse {
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct ListWithoutContinuationResponse {
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct NestedLinkResponse {
-    #[serde(default, rename = "nestedItems")]
-    pub nested_items: NestedLinkResponseNestedItems,
-
-    #[serde(rename = "nestedNext", skip_serializing_if = "Option::is_none")]
-    pub nested_next: Option<NestedLinkResponseNestedNext>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct NestedLinkResponseNestedItems {
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct NestedLinkResponseNestedNext {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub next: Option<String>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
 pub struct Pet {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
@@ -77,75 +19,7 @@ pub struct Pet {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct RequestHeaderNestedResponseBodyResponse {
-    #[serde(default, rename = "nestedItems")]
-    pub nested_items: RequestHeaderNestedResponseBodyResponseNestedItems,
-
-    #[serde(rename = "nestedNext", skip_serializing_if = "Option::is_none")]
-    pub nested_next: Option<RequestHeaderNestedResponseBodyResponseNestedNext>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct RequestHeaderNestedResponseBodyResponseNestedItems {
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct RequestHeaderNestedResponseBodyResponseNestedNext {
-    #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
-    pub next_token: Option<String>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct RequestHeaderResponseBodyResponse {
-    #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
-    pub next_token: Option<String>,
-
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
 pub struct RequestHeaderResponseHeaderResponse {
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct RequestQueryNestedResponseBodyResponse {
-    #[serde(default, rename = "nestedItems")]
-    pub nested_items: RequestQueryNestedResponseBodyResponseNestedItems,
-
-    #[serde(rename = "nestedNext", skip_serializing_if = "Option::is_none")]
-    pub nested_next: Option<RequestQueryNestedResponseBodyResponseNestedNext>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct RequestQueryNestedResponseBodyResponseNestedItems {
-    #[serde(default)]
-    pub pets: Vec<Pet>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct RequestQueryNestedResponseBodyResponseNestedNext {
-    #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
-    pub next_token: Option<String>,
-}
-
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct RequestQueryResponseBodyResponse {
-    #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
-    pub next_token: Option<String>,
-
     #[serde(default)]
     pub pets: Vec<Pet>,
 }

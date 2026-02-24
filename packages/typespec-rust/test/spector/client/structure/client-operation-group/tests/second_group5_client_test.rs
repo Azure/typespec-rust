@@ -2,7 +2,10 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_clientopgroup::{models::ClientType, SecondClient};
+use spector_clientopgroup::{
+    client::structure::another_client_operation_group::SecondClient,
+    client::structure::service::models::ClientType,
+};
 
 #[tokio::test]
 async fn six() {

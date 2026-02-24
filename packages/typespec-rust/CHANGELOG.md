@@ -1,6 +1,10 @@
 # Release History
 
-## 0.36.1 (unreleased)
+## 0.37.0 (unreleased)
+
+### Breaking Changes
+
+* TypeSpec namespaces are now honored and emitted as sub-modules.
 
 ### Other Changes
 

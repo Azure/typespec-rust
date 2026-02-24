@@ -31,25 +31,25 @@ export function emitClientsModRs(modules: Array<string>): string {
 /**
  * emits the contents of the generated/mod.rs file
  * 
- * @param crate the crate for which to emit the mod.rs file
+ * @param module the module for which to emit the mod.rs file
  * @returns the contents of the mod.rs file
  */
-export function emitGeneratedModRs(crate: rust.Crate): string {
+export function emitGeneratedModRs(module: rust.ModuleContainer): string {
   let content = helpers.contentPreamble();
   const pubModModels = '/// Contains all the data structures and types used by the client library.\npub mod models;\n'
-  if (crate.clients.length > 0) {
+  if (module.clients.length > 0) {
     content += '/// Clients used to communicate with the service.\n';
     content += 'pub mod clients;\n';
-    // client method options are in the models module
-    content += pubModModels;
-  } else if (crate.enums.length > 0 || crate.models.length > 0 || crate.unions.length > 0) {
+  }
+
+  if (module.clients.find((client) => client.methods.find((method) => method.kind !== 'clientaccessor')) || module.enums.length > 0 || module.models.length > 0 || module.unions.length > 0) {
     content += pubModModels;
   }
 
-  if (crate.clients.length > 0) {
+  if (module.clients.length > 0) {
     // the instantiable clients and their options types get re-exported from the root
     const clientsAndClientOptions = new Array<string>();
-    for (const client of crate.clients) {
+    for (const client of module.clients) {
       if (client.constructable) {
         clientsAndClientOptions.push(client.name);
 
@@ -59,7 +59,10 @@ export function emitGeneratedModRs(crate: rust.Crate): string {
         }
       }
     }
-    content += `pub use clients::{${clientsAndClientOptions.join(', ')}};\n`;
+
+    if (clientsAndClientOptions.length > 0) {
+      content += `pub use clients::{${clientsAndClientOptions.join(', ')}};\n`;
+    }
   }
 
   return content;
@@ -75,4 +78,21 @@ export function emitModelsModRs(modules: Array<string>): string {
   // clippy complains about "mod models;" inside the models directory
   return helpers.contentPreamble()
     + modules.sort().map((module) => module.match(/mod models$/) ? `#[allow(clippy::module_inception)]\n${module}` : module).join(';\n') + ';\n';
+}
+
+/**
+ * emits the contents of mod.rs for a sub-module
+ * 
+ * @param module the sub-module for which to emit the content
+ * @returns the contents of the mod.rs file
+ */
+export function emitSubModRs(module: rust.SubModule): string {
+  let content = helpers.contentPreamble();// 
+  if (module.clients.length > 0 || module.enums.length > 0 || module.models.length > 0 || module.unions.length > 0) {
+    content += 'mod generated;\npub use generated::*;\n';
+  }
+  for (const subModule of module.subModules) {
+    content += `pub mod ${subModule.name};\n`;
+  }
+  return content;
 }

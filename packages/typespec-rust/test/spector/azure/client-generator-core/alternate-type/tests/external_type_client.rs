@@ -5,7 +5,7 @@
 use azure_core::http::RequestContent;
 use geojson::{Feature, Geometry, Value};
 use serde_json::Map;
-use spector_alternatetype::{models::ModelWithFeatureProperty, AlternateTypeClient};
+use spector_alternatetype::{external_type::models::ModelWithFeatureProperty, AlternateTypeClient};
 
 fn create_feature() -> Feature {
     let geometry = Geometry::new(Value::Point(vec![-122.25, 37.87]));

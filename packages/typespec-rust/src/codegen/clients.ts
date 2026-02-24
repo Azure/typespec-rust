@@ -19,17 +19,17 @@ export interface ClientModules {
   modules: Array<helpers.Module>;
 
   /** the client method options module */
-  options: helpers.Module;
+  options?: helpers.Module;
 }
 
 /**
  * emits the content for all client files
  * 
- * @param crate the crate for which to emit clients
- * @returns client content or undefined if the crate contains no clients
+ * @param module the module for which to emit clients
+ * @returns client content or undefined if the module contains no clients
  */
-export function emitClients(crate: rust.Crate): ClientModules | undefined {
-  if (crate.clients.length === 0) {
+export function emitClients(module: rust.ModuleContainer): ClientModules | undefined {
+  if (module.clients.length === 0) {
     return undefined;
   }
 
@@ -49,8 +49,8 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   const clientModules = new Array<helpers.Module>();
 
   // emit the clients, one file per client
-  for (const client of crate.clients) {
-    const use = new Use('clients');
+  for (const client of module.clients) {
+    const use = new Use(module, 'clients');
     const indent = new helpers.indentation();
 
     let body = helpers.formatDocComment(client.docs);
@@ -196,6 +196,8 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     body += `${indent.push().get()}&self.${client.endpoint.name}\n`;
     body += `${indent.pop().get()}}\n\n`;
 
+    const crate = helpers.getCrate(module);
+
     for (let i = 0; i < client.methods.length; ++i) {
       const method = client.methods[i];
       const returnType = helpers.getTypeDeclaration(method.returns);
@@ -295,7 +297,8 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     // add using for method_options as required
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
-        use.add('crate::generated::models', method.options.type.name);
+        // client method options types are always in the same module as their client method
+        use.add(`${utils.buildImportPath(client.module, client.module)}::models`, method.options.type.name);
       }
     }
 
@@ -313,17 +316,17 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
   return {
     modules: clientModules,
-    options: getMethodOptions(crate),
+    options: getMethodOptions(module),
   };
 }
 
-function getMethodOptions(crate: rust.Crate): helpers.Module {
-  const use = new Use('modelsOther');
+function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefined {
+  const use = new Use(module, 'modelsOther');
   const indent = new helpers.indentation();
   const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
-  for (const client of crate.clients) {
+  for (const client of module.clients) {
     for (let i = 0; i < client.methods.length; ++i) {
       const method = client.methods[i];
       if (method.kind === 'clientaccessor') {
@@ -375,6 +378,11 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
         body += '\n';
       }
     }
+  }
+
+  if (body === '') {
+    // client is top-level only, no methods just accessors
+    return undefined;
   }
 
   let content = helpers.contentPreamble();
@@ -516,11 +524,11 @@ function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): { count:
  * returns documentation for header trait access if the method has response headers.
  * 
  * @param indent the current indentation level
- * @param crate the crate to which method belongs
+ * @param module the module to which method belongs
  * @param method the method for which to generate header trait documentation
  * @returns the header trait documentation or empty string if not applicable
  */
-function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate, method: ClientMethod): string {
+function getHeaderTraitDocComment(indent: helpers.indentation, module: rust.ModuleContainer, method: ClientMethod): string {
   if (!method.responseHeaders) {
     return '';
   }
@@ -543,17 +551,17 @@ function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate
   headerDocs += `${indent.get()}/// The returned [${helpers.wrapInBackTicks(returnType)}](azure_core::http::${returnType}) implements the [${helpers.wrapInBackTicks(traitName)}] trait, which provides\n`;
   headerDocs += `${indent.get()}/// access to response headers. For example:\n`;
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += emitHeaderTraitDocExample(crate.name, method.responseHeaders, indent);
+  headerDocs += emitHeaderTraitDocExample(method.responseHeaders, indent);
   headerDocs += `${indent.get()}///\n`;
   headerDocs += `${indent.get()}/// ### Available headers\n`;
 
   // List all available headers
   for (const header of method.responseHeaders.headers) {
-    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](crate::generated::models::${traitName}::${header.name}) - ${header.header}\n`;
+    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](${utils.buildImportPath(module, module)}::models::${traitName}::${header.name}) - ${header.header}\n`;
   }
 
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += `${indent.get()}/// [${helpers.wrapInBackTicks(traitName)}]: crate::generated::models::${traitName}\n`;
+  headerDocs += `${indent.get()}/// [${helpers.wrapInBackTicks(traitName)}]: ${utils.buildImportPath(module, module)}::models::${traitName}\n`;
 
   return headerDocs;
 }

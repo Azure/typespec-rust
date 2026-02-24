@@ -7,3 +7,5 @@
 
 mod generated;
 pub use generated::*;
+pub mod different_body;
+pub mod same_body;

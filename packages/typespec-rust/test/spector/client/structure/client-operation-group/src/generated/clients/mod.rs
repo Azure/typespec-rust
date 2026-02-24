@@ -6,10 +6,6 @@
 mod first_client;
 mod first_group3_client;
 mod first_group4_client;
-mod second_client;
-mod second_group5_client;
 pub use first_client::*;
 pub use first_group3_client::*;
 pub use first_group4_client::*;
-pub use second_client::*;
-pub use second_group5_client::*;

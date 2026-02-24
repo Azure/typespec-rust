@@ -7,3 +7,5 @@
 
 mod generated;
 pub use generated::*;
+pub mod alias;
+pub mod model;

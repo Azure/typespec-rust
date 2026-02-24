@@ -29,42 +29,46 @@ export interface Models {
 
 /**
  * returns the emitted model types, or empty if the
- * crate contains no model types.
+ * module contains no model types.
  * 
- * @param crate the crate for which to emit models
- * @param context the context for the provided crate
+ * @param module the module for which to emit models
+ * @param context the context for the provided module
  * @returns the model content or empty
  */
-export function emitModels(crate: rust.Crate, context: Context): Models {
-  if (crate.models.length === 0) {
+export function emitModels(module: rust.ModuleContainer, context: Context): Models {
+  if (module.models.length === 0) {
     return {};
   }
 
+  serdeHelpers.clear();
+  serdeHelpersForXmlAddlProps.clear();
+  xmlListWrappers.clear();
+
   return {
-    definitions: emitModelDefinitions(crate, context),
-    serde: emitModelsSerde(),
-    impls: emitModelImpls(crate, context),
-    xmlHelpers: emitXMLListWrappers(),
+    definitions: emitModelDefinitions(module, context),
+    serde: emitModelsSerde(module),
+    impls: emitModelImpls(module, context),
+    xmlHelpers: emitXMLListWrappers(module),
   };
 }
 
 /**
  * the implementation of emitModels
  * 
- * @param crate the crate for which to emit models
- * @param context the context for the provided crate
+ * @param module the module for which to emit models
+ * @param context the context for the provided module
  * @returns the model content or empty
  */
-function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Module | undefined {
+function emitModelDefinitions(module: rust.ModuleContainer, context: Context): helpers.Module | undefined {
   // for the internal models we might need to use public model types
-  const use = new Use('models');
+  const use = new Use(module, 'models');
   use.add('azure_core::fmt', 'SafeDebug');
 
   const indent = new helpers.indentation();
   const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
-  for (const model of crate.models) {
+  for (const model of module.models) {
     visTracker.update(model.visibility);
     if (model.kind === 'marker') {
       body += helpers.formatDocComment(model.docs);
@@ -116,7 +120,7 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
     } else if (discriminator) {
       // find the matching DU member for this model
       let duMember: rust.DiscriminatedUnionMember | undefined;
-      for (const union of crate.unions) {
+      for (const union of module.unions) {
         for (const member of union.members) {
           if (member.type === model) {
             duMember = member;
@@ -169,7 +173,7 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
       const deserializeWith = field.customizations.find((each) => each.kind === 'deserializeWith');
 
       if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
-        addSerDeHelper(field, serdeParams, bodyFormat, use, deserializeWith);
+        addSerDeHelper(module, field, serdeParams, bodyFormat, use, deserializeWith);
       } else if (bodyFormat === 'xml' && utils.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
@@ -229,10 +233,11 @@ function emitModelDefinitions(crate: rust.Crate, context: Context): helpers.Modu
  * returns serde helpers for public models.
  * if no helpers are required, undefined is returned.
  * 
+ * @param module the module being processed
  * @returns the model serde helpers content or undefined
  */
-function emitModelsSerde(): helpers.Module | undefined {
-  const use = new Use('modelsOther');
+function emitModelsSerde(module: rust.ModuleContainer): helpers.Module | undefined {
+  const use = new Use(module, 'modelsOther');
   const serdeHelpers = emitSerDeHelpers(use);
 
   if (!serdeHelpers) {
@@ -255,16 +260,16 @@ function emitModelsSerde(): helpers.Module | undefined {
  * returns any trait impls for public models.
  * if no helpers are required, undefined is returned.
  * 
- * @param crate the crate for which to emit model serde helpers
- * @param context the context for the provided crate
+ * @param module the module for which to emit model serde helpers
+ * @param context the context for the provided module
  * @returns the model serde helpers content or undefined
  */
-function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
-  const use = new Use('modelsOther');
+function emitModelImpls(module: rust.ModuleContainer, context: Context): helpers.Module | undefined {
+  const use = new Use(module, 'modelsOther');
   const entries = new Array<string>();
 
   // emit From<model> for tagged enum types
-  for (const union of crate.unions) {
+  for (const union of module.unions) {
     const indent = new helpers.indentation();
     use.addForType(union);
     for (const member of union.members) {
@@ -279,7 +284,7 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
   }
 
   // emit TryFrom as required
-  for (const model of crate.models) {
+  for (const model of module.models) {
     if (model.kind === 'marker') {
       // no impls for marker types
       continue;
@@ -475,9 +480,10 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
  * emits helper types for XML lists or returns undefined
  * if no XMLListWrappers are required.
  * 
+ * @param module the module being processed
  * @returns the helper models for wrapped XML lists or undefined
  */
-function emitXMLListWrappers(): helpers.Module | undefined {
+function emitXMLListWrappers(module: rust.ModuleContainer): helpers.Module | undefined {
   if (xmlListWrappers.size === 0) {
     return undefined;
   }
@@ -486,7 +492,7 @@ function emitXMLListWrappers(): helpers.Module | undefined {
   wrapperTypes.sort((a, b) => { return helpers.sortAscending(a.name, b.name); });
 
   const indent = new helpers.indentation();
-  const use = new Use('modelsOther');
+  const use = new Use(module, 'modelsOther');
 
   use.add('serde', 'Deserialize', 'Deserializer', 'Serialize', 'Serializer');
 
@@ -548,13 +554,14 @@ const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProp
  * defines serde helpers for encodedBytes and offsetDateTime types.
  * any other type will cause this function to throw.
  * 
+ * @param module the module being processed
  * @param field the model field for which to build serde helpers
  * @param serdeParams the params that will be passed to the serde annotation
  * @param format the (de)serialization format of the data
  * @param use the use statement builder currently in scope
  * @param deserializeWith optional custom deserializer to use in lieu of the emitted variant
  */
-function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format: helpers.ModelFormat, use: Use, deserializeWith?: rust.DeserializeWith): void {
+function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, serdeParams: Set<string>, format: helpers.ModelFormat, use: Use, deserializeWith?: rust.DeserializeWith): void {
   const unwrapped = helpers.unwrapType(field.type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
@@ -614,7 +621,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
     // we can reuse identical helpers across model types
     if (!serdeHelpers.has(name)) {
       serdeHelpers.set(name, (indent: helpers.indentation): string => {
-        const modUse = new Use('modelsOther');
+        const modUse = new Use(module, 'modelsOther');
         let modContent = `pub mod ${name} {\n`;
         modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
         const deserialize = deserializeWith ? '' : `${buildDeserialize(indent, field.type, modUse)}\n`;

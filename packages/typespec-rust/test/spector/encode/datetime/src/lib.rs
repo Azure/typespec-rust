@@ -7,3 +7,7 @@
 
 mod generated;
 pub use generated::*;
+pub mod header;
+pub mod property;
+pub mod query;
+pub mod response_header;

@@ -5,7 +5,5 @@
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-// TODO: LRO client has dead code, https://github.com/Azure/typespec-rust/issues/188
-#[allow(dead_code)]
 mod generated;
 pub use generated::*;
