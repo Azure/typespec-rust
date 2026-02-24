@@ -1950,29 +1950,31 @@ export class Adapter {
       }
     };
 
-    const throwOnUnitType = function(type: rust.ResponseTypes): void {
-      if (type.kind === 'unit') {
-        // this is to filter out unit from ResponseTypes.
-        // methods that return unit should have been skipped by our caller
-        // so we should never hit this (if we do, we have a bug elsewhere).
-        throw new AdapterError('InternalError', `unexpected trait impl kind ${type.kind}`);
-      }
-    };
-
     // response header traits are only ever for marker types and payloads
-    let implFor: rust.AsyncResponse<rust.MarkerType> | rust.Response<rust.MarkerType | rust.WireType>;
+    let implFor: rust.AsyncResponse<rust.MarkerType> | rust.Response<rust.MarkerType | rust.Model>;
     switch (method.returns.type.kind) {
       case 'pager':
       case 'poller':
         implFor = method.returns.type.type;
         break;
       case 'response':
-        throwOnUnitType(method.returns.type.content);
-        implFor = <rust.Response<rust.MarkerType | rust.WireType>>method.returns.type;
+        switch (method.returns.type.content.kind) {
+          case 'marker':
+          case 'model':
+            implFor = <rust.Response<rust.MarkerType | rust.Model>>method.returns.type;
+            break;
+          default:
+            throw new AdapterError('InternalError', `unexpected trait impl content kind ${method.returns.type.content.kind}`);
+        }
         break;
       case 'asyncResponse':
-        throwOnUnitType(method.returns.type.type);
-        implFor = <rust.AsyncResponse<rust.MarkerType>>method.returns.type;
+        switch (method.returns.type.type.kind) {
+          case 'marker':
+            implFor = <rust.AsyncResponse<rust.MarkerType>>method.returns.type;
+            break;
+          default:
+            throw new AdapterError('InternalError', `unexpected trait impl type kind ${method.returns.type.type.kind}`);
+        }
         break;
     }
 
