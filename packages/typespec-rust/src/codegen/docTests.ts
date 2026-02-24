@@ -20,7 +20,7 @@ export function emitHeaderTraitDocExample(crateName: string, trait: rust.Respons
     indent = new helpers.indentation(0);
   }
 
-  let targetType: rust.MarkerType | rust.WireType;
+  let targetType: rust.MarkerType | rust.Model;
   let useFromHttp = 'http::Response';
   switch (trait.implFor.kind) {
     case 'asyncResponse':
@@ -42,8 +42,7 @@ export function emitHeaderTraitDocExample(crateName: string, trait: rust.Respons
   // internal types aren't accessible in doc tests so we ignore them
   let headerDocs = `${indent.get()}/// ${helpers.emitBackTicks(3)}${trait.visibility === 'pub' ? 'no_run' : 'ignore'}\n`;
   headerDocs += `${indent.get()}/// use azure_core::{Result, ${useFromHttp}};\n`;
-  // we need to unwrap content in case it's a Vec<T> etc
-  headerDocs += `${indent.get()}/// use ${crateName}::models::{${helpers.getTypeDeclaration(helpers.unwrapType(targetType))}, ${trait.name}};\n`;
+  headerDocs += `${indent.get()}/// use ${crateName}::models::{${helpers.getTypeDeclaration(targetType)}, ${trait.name}};\n`;
   headerDocs += `${indent.get()}/// async fn example() -> Result<()> {\n`;
   headerDocs += `${indent.get()}///     let response: ${helpers.getTypeDeclaration(trait.implFor)} = unimplemented!();\n`;
   headerDocs += `${indent.get()}///     // Access response headers\n`;
