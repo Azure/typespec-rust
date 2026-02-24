@@ -34,7 +34,7 @@ importers:
         specifier: ~0.65.0
         version: 0.65.0(47cd2df982df6d63f1b050daa51e3328)
       '@azure-tools/typespec-client-generator-core':
-        specifier: ~0.65.2
+        specifier: ~0.65.3
         version: 0.65.3(ebcdf108dae87b61c78d971f37563a51)
       '@eslint/js':
         specifier: ^9.39.1
