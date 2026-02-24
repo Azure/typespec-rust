@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_jsonencodedname::{models::JsonEncodedNameModel, JsonClient};
+use spector_jsonencodedname::{property::models::JsonEncodedNameModel, JsonClient};
 
 #[tokio::test]
 async fn get() {

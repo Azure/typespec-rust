@@ -6,18 +6,6 @@
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
-/// This is a simple model.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct BodyParameter {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-}
-
-#[derive(Clone, Deserialize, SafeDebug, Serialize)]
-pub(crate) struct SpreadAsRequestBodyRequest {
-    pub(crate) name: String,
-}
-
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadAsRequestParameterRequest {
     pub(crate) name: String,

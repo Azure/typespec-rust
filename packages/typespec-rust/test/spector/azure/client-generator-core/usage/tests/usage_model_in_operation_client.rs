@@ -4,7 +4,7 @@
 
 use azure_core::http::RequestContent;
 use spector_coreusage::{
-    models::{InputModel, OutputModel, RoundTripModel},
+    model_in_operation::models::{InputModel, OutputModel, RoundTripModel},
     UsageClient,
 };
 

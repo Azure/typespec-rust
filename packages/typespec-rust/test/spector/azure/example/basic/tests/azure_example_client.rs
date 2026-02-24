@@ -5,8 +5,8 @@
 use std::collections::HashMap;
 
 use spector_azurebasic::{
-    models::{ActionRequest, ActionResponse, Model},
     AzureExampleClient,
+    _specs_::azure::example::basic::models::{ActionRequest, ActionResponse, Model},
 };
 
 #[tokio::test]
@@ -15,7 +15,9 @@ async fn basic_action() {
     let body = ActionRequest {
         array_property: Some(vec!["item".to_string()]),
         model_property: Some(Model {
-            enum_property: Some(spector_azurebasic::models::Enum::EnumValue1),
+            enum_property: Some(
+                spector_azurebasic::_specs_::azure::example::basic::models::Enum::EnumValue1,
+            ),
             float32_property: Some(1.5),
             int32_property: Some(1),
         }),

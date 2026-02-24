@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_contentneg::{models::PngImageAsJson, ContentNegotiationClient};
+use spector_contentneg::{different_body::models::PngImageAsJson, ContentNegotiationClient};
 use std::fs;
 
 #[tokio::test]

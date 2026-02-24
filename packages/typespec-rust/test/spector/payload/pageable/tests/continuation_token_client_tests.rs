@@ -4,16 +4,16 @@
 
 use futures::StreamExt;
 use spector_corepageable::{
-    models::{
+    models::{RequestHeaderResponseHeaderResponse, RequestQueryResponseHeaderResponse},
+    server_driven_pagination::continuation_token::models::{
         PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions,
         PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions,
-        RequestHeaderResponseBodyResponse, RequestHeaderResponseHeaderResponse,
-        RequestHeaderResponseHeaderResponseHeaders, RequestQueryResponseBodyResponse,
-        RequestQueryResponseHeaderResponse, RequestQueryResponseHeaderResponseHeaders,
+        RequestHeaderResponseBodyResponse, RequestHeaderResponseHeaderResponseHeaders,
+        RequestQueryResponseBodyResponse, RequestQueryResponseHeaderResponseHeaders,
     },
     PageableClient,
 };

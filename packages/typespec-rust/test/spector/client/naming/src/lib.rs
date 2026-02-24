@@ -7,3 +7,6 @@
 
 mod generated;
 pub use generated::*;
+pub mod model;
+pub mod property;
+pub mod union_enum;

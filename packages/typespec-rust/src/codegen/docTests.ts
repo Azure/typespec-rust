@@ -5,16 +5,16 @@
 
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
+import * as utils from '../utils/utils.js';
 
 /**
  * emit doc examples for accessing header traits
  * 
- * @param crateName the name of the containing crate
  * @param trait the trait for which to emit the examples
  * @param indent the indentation helper in scope or undefined for no indentation
  * @returns the examples text
  */
-export function emitHeaderTraitDocExample(crateName: string, trait: rust.ResponseHeadersTrait, indent?: helpers.indentation): string {
+export function emitHeaderTraitDocExample(trait: rust.ResponseHeadersTrait, indent?: helpers.indentation): string {
   if (!indent) {
     // missing indent means no indentation
     indent = new helpers.indentation(0);
@@ -42,7 +42,21 @@ export function emitHeaderTraitDocExample(crateName: string, trait: rust.Respons
   // internal types aren't accessible in doc tests so we ignore them
   let headerDocs = `${indent.get()}/// ${helpers.emitBackTicks(3)}${trait.visibility === 'pub' ? 'no_run' : 'ignore'}\n`;
   headerDocs += `${indent.get()}/// use azure_core::{Result, ${useFromHttp}};\n`;
-  headerDocs += `${indent.get()}/// use ${crateName}::models::{${helpers.getTypeDeclaration(targetType)}, ${trait.name}};\n`;
+
+  const crateName = helpers.getCrate(trait.module).name;
+  if (targetType.kind !== 'model' || targetType.module === trait.module) {
+    // this is either a marker type or a model in the same module as the trait.
+    // either way, we can combine them into a single import statement.
+    headerDocs += `${indent.get()}/// use ${utils.buildImportPath(trait.module, trait.module, crateName)}::models::{${helpers.getTypeDeclaration(targetType)}, ${trait.name}};\n`;
+  } else {
+    // the model and trait are in different modules, so we need to import both
+    const imports = new Array<string>(
+      `${utils.buildImportPath(trait.module, trait.module, crateName)}::models::${trait.name}`,
+      `${utils.buildImportPath(trait.module, targetType.module, crateName)}::models::${helpers.getTypeDeclaration(targetType)}`,
+    );
+    headerDocs += imports.sort().map(imp => `${indent.get()}/// use ${imp};\n`).join('');
+  }
+
   headerDocs += `${indent.get()}/// async fn example() -> Result<()> {\n`;
   headerDocs += `${indent.get()}///     let response: ${helpers.getTypeDeclaration(trait.implFor)} = unimplemented!();\n`;
   headerDocs += `${indent.get()}///     // Access response headers\n`;

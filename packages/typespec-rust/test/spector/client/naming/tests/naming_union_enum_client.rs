@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_naming::{
-    models::{ClientExtensibleEnum, ExtensibleEnum},
+    union_enum::models::{ClientExtensibleEnum, ExtensibleEnum},
     NamingClient,
 };
 

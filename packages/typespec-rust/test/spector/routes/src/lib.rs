@@ -7,3 +7,5 @@
 
 mod generated;
 pub use generated::*;
+pub mod path_parameters;
+pub mod query_parameters;
