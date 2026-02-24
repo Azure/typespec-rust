@@ -9,6 +9,7 @@ import * as rust from '../codemodel/index.js';
 /**
  * emits the contents of the lib.rs file
  * 
+ * @param crate the crate for which to emit the lib.rs file
  * @returns the contents of the lib.rs file
  */
 export function emitLibRs(crate: rust.Crate): string {
