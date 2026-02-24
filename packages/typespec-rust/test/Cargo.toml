@@ -48,6 +48,8 @@ members = [
     "spector/azure/resource-manager/operation-templates",
     "spector/azure/resource-manager/resources",
     "spector/azure/resource-manager/multi-service",
+    "spector/azure/resource-manager/multi-service-older-versions",
+    "spector/azure/resource-manager/multi-service-shared-models",
     "spector/azure/special-headers/client-request-id",
     "spector/azure/versioning/previewVersion",
     "spector/client/enum-conflict",
