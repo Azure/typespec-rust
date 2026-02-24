@@ -1362,7 +1362,11 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   const requestResult = constructRequest(indent, use, method, paramGroups, true, srcUrlVar, cloneUrl);
   body += requestResult.content;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
-  body += `${indent.get()}Box::pin(async move {\n`;
+  body += `${indent.get()}Box::pin(`;
+  if (method.strategy?.kind === 'nextLink') {
+    body += `{\n${indent.push().get()}let first_url = first_url.clone();\n${indent.get()}`;
+  }
+  body += `async move {\n`;
   body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&pager_options.context, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
@@ -1416,7 +1420,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
         const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         nextPageValue = lastFieldName;
         srcNextPage = `res.${buildNextLinkPath(method.strategy.nextLinkPath)}`;
-        continuation = `PagerContinuation::Link(${lastFieldName}.parse()?)`;
+        continuation = `PagerContinuation::Link(first_url.join(${lastFieldName}.as_ref())?)`;
         break;
       }
     }
@@ -1443,6 +1447,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}Ok(PagerResult::Done { response: rsp.into() })\n`;
   }
 
+  if (method.strategy?.kind === 'nextLink') {
+    body += `${indent.pop().get()}}\n`;
+  }
   body += `${indent.pop().get()}})\n`; // end Box::pin(async move {
   body += `${indent.get()}},\n${indent.get()}Some(options.method_options),\n`; // end move {
   body += `${indent.pop().get()}))`; // end Ok(Pager::new(

@@ -12,6 +12,20 @@ pub struct FlattenPropertyClientPutFlattenModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`FlattenPropertyClient::put_flatten_read_only_model()`](crate::generated::clients::FlattenPropertyClient::put_flatten_read_only_model())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FlattenPropertyClientPutFlattenReadOnlyModelOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`FlattenPropertyClient::put_flatten_unknown_model()`](crate::generated::clients::FlattenPropertyClient::put_flatten_unknown_model())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FlattenPropertyClientPutFlattenUnknownModelOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`FlattenPropertyClient::put_nested_flatten_model()`](crate::generated::clients::FlattenPropertyClient::put_nested_flatten_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientPutNestedFlattenModelOptions<'a> {

@@ -40,6 +40,7 @@ async fn list_with_parameterized_next_link() {
             _ => panic!("unexpected page number"),
         }
     }
+    assert_eq!(item_count, 2);
 }
 
 #[tokio::test]
@@ -64,6 +65,7 @@ async fn list_with_custom_page_model() {
             _ => panic!("unexpected item number"),
         }
     }
+    assert_eq!(item_count, 1);
 }
 
 #[tokio::test]
@@ -95,6 +97,7 @@ async fn list_with_custom_page_model_pages() {
             _ => panic!("unexpected page number"),
         }
     }
+    assert_eq!(page_count, 1);
 }
 
 #[tokio::test]
@@ -119,6 +122,7 @@ async fn list_with_page() {
             _ => panic!("unexpected item number"),
         }
     }
+    assert_eq!(item_count, 1);
 }
 
 #[tokio::test]
@@ -147,6 +151,7 @@ async fn list_with_page_pages() {
             _ => panic!("unexpected page number"),
         }
     }
+    assert_eq!(page_count, 1);
 }
 
 #[tokio::test]
@@ -183,6 +188,7 @@ async fn list_with_parameters() {
             _ => panic!("unexpected item number"),
         }
     }
+    assert_eq!(item_count, 1);
 }
 
 #[tokio::test]
@@ -224,4 +230,28 @@ async fn list_with_parameters_pages() {
             _ => panic!("unexpected page number"),
         }
     }
+    assert_eq!(page_count, 1);
+}
+
+#[tokio::test]
+async fn list_with_relative_next_link() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut iter = client.list_with_relative_next_link(None).unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.id, Some(1));
+                assert_eq!(item.name, Some("User1".to_string()));
+            }
+            2 => {
+                assert_eq!(item.id, Some(2));
+                assert_eq!(item.name, Some("User2".to_string()));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+    assert_eq!(item_count, 2);
 }

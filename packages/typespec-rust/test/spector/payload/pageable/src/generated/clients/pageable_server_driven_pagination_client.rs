@@ -66,29 +66,34 @@ impl PageableServerDrivenPaginationClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let res: LinkResponse = json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.next {
-                        Some(next) if !next.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: PagerContinuation::Link(next.parse()?),
-                        },
-                        _ => PagerResult::Done { response: rsp },
-                    })
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: LinkResponse = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next {
+                            Some(next) if !next.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    first_url.join(next.as_ref())?,
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
                 })
             },
             Some(options.method_options),
@@ -117,29 +122,34 @@ impl PageableServerDrivenPaginationClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let res: LinkStringResponse = json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.next {
-                        Some(next) if !next.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: PagerContinuation::Link(next.parse()?),
-                        },
-                        _ => PagerResult::Done { response: rsp },
-                    })
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: LinkStringResponse = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next {
+                            Some(next) if !next.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    first_url.join(next.as_ref())?,
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
                 })
             },
             Some(options.method_options),
@@ -168,31 +178,36 @@ impl PageableServerDrivenPaginationClient {
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: NestedLinkResponse = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(
+                            match res.nested_next.and_then(|nested_next| nested_next.next) {
+                                Some(next) if !next.is_empty() => PagerResult::More {
+                                    response: rsp,
+                                    continuation: PagerContinuation::Link(
+                                        first_url.join(next.as_ref())?,
+                                    ),
                                 },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let res: NestedLinkResponse = json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(
-                        match res.nested_next.and_then(|nested_next| nested_next.next) {
-                            Some(next) if !next.is_empty() => PagerResult::More {
-                                response: rsp,
-                                continuation: PagerContinuation::Link(next.parse()?),
+                                _ => PagerResult::Done { response: rsp },
                             },
-                            _ => PagerResult::Done { response: rsp },
-                        },
-                    )
+                        )
+                    }
                 })
             },
             Some(options.method_options),
