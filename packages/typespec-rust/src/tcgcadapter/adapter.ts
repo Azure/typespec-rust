@@ -124,7 +124,7 @@ export class Adapter {
     }
 
     if (this.rootNamespace === '') {
-      throw new Error('missing namespace');
+      throw new AdapterError('UnsupportedTsp', 'unable to determine root namespace');
     }
 
     let serviceType: rust.ServiceType = 'data-plane';
