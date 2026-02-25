@@ -140,7 +140,7 @@ export class Context {
    * @returns the impl TryFrom<T> block for type or the empty string
    */
   getTryFromForError(model: rust.Model, use: Use): string {
-    if ((model.flags & rust.ModelFlags.Error) !== rust.ModelFlags.Error) {
+    if ((model.flags & rust.ModelFlags.Error) === 0) {
       return '';
     }
 
