@@ -5,7 +5,7 @@
 mod common;
 
 use azure_core::http::StatusCode;
-use spector_armcommon::models::{ConfidentialResource, ConfidentialResourceProperties};
+use spector_armcommon::models::{CloudError, ConfidentialResource, ConfidentialResourceProperties};
 
 #[tokio::test]
 async fn get_for_predefined_error() {
@@ -21,7 +21,6 @@ async fn get_for_predefined_error() {
 }
 
 #[tokio::test]
-#[ignore] // Follow up on custom error design
 async fn create_for_user_defined_error() {
     let resource = ConfidentialResource {
         location: Some("eastus".to_string()),
@@ -41,4 +40,21 @@ async fn create_for_user_defined_error() {
     let err = rsp.unwrap_err();
     assert_eq!(err.http_status(), Some(StatusCode::BadRequest));
     assert_eq!(err.to_string(), "Username should not contain only numbers.");
+
+    let cloud_err: CloudError = err.try_into().unwrap();
+
+    let cloud_error = cloud_err.error.as_ref();
+    assert!(cloud_error.is_some());
+    assert_eq!(cloud_error.unwrap().code, Some("BadRequest".to_string()));
+    assert_eq!(
+        cloud_error.unwrap().message,
+        Some("Username should not contain only numbers.".to_string())
+    );
+
+    let cloud_inner = cloud_error.unwrap().innererror.as_ref();
+    assert!(cloud_inner.is_some());
+    assert_eq!(
+        cloud_inner.unwrap().exceptiontype,
+        Some("general".to_string())
+    );
 }

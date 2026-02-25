@@ -325,6 +325,9 @@ export enum ModelFlags {
 
   /** model is used as output from a method */
   Output = 2,
+
+  /** model is as error */
+  Error = 4,
 }
 
 /** DateTimeEncoding is the wire format of the date/time */

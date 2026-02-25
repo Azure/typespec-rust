@@ -173,7 +173,11 @@ export class Adapter {
     const processedTypes = new Set<string>();
 
     for (const model of this.ctx.sdkPackage.models) {
-      if ((model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0 && (model.usage & tcgc.UsageFlags.Spread) === 0) {
+      let usageFlags = tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread;
+      if (this.options['emit-error-types']) {
+        usageFlags |= tcgc.UsageFlags.Exception;
+      }
+      if ((model.usage & usageFlags) === 0) {
         // skip types without input and output usage. this will include core
         // types unless they're explicitly referenced (e.g. a model property).
         // we keep the models for spread params as we internally use them.
@@ -357,6 +361,9 @@ export class Adapter {
     }
     if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output) {
       modelFlags |= rust.ModelFlags.Output;
+    }
+    if (this.options['emit-error-types'] && <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception) {
+      modelFlags |= rust.ModelFlags.Error;
     }
 
     rustModel = new rust.Model(modelName, model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags);

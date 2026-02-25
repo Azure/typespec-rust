@@ -132,6 +132,33 @@ export class Context {
   }
 
   /**
+   * returns the impl azure_core::Error for the error type.
+   * if no impl is required, the empty string is returned.
+   *
+   * @param model the model for which to implement TryFrom
+   * @param use the use statement builder currently in scope
+   * @returns the impl TryFrom<T> block for type or the empty string
+   */
+  getTryFromForError(model: rust.Model, use: Use): string {
+    if ((model.flags & rust.ModelFlags.Error) !== rust.ModelFlags.Error) {
+      return '';
+    }
+
+    use.add('azure_core::error', 'ErrorKind');
+    const indent = new helpers.indentation();
+    let content = `impl TryFrom<azure_core::Error> for ${helpers.getTypeDeclaration(model)} {\n`;
+    content += `${indent.get()}type Error = azure_core::Error;\n`;
+    content += `${indent.get()}fn try_from(error: azure_core::Error) -> std::result::Result<Self, Self::Error> {\n`;
+    content += `${indent.push().get()}match error.kind() {`
+    content += `${indent.push().get()}ErrorKind::HttpResponse { raw_response: Some(raw_response), .. } => Ok(serde_json::from_str(raw_response.body().clone().into_string()?.as_ref())?),`;
+    content += `${indent.get()}_ => Err(azure_core::Error::with_message(azure_core::error::ErrorKind::DataConversion, "ErrorKind was not HttpResponse and could not be parsed."))`;
+    content += `${indent.pop().get()}}\n`;
+    content += `${indent.pop().get()}}\n`;
+    content += '}\n\n';
+    return content;
+  }
+
+  /**
    * returns the body format for the provided model
    * 
    * @param model the model for which to determine the format

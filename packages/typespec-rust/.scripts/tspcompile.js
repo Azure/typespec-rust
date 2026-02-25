@@ -218,6 +218,12 @@ function generate(crate, input, outputDir, additionalArgs) {
       additionalArgs[i] = `--option="@azure-tools/typespec-rust.${additionalArgs[i]}"`;
     }
   }
+
+  const tspConfigPath = `${outputDir}/tspconfig.yaml`;
+  if (fs.existsSync(tspConfigPath)) {
+    additionalArgs.push(`--config=${tspConfigPath}`);
+  }
+
   sem.take(async function() {
     // if a tsp file isn't specified, first check
     // for a client.tsp file. if that doesn't exist
