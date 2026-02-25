@@ -5,6 +5,8 @@
 ### Breaking Changes
 
 * TypeSpec namespaces are now honored and emitted as sub-modules.
+  * The root namespace is selected from the first defined client.  All content in the root namespace is exported as `crate_name::clients::*` and `crate_name::models::*`.
+  * If there are no defined clients, the the root namespace is selected from a non-core model type.
 
 ### Other Changes
 
