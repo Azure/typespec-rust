@@ -59,7 +59,7 @@ pub enum AccessTier {
 }
 
 /// The account kind.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum AccountKind {
     /// The storage account is a blob storage account.
     BlobStorage,
@@ -75,9 +75,6 @@ pub enum AccountKind {
 
     /// The storage account is a storage V2 account.
     StorageV2,
-
-    /// Any other value not defined in `AccountKind`.
-    UnknownValue(String),
 }
 
 /// The archive status.
@@ -96,53 +93,25 @@ pub enum ArchiveStatus {
     UnknownValue(String),
 }
 
+/// The blob copy source tags types.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum BlobCopySourceTags {
+    /// The copy blob source tags option.
+    Copy,
+
+    /// The replace blob source tags option.
+    Replace,
+}
+
 /// The type of blob deletions.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum BlobDeleteType {
     /// Permanently delete the blob.
     Permanent,
-
-    /// Any other value not defined in `BlobDeleteType`.
-    UnknownValue(String),
-}
-
-/// The blob expiration options.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum BlobExpiryOptions {
-    /// Absolute time.
-    Absolute,
-
-    /// Never expire.
-    NeverExpire,
-
-    /// Relative to creation time.
-    RelativeToCreation,
-
-    /// Relative to now.
-    RelativeToNow,
-
-    /// Any other value not defined in `BlobExpiryOptions`.
-    UnknownValue(String),
-}
-
-/// The immutability policy mode.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum BlobImmutabilityPolicyMode {
-    /// The immutability policy is locked.
-    Locked,
-
-    /// The immutability policy is mutable.
-    Mutable,
-
-    /// The immutability policy is unlocked.
-    Unlocked,
-
-    /// Any other value not defined in `BlobImmutabilityPolicyMode`.
-    UnknownValue(String),
 }
 
 /// The blob type.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum BlobType {
     /// The blob is an append blob.
     AppendBlob,
@@ -152,13 +121,10 @@ pub enum BlobType {
 
     /// The blob is a page blob.
     PageBlob,
-
-    /// Any other value not defined in `BlobType`.
-    UnknownValue(String),
 }
 
 /// The block list types.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum BlockListType {
     /// Both lists together.
     All,
@@ -168,13 +134,10 @@ pub enum BlockListType {
 
     /// The list of uncommitted blocks.
     Uncommitted,
-
-    /// Any other value not defined in `BlockListType`.
-    UnknownValue(String),
 }
 
 /// The copy status.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CopyStatus {
     /// The copy operation is aborted.
     Aborted,
@@ -187,46 +150,44 @@ pub enum CopyStatus {
 
     /// The copy operation succeeded.
     Success,
-
-    /// Any other value not defined in `CopyStatus`.
-    UnknownValue(String),
 }
 
 /// The delete snapshots option type.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum DeleteSnapshotsOptionType {
     /// The delete snapshots include option is include.
     Include,
 
     /// The delete snapshots include option is only.
     Only,
-
-    /// Any other value not defined in `DeleteSnapshotsOptionType`.
-    UnknownValue(String),
 }
 
 /// The algorithm used to produce the encryption key hash. Currently, the only accepted value is \"AES256\". Must be provided
 /// if the x-ms-encryption-key header is provided.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum EncryptionAlgorithmType {
     /// The AES256 encryption algorithm.
     Aes256,
+}
 
-    /// Any other value not defined in `EncryptionAlgorithmType`.
+/// The file share token intent types.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum FileShareTokenIntent {
+    /// The file share token intent is backup.
+    Backup,
+
+    /// Any other value not defined in `FileShareTokenIntent`.
     UnknownValue(String),
 }
 
 /// The filter blobs includes.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum FilterBlobsIncludeItem {
     /// The filter includes no versions.
     None,
 
     /// The filter includes n versions.
     Versions,
-
-    /// Any other value not defined in `FilterBlobsIncludeItem`.
-    UnknownValue(String),
 }
 
 /// The geo replication status.
@@ -245,21 +206,31 @@ pub enum GeoReplicationStatusType {
     UnknownValue(String),
 }
 
+/// The immutability policy mode used in requests and responses.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ImmutabilityPolicyMode {
+    /// The immutability policy is locked.
+    Locked,
+
+    /// The immutability policy is mutable. Should never be set, only returned.
+    Mutable,
+
+    /// The immutability policy is unlocked.
+    Unlocked,
+}
+
 /// The lease duration.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum LeaseDuration {
     /// The lease is of fixed duration.
     Fixed,
 
     /// The lease is of infinite duration.
     Infinite,
-
-    /// Any other value not defined in `LeaseDuration`.
-    UnknownValue(String),
 }
 
 /// The lease state.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum LeaseState {
     /// The lease is available.
     Available,
@@ -275,26 +246,20 @@ pub enum LeaseState {
 
     /// The lease is currently leased.
     Leased,
-
-    /// Any other value not defined in `LeaseState`.
-    UnknownValue(String),
 }
 
 /// The lease status.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum LeaseStatus {
     /// The lease is locked.
     Locked,
 
     /// The lease is unlocked.
     Unlocked,
-
-    /// Any other value not defined in `LeaseStatus`.
-    UnknownValue(String),
 }
 
 /// The list blob includes parameter values.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ListBlobsIncludeItem {
     /// The include copies.
     Copy,
@@ -325,13 +290,10 @@ pub enum ListBlobsIncludeItem {
 
     /// The include versions.
     Versions,
-
-    /// Any other value not defined in `ListBlobsIncludeItem`.
-    UnknownValue(String),
 }
 
 /// Include this parameter to specify that the container's metadata be returned as part of the response body.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ListContainersIncludeType {
     /// Include deleted
     Deleted,
@@ -341,9 +303,6 @@ pub enum ListContainersIncludeType {
 
     /// Include system
     System,
-
-    /// Any other value not defined in `ListContainersIncludeType`.
-    UnknownValue(String),
 }
 
 /// The premium page blob access tier types.
@@ -399,35 +358,6 @@ pub enum PublicAccessType {
     UnknownValue(String),
 }
 
-/// The query request, note only SQL supported
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum QueryRequestType {
-    /// The SQL request query type.
-    Sql,
-
-    /// Any other value not defined in `QueryRequestType`.
-    UnknownValue(String),
-}
-
-/// The query format type.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum QueryType {
-    /// The query format type is Apache Arrow.
-    Arrow,
-
-    /// The query format type is delimited.
-    Delimited,
-
-    /// The query format type is JSON.
-    Json,
-
-    /// The query format type is Parquet.
-    Parquet,
-
-    /// Any other value not defined in `QueryType`.
-    UnknownValue(String),
-}
-
 /// If an object is in rehydrate pending state then this header is returned with priority of rehydrate. Valid values are High
 /// and Standard.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -443,7 +373,7 @@ pub enum RehydratePriority {
 }
 
 /// The sequence number actions.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SequenceNumberActionType {
     /// Increment the sequence number.
     Increment,
@@ -453,19 +383,22 @@ pub enum SequenceNumberActionType {
 
     /// Update the sequence number.
     Update,
-
-    /// Any other value not defined in `SequenceNumberActionType`.
-    UnknownValue(String),
 }
 
 /// The SKU types
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SkuName {
     /// The premium LRS SKU.
     PremiumLrs,
 
+    /// The premium ZRS SKU.
+    PremiumZrs,
+
     /// The standard GRS SKU.
     StandardGrs,
+
+    /// The standard GZRS SKU.
+    StandardGzrs,
 
     /// The standard LRS SKU.
     StandardLrs,
@@ -473,9 +406,355 @@ pub enum SkuName {
     /// The standard RAGRS SKU.
     StandardRagrs,
 
+    /// The standard RAGZRS SKU.
+    StandardRagzrs,
+
     /// The standard ZRS SKU.
     StandardZrs,
+}
 
-    /// Any other value not defined in `SkuName`.
+/// Error codes returned by the Azure Blob Storage service.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum StorageErrorCode {
+    /// Account already exists.
+    AccountAlreadyExists,
+
+    /// Account is being created.
+    AccountBeingCreated,
+
+    /// Account is disabled.
+    AccountIsDisabled,
+
+    /// Append position condition not met.
+    AppendPositionConditionNotMet,
+
+    /// Authentication failed.
+    AuthenticationFailed,
+
+    /// Authorization failure.
+    AuthorizationFailure,
+
+    /// Authorization permission mismatch.
+    AuthorizationPermissionMismatch,
+
+    /// Authorization protocol mismatch.
+    AuthorizationProtocolMismatch,
+
+    /// Authorization resource type mismatch.
+    AuthorizationResourceTypeMismatch,
+
+    /// Authorization service mismatch.
+    AuthorizationServiceMismatch,
+
+    /// Authorization source IP mismatch.
+    AuthorizationSourceIPMismatch,
+
+    /// Blob access tier not supported for account type.
+    BlobAccessTierNotSupportedForAccountType,
+
+    /// Blob already exists.
+    BlobAlreadyExists,
+
+    /// Blob archived.
+    BlobArchived,
+
+    /// Blob being rehydrated.
+    BlobBeingRehydrated,
+
+    /// Blob is immutable due to policy.
+    BlobImmutableDueToPolicy,
+
+    /// Blob not archived.
+    BlobNotArchived,
+
+    /// Blob not found.
+    BlobNotFound,
+
+    /// Blob overwritten.
+    BlobOverwritten,
+
+    /// Blob tier inadequate for content length.
+    BlobTierInadequateForContentLength,
+
+    /// Blob uses customer specified encryption.
+    BlobUsesCustomerSpecifiedEncryption,
+
+    /// Block count exceeds limit.
+    BlockCountExceedsLimit,
+
+    /// Block list too long.
+    BlockListTooLong,
+
+    /// Cannot change to lower tier.
+    CannotChangeToLowerTier,
+
+    /// Cannot verify copy source.
+    CannotVerifyCopySource,
+
+    /// Condition headers not supported.
+    ConditionHeadersNotSupported,
+
+    /// Condition not met.
+    ConditionNotMet,
+
+    /// Container already exists.
+    ContainerAlreadyExists,
+
+    /// Container being deleted.
+    ContainerBeingDeleted,
+
+    /// Container disabled.
+    ContainerDisabled,
+
+    /// Container not found.
+    ContainerNotFound,
+
+    /// Content length larger than tier limit.
+    ContentLengthLargerThanTierLimit,
+
+    /// Copy across accounts not supported.
+    CopyAcrossAccountsNotSupported,
+
+    /// Copy ID mismatch.
+    CopyIdMismatch,
+
+    /// Empty metadata key.
+    EmptyMetadataKey,
+
+    /// Feature version mismatch.
+    FeatureVersionMismatch,
+
+    /// Incremental copy blob mismatch.
+    IncrementalCopyBlobMismatch,
+
+    /// Incremental copy of earlier version snapshot not allowed.
+    IncrementalCopyOfEarlierVersionSnapshotNotAllowed,
+
+    /// Incremental copy source must be snapshot.
+    IncrementalCopySourceMustBeSnapshot,
+
+    /// Infinite lease duration required.
+    InfiniteLeaseDurationRequired,
+
+    /// Insufficient account permissions.
+    InsufficientAccountPermissions,
+
+    /// Internal error.
+    InternalError,
+
+    /// Invalid authentication information.
+    InvalidAuthenticationInfo,
+
+    /// Invalid blob or block.
+    InvalidBlobOrBlock,
+
+    /// Invalid blob tier.
+    InvalidBlobTier,
+
+    /// Invalid blob type.
+    InvalidBlobType,
+
+    /// Invalid block ID.
+    InvalidBlockId,
+
+    /// Invalid block list.
+    InvalidBlockList,
+
+    /// Invalid header value.
+    InvalidHeaderValue,
+
+    /// Invalid HTTP verb.
+    InvalidHttpVerb,
+
+    /// Invalid input.
+    InvalidInput,
+
+    /// Invalid MD5.
+    InvalidMd5,
+
+    /// Invalid metadata.
+    InvalidMetadata,
+
+    /// Invalid operation.
+    InvalidOperation,
+
+    /// Invalid page range.
+    InvalidPageRange,
+
+    /// Invalid query parameter value.
+    InvalidQueryParameterValue,
+
+    /// Invalid range.
+    InvalidRange,
+
+    /// Invalid request URL.
+    InvalidRequestUrl,
+
+    /// Invalid source blob type.
+    InvalidSourceBlobType,
+
+    /// Invalid source blob URL.
+    InvalidSourceBlobUrl,
+
+    /// Invalid URI.
+    InvalidUri,
+
+    /// Invalid version for page blob operation.
+    InvalidVersionForPageBlobOperation,
+
+    /// Invalid XML document.
+    InvalidXmlDocument,
+
+    /// Invalid XML node value.
+    InvalidXmlNodeValue,
+
+    /// Lease already broken.
+    LeaseAlreadyBroken,
+
+    /// Lease already present.
+    LeaseAlreadyPresent,
+
+    /// Lease ID mismatch with blob operation.
+    LeaseIdMismatchWithBlobOperation,
+
+    /// Lease ID mismatch with container operation.
+    LeaseIdMismatchWithContainerOperation,
+
+    /// Lease ID mismatch with lease operation.
+    LeaseIdMismatchWithLeaseOperation,
+
+    /// Lease ID missing.
+    LeaseIdMissing,
+
+    /// Lease is breaking and cannot be acquired.
+    LeaseIsBreakingAndCannotBeAcquired,
+
+    /// Lease is breaking and cannot be changed.
+    LeaseIsBreakingAndCannotBeChanged,
+
+    /// Lease is broken and cannot be renewed.
+    LeaseIsBrokenAndCannotBeRenewed,
+
+    /// Lease lost.
+    LeaseLost,
+
+    /// Lease not present with blob operation.
+    LeaseNotPresentWithBlobOperation,
+
+    /// Lease not present with container operation.
+    LeaseNotPresentWithContainerOperation,
+
+    /// Lease not present with lease operation.
+    LeaseNotPresentWithLeaseOperation,
+
+    /// Maximum blob size condition not met.
+    MaxBlobSizeConditionNotMet,
+
+    /// MD5 mismatch.
+    Md5Mismatch,
+
+    /// Metadata too large.
+    MetadataTooLarge,
+
+    /// Missing content length header.
+    MissingContentLengthHeader,
+
+    /// Missing required header.
+    MissingRequiredHeader,
+
+    /// Missing required query parameter.
+    MissingRequiredQueryParameter,
+
+    /// Missing required XML node.
+    MissingRequiredXmlNode,
+
+    /// Multiple condition headers not supported.
+    MultipleConditionHeadersNotSupported,
+
+    /// No pending copy operation.
+    NoPendingCopyOperation,
+
+    /// Operation not allowed on incremental copy blob.
+    OperationNotAllowedOnIncrementalCopyBlob,
+
+    /// Operation timed out.
+    OperationTimedOut,
+
+    /// Out of range input.
+    OutOfRangeInput,
+
+    /// Out of range query parameter value.
+    OutOfRangeQueryParameterValue,
+
+    /// Pending copy operation.
+    PendingCopyOperation,
+
+    /// Previous snapshot cannot be newer.
+    PreviousSnapshotCannotBeNewer,
+
+    /// Previous snapshot not found.
+    PreviousSnapshotNotFound,
+
+    /// Previous snapshot operation not supported.
+    PreviousSnapshotOperationNotSupported,
+
+    /// Request body too large.
+    RequestBodyTooLarge,
+
+    /// Request URL failed to parse.
+    RequestUrlFailedToParse,
+
+    /// Resource already exists.
+    ResourceAlreadyExists,
+
+    /// Resource not found.
+    ResourceNotFound,
+
+    /// Resource type mismatch.
+    ResourceTypeMismatch,
+
+    /// Sequence number condition not met.
+    SequenceNumberConditionNotMet,
+
+    /// Sequence number increment too large.
+    SequenceNumberIncrementTooLarge,
+
+    /// Server busy.
+    ServerBusy,
+
+    /// Snapshot count exceeded.
+    SnapshotCountExceeded,
+
+    /// Snapshot operation rate exceeded.
+    SnapshotOperationRateExceeded,
+
+    /// Snapshots present.
+    SnapshotsPresent,
+
+    /// Source condition not met.
+    SourceConditionNotMet,
+
+    /// System in use.
+    SystemInUse,
+
+    /// Target condition not met.
+    TargetConditionNotMet,
+
+    /// Unauthorized blob overwrite.
+    UnauthorizedBlobOverwrite,
+
+    /// Unsupported header.
+    UnsupportedHeader,
+
+    /// Unsupported HTTP verb.
+    UnsupportedHttpVerb,
+
+    /// Unsupported query parameter.
+    UnsupportedQueryParameter,
+
+    /// Unsupported XML node.
+    UnsupportedXmlNode,
+
+    /// Any other value not defined in `StorageErrorCode`.
     UnknownValue(String),
 }

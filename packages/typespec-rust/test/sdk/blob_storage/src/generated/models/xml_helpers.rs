@@ -6,9 +6,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use super::{
-    ArrowField, BlobTag, Block, ClearRange, ContainerItem, CorsRule, FilterBlobItem, PageRange,
-};
+use super::{BlobTag, Block, ContainerItem, CorsRule, FilterBlobItem};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Deserialize, Serialize)]
@@ -61,32 +59,6 @@ impl BlobsBlob {
     {
         BlobsBlob {
             Blob: to_serialize.to_owned(),
-        }
-        .serialize(serializer)
-    }
-}
-
-#[derive(Deserialize, Serialize)]
-#[serde(rename = "ClearRange")]
-pub(crate) struct Clear_rangeClearRange {
-    #[serde(default)]
-    ClearRange: Option<Vec<ClearRange>>,
-}
-
-impl Clear_rangeClearRange {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<ClearRange>>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        Ok(Clear_rangeClearRange::deserialize(deserializer)?.ClearRange)
-    }
-
-    pub fn wrap<S>(to_serialize: &Option<Vec<ClearRange>>, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        Clear_rangeClearRange {
-            ClearRange: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
@@ -165,58 +137,6 @@ impl CorsCorsRule {
     {
         CorsCorsRule {
             CorsRule: to_serialize.to_owned(),
-        }
-        .serialize(serializer)
-    }
-}
-
-#[derive(Deserialize, Serialize)]
-#[serde(rename = "PageRange")]
-pub(crate) struct Page_rangePageRange {
-    #[serde(default)]
-    PageRange: Option<Vec<PageRange>>,
-}
-
-impl Page_rangePageRange {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<PageRange>>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        Ok(Page_rangePageRange::deserialize(deserializer)?.PageRange)
-    }
-
-    pub fn wrap<S>(to_serialize: &Option<Vec<PageRange>>, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        Page_rangePageRange {
-            PageRange: to_serialize.to_owned(),
-        }
-        .serialize(serializer)
-    }
-}
-
-#[derive(Deserialize, Serialize)]
-#[serde(rename = "Schema")]
-pub(crate) struct SchemaField {
-    #[serde(default)]
-    Field: Option<Vec<ArrowField>>,
-}
-
-impl SchemaField {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<ArrowField>>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        Ok(SchemaField::deserialize(deserializer)?.Field)
-    }
-
-    pub fn wrap<S>(to_serialize: &Option<Vec<ArrowField>>, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        SchemaField {
-            Field: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
