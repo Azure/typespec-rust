@@ -8,7 +8,7 @@ import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import * as shared from '../shared/shared.js';
+import * as utils from '../utils/utils.js';
 
 /**
  * returns the emitted header traits, or undefined if there
@@ -188,7 +188,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
  */
 function getHeaderConstName(header: rust.ResponseHeader): string {
   // strip off any x-ms- prefix
-  const chunks = shared.deconstruct(header.header.replace(/^x-ms-/i, ''));
+  const chunks = utils.deconstruct(header.header.replace(/^x-ms-/i, ''));
   return `${chunks.map(i => i.toUpperCase()).join('_')}`;
 }
 
@@ -223,6 +223,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
       const decoder = helpers.getBytesEncodingMethod(header.type.encoding, 'decode', use);
       return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| ${decoder}(h.as_str()))\n`;
     }
+    case 'Etag':
     case 'enum':
     case 'scalar':
     case 'String':

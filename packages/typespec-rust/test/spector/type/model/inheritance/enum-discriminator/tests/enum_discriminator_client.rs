@@ -1,0 +1,153 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+use spector_enumdisc::{
+    models::{Cobra, Dog, DogKind, Golden, Snake},
+    EnumDiscriminatorClient,
+};
+
+#[tokio::test]
+async fn get_extensible_model() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let resp = client.get_extensible_model(None).await.unwrap();
+    assert_eq!(resp.status(), 200);
+
+    match resp.into_model().unwrap() {
+        Dog::Golden(golden) => {
+            assert_eq!(golden.weight, Some(10));
+        }
+        other => panic!("expected Golden, found {other:?}"),
+    }
+}
+
+#[tokio::test]
+async fn get_extensible_model_missing_discriminator() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let resp = client
+        .get_extensible_model_missing_discriminator(None)
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 200);
+
+    match resp.into_model().unwrap() {
+        Dog::UnknownKind { kind, weight } => {
+            assert!(kind.is_none());
+            assert_eq!(weight, Some(10));
+        }
+        other => panic!("expected base Dog, found {other:?}"),
+    }
+}
+
+#[tokio::test]
+async fn get_extensible_model_wrong_discriminator() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let resp = client
+        .get_extensible_model_wrong_discriminator(None)
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 200);
+
+    match resp.into_model().unwrap() {
+        Dog::UnknownKind { kind, weight } => {
+            match kind {
+                Some(DogKind::UnknownValue(value)) => assert_eq!(value, "wrongKind"),
+                other => panic!("expected unknown kind, found {other:?}"),
+            }
+            assert_eq!(weight, Some(8));
+        }
+        other => panic!("expected base Dog, found {other:?}"),
+    }
+}
+
+#[tokio::test]
+async fn get_fixed_model() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let resp = client.get_fixed_model(None).await.unwrap();
+    assert_eq!(resp.status(), 200);
+
+    match resp.into_model().unwrap() {
+        Snake::Cobra(cobra) => {
+            assert_eq!(cobra.length, Some(10));
+        }
+    }
+}
+
+#[tokio::test]
+async fn get_fixed_model_missing_discriminator() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let resp = client
+        .get_fixed_model_missing_discriminator(None)
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 200);
+
+    // Fixed enum requires a discriminator, so this should fail to deserialize
+    let result = resp.into_model();
+    let err = result.unwrap_err();
+    assert_eq!(
+        err.to_string(),
+        "missing field `kind` at line 1 column 13".to_string()
+    );
+}
+
+#[tokio::test]
+async fn get_fixed_model_wrong_discriminator() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let resp = client
+        .get_fixed_model_wrong_discriminator(None)
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 200);
+
+    // Fixed enum doesn't support unknown discriminator values
+    // So this should fail to deserialize
+    let result = resp.into_model();
+    let err = result.unwrap_err();
+    assert_eq!(
+        err.to_string(),
+        "unknown variant `wrongKind`, expected `cobra` at line 1 column 30".to_string()
+    );
+}
+
+#[tokio::test]
+async fn put_extensible_model() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let body = Golden { weight: Some(10) };
+
+    let resp = client
+        .put_extensible_model(Dog::from(body).try_into().unwrap(), None)
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
+async fn put_fixed_model() {
+    let client =
+        EnumDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let body = Cobra { length: Some(10) };
+
+    let resp = client
+        .put_fixed_model(Snake::from(body).try_into().unwrap(), None)
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 204);
+}

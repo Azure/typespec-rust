@@ -7,6 +7,7 @@ import { Use } from './use.js';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 import {Context} from "./context.js";
+import * as utils from '../utils/utils.js';
 
 /** contains unions to emit */
 export interface Unions {
@@ -45,50 +46,39 @@ export function emitUnions(crate: rust.Crate, context: Context): Unions {
       body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
     }
 
-    const unionMembers = new Array<rust.DiscriminatedUnionMember | rust.Model>(...rustUnion.members);
-    if (rustUnion.unionKind?.kind === 'discriminatedUnionBase') {
-      unionMembers.push(rustUnion.unionKind.baseType);
-      unionMembers.sort((a: rust.DiscriminatedUnionMember | rust.Model, b: rust.DiscriminatedUnionMember | rust.Model) => {
-        const aName = a.kind === 'discriminatedUnionMember' ? a.type.name : a.name;
-        const bName = b.kind === 'discriminatedUnionMember' ? b.type.name : b.name;
-        return helpers.sortAscending(aName, bName);
-      });
+    const extensiblePolymorphicDU = rustUnion.unionKind?.kind === 'discriminatedUnionBase' ? rustUnion.unionKind : undefined;
+    if (!extensiblePolymorphicDU) {
+      // extensible polymorphic unions define Serialize
+      use.add('serde', 'Serialize');
     }
 
-    use.add('serde', 'Serialize');
-    const needsDeserialize = !rustUnion.unionKind || rustUnion.unionKind.kind !== 'discriminatedUnionBase';
-    if (needsDeserialize) {
-      // discriminatedUnionBase unions explicitly define Deserialize
-      use.add('serde', 'Deserialize');
-    }
+    use.add('serde', 'Deserialize');
     use.add('azure_core::fmt', 'SafeDebug');
-    body += `#[derive(Clone, ${needsDeserialize ? 'Deserialize, ' : ''}Serialize, SafeDebug)]\n`;
+    body += `#[derive(Clone, Deserialize, ${!extensiblePolymorphicDU ? 'Serialize, ' : ''}SafeDebug)]\n`;
+
     const content = rustUnion.unionKind?.kind === 'discriminatedUnionEnvelope' ? `content = "${rustUnion.unionKind.envelopeName}"` : '';
     body += `#[serde(${[content, `tag = "${rustUnion.discriminant}"`].filter(x => x !== '').join(', ')})]\n`;
     body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
 
-    for (const member of unionMembers) {
-      const memberType = member.kind === 'discriminatedUnionMember' ? member.type : member;
-      use.addForType(memberType);
+    for (const member of rustUnion.members) {
+      use.addForType(member.type);
 
-      // don't duplicate the docs for the base model type (already emitted with the model def)
-      if (member.kind === 'discriminatedUnionMember') {
-        const docs = helpers.formatDocComment(member.docs, true);
-        if (docs.length > 0) {
-          body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
-        }
+      const docs = helpers.formatDocComment(member.docs, true);
+      if (docs.length > 0) {
+        body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
       }
 
-      if (member.kind === 'discriminatedUnionMember' && member.discriminantValue !== member.type.name) {
-        // we don't rename the base type for polymorphic DUs since it's
-        // the fallback for cases not defined by the tsp and instances of
-        // the base type aren't actually returned.
+      if (member.discriminantValue !== member.type.name) {
         body += `#[serde(rename = "${member.discriminantValue}")]\n`;
       }
-      body += `${indent.get()}${memberType.name}(${helpers.getTypeDeclaration(memberType)})`;
+      body += `${indent.get()}${member.type.name}(${helpers.getTypeDeclaration(member.type)})`;
       body += ',\n\n';
     }
 
+    if (extensiblePolymorphicDU) {
+      body += `${indent.get()}#[serde(untagged)]\n`;
+      body += `${indent.get()}${getPolymorphicUnknownVariant(indent, use, extensiblePolymorphicDU, rustUnion.discriminant, false)},\n`;
+    }
     body += '}\n\n'; // end enum declaration
   }
 
@@ -105,6 +95,44 @@ export function emitUnions(crate: rust.Crate, context: Context): Unions {
     impls: emitUnionImpls(crate, context),
     serde: emitUnionSerde(crate),
   };
+}
+
+/**
+ * gets the name for the unknown variant entry in a tagged enum.
+ * 
+ * @param discriminant the name of the discriminant field
+ * @returns the name to use for the unknown variant
+ */
+function getPolymorphicUnknownVariantName(discriminant: string): string {
+  return `Unknown${utils.capitalize(discriminant)}`;
+}
+
+/**
+ * gets the type definition for the unknown variant entry in a tagged enum.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param baseType the base type in a polymorphic discriminated union
+ * @param discriminant the name of the discriminant field
+ * @param abbreviated when true, the abbreviated type definition is returned
+ * @returns the unknown variant type definition
+ */
+function getPolymorphicUnknownVariant(indent: helpers.indentation, use: Use, baseType: rust.DiscriminatedUnionBase, discriminant: string, abbreviated: boolean): string {
+  let unknownDef = `${getPolymorphicUnknownVariantName(discriminant)} {${abbreviated ? '' : '\n'}`;
+  indent.push();
+  for (const field of baseType.baseType.fields) {
+    if (!abbreviated) {
+      unknownDef += helpers.formatDocComment(field.docs, false, undefined, indent);
+    }
+    use.addForType(field.type);
+    if (abbreviated) {
+      unknownDef += `${field.name}, `;
+    } else {
+      unknownDef += `${indent.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
+    }
+  }
+  unknownDef += `${abbreviated ? '' : indent.pop().get()}}`;
+  return unknownDef;
 }
 
 /**
@@ -163,32 +191,48 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
 
   let body = '';
   for (const rustUnion of crate.unions) {
-    if (!rustUnion.unionKind || rustUnion.unionKind.kind !== 'discriminatedUnionBase') {
+    if (!isPolymorphicDU(rustUnion.unionKind) || rustUnion.unionKind.kind !== 'discriminatedUnionBase') {
       continue;
     }
 
     use.addForType(rustUnion);
-    body += `impl<'de> Deserialize<'de> for ${rustUnion.name} {\n`;
-    body += `${indent.get()}fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer<'de> {\n`;
-    body += `${indent.push().get()}let value = Value::deserialize(deserializer)?;\n`;
+
+    // for extensible polymorphic DUs we must implement Serialize
+    const unionBaseKind = rustUnion.unionKind;
+    use.add('serde', 'Serialize', 'Serializer');
+    body += `impl Serialize for ${rustUnion.name} {\n`;
+    body += `${indent.get()}fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {\n`;
     const matchArms = rustUnion.members.map((member) => {
+      use.addForType(member.type);
+      const instanceVar = utils.snakeCaseName(member.type.name);
       return {
-        pattern: `Some("${member.discriminantValue}")`,
-        body: (indent: helpers.indentation) => {
-          use.addForType(member.type);
-          return `${indent.get()}${member.type.name}::deserialize(&value).map(${rustUnion.name}::${member.type.name}).map_err(serde::de::Error::custom)\n`
-        },
+        pattern: `${rustUnion.name}::${member.type.name}(${instanceVar})`,
+        body: (indent: helpers.indentation) => `${indent.get()}${member.type.name}::serialize(${instanceVar}, serializer)\n`,
       }
     });
 
-    const baseType = rustUnion.unionKind.baseType;
-    use.addForType(baseType);
+    // this is the match arm for the unknown variant
     matchArms.push({
-      pattern: '_',
-      body: (indent: helpers.indentation) => `${indent.get()}${baseType.name}::deserialize(&value).map(${rustUnion.name}::${baseType.name}).map_err(serde::de::Error::custom)\n`,
+      pattern: `${indent.get()}${rustUnion.name}::${getPolymorphicUnknownVariant(indent, use, unionBaseKind, rustUnion.discriminant, true)}`,
+      body: (indent) => {
+        let content = `${indent.push().get()}#[derive(Serialize)]\n`;
+        const unknownVariantName = getPolymorphicUnknownVariantName(rustUnion.discriminant);
+        content += `${indent.get()}struct ${unknownVariantName}<'a> {\n`;
+        indent.push();
+        for (const field of unionBaseKind.baseType.fields) {
+          if (field.kind === 'additionalProperties') {
+            // TODO
+            continue;
+          }
+          content += `${indent.get()}#[serde(skip_serializing_if = "Option::is_none")]\n`;
+          content += `${indent.get()}${field.name}: &'a ${helpers.getTypeDeclaration(field.type)},\n`;
+        }
+        content += `${indent.pop().get()}}\n`;
+        content += `${indent.get()}${unknownVariantName}::serialize(&${unknownVariantName} { ${unionBaseKind.baseType.fields.map((field) => field.name).join(', ')} }, serializer)\n`;
+        return content;
+      },
     });
-
-    body += `${indent.get()}${helpers.buildMatch(indent, `value.get("${rustUnion.discriminant}").and_then(Value::as_str)`, matchArms)}\n`;
+    body += `${indent.get()}${helpers.buildMatch(indent, 'self', matchArms)}\n`;
     body += `${indent.pop().get()}}\n`; // end fn
     body += '}\n\n'; // end impl
   }
@@ -196,10 +240,6 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
   if (body === '') {
     return undefined;
   }
-
-  // all cases require these
-  use.add('azure_core', 'Value');
-  use.add('serde', 'Deserialize');
 
   let content = helpers.contentPreamble();
   content += use.text();
@@ -210,4 +250,18 @@ function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
     content: content,
     visibility: 'internal',
   };
+}
+
+/** narrows duKind to the applicable DU type within the conditional block */
+function isPolymorphicDU(duKind?: rust.DiscriminatedUnionKind): duKind is rust.DiscriminatedUnionBase | rust.DiscriminatedUnionSealed {
+  if (!duKind) {
+    return false;
+  }
+  switch (duKind.kind) {
+    case 'discriminatedUnionBase':
+    case 'discriminatedUnionSealed':
+      return true;
+    default:
+      return false;
+  }
 }

@@ -12,7 +12,7 @@ default = ["azure_core/default"]
 
 [dependencies]
 async-trait = { workspace = true }
-azure_core = { workspace = true }
+azure_core = { workspace = true, features = ["xml"] }
 serde = { workspace = true }
 
 [dev-dependencies]

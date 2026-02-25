@@ -1,6 +1,30 @@
 # Release History
 
-## 0.33.1 (unreleased)
+## 0.35.0 (2026-02-13)
+
+### Breaking Changes
+
+* Fixed header response type for `etag` headers.
+* Removed `wasm32`-conditional `async_trait` attribute macro ([Azure/azure-sdk-for-rust#3377](https://github.com/Azure/azure-sdk-for-rust/issues/3377)).
+
+### Features Added
+
+* Added support for `@clientOption` decorator on model fields to specify custom deserializers.
+  * The format is `@@clientOption(ModelName.field, "deserialize_with", "path::to::deserializer_fn", "rust")`.
+* Added support for omitting client constructors via the `InitializedBy.customizeCode` setting.
+
+### Other Changes
+
+* Cleaned up MIT license header code comment text.
+* Updated to the latest tsp toolset.
+
+## 0.34.0 (2026-02-06)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Updated to new usage of `Pager` and `Poller` types.
 
 ### Features Added
 
@@ -10,6 +34,8 @@
 
 * Using `Azure.Core.eTag` as a header parameter no longer causes an internal error.
 * Fixed bad codegen for remaining cases when an operation is annotated with `Access.internal` (the original fix for this was incomplete).
+* Fixed incorrect handling of `@alternateType` decorator when replacing scalar types.
+* Don't derive `Default` on internal structs used for spread params.
 
 ### Other Changes
 

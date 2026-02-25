@@ -239,3 +239,64 @@ async fn lro_client_export() {
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.content, Some("order1,product1,1".to_string()));
 }
+
+/*#[tokio::test]
+async fn lro_client_export_array() {
+    let client = common::create_client().get_operation_templates_lro_client();
+
+    let export_request: RequestContent<ExportRequest> = ExportRequest {
+        format: Some("csv".to_string()),
+    }
+    .try_into()
+    .unwrap();
+
+    let options = Some(OperationTemplatesLroClientExportArrayOptions {
+        method_options: PollerOptions {
+            frequency: Duration::seconds(1),
+            ..Default::default()
+        },
+    });
+
+    let mut poller = client
+        .export_array(export_request.clone(), options.clone())
+        .unwrap();
+
+    let mut poll_count = 0;
+    while let Some(result) = poller.next().await {
+        poll_count += 1;
+        let response = result.unwrap();
+        let http_status = response.status();
+        let status_monitor = response.into_model().unwrap();
+        let poller_status = status_monitor.status();
+        match poll_count {
+            1 => {
+                assert_eq!(http_status, StatusCode::Accepted);
+                assert_eq!(poller_status, PollerStatus::InProgress);
+            }
+            2 => {
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::InProgress);
+            }
+            3 => {
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::Succeeded);
+            }
+            _ => {
+                panic!("unexpected poll count");
+            }
+        }
+    }
+    assert_eq!(poll_count, 3);
+
+    let poller = client.export_array(export_request, options).unwrap();
+    let final_result: Vec<ExportResult> = poller.await.unwrap().into_model().unwrap();
+    assert_eq!(final_result.len(), 2);
+    assert_eq!(
+        final_result[0].content,
+        Some("order1,product1,1".to_string())
+    );
+    assert_eq!(
+        final_result[1].content,
+        Some("order2,product2,2".to_string())
+    );
+}*/

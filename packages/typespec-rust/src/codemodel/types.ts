@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { Crate, CrateDependency } from './crate.js';
+import { ModelFieldCustomizations } from './customizations.js';
 
 /** Docs contains the values used in doc comment generation. */
 export interface Docs {
@@ -155,7 +156,7 @@ export interface DiscriminatedUnion {
 }
 
 /** DiscriminatedUnionKind contains the kinds of discriminated unions */
-export type DiscriminatedUnionKind = DiscriminatedUnionBase | DiscriminatedUnionEnvelope;
+export type DiscriminatedUnionKind = DiscriminatedUnionBase | DiscriminatedUnionEnvelope | DiscriminatedUnionSealed;
 
 /** DiscriminatedUnionMember is a tagged enum member for a specific DiscriminatedUnion */
 export interface DiscriminatedUnionMember {
@@ -185,6 +186,11 @@ export interface DiscriminatedUnionEnvelope {
 
   /** data envelope property name */
   envelopeName: string;
+}
+
+/** DiscriminatedUnionSealed indicates that the union doesn't revert to the base type for unknown discriminants. */
+export interface DiscriminatedUnionSealed {
+  kind: 'discriminatedUnionSealed';
 }
 
 /** Etag is an azure_core::Etag */
@@ -301,6 +307,9 @@ export interface ModelField extends StructFieldBase {
   /** indicates if the field is optional */
   optional: boolean;
 
+  /** any customizations for this field. can be empty */
+  customizations: Array<ModelFieldCustomizations>;
+
   /** contains XML-specific serde info */
   xmlKind?: XMLKind;
 }
@@ -314,6 +323,9 @@ export enum ModelFieldFlags {
 
   /** deserialize an empty string as None for Option<String> */
   DeserializeEmptyStringAsNone = 2,
+
+  /** field is the discriminator in a discriminated union */
+  Discriminator = 4,
 }
 
 /** ModelFlags contains bit flags describing model usage */
@@ -326,8 +338,11 @@ export enum ModelFlags {
   /** model is used as output from a method */
   Output = 2,
 
+  /** model is a sub-type in a polymorphic discriminated union */
+  PolymorphicSubtype = 4,
+
   /** model is as error */
-  Error = 4,
+  Error = 8,
 }
 
 /** DateTimeEncoding is the wire format of the date/time */
@@ -855,6 +870,12 @@ export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
   }
 }
 
+export class DiscriminatedUnionSealed implements DiscriminatedUnionSealed {
+  constructor() {
+    this.kind = 'discriminatedUnionSealed';
+  }
+}
+
 export class Model extends StructBase implements Model {
   constructor(name: string, visibility: Visibility, flags: ModelFlags) {
     super('model', name, visibility);
@@ -877,6 +898,7 @@ export class ModelField extends StructFieldBase implements ModelField {
     this.flags = ModelFieldFlags.Unspecified;
     this.optional = optional;
     this.serde = serde;
+    this.customizations = new Array<ModelFieldCustomizations>;
   }
 }
 

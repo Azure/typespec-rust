@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
-import * as shared from '../shared/shared.js';
+import * as utils from '../utils/utils.js';
 
 /**
  * if name is a reserved word, append the suffix and return the result, else return name.
@@ -56,7 +56,7 @@ export function fixUpEnumValueName(enumValue: tcgc.SdkEnumValueType): string {
  * @returns the fixed up name. can be the original value if no fix-up was required
  */
 export function fixUpEnumValueNameWorker(name: string): string {
-  const chunks = shared.deconstruct(name).map((each) => shared.capitalize(each));
+  const chunks = utils.deconstruct(name).map((each) => utils.capitalize(each));
   let fixedName = chunks[0];
   for (let i = 1; i < chunks.length; ++i) {
     const chunk = chunks[i];

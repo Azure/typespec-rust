@@ -53,7 +53,7 @@ const httpSpecsGroup = {
   'spector_extensible': {input: 'type/enum/extensible'},
   'spector_fixed': {input: 'type/enum/fixed'},
   'spector_empty': {input: 'type/model/empty'},
-  //'spector_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
+  'spector_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
   'spector_nodisc': {input: 'type/model/inheritance/not-discriminated'},
   //'spector_recursive': {input: 'type/model/inheritance/recursive'},
   'spector_singledisc': {input: 'type/model/inheritance/single-discriminator'},
@@ -79,13 +79,16 @@ const azureHttpSpecsGroup = {
   'spector_apiverheader': {input: 'azure/client-generator-core/api-version/header/client.tsp'},
   'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
-  'spector_clientinit': {input: 'azure/client-generator-core/client-initialization/client.tsp'},
+  'spector_clientinit_default': {input: 'azure/client-generator-core/client-initialization/default'},
+  'spector_clientinit_individually': {input: 'azure/client-generator-core/client-initialization/individually'},
+  'spector_clientinit_individually_parent': {input: 'azure/client-generator-core/client-initialization/individuallyParent'},
   'spector_clientloc_move1': {input: 'azure/client-generator-core/client-location/move-method-parameter-to-client'},
   'spector_clientloc_move2': {input: 'azure/client-generator-core/client-location/move-to-existing-sub-client'},
   'spector_clientloc_move3': {input: 'azure/client-generator-core/client-location/move-to-new-sub-client'},
   'spector_clientloc_move4': {input: 'azure/client-generator-core/client-location/move-to-root-client'},
   'spector_emptystringasnone': {input: 'azure/client-generator-core/deserialize-empty-string-as-null'},
   'spector_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
+  'spector_corenextlinkverb': {input: 'azure/client-generator-core/next-link-verb'},
   //'spector_coreoverride': {input: 'azure/client-generator-core/override/client.tsp'},
   'spector_coreusage': {input: 'azure/client-generator-core/usage'},
   'spector_basic': {input: 'azure/core/basic'},
@@ -104,8 +107,12 @@ const azureHttpSpecsGroup = {
   'spector_armnonresource': {input: 'azure/resource-manager/non-resource'},
   'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
   'spector_armresources': {input: 'azure/resource-manager/resources'},
+  'spector_arm_multi_service': {input: 'azure/resource-manager/multi-service/client.tsp'},
+  'spector_arm_multi_service_older_versions': {input: 'azure/resource-manager/multi-service-older-versions/client.tsp'},
+  'spector_arm_multi_service_shared_models': {input: 'azure/resource-manager/multi-service-shared-models/client.tsp'},
   'spector_requestidheader': {input: 'azure/special-headers/client-request-id'},
   'spector_azpreviewversion': {input: 'azure/versioning/previewVersion'},
+  'spector_azure_client_namespace': {input: 'client/namespace/client.tsp', output: 'azure/client/namespace'},
   'spector_naming': {input: 'client/naming'},
   'spector_enumconflict': {input: 'client/naming/enum-conflict', output: 'client/enum-conflict'},
   'spector_overload': {input: 'client/overload/client.tsp'},
@@ -149,6 +156,9 @@ function should_generate(name) {
   return true
 }
 
+// When https://github.com/Azure/typespec-azure/pull/3950 is merged, and we use the newer version of @azure-tools/azure-http-specs,
+// we can remove alternate_types from below, add it to azureHttpSpecsGroup above, and remove the checked-in tsp files
+// from packages\typespec-rust\test\spector\azure\client-generator-core\alternate-type\.
 const alternate_types = pkgRoot + 'test/tsp/AlternateTypes';
 generate('alternate_types', alternate_types, 'test/other/alternate_types');
 
@@ -181,6 +191,12 @@ generate('misc_tests', misc_tests, 'test/other/misc_tests', ['omit-constructors=
 
 const pub_crate = pkgRoot + 'test/tsp/PubCrate';
 generate('pub_crate', pub_crate, 'test/other/pub_crate');
+
+const client_option = pkgRoot + 'test/tsp/ClientOption';
+generate('client_option', client_option, 'test/other/client_option');
+
+const spector_alternatetype = pkgRoot + 'test/spector/azure/client-generator-core/alternate-type/client.tsp';
+generate('spector_alternatetype', spector_alternatetype, 'test/spector/azure/client-generator-core/alternate-type');
 
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
@@ -268,10 +284,10 @@ function generate(crate, input, outputDir, additionalArgs) {
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
+        sem.leave();
       });
     } catch (err) {
       console.error('\x1b[91m%s\x1b[0m', err);
-    } finally {
       sem.leave();
     }
   });

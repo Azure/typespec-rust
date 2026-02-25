@@ -8,8 +8,8 @@ use azure_core::{
     xml::to_xml,
 };
 use blob_storage::models::{
-    AccessPolicy, BlobItemInternal, BlobMetadata, GeoReplication, GeoReplicationStatusType,
-    ListBlobsFlatSegmentResponse, ObjectReplicationMetadata, SignedIdentifier, SignedIdentifiers,
+    AccessPolicy, BlobItem, BlobMetadata, GeoReplication, GeoReplicationStatusType,
+    ListBlobsResponse, ObjectReplicationMetadata, SignedIdentifier, SignedIdentifiers,
     StorageServiceStats,
 };
 use std::collections::HashMap;
@@ -57,7 +57,7 @@ async fn additional_properties_de() {
         <NextMarker />
     </EnumerationResults>"#;
 
-    let resp: Response<ListBlobsFlatSegmentResponse, XmlFormat> =
+    let resp: Response<ListBlobsResponse, XmlFormat> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), xml_data).into();
 
     let body = resp.into_model().unwrap();
@@ -65,13 +65,13 @@ async fn additional_properties_de() {
 
     let blob0 = &body.segment.blob_items[0];
     let blob0_name = blob0.name.as_ref().unwrap();
-    assert_eq!(blob0_name.content, Some("blob0".to_string()));
+    assert_eq!(blob0_name, "blob0");
     assert!(blob0.metadata.is_none());
     assert!(blob0.object_replication_metadata.is_none());
 
     let blob1 = &body.segment.blob_items[1];
     let blob1_name = blob1.name.as_ref().unwrap();
-    assert_eq!(blob1_name.content, Some("blob1".to_string()));
+    assert_eq!(blob1_name, "blob1");
     let blob1_metadata = blob1.metadata.as_ref().unwrap();
     let blob1_or_metadata = blob1.object_replication_metadata.as_ref().unwrap();
     assert!(blob1_metadata.additional_properties.is_none());
@@ -80,7 +80,7 @@ async fn additional_properties_de() {
 
     let blob2 = &body.segment.blob_items[2];
     let blob2_name = blob2.name.as_ref().unwrap();
-    assert_eq!(blob2_name.content, Some("blob2".to_string()));
+    assert_eq!(blob2_name, "blob2");
     let blob2_metadata = blob2.metadata.as_ref().unwrap();
     let blob2_addl_props = blob2_metadata.additional_properties.as_ref().unwrap();
     assert_eq!(blob2_addl_props.len(), 2);
@@ -91,7 +91,7 @@ async fn additional_properties_de() {
 
     let blob3 = &body.segment.blob_items[3];
     let blob3_name = blob3.name.as_ref().unwrap();
-    assert_eq!(blob3_name.content, Some("blob3".to_string()));
+    assert_eq!(blob3_name, "blob3");
     assert!(blob3.metadata.is_none());
     let blob3_or_metadata = blob3.object_replication_metadata.as_ref().unwrap();
     let blob3_or_addl_props = blob3_or_metadata.additional_properties.as_ref().unwrap();
@@ -101,7 +101,7 @@ async fn additional_properties_de() {
 
     let blob4 = &body.segment.blob_items[4];
     let blob4_name = blob4.name.as_ref().unwrap();
-    assert_eq!(blob4_name.content, Some("blob4".to_string()));
+    assert_eq!(blob4_name, "blob4");
     let blob4_metadata = blob4.metadata.as_ref().unwrap();
     let blob4_addl_props = blob4_metadata.additional_properties.as_ref().unwrap();
     assert_eq!(blob4_addl_props.len(), 2);
@@ -126,7 +126,7 @@ async fn additional_properties_se() {
     or_metadata.additional_properties =
         Some(HashMap::from([("ding".to_string(), "Dong".to_string())]));
 
-    let mut blob_item_internal = BlobItemInternal::default();
+    let mut blob_item_internal = BlobItem::default();
     blob_item_internal.metadata = Some(blob_metadata);
     blob_item_internal.object_replication_metadata = Some(or_metadata);
 

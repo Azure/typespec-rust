@@ -7,7 +7,7 @@ import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import { getPayloadFormatType } from '../shared/shared.js';
+import { getPayloadFormatType } from '../utils/utils.js';
 
 /**
  * Context contains contextual information about how types are used.
@@ -230,8 +230,7 @@ export class Context {
 
     const indent = new helpers.indentation();
 
-    let content = '#[cfg_attr(not(target_arch = "wasm32"), async_trait)]\n';
-    content += '#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]\n';
+    let content = '#[async_trait]\n';
     content += `impl Page for ${model.name} {\n`;
     content += `${indent.get()}type Item = ${helpers.getTypeDeclaration(helpers.unwrapType(pageItemsField.type))};\n`;
     content += `${indent.get()}type IntoIter = <${helpers.getTypeDeclaration(pageItemsField.type)} as IntoIterator>::IntoIter;\n`;

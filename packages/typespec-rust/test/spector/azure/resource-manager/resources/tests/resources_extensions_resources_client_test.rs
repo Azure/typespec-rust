@@ -13,7 +13,7 @@ use azure_core::{
 };
 use futures::StreamExt;
 use spector_armresources::models::{
-    CreatedByType, ExtensionsResource, ExtensionsResourceProperties, ProvisioningState,
+    ExtensionsResource, ExtensionsResourceProperties, ProvisioningState,
     ResourcesExtensionsResourcesClientCreateOrUpdateOptions,
 };
 use time::{Date, Month, Time};
@@ -794,6 +794,112 @@ async fn update_by_resource() {
     assert_eq!(Some("valid2".to_string()), created_props.description);
 }
 
+#[tokio::test]
+async fn create_or_update() {
+    let client = common::create_client().get_resources_extensions_resources_client();
+
+    let create_or_update_request: RequestContent<ExtensionsResource> = ExtensionsResource {
+        properties: Some(ExtensionsResourceProperties {
+            description: Some("valid".to_string()),
+            ..Default::default()
+        }),
+        ..Default::default()
+    }
+    .try_into()
+    .unwrap();
+
+    let options = Some(ResourcesExtensionsResourcesClientCreateOrUpdateOptions {
+        method_options: PollerOptions {
+            frequency: Duration::seconds(1),
+            ..Default::default()
+        },
+    });
+
+    for id in [RESOURCE_GROUP, SUBSCRIPTION, "", RESOURCE] {
+        let mut poller = client
+            .create_or_update(
+                id.trim_start_matches('/'),
+                "extension",
+                create_or_update_request.clone(),
+                options.clone(),
+            )
+            .unwrap();
+
+        let mut poll_count = 0;
+        while let Some(result) = poller.next().await {
+            poll_count += 1;
+            let response = result.unwrap();
+            let http_status = response.status();
+            let status_monitor = response.into_model().unwrap();
+            let poller_status = status_monitor.status();
+            match poll_count {
+                1 => {
+                    assert_eq!(http_status, StatusCode::Ok);
+                    assert_eq!(poller_status, PollerStatus::Succeeded);
+                }
+                _ => {
+                    panic!("unexpected poll count");
+                }
+            }
+        }
+        assert_eq!(poll_count, 1);
+
+        let poller = client
+            .create_or_update(
+                id.trim_start_matches('/'),
+                "extension",
+                create_or_update_request.clone(),
+                options.clone(),
+            )
+            .unwrap();
+
+        let resource = poller.await.unwrap().into_model().unwrap();
+        let expected = get_extension_resource(id);
+
+        assert_eq!(resource.id, expected.id);
+        assert_eq!(resource.name, expected.name);
+        assert_eq!(resource.type_prop, expected.type_prop);
+
+        assert!(resource.properties.is_some());
+        assert_eq!(
+            resource.properties.as_ref().unwrap().provisioning_state,
+            expected.properties.as_ref().unwrap().provisioning_state
+        );
+        assert_eq!(
+            resource.properties.as_ref().unwrap().description,
+            expected.properties.as_ref().unwrap().description
+        );
+
+        assert!(resource.system_data.is_some());
+        assert_eq!(
+            resource.system_data.as_ref().unwrap().created_by,
+            expected.system_data.as_ref().unwrap().created_by
+        );
+        assert_eq!(
+            resource.system_data.as_ref().unwrap().created_by_type,
+            expected.system_data.as_ref().unwrap().created_by_type
+        );
+        assert_eq!(
+            resource.system_data.as_ref().unwrap().last_modified_by,
+            expected.system_data.as_ref().unwrap().last_modified_by
+        );
+
+        assert_eq!(
+            resource.system_data.as_ref().unwrap().last_modified_by_type,
+            expected.system_data.as_ref().unwrap().last_modified_by_type
+        );
+
+        assert_eq!(
+            resource.system_data.as_ref().unwrap().created_at,
+            expected.system_data.as_ref().unwrap().created_at
+        );
+        assert_eq!(
+            resource.system_data.as_ref().unwrap().last_modified_at,
+            expected.system_data.as_ref().unwrap().last_modified_at
+        );
+    }
+}
+
 fn get_extension_resource(id: &str) -> ExtensionsResource {
     let mut full_id =
         "{id}/providers/Azure.ResourceManager.Resources/extensionsResources/extension".to_string();
@@ -833,123 +939,4 @@ fn validate_timestamps(
     // Verify date components match expected values
     assert_eq!(created_at, Some(expected_dt));
     assert_eq!(last_modified_at, Some(expected_dt));
-}
-
-#[tokio::test]
-async fn create_or_update() {
-    let client = common::create_client().get_resources_extensions_resources_client();
-
-    let create_or_update_request: RequestContent<ExtensionsResource> = ExtensionsResource {
-        properties: Some(ExtensionsResourceProperties {
-            description: Some("valid".to_string()),
-            ..Default::default()
-        }),
-        ..Default::default()
-    }
-    .try_into()
-    .unwrap();
-
-    let options = Some(ResourcesExtensionsResourcesClientCreateOrUpdateOptions {
-        method_options: PollerOptions {
-            frequency: Duration::seconds(1),
-            ..Default::default()
-        },
-    });
-
-    let mut poller = client
-        .create_or_update(
-            RESOURCE.trim_start_matches('/'),
-            "extension",
-            create_or_update_request.clone(),
-            options.clone(),
-        )
-        .unwrap();
-
-    let mut poll_count = 0;
-    while let Some(result) = poller.next().await {
-        poll_count += 1;
-        let response = result.unwrap();
-        let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
-        match poll_count {
-            1 => {
-                assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
-            }
-            _ => {
-                panic!("unexpected poll count");
-            }
-        }
-    }
-    assert_eq!(poll_count, 1);
-
-    let poller = client
-        .create_or_update(
-            RESOURCE.trim_start_matches('/'),
-            "extension",
-            create_or_update_request,
-            options,
-        )
-        .unwrap();
-    let final_result = poller.await.unwrap().into_model().unwrap();
-
-    assert_eq!(
-        final_result.id,
-        Some(format!(
-            "{}/providers/Azure.ResourceManager.Resources/extensionsResources/extension",
-            RESOURCE
-        ))
-    );
-    assert_eq!(final_result.name, Some("extension".to_string()));
-    assert_eq!(
-        final_result.type_prop,
-        Some("Azure.ResourceManager.Resources/extensionsResources".to_string())
-    );
-
-    assert!(final_result.properties.is_some());
-    assert_eq!(
-        final_result.properties.as_ref().unwrap().provisioning_state,
-        Some(ProvisioningState::Succeeded)
-    );
-    assert_eq!(
-        final_result.properties.as_ref().unwrap().description,
-        Some("valid".to_string())
-    );
-
-    assert!(final_result.system_data.is_some());
-    assert_eq!(
-        final_result.system_data.as_ref().unwrap().created_by,
-        Some("AzureSDK".to_string())
-    );
-    assert_eq!(
-        final_result.system_data.as_ref().unwrap().created_by_type,
-        Some(CreatedByType::User)
-    );
-    assert_eq!(
-        final_result.system_data.as_ref().unwrap().created_at,
-        Some(OffsetDateTime::new_utc(
-            Date::from_calendar_date(2024, Month::October, 4).unwrap(),
-            Time::from_hms_milli(0, 56, 7, 442).unwrap(),
-        ))
-    );
-    assert_eq!(
-        final_result.system_data.as_ref().unwrap().last_modified_by,
-        Some("AzureSDK".to_string())
-    );
-    assert_eq!(
-        final_result
-            .system_data
-            .as_ref()
-            .unwrap()
-            .last_modified_by_type,
-        Some(CreatedByType::User)
-    );
-    assert_eq!(
-        final_result.system_data.as_ref().unwrap().last_modified_at,
-        Some(OffsetDateTime::new_utc(
-            Date::from_calendar_date(2024, Month::October, 4).unwrap(),
-            Time::from_hms_milli(0, 56, 7, 442).unwrap(),
-        ))
-    );
 }

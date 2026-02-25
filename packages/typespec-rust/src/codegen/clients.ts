@@ -11,7 +11,7 @@ import * as helpers from './helpers.js';
 import queryString from 'query-string';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import * as shared from '../shared/shared.js';
+import * as utils from '../utils/utils.js';
 
 /** the client modules */
 export interface ClientModules {
@@ -37,7 +37,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   const clientOptionsImplDefault = function (constructable: rust.ClientConstruction): boolean {
     // only implement Default when there's more than one field (i.e. more than just client_options)
     // and the field(s) contain a client default value.
-    if (constructable.suppressed) {
+    if (constructable.suppressed === 'yes') {
       return false;
     }
     const optionsType = constructable.options.type;
@@ -63,7 +63,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     }
     body += '}\n\n'; // end client
 
-    if (client.constructable && !client.constructable.suppressed) {
+    if (client.constructable && client.constructable.suppressed !== 'yes') {
       // if client options doesn't require an impl for Default then just derive it
       let deriveDefault = 'Default, ';
       if (clientOptionsImplDefault(client.constructable)) {
@@ -88,7 +88,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
     body += `impl ${client.name} {\n`;
 
-    if (client.constructable && !client.constructable.suppressed) {
+    if (client.constructable && client.constructable.suppressed === 'no') {
       // this is an instantiable client, so we need to emit client options and constructors
       use.add('azure_core', 'Result');
 
@@ -303,7 +303,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     content += use.text();
     content += body;
 
-    const clientMod = shared.deconstruct(client.name).join('_');
+    const clientMod = utils.deconstruct(client.name).join('_');
     clientModules.push({
       name: clientMod,
       content: content,
@@ -568,7 +568,7 @@ function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate
  */
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.params) {
-    const arcTokenCred = shared.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
+    const arcTokenCred = utils.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
     if (arcTokenCred) {
       use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
       const scopes = new Array<string>();
@@ -933,7 +933,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
         // if queryParam is a &[&str] then we'll need to deref the iterator
-        const deref = shared.asTypeOf(queryParam.type, 'str', 'ref', 'slice', 'ref') ? '*' : '';
+        const deref = utils.asTypeOf(queryParam.type, 'str', 'ref', 'slice', 'ref') ? '*' : '';
         text += `${indent.push().get()}query_builder.append_pair("${queryParam.key}", ${deref}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false, valueVar)});\n`;
         text += `${indent.pop().get()}}\n`;
         return text;
@@ -990,7 +990,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
       body += `${indent.get()}let ${headerParam.name} = ` + helpers.buildMatch(indent, headerParam.name, [
         {
           pattern: `PagerState::More(${headerParam.name})`,
-          body: (indent) => `${indent.get()}&Some(${headerParam.name})\n`,
+          body: (indent) => `${indent.get()}&Some(${headerParam.name}.into())\n`,
         },
         {
           pattern: 'PagerState::Initial',
@@ -1049,7 +1049,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   // when constructing the request var name we need to ensure
   // that it doesn't collide with any parameter name.
   const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
-  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${shared.capitalize(method.httpMethod)});\n`;
+  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${utils.capitalize(method.httpMethod)});\n`;
 
   body += applyHeaderParams(indent, use, method, paramGroups, inClosure, requestVarName);
 
@@ -1269,7 +1269,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     switch (method.strategy.kind) {
       case 'continuationToken': {
         const reqTokenParam = method.strategy.requestToken.name;
-        body += `${indent.get()}Ok(${method.returns.type.name}::new(move |${reqTokenParam}: PagerState<String>, pager_options| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::new(move |${reqTokenParam}: PagerState, pager_options| {\n`;
         body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
         if (method.strategy.requestToken.kind === 'queryScalar') {
           // if the url already contains the token query param,
@@ -1281,7 +1281,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
             condition: `let PagerState::More(${reqTokenParam}) = ${reqTokenParam}`,
             body: (indent) => {
               return `${indent.get()}let mut query_builder = url.query_builder();\n`
-                + `${indent.get()}query_builder.set_pair("${reqTokenValue}", &${reqTokenParam});\n`
+                + `${indent.get()}query_builder.set_pair("${reqTokenValue}", ${reqTokenParam}.as_ref());\n`
                 + `${indent.get()}query_builder.build();\n`;
             }
           })}\n`;
@@ -1292,21 +1292,24 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       case 'nextLink': {
         const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         const reinjectedParams = method.strategy.reinjectedParams;
-        body += `${indent.get()}Ok(${method.returns.type.name}::new(move |${nextLinkName}: PagerState<Url>, pager_options| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::new(move |${nextLinkName}: PagerState, pager_options| {\n`;
         body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
           pattern: `PagerState::More(${nextLinkName})`,
           body: (indent) => {
-            const cloneNextLink = `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
+            const cloneNextLink = `${indent.get()}let mut ${nextLinkName}: Url = ${nextLinkName}.try_into().expect("expected Url");\n`;
             let content = '';
             let hasQueryBuilder = false;
+            let needsTryInto = true;
             if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
               content += cloneNextLink;
               hasQueryBuilder = true;
+              needsTryInto = false;
               use.add('azure_core::http', 'UrlExt');
               content += `${indent.get()}let mut query_builder = ${nextLinkName}.query_builder();\n`;
               content += `${indent.get()}query_builder.set_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
             } else if (reinjectedParams.length > 0) {
-              // if we didn't clone it above, we'll need to clone it for this case
+              // if we didn't try_into above, we'll need to do it for this case
+              needsTryInto = false;
               content += cloneNextLink;
             }
 
@@ -1324,7 +1327,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
             if (hasQueryBuilder) {
               content += `${indent.get()}query_builder.build();\n`;
             }
-            content += `${indent.get()}${nextLinkName}\n`;
+            content += `${indent.get()}${nextLinkName}${needsTryInto ? '.try_into().expect("expected Url")' : ''}\n`;
             return content;
           }
         }, {
@@ -1338,7 +1341,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   } else {
     // no next link when there's no strategy
-    body += `${indent.get()}Ok(${method.returns.type.name}::new(move |_: PagerState<Url>, pager_options| {\n`;
+    body += `${indent.get()}Ok(${method.returns.type.name}::new(move |_: PagerState, pager_options| {\n`;
     indent.push();
     cloneUrl = true;
     srcUrlVar = urlVar;
@@ -1359,7 +1362,11 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   const requestResult = constructRequest(indent, use, method, paramGroups, true, srcUrlVar, cloneUrl);
   body += requestResult.content;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
-  body += `${indent.get()}Box::pin(async move {\n`;
+  body += `${indent.get()}Box::pin(`;
+  if (method.strategy?.kind === 'nextLink') {
+    body += `{\n${indent.push().get()}let first_url = first_url.clone();\n${indent.get()}`;
+  }
+  body += `async move {\n`;
   body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&pager_options.context, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
@@ -1386,6 +1393,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       return fullPath;
     };
 
+    use.add('azure_core::http::pager', 'PagerContinuation');
+
     let srcNextPage: string;
     let nextPageValue: string;
     let continuation: string;
@@ -1405,13 +1414,13 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
             srcNextPage = `rsp.${method.strategy.responseToken.name}()?`;
             break;
         }
-        continuation = nextPageValue;
+        continuation = `PagerContinuation::Token(${nextPageValue})`;
         break;
       case 'nextLink': {
         const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         nextPageValue = lastFieldName;
         srcNextPage = `res.${buildNextLinkPath(method.strategy.nextLinkPath)}`;
-        continuation = `${lastFieldName}.parse()?`;
+        continuation = `PagerContinuation::Link(first_url.join(${lastFieldName}.as_ref())?)`;
         break;
       }
     }
@@ -1438,6 +1447,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}Ok(PagerResult::Done { response: rsp.into() })\n`;
   }
 
+  if (method.strategy?.kind === 'nextLink') {
+    body += `${indent.pop().get()}}\n`;
+  }
   body += `${indent.pop().get()}})\n`; // end Box::pin(async move {
   body += `${indent.get()}},\n${indent.get()}Some(options.method_options),\n`; // end move {
   body += `${indent.pop().get()}))`; // end Ok(Pager::new(
@@ -1468,7 +1480,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
-  use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
+  use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor');
   if (pollingStepHeaderName !== undefined || method.finalResultStrategy.kind !== 'originalUri') {
     use.add('azure_core::http::headers', 'HeaderName');
   }
@@ -1490,18 +1502,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   // we call this eagerly so that we have access to the request var name
   const initialRequestResult = constructRequest(indent, use, method, paramGroups, true, urlVar, true, false);
 
-  const applyApiVersionParam = function (indent: helpers.indentation, paramGroups: MethodParamGroups, newLinkVarName: string, existingLinkVarAccessor: string): string {
-    if (paramGroups.apiVersion?.kind === 'queryScalar') {
-      use.add('azure_core::http', 'UrlExt');
-      return `${indent.get()}let mut ${newLinkVarName} = ${existingLinkVarAccessor}.clone();\n`
-        + `${indent.get()}let mut query_builder = ${newLinkVarName}.query_builder();\n`
-        + `${indent.get()}query_builder.set_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`
-        + `${indent.get()}query_builder.build();\n`;
-    }
-
-    return '';
-  };
-
   const declareRequest = function (indent: helpers.indentation, use: Use, method: rust.LroMethod, paramGroups: MethodParamGroups, requestVarName: string, linkExpr: string, forceMut?: boolean, optionsPrefix?: string): string {
     let mutRequest = '';
     // if the only header is optional Content-Type it will not be used
@@ -1514,48 +1514,48 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
       + applyHeaderParams(indent, use, method, paramGroups, true, requestVarName, optionsPrefix);
   };
 
-  let stateVarType = 'Url';
-  let progressVarName = 'next_link';
-  let stateNextLinkAccessor = 'next_link';
-  let pollerStateMoreReturn = 'next_link';
-  let pollerStateInitialReturn = `${urlVar}.clone()`;
-  let pollerStatusInProgressReturn = 'next_link';
-  if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) {
-    // A case when the initial response contains two headers - one (usually, 'azure-asyncoperation') to poll operation status
-    // and another (usually, 'location') to collect the final result. Both values are URLs.
-    // But only the initial response will have these headers, i.e. responses from 'azure-asyncoperation' URL won't have the 'location'.
-    // Therefore, we need to preserve both URLs and pass them between poller states, up to the moment when the operation status
-    // is Succeeded, so that when operation is Succeeded, the poller can send a request to 'location' to collect the result.
-    body += `${indent.get()}struct Progress{ next_link: Url, final_link: Url, }`;
-    body += `${indent.get()}impl AsRef<str> for Progress{ fn as_ref(&self) -> &str{ self.next_link.as_ref() }}\n`;
-
-    stateVarType = 'Progress';
-    progressVarName = 'progress';
-    stateNextLinkAccessor = 'progress.next_link';
-    pollerStateMoreReturn = 'Progress{next_link, final_link: progress.final_link}';
-    pollerStateInitialReturn = `Progress{next_link: ${urlVar}.clone(), final_link: ${urlVar}.clone()}`;
-    pollerStatusInProgressReturn = 'Progress{next_link, final_link}';
-  }
   body += `${indent.get()}Ok(${method.returns.type.name}::new(\n`
-  body += `${indent.push().get()}move |poller_state: PollerState<${stateVarType}>, poller_options| {\n`;
-  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, ${progressVarName}) = ${helpers.buildMatch(indent, 'poller_state', [{
-    pattern: `PollerState::More(${progressVarName})`,
+  body += `${indent.push().get()}move |poller_state: PollerState, poller_options| {\n`;
+  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, continuation) = ${helpers.buildMatch(indent, 'poller_state', [{
+    pattern: `PollerState::More(continuation)`,
     body: (indent) => {
-      return applyApiVersionParam(indent, paramGroups, 'next_link', stateNextLinkAccessor)
-        + declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'next_link.clone()')
-        + `${indent.get()}(${initialRequestResult.requestVarName}, ${pollerStateMoreReturn})\n`;
+      const mutNextLink = paramGroups.apiVersion?.kind === 'queryScalar' ? 'mut ' : '';
+      const continuationMatchExpr = (!paramGroups.body && paramGroups.partialBody.length === 0) ? 'continuation.clone()' : 'continuation';
+      let body = `${indent.get()}let (${mutNextLink}next_link, final_link) = ${helpers.buildMatch(indent, continuationMatchExpr, [{
+        pattern: 'PollerContinuation::Links { next_link, final_link }',
+        body: (indent) => `${indent.get()}(next_link, final_link)\n`,
+      }, {
+        pattern: '_',
+        body: (indent) => `${indent.get()}unreachable!()\n`,
+      }])};\n`;
+
+      if (paramGroups.apiVersion?.kind === 'queryScalar') {
+        use.add('azure_core::http', 'UrlExt');
+        body += `${indent.get()}let mut query_builder = next_link.query_builder();\n`;
+        body += `${indent.get()}query_builder.set_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
+        body += `${indent.get()}query_builder.build();\n`;
+      }
+
+      body += declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'next_link.clone()');
+      body += `${indent.get()}(${initialRequestResult.requestVarName}, PollerContinuation::Links { next_link, final_link })\n`;
+      return body;
     },
   }, {
     pattern: 'PollerState::Initial',
     body: (indent) => {
       let body = initialRequestResult.content;
-      body += `${indent.get()}(${initialRequestResult.requestVarName}, ${pollerStateInitialReturn})\n`;
-
+      body += `${indent.get()}(${initialRequestResult.requestVarName}, PollerContinuation::Links { next_link: url.clone(), final_link: None, })\n`;
       return body;
     },
   }])};\n`;
   body += `${indent.get()}let ctx = poller_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
+
+  if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) {
+    // Avoid moving the poller closure's captured `url` into the async block.
+    // We shadow it with a per-iteration clone so the outer closure can remain `Fn`.
+    body += `${indent.get()}let url = url.clone();\n`
+  }
 
   if (method.finalResultStrategy.kind === 'originalUri') {
     body += `${indent.get()}let final_link = url.clone();\n`
@@ -1630,21 +1630,33 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   }
 
   if (pollingStepHeaderName !== undefined) {
-    body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, `headers.get_optional_string(&HeaderName::from_static("${pollingStepHeaderName}"))`, [{
-      pattern: 'Some(operation_location)',
+    body += `${indent.get()}let continuation = ${helpers.buildIfBlock(indent, {
+      condition: `let Some(operation_location) = headers.get_optional_string(&HeaderName::from_static("${pollingStepHeaderName}"))`,
       body: (indent) => {
-        return `${indent.get()}Url::parse(&operation_location)?\n`;
+        let body = `${indent.get()}let next_link = Url::parse(&operation_location)?;\n`;
+        body += `${indent.get()}${helpers.buildMatch(indent, 'continuation', [{
+          pattern: 'PollerContinuation::Links { final_link, .. }',
+          body: (indent) => `${indent.get()}PollerContinuation::Links { next_link, final_link }\n`,
+        }, {
+          pattern: '_',
+          body: (indent) => `${indent.get()}unreachable!()\n`,
+        }])}\n`;
+        return body;
       }
     }, {
-      pattern: 'None',
-      body: (indent) => {
-        return `${indent.get()}${stateNextLinkAccessor}`;
-      }
-    }])};\n`
+      body: (indent) => `${indent.get()}continuation\n`
+    })};\n`;
   }
 
   if (isArmPutLro || isArmPatchLro) {
     use.add('azure_core::http', 'StatusCode');
+    body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, '&continuation', [{
+      pattern: 'PollerContinuation::Links { next_link, .. }',
+      body: (indent) => `${indent.get()}next_link\n`,
+    }, {
+      pattern: '_',
+      body: (indent) => `${indent.get()}unreachable!()\n`,
+    }])};\n`;
     body += `${indent.get()}let mut final_body = None;\n`;
     body += `${indent.get()}if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {\n`;
     body += `${indent.push().get()}final_body = Some(body);\n`;
@@ -1653,17 +1665,29 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   }
 
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) { // separate link for picking up the result
-    body += `${indent.get()}let final_link = ${helpers.buildMatch(indent, `headers.get_optional_string(&HeaderName::from_static("${method.finalResultStrategy.headerName}"))`, [{
-      pattern: 'Some(final_link)',
+    body += `${indent.get()}let continuation = ${helpers.buildIfBlock(indent, {
+      condition: `let Some(final_link) = headers.get_optional_string(&HeaderName::from_static("${method.finalResultStrategy.headerName}"))`,
       body: (indent) => {
-        return `${indent.get()}Url::parse(&final_link)?\n`;
+        let body = `${indent.get()}let final_link = Url::parse(&final_link)?;\n`;
+        body += `${indent.get()}${helpers.buildMatch(indent, 'continuation', [{
+          pattern: 'PollerContinuation::Links { next_link, .. }',
+          body: (indent) => `${indent.get()}PollerContinuation::Links { next_link, final_link: Some(final_link) }\n`,
+        }, {
+          pattern: '_',
+          body: (indent) => `${indent.get()}unreachable!()\n`,
+        }])}\n`;
+        return body;
       }
     }, {
-      pattern: 'None',
-      body: (indent) => {
-        return `${indent.get()}progress.final_link`;
-      }
-    }])};\n`
+      body: (indent) => `${indent.get()}continuation\n`
+    })};\n`;
+    body += `${indent.get()}let final_link = ${helpers.buildMatch(indent, '&continuation', [{
+      pattern: 'PollerContinuation::Links { final_link, .. }',
+      body: (indent) => `${indent.get()}final_link.clone().unwrap_or_else(|| url.clone())\n`,
+    }, {
+      pattern: '_',
+      body: (indent) => `${indent.get()}unreachable!()\n`,
+    }])};\n`;
   }
 
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &poller_options);\n`
@@ -1696,7 +1720,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   const arms: helpers.matchArm[] = [{
     pattern: `PollerStatus::InProgress`,
     body: (indent) => {
-      return `${indent.get()}response: rsp, retry_after, continuation_token: ${pollerStatusInProgressReturn}\n`;
+      return `${indent.get()}response: rsp, retry_after, continuation\n`;
     },
     returns: 'PollerResult::InProgress'
   }];
@@ -1930,7 +1954,7 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
 
 /** returns true if the type isn't copyable thus needs to be cloned or borrowed */
 function nonCopyableType(type: rust.Type): boolean {
-  const unwrappedType = shared.unwrapOption(type);
+  const unwrappedType = utils.unwrapOption(type);
   switch (unwrappedType.kind) {
     case 'String':
     case 'Url':

@@ -10,10 +10,11 @@ import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
 import {RustEmitterOptions} from '../lib.js';
-import * as shared from '../shared/shared.js';
+import * as utils from '../utils/utils.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
 import {FinalStateValue} from "@azure-tools/typespec-azure-core";
+import {EmitContext, NoTarget} from "@typespec/compiler";
 
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
@@ -114,8 +115,8 @@ export class Adapter {
   }
 
   /** performs all the steps to convert tcgc to a crate */
-  tcgcToCrate(): rust.Crate {
-    this.adaptTypes();
+  tcgcToCrate(context: EmitContext<RustEmitterOptions>): rust.Crate {
+    this.adaptTypes(context);
     this.adaptClients();
 
     // marker models don't require serde so exclude them from the check
@@ -146,10 +147,17 @@ export class Adapter {
   }
 
   /** converts all tcgc types to their Rust type equivalent */
-  private adaptTypes(): void {
+  private adaptTypes(context: EmitContext<RustEmitterOptions>): void {
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
       if (!sdkUnion.discriminatedOptions) {
-        throw new AdapterError('UnsupportedTsp', 'non-discriminated unions are not supported', sdkUnion.__raw?.node);
+        // When https://github.com/microsoft/typespec/issues/9749 is fixed, we can return to throwing an exception here.
+        context.program.reportDiagnostic({
+          code: 'UnsupportedTsp',
+          severity: 'warning',
+          message: `Non-discriminated unions ('${sdkUnion.name}') are not supported. No type will be generated.`,
+          target: NoTarget,
+        })
+        continue;
       }
       const rustUnion = this.getDiscriminatedUnion(sdkUnion);
       this.crate.unions.push(rustUnion);
@@ -195,6 +203,11 @@ export class Adapter {
       if (model.discriminatedSubtypes) {
         const rustUnion = this.getDiscriminatedUnion(model);
         this.crate.unions.push(rustUnion);
+
+        // we don't want to add the base type to the array
+        // of models to emit as we hijack its name to be used
+        // for the associated tagged enum type.
+        continue;
       }
 
       if (model.external) {
@@ -213,7 +226,7 @@ export class Adapter {
    * @returns a Rust enum
    */
   private getEnum(sdkEnum: tcgc.SdkEnumType): rust.Enum {
-    const enumName = shared.deconstruct(sdkEnum.name).map((each) => shared.capitalize(each)).join('');
+    const enumName = utils.deconstruct(sdkEnum.name).map((each) => utils.capitalize(each)).join('');
     let rustEnum = this.types.get(enumName);
     if (rustEnum) {
       return <rust.Enum>rustEnum;
@@ -343,7 +356,7 @@ export class Adapter {
 
     // remove any non-word characters from the name.
     // the most common case is something like Foo.Bar.Baz
-    modelName = shared.capitalize(modelName).replace(/\W/g, '');
+    modelName = utils.capitalize(modelName).replace(/\W/g, '');
     let rustModel = this.types.get(modelName);
     if (rustModel) {
       return <rust.Model>rustModel;
@@ -359,7 +372,13 @@ export class Adapter {
     if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Input) === tcgc.UsageFlags.Input) {
       modelFlags |= rust.ModelFlags.Input;
     }
-    if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output) {
+
+    // include error and LRO polling types as output types
+    if (
+      <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output ||
+      <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception ||
+      <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.LroPolling) === tcgc.UsageFlags.LroPolling
+    ) {
       modelFlags |= rust.ModelFlags.Output;
     }
     if (this.options['emit-error-types'] && <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception) {
@@ -376,9 +395,7 @@ export class Adapter {
     const allProps = new Array<tcgc.SdkModelPropertyType>();
     for (const prop of model.properties) {
       if (prop.discriminator && !model.discriminatedSubtypes) {
-        // omit the discriminator field from child types
-        // as it's not very useful (or necessary)
-        continue;
+        rustModel.flags |= rust.ModelFlags.PolymorphicSubtype;
       }
       allProps.push(prop);
     }
@@ -457,7 +474,7 @@ export class Adapter {
       throw new AdapterError('InternalError', 'unnamed union', src.__raw?.node);
     }
 
-    const unionName = src.kind === 'model' ? `${shared.capitalize(src.name)}Kind` : shared.capitalize(src.name);
+    const unionName = utils.deconstruct(src.name).map((each) => utils.capitalize(each)).join('');
     const keyName = `discriminated-union-${unionName}`;
     let rustUnion = this.types.get(keyName);
     if (rustUnion) {
@@ -474,19 +491,25 @@ export class Adapter {
         }
 
         // find the discriminator field
-        let discriminatorPropertyName: string | undefined;
+        let discriminatorProperty: tcgc.SdkModelPropertyType | undefined;
         for (const prop of src.properties) {
           if (prop.kind === 'property' && prop.discriminator) {
-            discriminatorPropertyName = prop.name;
+            discriminatorProperty = prop;
             break;
           }
         }
-        if (!discriminatorPropertyName) {
+        if (!discriminatorProperty) {
           throw new AdapterError('InternalError', `failed to find discriminator field for type ${src.name}`, src.__raw?.node);
         }
 
-        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorPropertyName);
-        rustUnion.unionKind = new rust.DiscriminatedUnionBase(this.getModel(src));
+        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorProperty.name);
+        if (discriminatorProperty.type.kind === 'enum' && discriminatorProperty.type.isFixed) {
+          // when the DU is a fixed enum, it means we don't fall back to the
+          // base type when the discriminator value is unknown or missing.
+          rustUnion.unionKind = new rust.DiscriminatedUnionSealed();
+        } else {
+          rustUnion.unionKind = new rust.DiscriminatedUnionBase(this.getModel(src));
+        }
 
         for (const subType of Object.values(src.discriminatedSubtypes)) {
           if (!subType.discriminatorValue) {
@@ -598,11 +621,11 @@ export class Adapter {
 
     const serializedName = this.getSerializedPropertyName(property) ?? property.name;
 
-    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), serializedName, modelVisibility, fieldType, property.optional);
+    const modelField = new rust.ModelField(naming.getEscapedReservedName(utils.snakeCaseName(property.name), 'prop'), serializedName, modelVisibility, fieldType, property.optional);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     // if this is a literal, add a doc comment explaining its behavior
-    const unwrappedType = shared.unwrapOption(fieldType);
+    const unwrappedType = utils.unwrapOption(fieldType);
     if (unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal') {
       let constValue: string | number | boolean;
       switch (unwrappedType.kind) {
@@ -636,6 +659,37 @@ export class Adapter {
 
     if (property.decorators.find((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@deserializeEmptyStringAsNull') !== undefined) {
       modelField.flags |= rust.ModelFieldFlags.DeserializeEmptyStringAsNone;
+    } else if (property.kind === 'property' && property.discriminator) {
+      modelField.flags |= rust.ModelFieldFlags.Discriminator;
+    }
+
+    // check for any client options on the field
+    const clientOptions = property.decorators.filter((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@clientOption');
+    for (const clientOption of clientOptions) {
+      const optionName = <string>clientOption.arguments['name'];
+      const optionValue = <string>clientOption.arguments['value'];
+      switch (optionName) {
+        case 'deserialize_with':
+          if (modelField.customizations.find((each) => each.kind === 'deserializeWith')) {
+            // ignore any duplicates and warn about it
+            this.ctx.program.reportDiagnostic({
+              code: 'DuplicateClientOption',
+              severity: 'warning',
+              message: `duplicate client option ${optionName} on model field ${property.name} will be ignored`,
+              target: property.__raw?.node ?? tsp.NoTarget,
+            });
+            continue;
+          }
+          modelField.customizations.push(new rust.DeserializeWith(optionValue));
+          break;
+        default:
+          this.ctx.program.reportDiagnostic({
+            code: 'InvalidClientOption',
+            severity: 'warning',
+            message: `invalid client option ${optionName} on model field ${property.name}`,
+            target: property.__raw?.node ?? tsp.NoTarget,
+          });
+      }
     }
 
     return modelField;
@@ -649,6 +703,10 @@ export class Adapter {
    * @returns the adapted Rust type
    */
   private getType(type: tcgc.SdkType, stack?: Array<rust.Type>): rust.Type {
+    if (type.external) {
+      return this.getExternalType(type.external);
+    }
+
     const getDateTimeEncoding = (encoding: string): rust.DateTimeEncoding => {
       switch (encoding) {
         case 'rfc3339-fixed-width':
@@ -731,19 +789,11 @@ export class Adapter {
       case 'plainDate':
       case 'plainTime':
       case 'string':
-      case 'url': {
+      case 'url':
         if (type.kind === 'string' && type.crossLanguageDefinitionId === 'Azure.Core.eTag') {
-          const etagKey = 'Etag';
-          let etagType = this.types.get(etagKey);
-          if (etagType) {
-            return etagType;
-          }
-          etagType = new rust.Etag(this.crate);
-          this.types.set(etagKey, etagType);
-          return etagType;
+          return this.getEtag();
         }
         return this.getStringType();
-      }
       case 'nullable':
         if (type.type.kind === 'model' && type.type.isGeneratedName) {
           // if the nullable type's target type is a synthesized
@@ -817,6 +867,18 @@ export class Adapter {
     encodedBytesType = new rust.EncodedBytes(encoding, asSlice);
     this.types.set(keyName, encodedBytesType);
     return encodedBytesType;
+  }
+
+  /** returns a Etag type */
+  private getEtag(): rust.Etag {
+    const etagKey = 'Etag';
+    let etagType = this.types.get(etagKey);
+    if (etagType) {
+      return <rust.Etag>etagType;
+    }
+    etagType = new rust.Etag(this.crate);
+    this.types.set(etagKey, etagType);
+    return etagType;
   }
 
   /** returns a HashMap<String, type> */
@@ -1017,10 +1079,7 @@ export class Adapter {
   /** converts all tcgc clients and their methods into Rust clients/methods */
   private adaptClients(): void {
     for (const client of this.ctx.sdkPackage.clients) {
-      // start with instantiable clients and recursively work down
-      if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
-        this.recursiveAdaptClient(client);
-      }
+      this.recursiveAdaptClient(client);
     }
   }
 
@@ -1079,16 +1138,22 @@ export class Adapter {
     rustClient.parent = parent;
     rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'Pipeline', 'azure_core::http')));
 
-    // anything other than public means non-instantiable client
-    if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
+    // InitializedByFlags.CustomizeCode means the client is instantiable
+    // but the constructor is to be omitted (i.e. hand-written).
+    if (client.clientInitialization.initializedBy === tcgc.InitializedByFlags.CustomizeCode || client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, 'pub');
       const clientOptionsField = new rust.StructField('client_options', 'pub', new rust.ExternalType(this.crate, 'ClientOptions', 'azure_core::http'));
       clientOptionsField.docs.summary = 'Allows customization of the client.';
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
-      rustClient.constructable.suppressed = this.options['omit-constructors'];
       clientOptionsStruct.docs.summary = `Options used when creating a ${this.asDocLink(rustClient.name, rustClient.name)}`;
+
+      if (this.options['omit-constructors']) {
+        rustClient.constructable.suppressed = 'yes';
+      } else if (client.clientInitialization.initializedBy === tcgc.InitializedByFlags.CustomizeCode) {
+        rustClient.constructable.suppressed = 'ctor';
+      }
 
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
@@ -1180,7 +1245,7 @@ export class Adapter {
                 // note that the types of the param and the field are different.
                 // we default to "endpoint" and will use the defined name IFF
                 // it has the @clientName decorator applied
-                const endpointName = hasClientNameDecorator(templateArg.decorators) ? snakeCaseName(templateArg.name) : 'endpoint';
+                const endpointName = hasClientNameDecorator(templateArg.decorators) ? utils.snakeCaseName(templateArg.name) : 'endpoint';
                 const adaptedParam = new rust.ClientEndpointParameter(endpointName);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
@@ -1214,6 +1279,12 @@ export class Adapter {
             break;
           }
           case 'method': {
+            // https://github.com/Azure/typespec-rust/issues/849
+            // Azure doesn't use optional (with no explicit default value) API versions anyway.
+            if (param.isApiVersionParam && param.optional && !param.clientDefaultValue) {
+              param.optional = false;
+            }
+
             const clientParam = this.adaptClientParameter(param, rustClient.constructable);
             rustClient.fields.push(new rust.StructField(clientParam.name, 'pubCrate', clientParam.type));
             ctorParams.push(clientParam);
@@ -1240,7 +1311,7 @@ export class Adapter {
       // to create a child client that will need to inherit our client params.
       rustClient.endpoint = parent.endpoint;
       for (const prop of client.clientInitialization.parameters) {
-        const name = snakeCaseName(prop.name);
+        const name = utils.snakeCaseName(prop.name);
         const parentField = parent.fields.find((v) => v.name === name);
         if (parentField) {
           rustClient.fields.push(parentField);
@@ -1320,7 +1391,7 @@ export class Adapter {
    */
   private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction): rust.ClientParameter {
     let paramType: rust.Type = param.isApiVersionParam ? this.getStringType() : this.getType(param.type);
-    const paramName = snakeCaseName(param.name);
+    const paramName = utils.snakeCaseName(param.name);
 
     let optional = false;
     // client-side default value makes the param optional
@@ -1361,7 +1432,7 @@ export class Adapter {
    * @param subClient the sub-client type that the method returns
    */
   private adaptClientAccessor(parentClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, childClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, rustClient: rust.Client, subClient: rust.Client): void {
-    const clientAccessor = new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient);
+    const clientAccessor = new rust.ClientAccessor(`get_${utils.snakeCaseName(subClient.name)}`, rustClient, subClient);
     clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
     for (const param of childClient.clientInitialization.parameters) {
       // check if the client's initializer already has this parameter.
@@ -1377,7 +1448,7 @@ export class Adapter {
       if (existsOnParent) {
         continue;
       }
-      const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type));
+      const adaptedParam = new rust.Parameter(utils.snakeCaseName(param.name), this.getType(param.type));
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
       clientAccessor.params.push(adaptedParam);
     }
@@ -1393,13 +1464,13 @@ export class Adapter {
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
-      const chunks = shared.deconstruct(srcMethodName);
+      const chunks = utils.deconstruct(srcMethodName);
       if (chunks[0] === 'get') {
         chunks[0] = 'list';
       } else {
         chunks.unshift('list');
       }
-      srcMethodName = shared.camelCase(chunks);
+      srcMethodName = utils.camelCase(chunks);
       this.ctx.program.reportDiagnostic({
         code: 'PagingMethodRename',
         severity: 'warning',
@@ -1409,7 +1480,7 @@ export class Adapter {
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;
-    const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
+    const methodName = naming.getEscapedReservedName(utils.snakeCaseName(srcMethodName), 'fn');
     const pub: rust.Visibility = adaptAccessFlags(method.access);
 
     if (srcMethodName !== method.name) {
@@ -1421,7 +1492,7 @@ export class Adapter {
       }
     }
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${shared.pascalCase(srcMethodName, false)}Options`, pub);
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${utils.pascalCase(srcMethodName, false)}Options`, pub);
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
@@ -1724,7 +1795,7 @@ export class Adapter {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
 
       const statusType = this.typeToWireType(
-        this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${shared.pascalCase(rustMethod.name, false)}OperationStatus`));
+        this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${utils.pascalCase(rustMethod.name, false)}OperationStatus`));
 
       if (statusType.kind !== 'model') {
         throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
@@ -1764,7 +1835,7 @@ export class Adapter {
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
-      const markerType = new rust.MarkerType(`${rustClient.name}${shared.pascalCase(method.name, false)}Result`, rustMethod.visibility);
+      const markerType = new rust.MarkerType(`${rustClient.name}${utils.pascalCase(method.name, false)}Result`, rustMethod.visibility);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
       let resultType: rust.ResultTypes;
@@ -1832,9 +1903,10 @@ export class Adapter {
         if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
           throw new AdapterError('InternalError', `unexpected response header collection ${header.serializedName}`, header.__raw.node);
         }
-        responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), lowerCasedHeader);
+        responseHeader = new rust.ResponseHeaderHashMap(utils.snakeCaseName(header.name), lowerCasedHeader);
       } else {
-        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(lowerCasedHeader), this.typeToWireType(this.getType(header.type)));
+        const headerType = lowerCasedHeader.match(/^etag$/) ? this.getEtag() : this.typeToWireType(this.getType(header.type));
+        responseHeader = new rust.ResponseHeaderScalar(utils.snakeCaseName(header.name), utils.fixETagName(lowerCasedHeader), headerType);
       }
 
       responseHeader.docs = this.adaptDocs(header.summary, header.doc);
@@ -1875,39 +1947,41 @@ export class Adapter {
         case 'ref':
           return `Ref${recursiveTypeName(type.type)}`;
         case 'scalar':
-          return shared.capitalize(type.type);
+          return utils.capitalize(type.type);
         case 'slice':
           return `Slice${recursiveTypeName(type.type)}`;
         case 'Vec':
           return `${type.kind}${recursiveTypeName(type.type)}`;
         default:
-          return shared.capitalize(type.kind);
-      }
-    };
-
-    const throwOnUnitType = function(type: rust.ResponseTypes): void {
-      if (type.kind === 'unit') {
-        // this is to filter out unit from ResponseTypes.
-        // methods that return unit should have been skipped by our caller
-        // so we should never hit this (if we do, we have a bug elsewhere).
-        throw new AdapterError('InternalError', `unexpected trait impl kind ${type.kind}`);
+          return utils.capitalize(type.kind);
       }
     };
 
     // response header traits are only ever for marker types and payloads
-    let implFor: rust.AsyncResponse<rust.MarkerType> | rust.Response<rust.MarkerType | rust.WireType>;
+    let implFor: rust.AsyncResponse<rust.MarkerType> | rust.Response<rust.MarkerType | rust.Model>;
     switch (method.returns.type.kind) {
       case 'pager':
       case 'poller':
         implFor = method.returns.type.type;
         break;
       case 'response':
-        throwOnUnitType(method.returns.type.content);
-        implFor = <rust.Response<rust.MarkerType | rust.WireType>>method.returns.type;
+        switch (method.returns.type.content.kind) {
+          case 'marker':
+          case 'model':
+            implFor = <rust.Response<rust.MarkerType | rust.Model>>method.returns.type;
+            break;
+          default:
+            throw new AdapterError('InternalError', `unexpected trait impl content kind ${method.returns.type.content.kind}`);
+        }
         break;
       case 'asyncResponse':
-        throwOnUnitType(method.returns.type.type);
-        implFor = <rust.AsyncResponse<rust.MarkerType>>method.returns.type;
+        switch (method.returns.type.type.kind) {
+          case 'marker':
+            implFor = <rust.AsyncResponse<rust.MarkerType>>method.returns.type;
+            break;
+          default:
+            throw new AdapterError('InternalError', `unexpected trait impl type kind ${method.returns.type.type.kind}`);
+        }
         break;
     }
 
@@ -2076,7 +2150,7 @@ export class Adapter {
       return param.name;
     };
 
-    const paramName = naming.getEscapedReservedName(snakeCaseName(getCorrespondingClientParamName(param)), 'param', reservedParams);
+    const paramName = naming.getEscapedReservedName(utils.snakeCaseName(getCorrespondingClientParamName(param)), 'param', reservedParams);
     let paramType = this.getType(param.type);
 
     // for required header/path/query method string params, we might emit them as borrowed types
@@ -2335,9 +2409,9 @@ export class Adapter {
       throw new AdapterError('InternalError', `unexpected kind ${payloadType.kind} for spread body param`, opParamType.__raw?.node);
     }
 
-    const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
+    const paramName = naming.getEscapedReservedName(utils.snakeCaseName(param.name), 'param');
     const paramLoc: rust.ParameterLocation = 'method';
-    const formatType = shared.getPayloadFormatType(format);
+    const formatType = utils.getPayloadFormatType(format);
     const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format), formatType));
     return adaptedParam;
   }
@@ -2386,12 +2460,12 @@ export class Adapter {
 
 /** type guard to determine if type is a Ref<HashMap> */
 function isRefHashMap(type: rust.Type): type is rust.Ref<rust.HashMap> {
-  return shared.asTypeOf<rust.Ref<rust.HashMap>>(type, 'hashmap', 'ref') !== undefined;
+  return utils.asTypeOf<rust.Ref<rust.HashMap>>(type, 'hashmap', 'ref') !== undefined;
 }
 
 /** type guard to determine if type is a Ref<Slice> */
 function isRefSlice(type: rust.Type): type is rust.Ref<rust.Slice> {
-  return shared.asTypeOf<rust.Ref<rust.Slice>>(type, 'slice', 'ref') !== undefined;
+  return utils.asTypeOf<rust.Ref<rust.Slice>>(type, 'slice', 'ref') !== undefined;
 }
 
 /** method types that send/receive data */
@@ -2399,43 +2473,6 @@ type MethodType = rust.AsyncMethod | rust.PageableMethod | rust.LroMethod;
 
 /** supported kinds of tcgc scalars */
 type tcgcScalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8' | 'uint16' | 'uint32' | 'uint64' | 'uint8';
-
-/**
- * transforms Etag etc to all lower case.
- * this is to prevent inadvertently snake-casing
- * Etag to e_tag.
- * 
- * if name isn't some variant of Etag the
- * original value is returned.
- * 
- * @param name the name to transform
- * @returns etag or the original value
- */
-function fixETagName(name: string): string {
-  return name.match(/^etag$/i) ? 'etag' : name;
-}
-
-/**
- * removes any illegal characters from the provided name.
- * note that characters _ and - are preserved so that the
- * proper snake-casing can be performed.
- * 
- * @param name the name to transform
- * @returns the transformed name or the original value
- */
-function removeIllegalChars(name: string): string {
-  return name.replace(/[!@#$%^&*()+=]/g, '');
-}
-
-/**
- * snake-cases the provided name
- * 
- * @param name the name to snake-case
- * @returns name in snake-case format
- */
-function snakeCaseName(name: string): string {
-  return shared.deconstruct(fixETagName(removeIllegalChars(name))).join('_');
-}
 
 /**
  * recursively creates a map key from the specified type.
@@ -2532,7 +2569,7 @@ function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelFiel
       case 'TypeSpec.Xml.@attribute':
         return 'attribute';
       case 'TypeSpec.Xml.@unwrapped': {
-        const fieldType = shared.unwrapOption(field.type);
+        const fieldType = utils.unwrapOption(field.type);
         switch (fieldType.kind) {
           case 'Vec':
             return 'unwrappedList';
