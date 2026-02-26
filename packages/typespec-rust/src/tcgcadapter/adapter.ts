@@ -280,7 +280,7 @@ export class Adapter {
         this.getExternalType(model.external);
       } else {
         const rustModel = this.getModel(model);
-        if ((model.usage & tcgc.UsageFlags.Exception) !== 0 && terminalErrorModelNames.has(model.name)) {
+        if (terminalErrorModelNames.has(model.name)) {
           rustModel.flags |= rust.ModelFlags.Error;
         }
         if ((model.usage & tcgc.UsageFlags.Exception) === 0 || !isDefaultAzureErrorModel(rustModel)) {
