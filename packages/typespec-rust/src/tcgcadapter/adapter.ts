@@ -180,6 +180,30 @@ export class Adapter {
 
     const processedTypes = new Set<string>();
 
+    const getErrorModelNames = function(clients: tcgc.SdkClientType<tcgc.SdkHttpOperation>[], visitedClientNames = new Set<string>()) : Set<string> {
+      const errorModelNames = new Set<string>();
+      for (const client of clients) {
+        if (visitedClientNames.has(client.name)) {
+          continue;
+        }
+        visitedClientNames.add(client.name);
+        for (const errorModelName
+          of client.methods.flatMap(mt => mt.operation.exceptions).filter(
+            e => e.type?.kind === 'model').map(md => (md.type as tcgc.SdkModelType).name)
+        ) {
+          errorModelNames.add(errorModelName);
+        }
+
+        for (const errorModelName of getErrorModelNames(client.children ?? [], visitedClientNames).values()) {
+          errorModelNames.add(errorModelName);
+        }
+      }
+
+      return errorModelNames;
+    }
+
+    const errorModelNames = getErrorModelNames(this.ctx.sdkPackage.clients);
+
     for (const model of this.ctx.sdkPackage.models) {
       let usageFlags = tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread;
       if (this.options['emit-error-types']) {
@@ -214,6 +238,9 @@ export class Adapter {
         this.getExternalType(model.external);
       } else {
         const rustModel = this.getModel(model);
+        if ((model.usage & tcgc.UsageFlags.Exception) !== 0 && errorModelNames.has(model.name)) {
+          rustModel.flags |= rust.ModelFlags.Error;
+        }
         this.crate.models.push(rustModel);
       }
     }
@@ -376,13 +403,9 @@ export class Adapter {
     // include error and LRO polling types as output types
     if (
       <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output ||
-      <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception ||
       <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.LroPolling) === tcgc.UsageFlags.LroPolling
     ) {
       modelFlags |= rust.ModelFlags.Output;
-    }
-    if (this.options['emit-error-types'] && <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception) {
-      modelFlags |= rust.ModelFlags.Error;
     }
 
     rustModel = new rust.Model(modelName, model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags);

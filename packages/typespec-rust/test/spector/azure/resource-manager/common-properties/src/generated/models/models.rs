@@ -9,8 +9,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Api error.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct ApiError {
     /// The error code.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -34,8 +33,7 @@ pub struct ApiError {
 }
 
 /// Api error base.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct ApiErrorBase {
     /// The error code.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -52,7 +50,6 @@ pub struct ApiErrorBase {
 
 /// An error response.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
 pub struct CloudError {
     /// Api error.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -103,8 +100,7 @@ pub struct ConfidentialResourceProperties {
 }
 
 /// The resource management error additional info.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct ErrorAdditionalInfo {
     /// The additional info.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -116,8 +112,7 @@ pub struct ErrorAdditionalInfo {
 }
 
 /// The error detail.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct ErrorDetail {
     /// The error additional info.
     #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
@@ -144,7 +139,6 @@ pub struct ErrorDetail {
 ///
 /// Common error response for all Azure Resource Manager APIs to return error details for failed operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
 pub struct ErrorResponse {
     /// The error object.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -152,8 +146,7 @@ pub struct ErrorResponse {
 }
 
 /// Inner error details.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub struct InnerError {
     /// The internal error message or exception dump.
     #[serde(skip_serializing_if = "Option::is_none")]
