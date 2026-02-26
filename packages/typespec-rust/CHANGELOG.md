@@ -1,5 +1,11 @@
 # Release History
 
+## 0.36.0 (2026-02-26)
+
+### Breaking Changes
+
+* Fixed some edge cases where a method parameter's optionality wasn't correctly handled.
+
 ## 0.35.0 (2026-02-13)
 
 ### Breaking Changes
