@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-// cspell: ignore addl responseheader subclients lropaging
+// cspell: ignore addl requiredness responseheader subclients lropaging
 
 import * as tsp from '@typespec/compiler';
 import * as http from '@typespec/http';
