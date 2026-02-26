@@ -213,6 +213,9 @@ impl SecretClient {
         url.append_path(&path);
         let mut query_builder = url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
+        if let Some(out_content_type) = options.out_content_type.as_ref() {
+            query_builder.set_pair("outContentType", out_content_type.as_ref());
+        }
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");

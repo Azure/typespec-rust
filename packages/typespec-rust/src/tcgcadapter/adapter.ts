@@ -1593,7 +1593,7 @@ export class Adapter {
       ) {
         adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptPayloadFormat(opParam.defaultContentType), opParam.type);
       } else {
-        adaptedParam = this.adaptMethodParameter(opParam);
+        adaptedParam = this.adaptMethodParameter(opParam, param);
       }
 
       switch (adaptedParam.kind) {
@@ -2104,12 +2104,17 @@ export class Adapter {
   }
 
   /**
-   * converts a tcgc operation parameter into a Rust method parameter
+   * converts a tcgc operation parameter into a Rust method parameter.
+   * note that when methodParam is present, we must use all applicable
+   * values from methodParam as the source of truth. e.g. when overriding
+   * a method to make an optional param required, the requiredness will
+   * be reflected in the method param, _not_ the operation param.
    * 
-   * @param param the tcgc operation parameter to convert
+   * @param opParam the tcgc operation parameter to convert
+   * @param methodParam the tcgc method parameter associated with opParam
    * @returns a Rust method parameter
    */
-  private adaptMethodParameter(param: tcgc.SdkHttpParameter): rust.MethodParameter {
+  private adaptMethodParameter(opParam: tcgc.SdkHttpParameter, methodParam?: tcgc.SdkMethodParameter): rust.MethodParameter {
     /**
      * used to create keys for this.clientMethodParams
      * @param param the param for which to create a key
@@ -2121,11 +2126,11 @@ export class Adapter {
       return `${param.name}-${param.kind}`;
     };
 
-    const paramLoc = param.onClient ? 'client' : 'method';
+    const paramLoc = opParam.onClient ? 'client' : 'method';
 
     // if this is a client method param, check if we've already adapted it
     if (paramLoc === 'client') {
-      const clientMethodParam = this.clientMethodParams.get(getClientParamsKey(param));
+      const clientMethodParam = this.clientMethodParams.get(getClientParamsKey(opParam));
       if (clientMethodParam) {
         return clientMethodParam;
       }
@@ -2143,41 +2148,42 @@ export class Adapter {
       return param.name;
     };
 
-    const paramName = naming.getEscapedReservedName(utils.snakeCaseName(getCorrespondingClientParamName(param)), 'param', reservedParams);
-    let paramType = this.getType(param.type);
+    const paramName = naming.getEscapedReservedName(utils.snakeCaseName(getCorrespondingClientParamName(opParam)), 'param', reservedParams);
+    const paramOptional = methodParam ? methodParam.optional : opParam.optional;
+    let paramType = this.getType(methodParam ? methodParam.type : opParam.type);
 
     // for required header/path/query method string params, we might emit them as borrowed types
-    if (!param.optional && !param.onClient && (param.kind === 'header' || param.kind === 'path' || param.kind === 'query')) {
-      const borrowedType = this.canBorrowMethodParam(paramType, param.kind);
+    if (!paramOptional && paramLoc !== 'client' && (opParam.kind === 'header' || opParam.kind === 'path' || opParam.kind === 'query')) {
+      const borrowedType = this.canBorrowMethodParam(paramType, opParam.kind);
       if (borrowedType) {
         paramType = borrowedType;
       }
     }
 
     let adaptedParam: rust.MethodParameter;
-    switch (param.kind) {
+    switch (opParam.kind) {
       case 'body': {
         let requestType: rust.Bytes | rust.Payload;
-        if (param.type.kind === 'bytes' && param.type.encode === 'bytes') {
+        if (opParam.type.kind === 'bytes' && opParam.type.encode === 'bytes') {
           // bytes encoding indicates a streaming binary request
           requestType = new rust.Bytes(this.crate);
         } else {
-          requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptPayloadFormat(param.defaultContentType));
+          requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptPayloadFormat(opParam.defaultContentType));
         }
-        const requestFormatType = this.adaptPayloadFormatType(param.defaultContentType);
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType, requestFormatType));
+        const requestFormatType = this.adaptPayloadFormatType(opParam.defaultContentType);
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, paramOptional, new rust.RequestContent(this.crate, requestType, requestFormatType));
         break;
       }
       case 'cookie':
         // TODO: https://github.com/Azure/typespec-rust/issues/192
-        throw new AdapterError('UnsupportedTsp', 'cookie parameters are not supported', param.__raw?.node);
+        throw new AdapterError('UnsupportedTsp', 'cookie parameters are not supported', opParam.__raw?.node);
       case 'header':
-        if (param.collectionFormat) {
+        if (opParam.collectionFormat) {
           if (paramType.kind !== 'Vec' && !isRefSlice(paramType)) {
-            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for HeaderCollectionParameter`, param.__raw?.node);
+            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for HeaderCollectionParameter`, opParam.__raw?.node);
           }
           let format: rust.CollectionFormat;
-          switch (param.collectionFormat) {
+          switch (opParam.collectionFormat) {
             case 'csv':
             case 'simple':
               format = 'csv';
@@ -2185,17 +2191,17 @@ export class Adapter {
             case 'pipes':
             case 'ssv':
             case 'tsv':
-              format = param.collectionFormat;
+              format = opParam.collectionFormat;
               break;
             default:
-              throw new AdapterError('InternalError', `unexpected format ${param.collectionFormat} for HeaderCollectionParameter`, param.__raw?.node);
+              throw new AdapterError('InternalError', `unexpected format ${opParam.collectionFormat} for HeaderCollectionParameter`, opParam.__raw?.node);
           }
-          adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, format);
-        } else if (param.serializedName === 'x-ms-meta') {
+          adaptedParam = new rust.HeaderCollectionParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, format);
+        } else if (opParam.serializedName === 'x-ms-meta') {
           if (paramType.kind !== 'hashmap' && !isRefHashMap(paramType)) {
-            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for header ${param.serializedName}`, param.__raw?.node);
+            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for header ${opParam.serializedName}`, opParam.__raw?.node);
           }
-          adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
+          adaptedParam = new rust.HeaderHashMapParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType);
         } else {
           paramType = this.typeToWireType(paramType);
           switch (paramType.kind) {
@@ -2205,26 +2211,26 @@ export class Adapter {
             case 'slice':
             case 'str':
             case 'Vec':
-              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar header ${param.serializedName}`, param.__raw?.node);
+              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar header ${opParam.serializedName}`, opParam.__raw?.node);
           }
-          adaptedParam = new rust.HeaderScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
-          adaptedParam.isApiVersion = param.isApiVersionParam;
+          adaptedParam = new rust.HeaderScalarParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType);
+          adaptedParam.isApiVersion = opParam.isApiVersionParam;
         }
         break;
       case 'path': {
         paramType = this.typeToWireType(paramType);
         let style: rust.ParameterStyle = 'simple';
-        const tspStyleString = (param.style as string);
+        const tspStyleString = (opParam.style as string);
         if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
-          throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
+          throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${opParam.serializedName}`, opParam.__raw?.node);
         } else {
           style = tspStyleString as rust.ParameterStyle;
         }
 
         if (isRefSlice(paramType)) {
-          adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
+          adaptedParam = new rust.PathCollectionParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, opParam.allowReserved, style, opParam.explode);
         } else if (paramType.kind === 'hashmap' || isRefHashMap(paramType)) {
-          adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
+          adaptedParam = new rust.PathHashMapParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, opParam.allowReserved, style, opParam.explode);
         } else {
           switch (paramType.kind) {
             case 'jsonValue':
@@ -2232,43 +2238,43 @@ export class Adapter {
             case 'slice':
             case 'str':
             case 'Vec':
-              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${param.serializedName}`, param.__raw?.node);
+              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${opParam.serializedName}`, opParam.__raw?.node);
           }
 
-          adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style);
+          adaptedParam = new rust.PathScalarParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, opParam.allowReserved, style);
         }
       } break;
       case 'query':
         paramType = this.typeToWireType(paramType);
         if (paramType.kind === 'Vec' || isRefSlice(paramType)) {
-          let format: rust.ExtendedCollectionFormat = param.explode ? 'multi' : 'csv';
-          if (param.collectionFormat) {
-            format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
+          let format: rust.ExtendedCollectionFormat = opParam.explode ? 'multi' : 'csv';
+          if (opParam.collectionFormat) {
+            format = opParam.collectionFormat === 'simple' ? 'csv' : (opParam.collectionFormat === 'form' ? 'multi' : opParam.collectionFormat);
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
+          adaptedParam = new rust.QueryCollectionParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, true, format);
         } else if (paramType.kind === 'hashmap' || isRefHashMap(paramType)) {
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, param.explode);
+          adaptedParam = new rust.QueryHashMapParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, true, opParam.explode);
         } else {
           switch (paramType.kind) {
             case 'jsonValue':
             case 'model':
             case 'slice':
             case 'str':
-              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar query ${param.serializedName}`, param.__raw?.node);
+              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar query ${opParam.serializedName}`, opParam.__raw?.node);
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true);
-          adaptedParam.isApiVersion = param.isApiVersionParam;
+          adaptedParam = new rust.QueryScalarParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, true);
+          adaptedParam.isApiVersion = opParam.isApiVersionParam;
         }
         break;
     }
 
-    adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
+    adaptedParam.docs = this.adaptDocs(methodParam ? methodParam.summary : opParam.summary, methodParam ? methodParam.doc : opParam.doc);
 
     if (paramLoc === 'client') {
-      this.clientMethodParams.set(getClientParamsKey(param), adaptedParam);
+      this.clientMethodParams.set(getClientParamsKey(opParam), adaptedParam);
     }
 
     return adaptedParam;
