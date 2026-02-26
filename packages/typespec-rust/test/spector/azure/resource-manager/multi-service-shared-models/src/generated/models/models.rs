@@ -132,6 +132,16 @@ pub struct ErrorDetail {
     pub target: Option<String>,
 }
 
+/// Error response
+///
+/// Common error response for all Azure Resource Manager APIs to return error details for failed operations.
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+pub struct ErrorResponse {
+    /// The error object.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<ErrorDetail>,
+}
+
 /// Common metadata shared across multiple services.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SharedMetadata {

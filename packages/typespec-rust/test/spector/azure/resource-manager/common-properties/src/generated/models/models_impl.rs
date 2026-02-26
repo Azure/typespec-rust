@@ -27,9 +27,7 @@ impl TryFrom<azure_core::Error> for CloudError {
             ErrorKind::HttpResponse {
                 raw_response: Some(raw_response),
                 ..
-            } => Ok(serde_json::from_str(
-                raw_response.body().clone().into_string()?.as_ref(),
-            )?),
+            } => Ok(raw_response.body().json()?),
             _ => Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::DataConversion,
                 "ErrorKind was not HttpResponse and could not be parsed.",
@@ -45,9 +43,7 @@ impl TryFrom<azure_core::Error> for ErrorResponse {
             ErrorKind::HttpResponse {
                 raw_response: Some(raw_response),
                 ..
-            } => Ok(serde_json::from_str(
-                raw_response.body().clone().into_string()?.as_ref(),
-            )?),
+            } => Ok(raw_response.body().json()?),
             _ => Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::DataConversion,
                 "ErrorKind was not HttpResponse and could not be parsed.",

@@ -178,41 +178,83 @@ export class Adapter {
       }
     }
 
-    const processedTypes = new Set<string>();
+    let terminalErrorModelNames = new Set<string>();
+    if (this.options['emit-error-traits']) {
+      // Typespec would flag any model that is used in the error model with the Exception flag,
+      // even if that model is not directly used in any method, but is used as one of the terminal error type fields.
+      // We need to find these terminal error models, and ignore all others, because when we need to implement TryFrom trait,
+      // there is no need to implement it for every Exception model - we just need it for the terminal ones.
+      const getTerminalErrorModelNames = function(clients: tcgc.SdkClientType<tcgc.SdkHttpOperation>[], visitedClientNames = new Set<string>()) : Set<string> {
+        const terminalErrorModelNames = new Set<string>();
+        for (const client of clients) {
+          if (visitedClientNames.has(client.name)) {
+            continue;
+          }
+          visitedClientNames.add(client.name);
+          for (const errorModelName
+            of client.methods.flatMap(mt => mt.operation.exceptions).filter(
+              e => e.type?.kind === 'model').map(md => (md.type as tcgc.SdkModelType).name)
+          ) {
+            terminalErrorModelNames.add(errorModelName);
+          }
 
-    const getErrorModelNames = function(clients: tcgc.SdkClientType<tcgc.SdkHttpOperation>[], visitedClientNames = new Set<string>()) : Set<string> {
-      const errorModelNames = new Set<string>();
-      for (const client of clients) {
-        if (visitedClientNames.has(client.name)) {
-          continue;
-        }
-        visitedClientNames.add(client.name);
-        for (const errorModelName
-          of client.methods.flatMap(mt => mt.operation.exceptions).filter(
-            e => e.type?.kind === 'model').map(md => (md.type as tcgc.SdkModelType).name)
-        ) {
-          errorModelNames.add(errorModelName);
+          for (const errorModelName of getTerminalErrorModelNames(client.children ?? [], visitedClientNames).values()) {
+            terminalErrorModelNames.add(errorModelName);
+          }
         }
 
-        for (const errorModelName of getErrorModelNames(client.children ?? [], visitedClientNames).values()) {
-          errorModelNames.add(errorModelName);
-        }
+        return terminalErrorModelNames;
       }
 
-      return errorModelNames;
+      terminalErrorModelNames = getTerminalErrorModelNames(this.ctx.sdkPackage.clients);
     }
 
-    const errorModelNames = getErrorModelNames(this.ctx.sdkPackage.clients);
-
-    for (const model of this.ctx.sdkPackage.models) {
-      let usageFlags = tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread;
-      if (this.options['emit-error-types']) {
-        usageFlags |= tcgc.UsageFlags.Exception;
+    // We do not want to emit any of the default Azure errors.
+    const isDefaultAzureErrorModel = function(model: rust.Model): boolean {
+      switch (model.name) {
+        case 'Error':
+          if (model.fields.length === 5) {
+            return model.fields.some(
+              f => f.name === 'code' && f.type.kind === 'option' && f.type.type.kind === 'String')
+              && model.fields.some(
+                f => f.name === 'message' && f.type.kind === 'option' && f.type.type.kind === 'String')
+              && model.fields.some(
+                f => f.name === 'target' && f.type.kind === 'option' && f.type.type.kind === 'String')
+              && model.fields.some(f => f.name === 'details'
+                && f.type.kind === 'option' && f.type.type.kind === 'Vec'
+                && f.type.type.type.kind === 'model' && f.type.type.type.name === 'Error')
+              && model.fields.some(f => f.name === 'innererror'
+                && f.type.kind === 'option' && f.type.type.kind === 'model' && f.type.type.name === 'InnerError')
+          }
+          break;
+        case 'InnerError':
+          if (model.fields.length === 2) {
+            return model.fields.some(
+              f => f.name === 'code' && f.type.kind === 'option' && f.type.type.kind === 'String')
+              && model.fields.some(f => f.name === 'innererror'
+                && f.type.kind === 'option' && f.type.type.kind === 'box'
+                && f.type.type.type.kind === 'model' && f.type.type.type.name === 'InnerError')
+          }
+          break;
+        case 'ErrorResponse':
+          if (model.fields.length === 2) {
+            return model.fields.some(
+              f => f.name === 'error_code' && f.type.kind === 'option' && f.type.type.kind === 'String')
+              && model.fields.some(f => f.name === 'error'
+                && f.type.kind === 'option' && f.type.type.kind === 'model' && f.type.type.name === 'Error')
+          }
+          break;
       }
-      if ((model.usage & usageFlags) === 0) {
+      return false;
+    }
+
+    const processedTypes = new Set<string>();
+    for (const model of this.ctx.sdkPackage.models) {
+      if ((model.usage & (tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread | tcgc.UsageFlags.Exception)) === 0) {
         // skip types without input and output usage. this will include core
         // types unless they're explicitly referenced (e.g. a model property).
         // we keep the models for spread params as we internally use them.
+        // We also emit exception (error) types.
         continue;
       }
 
@@ -238,10 +280,12 @@ export class Adapter {
         this.getExternalType(model.external);
       } else {
         const rustModel = this.getModel(model);
-        if ((model.usage & tcgc.UsageFlags.Exception) !== 0 && errorModelNames.has(model.name)) {
+        if ((model.usage & tcgc.UsageFlags.Exception) !== 0 && terminalErrorModelNames.has(model.name)) {
           rustModel.flags |= rust.ModelFlags.Error;
         }
-        this.crate.models.push(rustModel);
+        if ((model.usage & tcgc.UsageFlags.Exception) === 0 || !isDefaultAzureErrorModel(rustModel)) {
+          this.crate.models.push(rustModel);
+        }
       }
     }
   }
