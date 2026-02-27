@@ -220,7 +220,7 @@ export class Adapter {
       }
 
       // Skip the default Azure core error models.
-      if (model.namespace === 'Azure.Core.Foundations') {
+      if (tcgc.isAzureCoreModel(model)) {
         continue;
       }
 
