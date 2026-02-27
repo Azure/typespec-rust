@@ -1,3 +1,4 @@
+<!-- cspell:words tcgcadapter -->
 # Copilot Instructions
 
 ## Project Overview

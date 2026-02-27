@@ -1,3 +1,4 @@
+<!-- cspell:words tcgcadapter -->
 # AGENTS.md
 
 ## Project Summary
