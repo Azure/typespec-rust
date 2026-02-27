@@ -1,4 +1,4 @@
-<!-- cspell:words tcgcadapter -->
+<!-- cspell:words tcgcadapter MSRV -->
 # Copilot Instructions
 
 ## Project Overview
@@ -16,6 +16,8 @@ This repository contains the TypeSpec Rust emitter (`@azure-tools/typespec-rust`
 - `/packages/typespec-rust/test/` — Generated Rust test crates and TypeScript unit tests
   - `test/spector/` — Integration test crates generated from spector specs
   - `test/sdk/` — SDK test crates
+  - `test/other/` — Targeted test crates
+  - `test/tsp/` — TypeSpec files used to generate test/other and test/sdk content
 - `/eng/pipelines/` — Azure DevOps CI/CD pipeline definitions
 - `/.vscode/cspell.json` — Spell checking configuration
 - `/rust-toolchain.toml` — Rust toolchain configuration
@@ -23,8 +25,8 @@ This repository contains the TypeSpec Rust emitter (`@azure-tools/typespec-rust`
 ## Prerequisites
 
 - **Node.js** >= 20.0.0
-- **pnpm** 10.10.0 (specified in `packageManager` field of `package.json`)
-- **Rust** 1.80+ with clippy and rustfmt components (components are configured in `rust-toolchain.toml`)
+- **pnpm** (version specified in `packageManager` field of `package.json`)
+- **Rust** at the minimum supported Rust version (MSRV) with clippy and rustfmt components (components are configured in `rust-toolchain.toml`)
 
 ## Install and Build
 
@@ -53,7 +55,7 @@ For CI with coverage: `pnpm run test-ci`
 
 ### Regenerating Rust Test Crates
 
-After modifying the emitter, regenerate the test crates:
+After modifying the emitter or contents under `test/tsp/`, regenerate the test crates. This command can take several minutes to complete; wait for it to finish before proceeding.
 
 ```bash
 cd packages/typespec-rust
@@ -85,8 +87,7 @@ pnpm spector --stop
 ## Coding Standards
 
 - Validate all TypeScript changes are linter clean: `pnpm eslint` (from `packages/typespec-rust`).
-- Validate Rust generated code: `cargo clippy --workspace --all-features --all-targets --keep-going --no-deps` (from `packages/typespec-rust/test`).
-- Format Rust code: `cargo fmt --all` (from `packages/typespec-rust/test`).
+- Validate Rust generated code: `cargo clippy --workspace --all-features --all-targets --keep-going --no-deps` (from `packages/typespec-rust/test`). The emitter automatically runs `cargo fmt` post-codegen if the Rust toolset is installed.
 - Run spell checking from the repo root: `cspell -c .vscode/cspell.json .` must succeed before committing.
 - All files must end with a newline character.
 

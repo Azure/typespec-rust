@@ -1,4 +1,4 @@
-<!-- cspell:words tcgcadapter -->
+<!-- cspell:words tcgcadapter MSRV -->
 # AGENTS.md
 
 ## Project Summary
@@ -13,9 +13,9 @@ pnpm install
 pnpm build
 ```
 
-- **Package manager**: pnpm 10.10.0 (do not use npm or yarn)
+- **Package manager**: pnpm (version specified in `packageManager` field of `package.json`; do not use npm or yarn)
 - **Node.js**: >= 20.0.0
-- **Rust**: 1.80+ with clippy and rustfmt (components configured in `rust-toolchain.toml`)
+- **Rust**: Minimum supported Rust version (MSRV) with clippy and rustfmt (components configured in `rust-toolchain.toml`)
 
 ## Build Commands
 
@@ -24,8 +24,8 @@ pnpm build
 | `pnpm install` | `packages/typespec-rust` | Install dependencies |
 | `pnpm build` | `packages/typespec-rust` | Build TypeScript emitter to `dist/` |
 | `pnpm watch` | `packages/typespec-rust` | Build in watch mode |
-| `pnpm run tspcompile` | `packages/typespec-rust` | Regenerate all Rust test crates |
-| `pnpm run tspcompile --filter=<pattern>` | `packages/typespec-rust` | Regenerate matching test crates only |
+| `pnpm run tspcompile` | `packages/typespec-rust` | Regenerate all Rust test crates (takes several minutes) |
+| `pnpm run tspcompile --filter=<pattern>` | `packages/typespec-rust` | Regenerate matching test crates only (takes several minutes) |
 | `cargo build` | `packages/typespec-rust/test` | Build all generated Rust crates |
 
 ## Testing
@@ -68,6 +68,8 @@ packages/typespec-rust/
 ├── test/                   # Generated Rust test crates + TS unit tests
 │   ├── spector/            # Integration tests (from spector specs)
 │   ├── sdk/                # SDK tests
+│   ├── other/              # Targeted test crates
+│   ├── tsp/                # TypeSpec files used to generate test/other and test/sdk
 │   └── Cargo.toml          # Rust workspace root
 ├── .scripts/               # Build helper scripts
 ├── package.json            # Package configuration (pnpm)
