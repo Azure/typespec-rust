@@ -1,5 +1,12 @@
 # Release History
 
+## 0.36.1 (unreleased)
+
+### Other Changes
+
+* Updated to the latest tsp toolset.
+  * This includes the latest `TypeSpec.Http` lib that fixes reporting the `content-type` header for `HEAD` operations.
+
 ## 0.36.0 (2026-02-26)
 
 ### Breaking Changes
