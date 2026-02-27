@@ -209,45 +209,6 @@ export class Adapter {
       terminalErrorModelNames = getTerminalErrorModelNames(this.ctx.sdkPackage.clients);
     }
 
-    // We do not want to emit any of the default Azure errors.
-    const isDefaultAzureErrorModel = function(model: rust.Model): boolean {
-      switch (model.name) {
-        case 'Error':
-          if (model.fields.length === 5) {
-            return model.fields.some(
-              f => f.name === 'code' && f.type.kind === 'option' && f.type.type.kind === 'String')
-              && model.fields.some(
-                f => f.name === 'message' && f.type.kind === 'option' && f.type.type.kind === 'String')
-              && model.fields.some(
-                f => f.name === 'target' && f.type.kind === 'option' && f.type.type.kind === 'String')
-              && model.fields.some(f => f.name === 'details'
-                && f.type.kind === 'option' && f.type.type.kind === 'Vec'
-                && f.type.type.type.kind === 'model' && f.type.type.type.name === 'Error')
-              && model.fields.some(f => f.name === 'innererror'
-                && f.type.kind === 'option' && f.type.type.kind === 'model' && f.type.type.name === 'InnerError')
-          }
-          break;
-        case 'InnerError':
-          if (model.fields.length === 2) {
-            return model.fields.some(
-              f => f.name === 'code' && f.type.kind === 'option' && f.type.type.kind === 'String')
-              && model.fields.some(f => f.name === 'innererror'
-                && f.type.kind === 'option' && f.type.type.kind === 'box'
-                && f.type.type.type.kind === 'model' && f.type.type.type.name === 'InnerError')
-          }
-          break;
-        case 'ErrorResponse':
-          if (model.fields.length === 2) {
-            return model.fields.some(
-              f => f.name === 'error_code' && f.type.kind === 'option' && f.type.type.kind === 'String')
-              && model.fields.some(f => f.name === 'error'
-                && f.type.kind === 'option' && f.type.type.kind === 'model' && f.type.type.name === 'Error')
-          }
-          break;
-      }
-      return false;
-    }
-
     const processedTypes = new Set<string>();
     for (const model of this.ctx.sdkPackage.models) {
       if ((model.usage & (tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread | tcgc.UsageFlags.Exception)) === 0) {
@@ -255,6 +216,11 @@ export class Adapter {
         // types unless they're explicitly referenced (e.g. a model property).
         // we keep the models for spread params as we internally use them.
         // We also emit exception (error) types.
+        continue;
+      }
+
+      // Skip the default Azure core error models.
+      if (model.namespace === 'Azure.Core.Foundations') {
         continue;
       }
 
@@ -283,9 +249,7 @@ export class Adapter {
         if (terminalErrorModelNames.has(model.name)) {
           rustModel.flags |= rust.ModelFlags.Error;
         }
-        if ((model.usage & tcgc.UsageFlags.Exception) === 0 || !isDefaultAzureErrorModel(rustModel)) {
-          this.crate.models.push(rustModel);
-        }
+        this.crate.models.push(rustModel);
       }
     }
   }
