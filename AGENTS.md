@@ -15,7 +15,7 @@ pnpm build
 
 - **Package manager**: pnpm 10.10.0 (do not use npm or yarn)
 - **Node.js**: >= 20.0.0
-- **Rust**: 1.80+ with clippy and rustfmt (see `rust-toolchain.toml`)
+- **Rust**: 1.80+ with clippy and rustfmt (components configured in `rust-toolchain.toml`)
 
 ## Build Commands
 
@@ -43,10 +43,9 @@ pnpm build
 | Command | Directory | Purpose |
 |---|---|---|
 | `pnpm eslint` | `packages/typespec-rust` | Lint TypeScript code |
-| `pnpm format` | `packages/typespec-rust` | Format TypeScript files |
 | `cargo clippy --workspace --all-features --all-targets --keep-going --no-deps` | `packages/typespec-rust/test` | Lint generated Rust code |
 | `cargo fmt --all` | `packages/typespec-rust/test` | Format generated Rust code |
-| `cspell -c ./.vscode/cspell.json ./packages` | repo root | Spell check — must pass before committing |
+| `cspell -c .vscode/cspell.json .` | repo root | Spell check — must pass before committing |
 
 ## Code Style
 

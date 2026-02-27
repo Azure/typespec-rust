@@ -24,7 +24,7 @@ This repository contains the TypeSpec Rust emitter (`@azure-tools/typespec-rust`
 
 - **Node.js** >= 20.0.0
 - **pnpm** 10.10.0 (specified in `packageManager` field of `package.json`)
-- **Rust** 1.80+ with clippy and rustfmt components (see `rust-toolchain.toml`)
+- **Rust** 1.80+ with clippy and rustfmt components (components are configured in `rust-toolchain.toml`)
 
 ## Install and Build
 
@@ -87,8 +87,7 @@ pnpm spector --stop
 - Validate all TypeScript changes are linter clean: `pnpm eslint` (from `packages/typespec-rust`).
 - Validate Rust generated code: `cargo clippy --workspace --all-features --all-targets --keep-going --no-deps` (from `packages/typespec-rust/test`).
 - Format Rust code: `cargo fmt --all` (from `packages/typespec-rust/test`).
-- Use `pnpm format` under each subfolder of `packages` folder to format TypeScript files.
-- Run spell checking: `cspell -c ./.vscode/cspell.json ./packages` must succeed before committing.
+- Run spell checking from the repo root: `cspell -c .vscode/cspell.json .` must succeed before committing.
 - All files must end with a newline character.
 
 ## CI Pipeline
