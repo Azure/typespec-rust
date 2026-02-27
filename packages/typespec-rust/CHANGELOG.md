@@ -6,7 +6,8 @@
 
 * TypeSpec namespaces are now honored and emitted as sub-modules.
   * The root namespace is selected from the first defined client.  All content in the root namespace is exported as `crate_name::clients::*` and `crate_name::models::*`.
-  * If there are no defined clients, the the root namespace is selected from a non-core model type.
+  * If there are no defined clients, then the root namespace is selected from a non-core model type.
+  * See the docs on [client authoring](https://azure.github.io/typespec-azure/docs/howtos/generate-client-libraries/03client/) for further info.
 
 ### Other Changes
 
