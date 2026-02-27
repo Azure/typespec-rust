@@ -1831,6 +1831,10 @@ export class Adapter {
       }
 
       const synthesizedModel = this.getModel(synthesizedType, new Array<rust.Type>());
+      const modelNs = this.adaptNamespace(synthesizedType.namespace);
+      if (!modelNs.models.includes(synthesizedModel)) {
+        modelNs.models.push(synthesizedModel);
+      }
 
       // for the pager response type, remove the Option<T> around the Vec<T> for the page items
       if (!method.pagingMetadata.pageItemsSegments) {
