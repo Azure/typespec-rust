@@ -178,13 +178,49 @@ export class Adapter {
       }
     }
 
-    const processedTypes = new Set<string>();
+    let terminalErrorModelNames = new Set<string>();
+    if (this.options['emit-error-traits']) {
+      // Typespec would flag any model that is used in the error model with the Exception flag,
+      // even if that model is not directly used in any method, but is used as one of the terminal error type fields.
+      // We need to find these terminal error models, and ignore all others, because when we need to implement TryFrom trait,
+      // there is no need to implement it for every Exception model - we just need it for the terminal ones.
+      const getTerminalErrorModelNames = function(clients: tcgc.SdkClientType<tcgc.SdkHttpOperation>[], visitedClientNames = new Set<string>()) : Set<string> {
+        const terminalErrorModelNames = new Set<string>();
+        for (const client of clients) {
+          if (visitedClientNames.has(client.name)) {
+            continue;
+          }
+          visitedClientNames.add(client.name);
+          for (const errorModelName
+            of client.methods.flatMap(mt => mt.operation.exceptions).filter(
+              e => e.type?.kind === 'model').map(md => (md.type as tcgc.SdkModelType).name)
+          ) {
+            terminalErrorModelNames.add(errorModelName);
+          }
 
+          for (const errorModelName of getTerminalErrorModelNames(client.children ?? [], visitedClientNames).values()) {
+            terminalErrorModelNames.add(errorModelName);
+          }
+        }
+
+        return terminalErrorModelNames;
+      }
+
+      terminalErrorModelNames = getTerminalErrorModelNames(this.ctx.sdkPackage.clients);
+    }
+
+    const processedTypes = new Set<string>();
     for (const model of this.ctx.sdkPackage.models) {
-      if ((model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0 && (model.usage & tcgc.UsageFlags.Spread) === 0) {
+      if ((model.usage & (tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread | tcgc.UsageFlags.Exception)) === 0) {
         // skip types without input and output usage. this will include core
         // types unless they're explicitly referenced (e.g. a model property).
         // we keep the models for spread params as we internally use them.
+        // We also emit exception (error) types.
+        continue;
+      }
+
+      // Skip the default Azure core error models.
+      if (model.namespace === 'Azure.Core.Foundations') {
         continue;
       }
 
@@ -210,6 +246,9 @@ export class Adapter {
         this.getExternalType(model.external);
       } else {
         const rustModel = this.getModel(model);
+        if (terminalErrorModelNames.has(model.name)) {
+          rustModel.flags |= rust.ModelFlags.Error;
+        }
         this.crate.models.push(rustModel);
       }
     }
@@ -372,7 +411,6 @@ export class Adapter {
     // include error and LRO polling types as output types
     if (
       <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output ||
-      <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception ||
       <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.LroPolling) === tcgc.UsageFlags.LroPolling
     ) {
       modelFlags |= rust.ModelFlags.Output;

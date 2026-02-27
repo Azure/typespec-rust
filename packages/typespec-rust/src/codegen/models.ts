@@ -294,6 +294,13 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
       entries.push(forReq);
     }
 
+    const forErr = context.getTryFromForError(model, use);
+    if (forErr) {
+      use.addForType(model);
+      entries.push(forErr);
+    }
+
+
     const pageImpl = context.getPageImplForType(model, use);
     if (pageImpl) {
       use.addForType(model);

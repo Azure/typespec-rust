@@ -340,6 +340,9 @@ export enum ModelFlags {
 
   /** model is a sub-type in a polymorphic discriminated union */
   PolymorphicSubtype = 4,
+
+  /** model is an error */
+  Error = 8,
 }
 
 /** DateTimeEncoding is the wire format of the date/time */

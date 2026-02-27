@@ -11,7 +11,7 @@ use super::{
     },
     AccessTier, ArchiveStatus, BlobType, CopyStatus, GeoReplicationStatusType,
     ImmutabilityPolicyMode, LeaseDuration, LeaseState, LeaseStatus, PublicAccessType,
-    RehydratePriority,
+    RehydratePriority, StorageErrorCode,
 };
 use azure_core::{base64, fmt::SafeDebug, time::OffsetDateTime};
 use serde::{Deserialize, Serialize};
@@ -753,6 +753,20 @@ pub struct CorsRule {
     /// The maximum age in seconds.
     #[serde(rename = "MaxAgeInSeconds", skip_serializing_if = "Option::is_none")]
     pub max_age_in_seconds: Option<i32>,
+}
+
+/// The error response.
+///
+/// This defines the wire format only. Language SDKs wrap this in idiomatic error types.
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+pub struct Error {
+    /// The error code.
+    #[serde(rename = "Code", skip_serializing_if = "Option::is_none")]
+    pub code: Option<StorageErrorCode>,
+
+    /// The error message.
+    #[serde(rename = "Message", skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
 }
 
 /// The filter blob item.

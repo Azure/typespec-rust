@@ -79,6 +79,30 @@ pub struct CoreError {
     pub target: Option<String>,
 }
 
+/// Azure App Configuration error object.
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+pub struct Error {
+    /// A detailed description of the error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub detail: Option<String>,
+
+    /// The name of the parameter that resulted in the error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The HTTP status code that the error maps to.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<i32>,
+
+    /// A brief summary of the error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+
+    /// The type of the error.
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub type_prop: Option<String>,
+}
+
 /// An object containing more specific information about the error. As per Azure REST API guidelines - <https://aka.ms/AzureRestApiGuidelines#handling-errors>.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]

@@ -1731,6 +1731,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "azure_core",
+ "serde",
  "tokio",
 ]
 
@@ -2118,6 +2119,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "azure_core",
+ "serde",
  "tokio",
 ]
 
@@ -2357,6 +2359,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "azure_core",
+ "serde",
  "tokio",
 ]
 

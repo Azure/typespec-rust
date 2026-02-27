@@ -19,6 +19,8 @@ export interface RustEmitterOptions {
   'overwrite-lib-rs': boolean;
   /** Whether to omit documentation links in generated code. Defaults to false */
   'temp-omit-doc-links': boolean;
+  /** Whether to emit TryFrom for error types */
+  'emit-error-traits': boolean;
 }
 
 const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
@@ -58,6 +60,12 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
       nullable: false, 
       default: false,
       description: 'Whether to omit documentation links in generated code. Defaults to false'
+    },
+    'emit-error-traits': {
+      type: 'boolean',
+      nullable: false,
+      default: false,
+      description: 'Whether to emit traits for error types. Defaults to false'
     },
   },
   required: [

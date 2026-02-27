@@ -130,6 +130,30 @@ pub struct DeletedSecretProperties {
     pub tags: Option<HashMap<String, String>>,
 }
 
+/// The key vault error exception.
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+pub struct KeyVaultError {
+    /// The key vault server error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<KeyVaultErrorError>,
+}
+
+/// The key vault server error.
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+pub struct KeyVaultErrorError {
+    /// The error code.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub code: Option<String>,
+
+    /// The key vault server error.
+    #[serde(rename = "innererror", skip_serializing_if = "Option::is_none")]
+    pub inner_error: Option<Box<KeyVaultErrorError>>,
+
+    /// The error message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
+}
+
 /// The deleted secret list result
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
