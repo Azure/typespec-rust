@@ -7,3 +7,5 @@
 
 mod generated;
 pub use generated::*;
+pub mod first_namespace;
+pub mod second_namespace;

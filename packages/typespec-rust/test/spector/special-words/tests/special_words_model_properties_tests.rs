@@ -4,7 +4,7 @@
 
 use azure_core::http::StatusCode;
 use spector_specialwords::{
-    models::{DictMethods, ModelWithList, SameAsModel},
+    model_properties::models::{DictMethods, ModelWithList, SameAsModel},
     SpecialWordsClient,
 };
 

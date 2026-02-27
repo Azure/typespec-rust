@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_multiclient::{models::ClientType, ClientAClient};
+use spector_multiclient::{client::structure::service::models::ClientType, ClientAClient};
 
 #[tokio::test]
 async fn renamed_five() {

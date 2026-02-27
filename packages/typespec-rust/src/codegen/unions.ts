@@ -23,23 +23,23 @@ export interface Unions {
 
 /**
  * returns the union enum types, or undefined if the
- * crate contains no union types.
+ * module contains no union types.
  *
- * @param crate the crate for which to emit unions
- * @param context the context for the provided crate
+ * @param module the module for which to emit unions
+ * @param context the context for the provided module
  * @returns the union content or undefined
  */
-export function emitUnions(crate: rust.Crate, context: Context): Unions {
-  if (crate.unions.length === 0) {
+export function emitUnions(module: rust.ModuleContainer, context: Context): Unions {
+  if (module.unions.length === 0) {
     return {};
   }
 
-  const use = new Use('modelsOther');
+  const use = new Use(module, 'modelsOther');
   const indent = new helpers.indentation();
   const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
-  for (const rustUnion of crate.unions) {
+  for (const rustUnion of module.unions) {
     visTracker.update(rustUnion.visibility);
     const docs = helpers.formatDocComment(rustUnion.docs, true);
     if (docs.length > 0) {
@@ -92,8 +92,8 @@ export function emitUnions(crate: rust.Crate, context: Context): Unions {
       content: content,
       visibility: visTracker.get(),
     },
-    impls: emitUnionImpls(crate, context),
-    serde: emitUnionSerde(crate),
+    impls: emitUnionImpls(module, context),
+    serde: emitUnionSerde(module),
   };
 }
 
@@ -139,15 +139,15 @@ function getPolymorphicUnknownVariant(indent: helpers.indentation, use: Use, bas
  * returns any trait impls for union types.
  * if no helpers are required, undefined is returned.
  * 
- * @param crate the crate for which to emit model impls
- * @param context the context for the provided crate
+ * @param module the module for which to emit model impls
+ * @param context the context for the provided module
  * @returns the union impls content or undefined
  */
-function emitUnionImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
-  const use = new Use('modelsOther');
+function emitUnionImpls(module: rust.ModuleContainer, context: Context): helpers.Module | undefined {
+  const use = new Use(module, 'modelsOther');
   const entries = new Array<string>();
 
-  for (const rustUnion of crate.unions) {
+  for (const rustUnion of module.unions) {
     const forReq = context.getTryFromForRequestContent(rustUnion, use);
 
     // helpers aren't required for all types, so only
@@ -178,19 +178,19 @@ function emitUnionImpls(crate: rust.Crate, context: Context): helpers.Module | u
  * returns the content for unions_serde.rs.
  * if no helpers are required, undefined is returned.
  * 
- * @param crate the crate for which to emit model impls
+ * @param module the module for which to emit model impls
  * @returns the union serde helpers or undefined
  */
-function emitUnionSerde(crate: rust.Crate): helpers.Module | undefined {
-  if (crate.unions.length === 0) {
+function emitUnionSerde(module: rust.ModuleContainer): helpers.Module | undefined {
+  if (module.unions.length === 0) {
     return undefined;
   }
 
-  const use = new Use('modelsOther');
+  const use = new Use(module, 'modelsOther');
   const indent = new helpers.indentation();
 
   let body = '';
-  for (const rustUnion of crate.unions) {
+  for (const rustUnion of module.unions) {
     if (!isPolymorphicDU(rustUnion.unionKind) || rustUnion.unionKind.kind !== 'discriminatedUnionBase') {
       continue;
     }

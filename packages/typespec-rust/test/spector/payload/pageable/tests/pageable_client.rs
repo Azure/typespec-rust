@@ -3,7 +3,9 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use futures::StreamExt;
-use spector_corepageable::{models::PageablePageSizeClientListWithPageSizeOptions, PageableClient};
+use spector_corepageable::{
+    page_size::models::PageablePageSizeClientListWithPageSizeOptions, PageableClient,
+};
 
 #[tokio::test]
 async fn list_with_page_size() {

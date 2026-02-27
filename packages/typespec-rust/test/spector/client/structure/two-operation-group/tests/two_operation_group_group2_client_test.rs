@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_twoop::{models::ClientType, TwoOperationGroupClient};
+use spector_twoop::{client::structure::service::models::ClientType, TwoOperationGroupClient};
 
 #[tokio::test]
 async fn five() {

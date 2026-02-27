@@ -4,7 +4,7 @@
 
 use spector_specialwords::SpecialWordsClient;
 
-use spector_specialwords::models::{
+use spector_specialwords::models::models::{
     And, As, Assert, Async, Await, Break, Class, Constructor, Continue, Def, Del, Elif, Else,
     Except, Exec, Finally, For, From, Global, If, Import, In, Is, Lambda, Not, Or, Pass, Raise,
     Return, Try, While, With, Yield,

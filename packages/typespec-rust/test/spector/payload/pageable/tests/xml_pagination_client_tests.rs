@@ -4,10 +4,8 @@
 
 use futures::StreamExt;
 use spector_corepageable::{
-    models::{
-        PageableXmlPaginationClientListWithContinuationOptions, XmlPet, XmlPetListResult,
-        XmlPetListResultWithNextLink,
-    },
+    models::{XmlPet, XmlPetListResult, XmlPetListResultWithNextLink},
+    xml_pagination::models::PageableXmlPaginationClientListWithContinuationOptions,
     PageableClient,
 };
 

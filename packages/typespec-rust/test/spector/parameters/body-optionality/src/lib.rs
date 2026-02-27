@@ -7,3 +7,4 @@
 
 mod generated;
 pub use generated::*;
+pub mod optional_explicit;

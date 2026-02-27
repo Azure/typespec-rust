@@ -252,6 +252,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       options.push(`--option="@azure-tools/typespec-rust.crate-name=${crate}"`);
       options.push(`--option="@azure-tools/typespec-rust.crate-version=0.1.0"`);
       options.push(`--option="@azure-tools/typespec-rust.emitter-output-dir=${fullOutputDir}"`);
+      //options.push(`--option="@azure-tools/typespec-rust.overwrite-lib-rs=true"`);
       const command = `node ${compiler} compile ${input} --emit=${pkgRoot} ${options.join(' ')} ${additionalArgs.join(' ')}`;
       if (switches.includes('--verbose')) {
         console.log(command);
@@ -261,7 +262,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       const maxRmRetries = 4;
       const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
       for (let attempt = 0; attempt < maxRmRetries; ++attempt) {
-        const rmPath = path.join(fullOutputDir, 'src', 'generated')
+        const rmPath = path.join(fullOutputDir, 'src', 'generated');
         try {
           fs.rmSync(rmPath, { force: true, recursive: true });
           break;

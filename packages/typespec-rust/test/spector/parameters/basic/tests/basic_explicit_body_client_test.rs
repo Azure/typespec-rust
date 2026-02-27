@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_basicparams::{models::User, BasicClient};
+use spector_basicparams::{explicit_body::models::User, BasicClient};
 
 #[tokio::test]
 async fn simple() {
