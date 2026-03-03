@@ -25,47 +25,47 @@ importers:
         version: 7.2.2
     devDependencies:
       '@azure-tools/azure-http-specs':
-        specifier: 0.1.0-alpha.38-dev.4
-        version: 0.1.0-alpha.38-dev.4(e47d2f2a0f0df6fe86f3f6ec4878d967)
+        specifier: 0.1.0-alpha.38-dev.5
+        version: 0.1.0-alpha.38-dev.5(b5da437d0efd70f0572bddf374ec5cee)
       '@azure-tools/typespec-azure-core':
         specifier: ~0.65.0
-        version: 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))))
+        version: 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))))
       '@azure-tools/typespec-azure-resource-manager':
         specifier: ~0.65.0
-        version: 0.65.0(f6ff5ed3ec2f12df217423783597a207)
+        version: 0.65.0(a973b4c169b7491879ac8293a59ef0e7)
       '@azure-tools/typespec-client-generator-core':
         specifier: ~0.65.4
-        version: 0.65.4(100e7e615a7ec9adfd6afc6b9dd7ab89)
+        version: 0.65.4(a0ab0fd9a7872388c6d900bff55c74d3)
       '@eslint/js':
         specifier: ^9.39.1
         version: 9.39.3
       '@types/node':
         specifier: ^20.19.25
-        version: 20.19.33
+        version: 20.19.35
       '@typespec/compiler':
         specifier: ^1.9.0
-        version: 1.9.0(@types/node@20.19.33)
+        version: 1.9.0(@types/node@20.19.35)
       '@typespec/http':
         specifier: ^1.9.1
-        version: 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
+        version: 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
       '@typespec/http-specs':
         specifier: 0.1.0-alpha.33-dev.3
-        version: 0.1.0-alpha.33-dev.3(@types/node@20.19.33)(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))(@typespec/versioning@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))(@typespec/xml@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
+        version: 0.1.0-alpha.33-dev.3(@types/node@20.19.35)(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))(@typespec/versioning@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))(@typespec/xml@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
       '@typespec/openapi':
         specifier: ^1.9.0
-        version: 1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
+        version: 1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
       '@typespec/rest':
         specifier: ~0.79.0
-        version: 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
+        version: 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
       '@typespec/spector':
         specifier: 0.1.0-alpha.23
-        version: 0.1.0-alpha.23(@types/node@20.19.33)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
+        version: 0.1.0-alpha.23(@types/node@20.19.35)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
       '@typespec/versioning':
         specifier: ~0.79.0
-        version: 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+        version: 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
       '@typespec/xml':
         specifier: ~0.79.0
-        version: 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+        version: 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
       '@vitest/coverage-v8':
         specifier: ^4.0.10
         version: 4.0.18(vitest@4.0.18)
@@ -86,17 +86,17 @@ importers:
         version: 8.56.1(eslint@9.39.3)(typescript@5.9.3)
       vitest:
         specifier: ^4.0.10
-        version: 4.0.18(@types/node@20.19.33)(@vitest/ui@4.0.18)(yaml@2.8.2)
+        version: 4.0.18(@types/node@20.19.35)(@vitest/ui@4.0.18)(yaml@2.8.2)
 
 packages:
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.38-dev.4':
-    resolution: {integrity: sha512-RcMWlJoH/ZfFXR4X/nZ/L6siNDtYylYERikcF23JbJ1/SrYsFIS3IpdG4E1YlEMwwfgolL31CDM32+d6g+AViQ==}
+  '@azure-tools/azure-http-specs@0.1.0-alpha.38-dev.5':
+    resolution: {integrity: sha512-QZm9K+gyaUI0vQ+Y6RI8eMHKOKZ2QQR0v8h0wcAYXNGeMPejnYaAF9FXORVt85N6uZV2NuCD9zmROcPc0dgxew==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@azure-tools/typespec-azure-core': ^0.65.0 || >=0.66.0-dev <0.66.0
       '@typespec/compiler': ^1.9.0
-      '@typespec/http': ^1.9.0
+      '@typespec/http': ^1.9.1
       '@typespec/rest': ^0.79.0 || >=0.80.0-dev <0.80.0
       '@typespec/versioning': ^0.79.0 || >=0.80.0-dev <0.80.0
       '@typespec/xml': ^0.79.0 || >=0.80.0-dev <0.80.0
@@ -754,8 +754,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@20.19.33':
-    resolution: {integrity: sha512-Rs1bVAIdBs5gbTIKza/tgpMuG1k3U/UMJLWecIMxNdJFDMzcM5LOiLVRYh3PilWEYDIeUDv7bpiHPLPsbydGcw==}
+  '@types/node@20.19.35':
+    resolution: {integrity: sha512-Uarfe6J91b9HAUXxjvSOdiO2UPOKLm07Q1oh0JHxoZ1y8HoqxDAu3gVrsrOHeiio0kSsoVBt4wFrKOm0dKxVPQ==}
 
   '@types/node@25.0.10':
     resolution: {integrity: sha512-zWW5KPngR/yvakJgGOmZ5vTBemDoSqF3AcV/LrO5u5wTWyEAVVh+IT39G4gtyAkh3CtTZs8aX/yRM82OfzHJRg==}
@@ -2467,50 +2467,50 @@ packages:
 
 snapshots:
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.38-dev.4(e47d2f2a0f0df6fe86f3f6ec4878d967)':
+  '@azure-tools/azure-http-specs@0.1.0-alpha.38-dev.5(b5da437d0efd70f0572bddf374ec5cee)':
     dependencies:
-      '@azure-tools/typespec-azure-core': 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))))
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
+      '@azure-tools/typespec-azure-core': 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
       '@typespec/spec-api': 0.1.0-alpha.12
-      '@typespec/spector': 0.1.0-alpha.23(@types/node@20.19.33)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
-      '@typespec/xml': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+      '@typespec/spector': 0.1.0-alpha.23(@types/node@20.19.35)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
+      '@typespec/xml': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
     transitivePeerDependencies:
       - '@types/node'
       - '@typespec/streams'
       - supports-color
 
-  '@azure-tools/typespec-azure-core@0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))))':
+  '@azure-tools/typespec-azure-core@0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
 
-  '@azure-tools/typespec-azure-resource-manager@0.65.0(f6ff5ed3ec2f12df217423783597a207)':
+  '@azure-tools/typespec-azure-resource-manager@0.65.0(a973b4c169b7491879ac8293a59ef0e7)':
     dependencies:
-      '@azure-tools/typespec-azure-core': 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))))
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/openapi': 1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
-      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
-      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+      '@azure-tools/typespec-azure-core': 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/openapi': 1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
+      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
+      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
       change-case: 5.4.4
       pluralize: 8.0.0
 
-  '@azure-tools/typespec-client-generator-core@0.65.4(100e7e615a7ec9adfd6afc6b9dd7ab89)':
+  '@azure-tools/typespec-client-generator-core@0.65.4(a0ab0fd9a7872388c6d900bff55c74d3)':
     dependencies:
-      '@azure-tools/typespec-azure-core': 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))))
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/events': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/openapi': 1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
-      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
-      '@typespec/sse': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/events@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/streams': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
-      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
-      '@typespec/xml': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+      '@azure-tools/typespec-azure-core': 0.65.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/events': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/openapi': 1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
+      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
+      '@typespec/sse': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/events@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/streams': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
+      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
+      '@typespec/xml': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
       change-case: 5.4.4
       pluralize: 8.0.0
       yaml: 2.8.2
@@ -2820,122 +2820,122 @@ snapshots:
 
   '@inquirer/ansi@2.0.2': {}
 
-  '@inquirer/checkbox@5.0.2(@types/node@20.19.33)':
+  '@inquirer/checkbox@5.0.2(@types/node@20.19.35)':
     dependencies:
       '@inquirer/ansi': 2.0.2
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
       '@inquirer/figures': 2.0.2
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/confirm@6.0.2(@types/node@20.19.33)':
+  '@inquirer/confirm@6.0.2(@types/node@20.19.35)':
     dependencies:
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/core@11.0.2(@types/node@20.19.33)':
+  '@inquirer/core@11.0.2(@types/node@20.19.35)':
     dependencies:
       '@inquirer/ansi': 2.0.2
       '@inquirer/figures': 2.0.2
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
       cli-width: 4.1.0
       mute-stream: 3.0.0
       signal-exit: 4.1.0
       wrap-ansi: 9.0.2
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/editor@5.0.2(@types/node@20.19.33)':
+  '@inquirer/editor@5.0.2(@types/node@20.19.35)':
     dependencies:
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/external-editor': 2.0.2(@types/node@20.19.33)
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/external-editor': 2.0.2(@types/node@20.19.35)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/expand@5.0.2(@types/node@20.19.33)':
+  '@inquirer/expand@5.0.2(@types/node@20.19.35)':
     dependencies:
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/external-editor@2.0.2(@types/node@20.19.33)':
+  '@inquirer/external-editor@2.0.2(@types/node@20.19.35)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.0
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
   '@inquirer/figures@2.0.2': {}
 
-  '@inquirer/input@5.0.2(@types/node@20.19.33)':
+  '@inquirer/input@5.0.2(@types/node@20.19.35)':
     dependencies:
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/number@4.0.2(@types/node@20.19.33)':
+  '@inquirer/number@4.0.2(@types/node@20.19.35)':
     dependencies:
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/password@5.0.2(@types/node@20.19.33)':
-    dependencies:
-      '@inquirer/ansi': 2.0.2
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
-    optionalDependencies:
-      '@types/node': 20.19.33
-
-  '@inquirer/prompts@8.0.2(@types/node@20.19.33)':
-    dependencies:
-      '@inquirer/checkbox': 5.0.2(@types/node@20.19.33)
-      '@inquirer/confirm': 6.0.2(@types/node@20.19.33)
-      '@inquirer/editor': 5.0.2(@types/node@20.19.33)
-      '@inquirer/expand': 5.0.2(@types/node@20.19.33)
-      '@inquirer/input': 5.0.2(@types/node@20.19.33)
-      '@inquirer/number': 4.0.2(@types/node@20.19.33)
-      '@inquirer/password': 5.0.2(@types/node@20.19.33)
-      '@inquirer/rawlist': 5.0.2(@types/node@20.19.33)
-      '@inquirer/search': 4.0.2(@types/node@20.19.33)
-      '@inquirer/select': 5.0.2(@types/node@20.19.33)
-    optionalDependencies:
-      '@types/node': 20.19.33
-
-  '@inquirer/rawlist@5.0.2(@types/node@20.19.33)':
-    dependencies:
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
-    optionalDependencies:
-      '@types/node': 20.19.33
-
-  '@inquirer/search@4.0.2(@types/node@20.19.33)':
-    dependencies:
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/figures': 2.0.2
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
-    optionalDependencies:
-      '@types/node': 20.19.33
-
-  '@inquirer/select@5.0.2(@types/node@20.19.33)':
+  '@inquirer/password@5.0.2(@types/node@20.19.35)':
     dependencies:
       '@inquirer/ansi': 2.0.2
-      '@inquirer/core': 11.0.2(@types/node@20.19.33)
-      '@inquirer/figures': 2.0.2
-      '@inquirer/type': 4.0.2(@types/node@20.19.33)
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
 
-  '@inquirer/type@4.0.2(@types/node@20.19.33)':
+  '@inquirer/prompts@8.0.2(@types/node@20.19.35)':
+    dependencies:
+      '@inquirer/checkbox': 5.0.2(@types/node@20.19.35)
+      '@inquirer/confirm': 6.0.2(@types/node@20.19.35)
+      '@inquirer/editor': 5.0.2(@types/node@20.19.35)
+      '@inquirer/expand': 5.0.2(@types/node@20.19.35)
+      '@inquirer/input': 5.0.2(@types/node@20.19.35)
+      '@inquirer/number': 4.0.2(@types/node@20.19.35)
+      '@inquirer/password': 5.0.2(@types/node@20.19.35)
+      '@inquirer/rawlist': 5.0.2(@types/node@20.19.35)
+      '@inquirer/search': 4.0.2(@types/node@20.19.35)
+      '@inquirer/select': 5.0.2(@types/node@20.19.35)
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
+
+  '@inquirer/rawlist@5.0.2(@types/node@20.19.35)':
+    dependencies:
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
+    optionalDependencies:
+      '@types/node': 20.19.35
+
+  '@inquirer/search@4.0.2(@types/node@20.19.35)':
+    dependencies:
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/figures': 2.0.2
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
+    optionalDependencies:
+      '@types/node': 20.19.35
+
+  '@inquirer/select@5.0.2(@types/node@20.19.35)':
+    dependencies:
+      '@inquirer/ansi': 2.0.2
+      '@inquirer/core': 11.0.2(@types/node@20.19.35)
+      '@inquirer/figures': 2.0.2
+      '@inquirer/type': 4.0.2(@types/node@20.19.35)
+    optionalDependencies:
+      '@types/node': 20.19.35
+
+  '@inquirer/type@4.0.2(@types/node@20.19.35)':
+    optionalDependencies:
+      '@types/node': 20.19.35
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -3063,7 +3063,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@20.19.33':
+  '@types/node@20.19.35':
     dependencies:
       undici-types: 6.21.0
 
@@ -3164,10 +3164,10 @@ snapshots:
       '@typescript-eslint/types': 8.56.1
       eslint-visitor-keys: 5.0.1
 
-  '@typespec/compiler@1.9.0(@types/node@20.19.33)':
+  '@typespec/compiler@1.9.0(@types/node@20.19.35)':
     dependencies:
       '@babel/code-frame': 7.28.6
-      '@inquirer/prompts': 8.0.2(@types/node@20.19.33)
+      '@inquirer/prompts': 8.0.2(@types/node@20.19.35)
       ajv: 8.17.1
       change-case: 5.4.4
       env-paths: 3.0.0
@@ -3186,40 +3186,40 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@typespec/events@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))':
+  '@typespec/events@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
 
-  '@typespec/http-specs@0.1.0-alpha.33-dev.3(@types/node@20.19.33)(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))(@typespec/versioning@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))(@typespec/xml@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))':
+  '@typespec/http-specs@0.1.0-alpha.33-dev.3(@types/node@20.19.35)(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))(@typespec/versioning@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))(@typespec/xml@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
       '@typespec/spec-api': 0.1.0-alpha.12
-      '@typespec/spector': 0.1.0-alpha.23(@types/node@20.19.33)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
-      '@typespec/xml': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+      '@typespec/spector': 0.1.0-alpha.23(@types/node@20.19.35)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
+      '@typespec/xml': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
       deep-equal: 2.2.3
     transitivePeerDependencies:
       - '@types/node'
       - '@typespec/streams'
       - supports-color
 
-  '@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))':
+  '@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
     optionalDependencies:
-      '@typespec/streams': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+      '@typespec/streams': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
 
-  '@typespec/openapi@1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))':
+  '@typespec/openapi@1.9.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
 
-  '@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))':
+  '@typespec/rest@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
 
   '@typespec/spec-api@0.1.0-alpha.12':
     dependencies:
@@ -3237,15 +3237,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typespec/spector@0.1.0-alpha.23(@types/node@20.19.33)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))':
+  '@typespec/spector@0.1.0-alpha.23(@types/node@20.19.35)(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))':
     dependencies:
       '@azure/identity': 4.13.0
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/rest': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))
       '@typespec/spec-api': 0.1.0-alpha.12
       '@typespec/spec-coverage-sdk': 0.1.0-alpha.15
-      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+      '@typespec/versioning': 0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
       ajv: 8.17.1
       body-parser: 2.2.1
       deep-equal: 2.2.3
@@ -3264,16 +3264,16 @@ snapshots:
       - '@typespec/streams'
       - supports-color
 
-  '@typespec/sse@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/events@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))':
+  '@typespec/sse@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/events@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))(@typespec/http@1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
-      '@typespec/events': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
-      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.33))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33)))
-      '@typespec/streams': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
+      '@typespec/events': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
+      '@typespec/http': 1.9.1(@typespec/compiler@1.9.0(@types/node@20.19.35))(@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35)))
+      '@typespec/streams': 0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))
 
-  '@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.33))':
+  '@typespec/streams@0.68.0(@typespec/compiler@1.9.0(@types/node@20.19.35))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
 
   '@typespec/ts-http-runtime@0.3.2':
     dependencies:
@@ -3283,13 +3283,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typespec/versioning@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))':
+  '@typespec/versioning@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
 
-  '@typespec/xml@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.33))':
+  '@typespec/xml@0.79.0(@typespec/compiler@1.9.0(@types/node@20.19.35))':
     dependencies:
-      '@typespec/compiler': 1.9.0(@types/node@20.19.33)
+      '@typespec/compiler': 1.9.0(@types/node@20.19.35)
 
   '@vitest/coverage-v8@4.0.18(vitest@4.0.18)':
     dependencies:
@@ -3303,7 +3303,7 @@ snapshots:
       obug: 2.1.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@types/node@20.19.33)(@vitest/ui@4.0.18)(yaml@2.8.2)
+      vitest: 4.0.18(@types/node@20.19.35)(@vitest/ui@4.0.18)(yaml@2.8.2)
 
   '@vitest/expect@4.0.18':
     dependencies:
@@ -3314,13 +3314,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.18(vite@7.2.2(@types/node@20.19.33)(yaml@2.8.2))':
+  '@vitest/mocker@4.0.18(vite@7.2.2(@types/node@20.19.35)(yaml@2.8.2))':
     dependencies:
       '@vitest/spy': 4.0.18
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.2.2(@types/node@20.19.33)(yaml@2.8.2)
+      vite: 7.2.2(@types/node@20.19.35)(yaml@2.8.2)
 
   '@vitest/pretty-format@4.0.18':
     dependencies:
@@ -3348,7 +3348,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@types/node@20.19.33)(@vitest/ui@4.0.18)(yaml@2.8.2)
+      vitest: 4.0.18(@types/node@20.19.35)(@vitest/ui@4.0.18)(yaml@2.8.2)
 
   '@vitest/utils@4.0.18':
     dependencies:
@@ -4761,7 +4761,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@7.2.2(@types/node@20.19.33)(yaml@2.8.2):
+  vite@7.2.2(@types/node@20.19.35)(yaml@2.8.2):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -4770,14 +4770,14 @@ snapshots:
       rollup: 4.53.2
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
       fsevents: 2.3.3
       yaml: 2.8.2
 
-  vitest@4.0.18(@types/node@20.19.33)(@vitest/ui@4.0.18)(yaml@2.8.2):
+  vitest@4.0.18(@types/node@20.19.35)(@vitest/ui@4.0.18)(yaml@2.8.2):
     dependencies:
       '@vitest/expect': 4.0.18
-      '@vitest/mocker': 4.0.18(vite@7.2.2(@types/node@20.19.33)(yaml@2.8.2))
+      '@vitest/mocker': 4.0.18(vite@7.2.2(@types/node@20.19.35)(yaml@2.8.2))
       '@vitest/pretty-format': 4.0.18
       '@vitest/runner': 4.0.18
       '@vitest/snapshot': 4.0.18
@@ -4794,10 +4794,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.2.2(@types/node@20.19.33)(yaml@2.8.2)
+      vite: 7.2.2(@types/node@20.19.35)(yaml@2.8.2)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 20.19.33
+      '@types/node': 20.19.35
       '@vitest/ui': 4.0.18(vitest@4.0.18)
     transitivePeerDependencies:
       - jiti
