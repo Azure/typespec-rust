@@ -2543,6 +2543,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_visibility"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_xml"
 version = "0.1.0"
 dependencies = [

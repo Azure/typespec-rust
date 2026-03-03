@@ -23,10 +23,14 @@ pub struct PagedUser {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct User {
     /// The entity tag for this resource.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub etag: Option<Etag>,
 
     /// The user's id.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 
@@ -54,6 +58,8 @@ pub struct UserOrder {
     pub detail: Option<String>,
 
     /// The user's id.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 

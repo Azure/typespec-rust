@@ -12,10 +12,14 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct ErrorAdditionalInfo {
     /// The additional info.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub info: Option<Value>,
 
     /// The additional info type.
+    ///
+    /// Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -25,22 +29,32 @@ pub struct ErrorAdditionalInfo {
 #[non_exhaustive]
 pub struct ErrorDetail {
     /// The error additional info.
+    ///
+    /// Visibility: Read
     #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
     pub additional_info: Option<Vec<ErrorAdditionalInfo>>,
 
     /// The error code.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
 
     /// The error details.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<Vec<ErrorDetail>>,
 
     /// The error message.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
 
     /// The error target.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
 }

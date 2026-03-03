@@ -11,10 +11,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SubscriptionResource1 {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The name of the SubscriptionResource1
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -23,10 +27,14 @@ pub struct SubscriptionResource1 {
     pub properties: Option<SubscriptionResource1Properties>,
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -39,6 +47,8 @@ pub struct SubscriptionResource1Properties {
     pub description: Option<String>,
 
     /// The status of the last operation.
+    ///
+    /// Visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 }
@@ -47,10 +57,14 @@ pub struct SubscriptionResource1Properties {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SubscriptionResource2 {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The name of the SubscriptionResource2
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -59,10 +73,14 @@ pub struct SubscriptionResource2 {
     pub properties: Option<SubscriptionResource2Properties>,
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -75,6 +93,8 @@ pub struct SubscriptionResource2Properties {
     pub config_value: Option<String>,
 
     /// The status of the last operation.
+    ///
+    /// Visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 }

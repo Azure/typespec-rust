@@ -83,6 +83,8 @@ pub struct Error {
 #[non_exhaustive]
 pub struct Key {
     /// The name of the key.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
@@ -112,6 +114,8 @@ pub struct KeyValue {
     pub etag: Option<String>,
 
     /// The key of the key-value.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
 
@@ -225,6 +229,8 @@ pub struct Snapshot {
     pub composition_type: Option<CompositionType>,
 
     /// The time that the snapshot was created.
+    ///
+    /// Visibility: Read
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
@@ -233,10 +239,14 @@ pub struct Snapshot {
     pub created: Option<OffsetDateTime>,
 
     /// A value representing the current state of the snapshot.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// The time that the snapshot will expire.
+    ///
+    /// Visibility: Read
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
@@ -249,10 +259,14 @@ pub struct Snapshot {
     pub filters: Option<Vec<KeyValueFilter>>,
 
     /// The amount of key-values in the snapshot.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub items_count: Option<i64>,
 
     /// The name of the snapshot.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -264,10 +278,14 @@ pub struct Snapshot {
     pub retention_period: Option<i64>,
 
     /// The size in bytes of the snapshot.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
 
     /// The current status of the snapshot.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<SnapshotStatus>,
 

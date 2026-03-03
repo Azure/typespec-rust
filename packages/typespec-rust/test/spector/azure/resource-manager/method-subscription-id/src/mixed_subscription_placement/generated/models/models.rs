@@ -12,14 +12,20 @@ use std::collections::HashMap;
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ResourceGroupResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
+    ///
+    /// Visibility: Create, Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 
     /// The name of the ResourceGroupResource
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -28,6 +34,8 @@ pub struct ResourceGroupResource {
     pub properties: Option<ResourceGroupResourceProperties>,
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
@@ -36,6 +44,8 @@ pub struct ResourceGroupResource {
     pub tags: Option<HashMap<String, String>>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -44,6 +54,8 @@ pub struct ResourceGroupResource {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ResourceGroupResourceProperties {
     /// The status of the last operation.
+    ///
+    /// Visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 
@@ -59,10 +71,14 @@ pub struct ResourceGroupResourceProperties {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SubscriptionResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The name of the SubscriptionResource
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -71,10 +87,14 @@ pub struct SubscriptionResource {
     pub properties: Option<SubscriptionResourceProperties>,
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -83,6 +103,8 @@ pub struct SubscriptionResource {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SubscriptionResourceProperties {
     /// The status of the last operation.
+    ///
+    /// Visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 

@@ -11,6 +11,8 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct User {
     /// The user's id.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 

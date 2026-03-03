@@ -740,6 +740,17 @@ export class Adapter {
     const modelField = new rust.ModelField(naming.getEscapedReservedName(utils.snakeCaseName(property.name), 'prop'), serializedName, modelVisibility, fieldType, property.optional);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
+    // append visibility info as a doc comment when visibility is restricted
+    const visibilityStr = formatVisibility(property.visibility);
+    if (visibilityStr) {
+      if (!modelField.docs.description) {
+        modelField.docs.description = '';
+      } else {
+        modelField.docs.description += '\n\n';
+      }
+      modelField.docs.description += `Visibility: ${visibilityStr}`;
+    }
+
     // if this is a literal, add a doc comment explaining its behavior
     const unwrappedType = utils.unwrapOption(fieldType);
     if (unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal') {
@@ -2762,6 +2773,50 @@ function isHttpStatusCodeRange(statusCode: http.HttpStatusCodeRange | number): s
  */
 function adaptAccessFlags(access: tcgc.AccessFlags): rust.Visibility {
   return access === 'public' ? 'pub' : 'pubCrate';
+}
+
+/**
+ * converts an array of Visibility flags to a sorted, human-readable string.
+ * returns undefined if visibility is unrestricted (all flags or undefined).
+ *
+ * @param visibility the visibility flags from TCGC
+ * @returns a formatted string like "Read" or "Create, Update", or undefined if unrestricted
+ */
+export function formatVisibility(visibility?: http.Visibility[]): string | undefined {
+  if (!visibility || visibility.length === 0) {
+    return undefined;
+  }
+
+  // combine all flags into a single bitmask
+  let combined = 0;
+  for (const v of visibility) {
+    combined |= v;
+  }
+
+  // if all lifecycle flags are set, there's no restriction
+  if (<http.Visibility>(combined & http.Visibility.All) === http.Visibility.All) {
+    return undefined;
+  }
+
+  // flags are checked in sorted order: Create, Delete, Query, Read, Update
+  const names: string[] = [];
+  if (combined & http.Visibility.Create) {
+    names.push('Create');
+  }
+  if (combined & http.Visibility.Delete) {
+    names.push('Delete');
+  }
+  if (combined & http.Visibility.Query) {
+    names.push('Query');
+  }
+  if (combined & http.Visibility.Read) {
+    names.push('Read');
+  }
+  if (combined & http.Visibility.Update) {
+    names.push('Update');
+  }
+
+  return names.length > 0 ? names.join(', ') : undefined;
 }
 
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;

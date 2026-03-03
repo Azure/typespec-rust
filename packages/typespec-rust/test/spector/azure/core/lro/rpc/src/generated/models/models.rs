@@ -33,6 +33,8 @@ pub struct RpcClientLongRunningRpcOperationStatus {
     pub error: Option<ErrorDetail>,
 
     /// The unique ID of the operation.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 

@@ -17,6 +17,7 @@
 
 * Updated to the latest tsp toolset.
   * This includes the latest `TypeSpec.Http` lib that fixes reporting the `content-type` header for `HEAD` operations.
+* Add doc comments for model properties with defined [visibility](https://typespec.io/docs/language-basics/visibility/).
 
 ## 0.36.0 (2026-02-26)
 

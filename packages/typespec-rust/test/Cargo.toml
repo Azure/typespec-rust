@@ -95,6 +95,7 @@ members = [
     "spector/type/model/inheritance/not-discriminated",
     "spector/type/model/inheritance/single-discriminator",
     "spector/type/model/usage",
+    "spector/type/model/visibility",
     "spector/type/property/nullable",
     "spector/type/property/optionality",
     "spector/type/property/value-types",

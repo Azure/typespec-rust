@@ -58,7 +58,7 @@ const httpSpecsGroup = {
   //'spector_recursive': {input: 'type/model/inheritance/recursive'},
   'spector_singledisc': {input: 'type/model/inheritance/single-discriminator'},
   'spector_usage': {input: 'type/model/usage'},
-  //'spector_visibility': {input: 'type/model/visibility'},
+  'spector_visibility': {input: 'type/model/visibility'},
   //'spector_addlprops': {input: 'type/property/additional-properties'},
   'spector_nullable': {input: 'type/property/nullable'},
   'spector_optionality': {input: 'type/property/optionality'},

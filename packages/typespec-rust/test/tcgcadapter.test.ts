@@ -7,7 +7,9 @@
 
 import * as rust from '../src/codemodel/index.js';
 import * as helpers from '../src/tcgcadapter/helpers.js';
+import { formatVisibility } from '../src/tcgcadapter/adapter.js';
 import * as naming from '../src/tcgcadapter/naming.js';
+import { Visibility } from '@typespec/http';
 import { deepEqual, strictEqual } from 'assert';
 import { describe, it } from 'vitest';
 
@@ -101,6 +103,28 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.formatDocs('anchor <a href="https://contoso.com/fake/link">to markdown.</a> and https://contoso.com/some-link'), 'anchor [to markdown.](https://contoso.com/fake/link) and <https://contoso.com/some-link>');
       strictEqual(helpers.formatDocs('https://contoso.com/some-link anchor <a href="https://contoso.com/fake/link">to markdown.</a>'), '<https://contoso.com/some-link> anchor [to markdown.](https://contoso.com/fake/link)');
       strictEqual(helpers.formatDocs('https://contoso.com/some-link-one https://contoso.com/some-link-two https://contoso.com/some-link-three'), '<https://contoso.com/some-link-one> <https://contoso.com/some-link-two> <https://contoso.com/some-link-three>');
+    });
+
+    it('formatVisibility', () => {
+      // undefined or empty visibility means unrestricted
+      strictEqual(formatVisibility(undefined), undefined);
+      strictEqual(formatVisibility([]), undefined);
+
+      // all lifecycle flags means unrestricted
+      strictEqual(formatVisibility([Visibility.All]), undefined);
+      strictEqual(formatVisibility([Visibility.Read, Visibility.Create, Visibility.Update, Visibility.Delete, Visibility.Query]), undefined);
+
+      // single visibility
+      strictEqual(formatVisibility([Visibility.Read]), 'Read');
+      strictEqual(formatVisibility([Visibility.Create]), 'Create');
+      strictEqual(formatVisibility([Visibility.Update]), 'Update');
+      strictEqual(formatVisibility([Visibility.Delete]), 'Delete');
+      strictEqual(formatVisibility([Visibility.Query]), 'Query');
+
+      // multiple visibilities are sorted alphabetically
+      strictEqual(formatVisibility([Visibility.Create, Visibility.Update]), 'Create, Update');
+      strictEqual(formatVisibility([Visibility.Read, Visibility.Create]), 'Create, Read');
+      strictEqual(formatVisibility([Visibility.Create, Visibility.Update, Visibility.Delete]), 'Create, Delete, Update');
     });
   });
 });

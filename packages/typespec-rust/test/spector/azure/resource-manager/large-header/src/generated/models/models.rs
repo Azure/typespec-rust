@@ -19,10 +19,14 @@ pub struct CancelResult {
 #[non_exhaustive]
 pub struct ErrorAdditionalInfo {
     /// The additional info.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub info: Option<Value>,
 
     /// The additional info type.
+    ///
+    /// Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -32,22 +36,32 @@ pub struct ErrorAdditionalInfo {
 #[non_exhaustive]
 pub struct ErrorDetail {
     /// The error additional info.
+    ///
+    /// Visibility: Read
     #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
     pub additional_info: Option<Vec<ErrorAdditionalInfo>>,
 
     /// The error code.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
 
     /// The error details.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<Vec<ErrorDetail>>,
 
     /// The error message.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
 
     /// The error target.
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
 }
@@ -67,6 +81,8 @@ pub struct ErrorResponse {
 #[non_exhaustive]
 pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     /// Operation complete time
+    ///
+    /// Visibility: Read
     #[serde(
         default,
         rename = "endTime",
@@ -76,6 +92,8 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     pub end_time: Option<OffsetDateTime>,
 
     /// Errors that occurred if the operation ended with Canceled or Failed status
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,
 
@@ -84,14 +102,20 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     pub id: Option<String>,
 
     /// The name of the operationStatus resource
+    ///
+    /// Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
+    ///
+    /// Visibility: Read
     #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
+    ///
+    /// Visibility: Read
     #[serde(
         default,
         rename = "startTime",
