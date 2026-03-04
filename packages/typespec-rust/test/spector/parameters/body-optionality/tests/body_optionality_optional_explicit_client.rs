@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_bodyoptional::{
-    models::{BodyModel, BodyOptionalityOptionalExplicitClientSetOptions},
+    models::BodyModel, optional_explicit::models::BodyOptionalityOptionalExplicitClientSetOptions,
     BodyOptionalityClient,
 };
 

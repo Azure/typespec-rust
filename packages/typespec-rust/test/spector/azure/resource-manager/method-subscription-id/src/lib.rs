@@ -7,3 +7,5 @@
 
 mod generated;
 pub use generated::*;
+pub mod mixed_subscription_placement;
+pub mod two_subscription_resources_method_level;

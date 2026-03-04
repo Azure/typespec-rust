@@ -7,22 +7,6 @@ use super::models_serde;
 use azure_core::{fmt::SafeDebug, time::OffsetDateTime};
 use serde::{Deserialize, Serialize};
 
-/// Contains results for [`DatetimeResponseHeaderClient::default()`](crate::generated::clients::DatetimeResponseHeaderClient::default())
-#[derive(SafeDebug)]
-pub struct DatetimeResponseHeaderClientDefaultResult;
-
-/// Contains results for [`DatetimeResponseHeaderClient::rfc3339()`](crate::generated::clients::DatetimeResponseHeaderClient::rfc3339())
-#[derive(SafeDebug)]
-pub struct DatetimeResponseHeaderClientRfc3339Result;
-
-/// Contains results for [`DatetimeResponseHeaderClient::rfc7231()`](crate::generated::clients::DatetimeResponseHeaderClient::rfc7231())
-#[derive(SafeDebug)]
-pub struct DatetimeResponseHeaderClientRfc7231Result;
-
-/// Contains results for [`DatetimeResponseHeaderClient::unix_timestamp()`](crate::generated::clients::DatetimeResponseHeaderClient::unix_timestamp())
-#[derive(SafeDebug)]
-pub struct DatetimeResponseHeaderClientUnixTimestampResult;
-
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DefaultDatetimeProperty {
     #[serde(

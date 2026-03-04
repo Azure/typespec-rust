@@ -2,15 +2,15 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use spector_union_discriminated::envelope::object::models::DiscriminatedEnvelopeObjectCustomPropertiesClientGetOptions;
+use spector_union_discriminated::envelope::object::models::DiscriminatedEnvelopeObjectDefaultClientGetOptions;
 use spector_union_discriminated::models::Cat;
-use spector_union_discriminated::models::DiscriminatedEnvelopeObjectCustomPropertiesClientGetOptions;
-use spector_union_discriminated::models::DiscriminatedEnvelopeObjectDefaultClientGetOptions;
-use spector_union_discriminated::models::DiscriminatedNoEnvelopeCustomDiscriminatorClientGetOptions;
-use spector_union_discriminated::models::DiscriminatedNoEnvelopeDefaultClientGetOptions;
 use spector_union_discriminated::models::PetInline;
 use spector_union_discriminated::models::PetInlineWithCustomDiscriminator;
 use spector_union_discriminated::models::PetWithCustomNames;
 use spector_union_discriminated::models::PetWithEnvelope;
+use spector_union_discriminated::no_envelope::models::DiscriminatedNoEnvelopeCustomDiscriminatorClientGetOptions;
+use spector_union_discriminated::no_envelope::models::DiscriminatedNoEnvelopeDefaultClientGetOptions;
 use spector_union_discriminated::DiscriminatedClient;
 
 #[tokio::test]

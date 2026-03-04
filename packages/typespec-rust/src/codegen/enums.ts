@@ -22,36 +22,36 @@ export interface Enums {
 
 /**
  * returns the emitted enum types, or empty if the
- * crate contains no enum types.
+ * module contains no enum types.
  * 
- * @param crate the crate for which to emit enums
- * @param context the context for the provided crate
+ * @param module the module for which to emit enums
+ * @param context the context for the provided module
  * @returns the enum models or empty
  */
-export function emitEnums(crate: rust.Crate, context: Context): Enums {
-  if (crate.enums.length === 0) {
+export function emitEnums(module: rust.ModuleContainer, context: Context): Enums {
+  if (module.enums.length === 0) {
     return {};
   }
 
   return {
-    definitions: emitEnumDefinitions(crate),
-    serde: emitEnumsSerde(crate),
-    impls: emitEnumsImpls(crate, context),
+    definitions: emitEnumDefinitions(module),
+    serde: emitEnumsSerde(module),
+    impls: emitEnumsImpls(module, context),
   };
 }
 
 /**
  * emits the definitions for enums
  * 
- * @param crate the crate for which to emit enums
+ * @param module the module for which to emit enums
  * @returns the enum definitions
  */
-function emitEnumDefinitions(crate: rust.Crate): helpers.Module {
+function emitEnumDefinitions(module: rust.ModuleContainer): helpers.Module {
   const indent = new helpers.indentation();
   const visTracker = new helpers.VisibilityTracker();
 
   let body = '';
-  for (const rustEnum of crate.enums) {
+  for (const rustEnum of module.enums) {
     visTracker.update(rustEnum.visibility);
     body += emitEnumPublicDefinitions(indent, rustEnum);
   }
@@ -69,15 +69,15 @@ function emitEnumDefinitions(crate: rust.Crate): helpers.Module {
 /**
  * emits the serde helpers for enums
  * 
- * @param crate the crate for which to emit serde helpers
+ * @param module the module for which to emit serde helpers
  * @returns the enum serde helpers
  */
-function emitEnumsSerde(crate: rust.Crate): helpers.Module {
-  const use = new Use('modelsOther');
+function emitEnumsSerde(module: rust.ModuleContainer): helpers.Module {
+  const use = new Use(module, 'modelsOther');
   const indent = new helpers.indentation();
 
   let body = '';
-  for (const rustEnum of crate.enums) {
+  for (const rustEnum of module.enums) {
     body += emitEnumSerdeDefinitions(indent, use, rustEnum);
   }
 
@@ -95,21 +95,21 @@ function emitEnumsSerde(crate: rust.Crate): helpers.Module {
 /**
  * emits the trait impls for enums
  * 
- * @param crate the crate for which to emit trait impls
- * @param context the context for the provided crate
+ * @param module the module for which to emit trait impls
+ * @param context the context for the provided module
  * @returns the enum trait impls
  */
-function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module {
-  const use = new Use('modelsOther');
+function emitEnumsImpls(module: rust.ModuleContainer, context: Context): helpers.Module {
+  const use = new Use(module, 'modelsOther');
   const indent = new helpers.indentation();
 
   let body = '';
-  for (const rustEnum of crate.enums) {
+  for (const rustEnum of module.enums) {
     body += emitEnumImplDefinitions(indent, use, rustEnum);
   }
 
   // emit impls as required
-  for (const rustEnum of crate.enums) {
+  for (const rustEnum of module.enums) {
     body += context.getTryFromForRequestContent(rustEnum, use);
   }
 

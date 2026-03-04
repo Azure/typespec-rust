@@ -4,7 +4,7 @@
 
 use serde_json::Number;
 use spector_numeric::{
-    models::{SafeintAsStringProperty, Uint32AsStringProperty, Uint8AsStringProperty},
+    property::models::{SafeintAsStringProperty, Uint32AsStringProperty, Uint8AsStringProperty},
     NumericClient,
 };
 

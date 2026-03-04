@@ -3,9 +3,9 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_naming::{
-    models::{
+    models::NamingClientResponseResultHeaders,
+    property::models::{
         ClientNameAndJsonEncodedNameModel, ClientNameModel, LanguageClientNameModel,
-        NamingClientResponseResultHeaders,
     },
     NamingClient,
 };

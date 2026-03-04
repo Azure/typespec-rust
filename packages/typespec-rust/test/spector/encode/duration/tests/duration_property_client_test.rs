@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_duration::{
-    models::{
+    property::models::{
         DefaultDurationProperty, Float64MillisecondsDurationProperty,
         Float64SecondsDurationProperty, FloatMillisecondsDurationArrayProperty,
         FloatMillisecondsDurationProperty, FloatMillisecondsLargerUnitDurationProperty,

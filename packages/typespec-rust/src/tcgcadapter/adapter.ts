@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-// cspell: ignore addl requiredness responseheader subclients lropaging
+// cspell: ignore addl clientgenerator requiredness resourcemanager responseheader subclients lropaging
 
 import * as tsp from '@typespec/compiler';
 import * as http from '@typespec/http';
@@ -14,7 +14,7 @@ import * as utils from '../utils/utils.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
 import {FinalStateValue} from "@azure-tools/typespec-azure-core";
-import {EmitContext, NoTarget} from "@typespec/compiler";
+import {NoTarget} from "@typespec/compiler";
 
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
@@ -89,6 +89,7 @@ export class Adapter {
   private readonly crate: rust.Crate;
   private readonly ctx: tcgc.SdkContext;
   private readonly options: RustEmitterOptions;
+  private readonly rootNamespace: string = '';
 
   // cache of adapted types
   private readonly types: Map<string, rust.Type>;
@@ -106,6 +107,26 @@ export class Adapter {
     this.ctx = ctx;
     this.options = options;
 
+    // this and adjacent code was taken from
+    // https://github.com/microsoft/typespec/blob/c0f464728f60fe3672204dd7f2907ea4c047dfcb/packages/http-client-python/emitter/src/utils.ts#L274
+    if (this.ctx.sdkPackage.clients.length > 0) {
+      this.rootNamespace = this.ctx.sdkPackage.clients[0].namespace;
+    } else if (this.ctx.sdkPackage.models.length > 0) {
+      const result = this.ctx.sdkPackage.models
+        .map((model) => model.namespace)
+        .filter((namespace) => !isLibNamespace(namespace));
+      if (result.length > 0) {
+        result.sort();
+        this.rootNamespace = result[0];
+      }
+    } else if (this.ctx.sdkPackage.namespaces.length > 0) {
+      this.rootNamespace = this.ctx.sdkPackage.namespaces[0].fullName;
+    }
+
+    if (this.rootNamespace === '') {
+      throw new AdapterError('UnsupportedTsp', 'unable to determine root namespace');
+    }
+
     let serviceType: rust.ServiceType = 'data-plane';
     if (this.ctx.arm === true) {
       serviceType = 'azure-arm';
@@ -115,20 +136,10 @@ export class Adapter {
   }
 
   /** performs all the steps to convert tcgc to a crate */
-  tcgcToCrate(context: EmitContext<RustEmitterOptions>): rust.Crate {
-    this.adaptTypes(context);
+  tcgcToCrate(): rust.Crate {
+    this.adaptTypes();
     this.adaptClients();
 
-    // marker models don't require serde so exclude them from the check
-    if (this.crate.enums.length > 0 || this.crate.models.some(e => e.kind === 'model')) {
-      this.crate.addDependency(new rust.CrateDependency('serde'));
-    }
-
-    if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0 || this.crate.unions.length > 0) {
-      this.crate.addDependency(new rust.CrateDependency('azure_core'));
-    }
-
-    this.crate.sortContent();
     return this.crate;
   }
 
@@ -146,12 +157,77 @@ export class Adapter {
     }
   }
 
+  /**
+   * adapts the specified namespace to a hierarchy of Rust modules
+   * 
+   * @param namespace the namespace for which to return the package
+   * @returns the leaf module in the namespace
+   */
+  private adaptNamespace(namespace: string): rust.ModuleContainer {
+    // some example namespaces
+    //   foo
+    //   foo.bar
+    //   foo.bar.baz
+    //
+
+    // if the namespace is empty or it's not under the root namespace or the
+    // root's parent namespace then it belongs to a core library, so redirect
+    // its content to the root namespace.
+    // when the root's parent IS a known library namespace (e.g. Azure.ResourceManager),
+    // sibling namespaces (like CommonTypes) also get redirected to root since they
+    // contain library types, not service types.
+    const nsLower = namespace.toLowerCase();
+    const rootLower = this.rootNamespace.toLowerCase();
+    const rootParentLower = rootLower.includes('.')
+      ? rootLower.substring(0, rootLower.lastIndexOf('.'))
+      : '';
+    const isUnderRoot = nsLower === rootLower || nsLower.startsWith(rootLower + '.');
+    const isParent = rootParentLower !== '' && nsLower === rootParentLower;
+    const isSiblingOfRoot = rootParentLower !== '' && !isUnderRoot && nsLower.startsWith(rootParentLower + '.');
+    const isParentLibrary = LIB_NAMESPACE.includes(rootParentLower);
+    if (namespace === '' || isParent || (!isUnderRoot && (!isSiblingOfRoot || isParentLibrary))) {
+      namespace = this.rootNamespace;
+    }
+
+    // trim off the root namespace. if the result is the empty
+    // string it means the contents goes into the crate's root.
+    // also handle sibling namespaces: if the root namespace is Foo.Bar
+    // and we encounter Foo.Baz, treat Baz as a child module by trimming
+    // the shared parent (Foo) prefix.
+    if (namespace.toLowerCase().startsWith(this.rootNamespace.toLowerCase())) {
+      namespace = namespace.substring(this.rootNamespace.length + 1);
+    } else {
+      const rootParent = this.rootNamespace.includes('.')
+        ? this.rootNamespace.substring(0, this.rootNamespace.lastIndexOf('.'))
+        : '';
+      if (rootParent !== '' && namespace.toLowerCase().startsWith(rootParent.toLowerCase() + '.')) {
+        namespace = namespace.substring(rootParent.length + 1);
+      }
+    }
+
+    const namespaces = namespace.split('.').filter(Boolean);
+
+    let cur: rust.ModuleContainer = this.crate;
+    for (const namespace of namespaces) {
+      const modName = utils.snakeCaseName(namespace);
+      let subMod: rust.SubModule | undefined = cur.subModules.find((each: rust.SubModule) => each.name === modName);
+      if (!subMod) {
+        subMod = new rust.SubModule(modName, cur);
+        cur.subModules.push(subMod);
+      }
+      cur = subMod;
+    }
+
+    return cur;
+  }
+
   /** converts all tcgc types to their Rust type equivalent */
-  private adaptTypes(context: EmitContext<RustEmitterOptions>): void {
+  private adaptTypes(): void {
+    let needsCoreAndSerde = false;
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
       if (!sdkUnion.discriminatedOptions) {
         // When https://github.com/microsoft/typespec/issues/9749 is fixed, we can return to throwing an exception here.
-        context.program.reportDiagnostic({
+        this.ctx.program.reportDiagnostic({
           code: 'UnsupportedTsp',
           severity: 'warning',
           message: `Non-discriminated unions ('${sdkUnion.name}') are not supported. No type will be generated.`,
@@ -160,7 +236,8 @@ export class Adapter {
         continue;
       }
       const rustUnion = this.getDiscriminatedUnion(sdkUnion);
-      this.crate.unions.push(rustUnion);
+      this.adaptNamespace(sdkUnion.namespace).unions.push(rustUnion);
+      needsCoreAndSerde = true;
     }
 
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
@@ -174,7 +251,8 @@ export class Adapter {
         this.getExternalType(sdkEnum.external);
       } else {
         const rustEnum = this.getEnum(sdkEnum);
-        this.crate.enums.push(rustEnum);
+        this.adaptNamespace(sdkEnum.namespace).enums.push(rustEnum);
+        needsCoreAndSerde = true;
       }
     }
 
@@ -224,6 +302,8 @@ export class Adapter {
         continue;
       }
 
+      needsCoreAndSerde = true;
+
       // TODO: workaround for https://github.com/Azure/typespec-azure/issues/3614
       if (processedTypes.has(model.name)) {
         continue;
@@ -234,7 +314,7 @@ export class Adapter {
 
       if (model.discriminatedSubtypes) {
         const rustUnion = this.getDiscriminatedUnion(model);
-        this.crate.unions.push(rustUnion);
+        this.adaptNamespace(model.namespace).unions.push(rustUnion);
 
         // we don't want to add the base type to the array
         // of models to emit as we hijack its name to be used
@@ -249,8 +329,13 @@ export class Adapter {
         if (terminalErrorModelNames.has(model.name)) {
           rustModel.flags |= rust.ModelFlags.Error;
         }
-        this.crate.models.push(rustModel);
+        this.adaptNamespace(model.namespace).models.push(rustModel);
       }
+    }
+
+    if (needsCoreAndSerde) {
+      this.crate.addDependency(new rust.CrateDependency('azure_core'));
+      this.crate.addDependency(new rust.CrateDependency('serde'));
     }
   }
 
@@ -291,7 +376,7 @@ export class Adapter {
         throw new AdapterError('UnsupportedTsp', `unsupported enum underlying type ${sdkEnum.valueType.kind}`, sdkEnum.__raw?.node);
     }
 
-    rustEnum = new rust.Enum(enumName, adaptAccessFlags(sdkEnum.access), !sdkEnum.isFixed, enumType);
+    rustEnum = new rust.Enum(enumName, adaptAccessFlags(sdkEnum.access), !sdkEnum.isFixed, enumType, this.adaptNamespace(sdkEnum.namespace));
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
@@ -416,7 +501,7 @@ export class Adapter {
       modelFlags |= rust.ModelFlags.Output;
     }
 
-    rustModel = new rust.Model(modelName, model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags);
+    rustModel = new rust.Model(modelName, model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags, this.adaptNamespace(model.namespace));
     rustModel.docs = this.adaptDocs(model.summary, model.doc);
     rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
@@ -533,7 +618,7 @@ export class Adapter {
           throw new AdapterError('InternalError', `failed to find discriminator field for type ${src.name}`, src.__raw?.node);
         }
 
-        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorProperty.name);
+        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), discriminatorProperty.name, this.adaptNamespace(src.namespace));
         if (discriminatorProperty.type.kind === 'enum' && discriminatorProperty.type.isFixed) {
           // when the DU is a fixed enum, it means we don't fall back to the
           // base type when the discriminator value is unknown or missing.
@@ -560,7 +645,7 @@ export class Adapter {
           throw new AdapterError('InternalError', 'getDiscriminatedUnion called for non-discriminated union', src.__raw?.node);
         }
 
-        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), src.discriminatedOptions.discriminatorPropertyName);
+        rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(src.access), src.discriminatedOptions.discriminatorPropertyName, this.adaptNamespace(src.namespace));
         if (src.discriminatedOptions.envelopePropertyName) {
           rustUnion.unionKind = new rust.DiscriminatedUnionEnvelope(src.discriminatedOptions.envelopePropertyName);
         }
@@ -1111,8 +1196,14 @@ export class Adapter {
 
   /** converts all tcgc clients and their methods into Rust clients/methods */
   private adaptClients(): void {
+    let needsCore = false;
     for (const client of this.ctx.sdkPackage.clients) {
+      // start with instantiable clients and recursively work down
       this.recursiveAdaptClient(client);
+      needsCore = true;
+    }
+    if (needsCore) {
+      this.crate.addDependency(new rust.CrateDependency('azure_core'));
     }
   }
 
@@ -1166,7 +1257,7 @@ export class Adapter {
       clientName += 'Client';
     }
 
-    const rustClient = new rust.Client(clientName);
+    const rustClient = new rust.Client(clientName, this.adaptNamespace(client.namespace));
     rustClient.docs = this.adaptDocs(client.summary, client.doc);
     rustClient.parent = parent;
     rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'Pipeline', 'azure_core::http')));
@@ -1385,7 +1476,7 @@ export class Adapter {
     // Set the tracing namespace for tracing based on the client's namespace
     rustClient.languageIndependentName = client.crossLanguageDefinitionId;
 
-    this.crate.clients.push(rustClient);
+    this.adaptNamespace(client.namespace).clients.push(rustClient);
     return rustClient;
   }
 
@@ -1529,7 +1620,7 @@ export class Adapter {
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${utils.pascalCase(srcMethodName, false)}Options`, pub);
     methodOptionsStruct.lifetime = optionsLifetime;
-    methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
+    methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `${utils.buildImportPath(rustClient.module, rustClient.module)}::clients::${rustClient.name}::${methodName}()`)}`;
 
     let clientMethodOptions: rust.ClientMethodOptions | rust.PagerOptions | rust.PollerOptions;
     switch (method.kind) {
@@ -1767,8 +1858,9 @@ export class Adapter {
       }
 
       const synthesizedModel = this.getModel(synthesizedType, new Array<rust.Type>());
-      if (!this.crate.models.includes(synthesizedModel)) {
-        this.crate.models.push(synthesizedModel);
+      const modelNs = this.adaptNamespace(synthesizedType.namespace);
+      if (!modelNs.models.includes(synthesizedModel)) {
+        modelNs.models.push(synthesizedModel);
       }
 
       // for the pager response type, remove the Option<T> around the Vec<T> for the page items
@@ -1829,13 +1921,13 @@ export class Adapter {
     } else if (method.kind === 'lro') {
       const pushModels = (
         tcgcType: tcgc.SdkType,
-        crate: rust.Crate,
+        container: rust.ModuleContainer,
         rustType: rust.Type = this.getType(tcgcType),
         ignoreAzureCoreModels: boolean = true
       ): void => {
         switch (tcgcType.kind) {
           case 'array':
-            pushModels(tcgcType.valueType, crate);
+            pushModels(tcgcType.valueType, container);
             return;
           case 'model':
             if (ignoreAzureCoreModels && tcgc.isAzureCoreModel(tcgcType)) {
@@ -1846,14 +1938,15 @@ export class Adapter {
             return;
         }
 
-        if (rustType.kind !== 'model' || crate.models.some(m => m === rustType)) {
+        if (rustType.kind !== 'model' || container.models.some(m => m === rustType) || rustType.module !== rustClient.module) {
+          // model already exists or belongs to a different module, do nothing
           return;
         }
 
-        crate.models.push(rustType);
+        container.models.push(rustType);
 
         for (const tcgcField of tcgcType.properties) {
-          pushModels(tcgcField.type,crate);
+          pushModels(tcgcField.type, container);
         }
       }
 
@@ -1866,12 +1959,17 @@ export class Adapter {
         throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
       }
 
-      pushModels(method.lroMetadata.pollingInfo.responseModel, this.crate, statusModel, false);
+      // the adapted type likely comes from core which means
+      // it will be in the root namespace.  since we emit these
+      // per client.operation, set the correct module
+      statusType.module = rustClient.module;
+
+      pushModels(method.lroMetadata.pollingInfo.responseModel, rustClient.module, statusModel, false);
 
       const poller = new rust.Poller(this.crate, new rust.Response(this.crate, statusType, format));
       if (method.response.type) {
         const resultType = this.getType(method.response.type);
-        pushModels(method.response.type, this.crate, resultType);
+        pushModels(method.response.type, rustClient.module, resultType);
         poller.resultType = new rust.Response(this.crate, this.typeToWireType(resultType), format);
       }
 
@@ -1884,7 +1982,7 @@ export class Adapter {
       // we need to return a marker type
       const markerType = new rust.MarkerType(`${rustClient.name}${utils.pascalCase(method.name, false)}Result`, rustMethod.visibility);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
-      this.crate.models.push(markerType);
+      rustClient.module.models.push(markerType);
       let resultType: rust.ResultTypes;
       if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
         // method returns a streaming binary response with headers
@@ -2036,7 +2134,7 @@ export class Adapter {
 
     // NOTE: the complete doc text will be emitted at codegen time
     const docs = this.asDocLink(`${client.name}::${method.name}()`, `crate::generated::clients::${client.name}::${method.name}()`);
-    const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs, method.visibility);
+    const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs, method.visibility, client.module);
     responseHeadersTrait.headers.push(...responseHeaders);
 
     return responseHeadersTrait;
@@ -2675,3 +2773,24 @@ const reservedParams = new Set<string>(
     'options',
   ]
 );
+
+/**
+ * possible namespaces from core libraries.
+ * all types from these namespaces will be placed
+ * into the root namespace.
+ * if more core libs show up, add their namespaces here.
+ */
+const LIB_NAMESPACE = [
+  "azure.clientgenerator.core",
+  "azure.core",
+  "azure.resourcemanager",
+  "typespec.http",
+  "typespec.rest",
+  "typespec.versioning",
+];
+
+/** returns true if the given namespace is a known library namespace or a child of one */
+function isLibNamespace(namespace: string): boolean {
+  const ns = namespace.toLowerCase();
+  return LIB_NAMESPACE.some((lib) => ns === lib || ns.startsWith(lib + '.'));
+}

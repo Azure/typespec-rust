@@ -4,7 +4,7 @@
 
 use azure_core::time::OffsetDateTime;
 use spector_datetime::{
-    models::{
+    response_header::models::{
         DatetimeResponseHeaderClientDefaultResultHeaders,
         DatetimeResponseHeaderClientRfc3339ResultHeaders,
         DatetimeResponseHeaderClientRfc7231ResultHeaders,

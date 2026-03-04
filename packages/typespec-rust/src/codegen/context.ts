@@ -27,6 +27,10 @@ export class Context {
    * @param crate the crate for which the context will be constructed
    */
   constructor(crate: rust.Crate) {
+    this.recursivePopulate(crate);
+  }
+
+  private recursivePopulate(module: rust.ModuleContainer): void {
     const recursiveAddBodyFormat = (type: rust.Type, format: helpers.ModelFormat) => {
       type = helpers.unwrapType(type);
       if (type.kind !== 'model') {
@@ -50,7 +54,7 @@ export class Context {
 
     // enumerate all client methods, looking for enum and model
     // params/responses and their wire format (JSON/XML etc).
-    for (const client of crate.clients) {
+    for (const client of module.clients) {
       for (const method of client.methods) {
         if (method.kind === 'clientaccessor') {
           continue;
@@ -95,6 +99,10 @@ export class Context {
           }
         }
       }
+    }
+
+    for (const subModule of module.subModules) {
+      this.recursivePopulate(subModule);
     }
   }
 

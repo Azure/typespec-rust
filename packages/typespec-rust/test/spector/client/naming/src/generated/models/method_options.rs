@@ -5,20 +5,6 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`ModelClient::client()`](crate::generated::clients::ModelClient::client())
-#[derive(Clone, Default, SafeDebug)]
-pub struct ModelClientClientOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`ModelClient::language()`](crate::generated::clients::ModelClient::language())
-#[derive(Clone, Default, SafeDebug)]
-pub struct ModelClientLanguageOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
 /// Options to be passed to [`NamingClient::client()`](crate::generated::clients::NamingClient::client())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientClientOptions<'a> {
@@ -64,20 +50,6 @@ pub struct NamingClientRequestOptions<'a> {
 /// Options to be passed to [`NamingClient::response()`](crate::generated::clients::NamingClient::response())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientResponseOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`NamingUnionEnumClient::union_enum_member_name()`](crate::generated::clients::NamingUnionEnumClient::union_enum_member_name())
-#[derive(Clone, Default, SafeDebug)]
-pub struct NamingUnionEnumClientUnionEnumMemberNameOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`NamingUnionEnumClient::union_enum_name()`](crate::generated::clients::NamingUnionEnumClient::union_enum_name())
-#[derive(Clone, Default, SafeDebug)]
-pub struct NamingUnionEnumClientUnionEnumNameOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

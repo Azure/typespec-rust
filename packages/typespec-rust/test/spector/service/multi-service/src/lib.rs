@@ -7,3 +7,5 @@
 
 mod generated;
 pub use generated::*;
+pub mod service_a;
+pub mod service_b;

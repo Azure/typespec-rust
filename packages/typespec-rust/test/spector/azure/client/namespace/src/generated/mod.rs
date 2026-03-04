@@ -7,7 +7,4 @@
 pub mod clients;
 /// Contains all the data structures and types used by the client library.
 pub mod models;
-pub use clients::{
-    ClientNamespaceFirstClient, ClientNamespaceFirstClientOptions, ClientNamespaceSecondClient,
-    ClientNamespaceSecondClientOptions,
-};
+pub use clients::{ClientNamespaceFirstClient, ClientNamespaceFirstClientOptions};
