@@ -80,7 +80,7 @@ pub struct StandardClientExportOperationStatus {
 pub struct User {
     /// The name of user.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 

@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 pub struct FirstItem {
     /// The id of the item.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 }
@@ -80,7 +80,7 @@ pub struct ParameterizedNextLinkPagingResult {
 pub struct SecondItem {
     /// The name of the item.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
@@ -91,13 +91,13 @@ pub struct SecondItem {
 pub struct User {
     /// The entity tag for this resource.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub etag: Option<Etag>,
 
     /// The user's id.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 
@@ -132,7 +132,7 @@ pub struct UserOrder {
 
     /// The user's id.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 

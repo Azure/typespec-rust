@@ -12,7 +12,7 @@ use std::collections::HashMap;
 pub struct ReadOnlyModel {
     /// Optional readonly nullable int list.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(
         rename = "optionalNullableIntList",
         skip_serializing_if = "Option::is_none"
@@ -21,7 +21,7 @@ pub struct ReadOnlyModel {
 
     /// Optional readonly string dictionary.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(
         rename = "optionalStringRecord",
         skip_serializing_if = "Option::is_none"
@@ -34,31 +34,31 @@ pub struct ReadOnlyModel {
 pub struct VisibilityModel {
     /// Required string[], illustrating a create property.
     ///
-    /// Visibility: Create
+    /// Operational Visibility: Create
     #[serde(rename = "createProp", skip_serializing_if = "Option::is_none")]
     pub create_prop: Option<Vec<String>>,
 
     /// Required bool, illustrating a delete property.
     ///
-    /// Visibility: Delete
+    /// Operational Visibility: Delete
     #[serde(rename = "deleteProp", skip_serializing_if = "Option::is_none")]
     pub delete_prop: Option<bool>,
 
     /// Required int32, illustrating a query property.
     ///
-    /// Visibility: Query
+    /// Operational Visibility: Query
     #[serde(rename = "queryProp", skip_serializing_if = "Option::is_none")]
     pub query_prop: Option<i32>,
 
     /// Required string, illustrating a readonly property.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(rename = "readProp", skip_serializing_if = "Option::is_none")]
     pub read_prop: Option<String>,
 
     /// Required int32[], illustrating a update property.
     ///
-    /// Visibility: Update
+    /// Operational Visibility: Update
     #[serde(rename = "updateProp", skip_serializing_if = "Option::is_none")]
     pub update_prop: Option<Vec<i32>>,
 }

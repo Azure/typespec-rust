@@ -84,7 +84,7 @@ pub struct Error {
 pub struct Key {
     /// The name of the key.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
@@ -115,7 +115,7 @@ pub struct KeyValue {
 
     /// The key of the key-value.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
 
@@ -230,7 +230,7 @@ pub struct Snapshot {
 
     /// The time that the snapshot was created.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
@@ -240,13 +240,13 @@ pub struct Snapshot {
 
     /// A value representing the current state of the snapshot.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// The time that the snapshot will expire.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
@@ -260,13 +260,13 @@ pub struct Snapshot {
 
     /// The amount of key-values in the snapshot.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub items_count: Option<i64>,
 
     /// The name of the snapshot.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -279,13 +279,13 @@ pub struct Snapshot {
 
     /// The size in bytes of the snapshot.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
 
     /// The current status of the snapshot.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<SnapshotStatus>,
 

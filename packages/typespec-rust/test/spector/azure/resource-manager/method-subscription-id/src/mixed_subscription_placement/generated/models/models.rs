@@ -13,19 +13,19 @@ use std::collections::HashMap;
 pub struct ResourceGroupResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
     ///
-    /// Visibility: Create, Read
+    /// Operational Visibility: Create, Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 
     /// The name of the ResourceGroupResource
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -35,7 +35,7 @@ pub struct ResourceGroupResource {
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
@@ -45,7 +45,7 @@ pub struct ResourceGroupResource {
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -55,7 +55,7 @@ pub struct ResourceGroupResource {
 pub struct ResourceGroupResourceProperties {
     /// The status of the last operation.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 
@@ -72,13 +72,13 @@ pub struct ResourceGroupResourceProperties {
 pub struct SubscriptionResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The name of the SubscriptionResource
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -88,13 +88,13 @@ pub struct SubscriptionResource {
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -104,7 +104,7 @@ pub struct SubscriptionResource {
 pub struct SubscriptionResourceProperties {
     /// The status of the last operation.
     ///
-    /// Visibility: Read
+    /// Operational Visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 
