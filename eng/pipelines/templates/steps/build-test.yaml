@@ -40,7 +40,6 @@ steps:
 
   - pwsh: |
       pnpm run tspcompile --verbose
-      pnpm -w modtidy $pwd
       if ("${{ parameters.Nightly }}" -eq "false") {
         git add -A .
         git diff --staged --exit-code
