@@ -7,3 +7,6 @@
 
 mod generated;
 pub use generated::*;
+pub mod compute;
+pub mod shared;
+pub mod storage;

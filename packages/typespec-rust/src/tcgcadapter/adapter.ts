@@ -114,7 +114,7 @@ export class Adapter {
     } else if (this.ctx.sdkPackage.models.length > 0) {
       const result = this.ctx.sdkPackage.models
         .map((model) => model.namespace)
-        .filter((namespace) => !LIB_NAMESPACE.includes(namespace));
+        .filter((namespace) => !isLibNamespace(namespace));
       if (result.length > 0) {
         result.sort();
         this.rootNamespace = result[0];
@@ -170,16 +170,39 @@ export class Adapter {
     //   foo.bar.baz
     //
 
-    // if the namespace is empty (why that happens or what it means is a mystery) or
-    // it's one of the core lib namespaces then switch that to the root namespace.
-    if (namespace === '' || LIB_NAMESPACE.some((item) => namespace.toLowerCase().startsWith(item))) {
+    // if the namespace is empty or it's not under the root namespace or the
+    // root's parent namespace then it belongs to a core library, so redirect
+    // its content to the root namespace.
+    // when the root's parent IS a known library namespace (e.g. Azure.ResourceManager),
+    // sibling namespaces (like CommonTypes) also get redirected to root since they
+    // contain library types, not service types.
+    const nsLower = namespace.toLowerCase();
+    const rootLower = this.rootNamespace.toLowerCase();
+    const rootParentLower = rootLower.includes('.')
+      ? rootLower.substring(0, rootLower.lastIndexOf('.'))
+      : '';
+    const isUnderRoot = nsLower === rootLower || nsLower.startsWith(rootLower + '.');
+    const isParent = rootParentLower !== '' && nsLower === rootParentLower;
+    const isSiblingOfRoot = rootParentLower !== '' && !isUnderRoot && nsLower.startsWith(rootParentLower + '.');
+    const isParentLibrary = LIB_NAMESPACE.includes(rootParentLower);
+    if (namespace === '' || isParent || (!isUnderRoot && (!isSiblingOfRoot || isParentLibrary))) {
       namespace = this.rootNamespace;
     }
 
     // trim off the root namespace. if the result is the empty
-    // string it means the contents goes into the crate's root
+    // string it means the contents goes into the crate's root.
+    // also handle sibling namespaces: if the root namespace is Foo.Bar
+    // and we encounter Foo.Baz, treat Baz as a child module by trimming
+    // the shared parent (Foo) prefix.
     if (namespace.toLowerCase().startsWith(this.rootNamespace.toLowerCase())) {
       namespace = namespace.substring(this.rootNamespace.length + 1);
+    } else {
+      const rootParent = this.rootNamespace.includes('.')
+        ? this.rootNamespace.substring(0, this.rootNamespace.lastIndexOf('.'))
+        : '';
+      if (rootParent !== '' && namespace.toLowerCase().startsWith(rootParent.toLowerCase() + '.')) {
+        namespace = namespace.substring(rootParent.length + 1);
+      }
     }
 
     const namespaces = namespace.split('.').filter(Boolean);
@@ -1915,7 +1938,8 @@ export class Adapter {
             return;
         }
 
-        if (rustType.kind !== 'model' || container.models.some(m => m === rustType)) {
+        if (rustType.kind !== 'model' || container.models.some(m => m === rustType) || rustType.module !== rustClient.module) {
+          // model already exists or belongs to a different module, do nothing
           return;
         }
 
@@ -1934,6 +1958,11 @@ export class Adapter {
       if (statusType.kind !== 'model') {
         throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
       }
+
+      // the adapted type likely comes from core which means
+      // it will be in the root namespace.  since we emit these
+      // per client.operation, set the correct module
+      statusType.module = rustClient.module;
 
       pushModels(method.lroMetadata.pollingInfo.responseModel, rustClient.module, statusModel, false);
 
@@ -2752,10 +2781,16 @@ const reservedParams = new Set<string>(
  * if more core libs show up, add their namespaces here.
  */
 const LIB_NAMESPACE = [
+  "azure.clientgenerator.core",
   "azure.core",
   "azure.resourcemanager",
-  "azure.clientgenerator.core",
-  "typespec.rest",
   "typespec.http",
+  "typespec.rest",
   "typespec.versioning",
 ];
+
+/** returns true if the given namespace is a known library namespace or a child of one */
+function isLibNamespace(namespace: string): boolean {
+  const ns = namespace.toLowerCase();
+  return LIB_NAMESPACE.some((lib) => ns === lib || ns.startsWith(lib + '.'));
+}

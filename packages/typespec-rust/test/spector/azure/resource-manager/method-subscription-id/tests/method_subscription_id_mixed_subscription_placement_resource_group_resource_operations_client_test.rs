@@ -4,8 +4,11 @@
 
 mod common;
 
-use spector_armmethodsub::models::{
-    ResourceGroupResource, ResourceGroupResourceProperties, ResourceProvisioningState,
+use spector_armmethodsub::{
+    mixed_subscription_placement::models::{
+        ResourceGroupResource, ResourceGroupResourceProperties,
+    },
+    models::ResourceProvisioningState,
 };
 
 const RESOURCE_GROUP_NAME: &str = "test-rg";

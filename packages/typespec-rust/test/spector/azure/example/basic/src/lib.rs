@@ -7,4 +7,3 @@
 
 mod generated;
 pub use generated::*;
-pub mod _specs_;

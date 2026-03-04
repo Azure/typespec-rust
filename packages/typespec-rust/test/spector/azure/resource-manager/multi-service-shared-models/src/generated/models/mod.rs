@@ -6,12 +6,7 @@
 mod enums;
 mod enums_impl;
 mod enums_serde;
-mod header_traits;
-mod method_options;
 #[allow(clippy::module_inception)]
 mod models;
-mod models_impl;
 pub use enums::*;
-pub use header_traits::*;
-pub use method_options::*;
 pub use models::*;

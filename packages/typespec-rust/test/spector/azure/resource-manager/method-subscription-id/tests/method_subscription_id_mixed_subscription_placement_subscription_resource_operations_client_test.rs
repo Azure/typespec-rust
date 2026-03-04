@@ -4,8 +4,9 @@
 
 mod common;
 
-use spector_armmethodsub::models::{
-    ResourceProvisioningState, SubscriptionResource, SubscriptionResourceProperties,
+use spector_armmethodsub::{
+    mixed_subscription_placement::models::{SubscriptionResource, SubscriptionResourceProperties},
+    models::ResourceProvisioningState,
 };
 
 const SUBSCRIPTION_ID: &str = "00000000-0000-0000-0000-000000000000";

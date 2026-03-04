@@ -5,10 +5,12 @@
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_arm_multi_service_older_versions::models::{
-    Disk, DiskProperties, ResourceProvisioningState, VirtualMachine, VirtualMachineProperties,
+use spector_arm_multi_service_older_versions::{
+    compute::models::{VirtualMachine, VirtualMachineProperties},
+    compute_disk::models::{Disk, DiskProperties},
+    models::ResourceProvisioningState,
+    CombinedClient,
 };
-use spector_arm_multi_service_older_versions::CombinedClient;
 use std::sync::Arc;
 
 #[derive(Debug)]

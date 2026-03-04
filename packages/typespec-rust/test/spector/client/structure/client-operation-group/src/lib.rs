@@ -7,4 +7,5 @@
 
 mod generated;
 pub use generated::*;
-pub mod client;
+pub mod another_client_operation_group;
+pub mod service;

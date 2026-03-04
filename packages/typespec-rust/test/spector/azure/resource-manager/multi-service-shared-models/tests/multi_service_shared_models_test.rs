@@ -5,11 +5,13 @@
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_arm_multi_service_shared_models::models::{
-    ResourceProvisioningState, SharedMetadata, StorageAccount, StorageAccountProperties,
-    VirtualMachine, VirtualMachineProperties,
+use spector_arm_multi_service_shared_models::{
+    compute::models::{VirtualMachine, VirtualMachineProperties},
+    models::ResourceProvisioningState,
+    shared::models::SharedMetadata,
+    storage::models::{StorageAccount, StorageAccountProperties},
+    CombinedClient,
 };
-use spector_arm_multi_service_shared_models::CombinedClient;
 use std::collections::HashMap;
 use std::sync::Arc;
 
