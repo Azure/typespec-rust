@@ -748,7 +748,7 @@ export class Adapter {
       } else {
         modelField.docs.description += '\n\n';
       }
-      modelField.docs.description += `Operational Visibility: ${visibilityStr}`;
+      modelField.docs.description += `Operational visibility: ${visibilityStr}`;
     }
 
     // if this is a literal, add a doc comment explaining its behavior

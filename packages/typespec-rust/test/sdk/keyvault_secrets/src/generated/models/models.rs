@@ -14,7 +14,7 @@ use std::collections::HashMap;
 pub struct BackupSecretResult {
     /// The backup blob containing the backed up secret.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         deserialize_with = "base64::option::deserialize_url_safe",
@@ -38,7 +38,7 @@ pub struct DeletedSecret {
 
     /// The time when the secret was deleted, in UTC
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "deletedDate",
@@ -53,14 +53,14 @@ pub struct DeletedSecret {
 
     /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kid: Option<String>,
 
     /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
     /// true.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
@@ -75,7 +75,7 @@ pub struct DeletedSecret {
 
     /// The time when the secret is scheduled to be purged, in UTC
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "scheduledPurgeDate",
@@ -107,7 +107,7 @@ pub struct DeletedSecretProperties {
 
     /// The time when the secret was deleted, in UTC
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "deletedDate",
@@ -122,7 +122,7 @@ pub struct DeletedSecretProperties {
 
     /// True if the secret's lifetime is managed by key vault. If this is a key backing a certificate, then managed will be true.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
@@ -132,7 +132,7 @@ pub struct DeletedSecretProperties {
 
     /// The time when the secret is scheduled to be purged, in UTC
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "scheduledPurgeDate",
@@ -151,7 +151,7 @@ pub struct DeletedSecretProperties {
 pub struct KeyVaultError {
     /// The key vault server error.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<KeyVaultErrorError>,
 }
@@ -161,19 +161,19 @@ pub struct KeyVaultError {
 pub struct KeyVaultErrorError {
     /// The error code.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
 
     /// The key vault server error.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "innererror", skip_serializing_if = "Option::is_none")]
     pub inner_error: Option<Box<KeyVaultErrorError>>,
 
     /// The error message.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
 }
@@ -184,14 +184,14 @@ pub struct KeyVaultErrorError {
 pub struct ListDeletedSecretPropertiesResult {
     /// The URL to get the next set of deleted secrets.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted
     /// secrets.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(default)]
     pub value: Vec<DeletedSecretProperties>,
 }
@@ -202,13 +202,13 @@ pub struct ListDeletedSecretPropertiesResult {
 pub struct ListSecretPropertiesResult {
     /// The URL to get the next set of secrets.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(default)]
     pub value: Vec<SecretProperties>,
 }
@@ -245,14 +245,14 @@ pub struct Secret {
 
     /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kid: Option<String>,
 
     /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
     /// true.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
@@ -275,7 +275,7 @@ pub struct Secret {
 pub struct SecretAttributes {
     /// Creation time in UTC.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
@@ -307,7 +307,7 @@ pub struct SecretAttributes {
 
     /// softDelete data retention days. Value should be >=7 and <=90 when softDelete enabled, otherwise 0.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "recoverableDays", skip_serializing_if = "Option::is_none")]
     pub recoverable_days: Option<i32>,
 
@@ -315,13 +315,13 @@ pub struct SecretAttributes {
     /// the secret can be permanently deleted by a privileged user; otherwise, only the system can purge the secret, at the end
     /// of the retention interval.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "recoveryLevel", skip_serializing_if = "Option::is_none")]
     pub recovery_level: Option<DeletionRecoveryLevel>,
 
     /// Last updated time in UTC.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
@@ -348,7 +348,7 @@ pub struct SecretProperties {
 
     /// True if the secret's lifetime is managed by key vault. If this is a key backing a certificate, then managed will be true.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 

@@ -29,7 +29,7 @@ pub struct ResultModel {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct RoundTripModel {
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<ResultModel>,
 }

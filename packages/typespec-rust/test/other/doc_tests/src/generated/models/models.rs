@@ -21,7 +21,7 @@ pub struct Metadata {
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "requestId", skip_serializing_if = "Option::is_none")]
     pub request_id: Option<String>,
 }
@@ -30,7 +30,7 @@ pub struct Metadata {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct MetadataError {
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<MetadataErrorError>,
 }

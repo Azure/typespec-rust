@@ -14,7 +14,7 @@ use std::collections::HashMap;
 pub struct CombinedDisksClientCreateOrUpdateOperationStatus {
     /// Operation complete time
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "endTime",
@@ -25,7 +25,7 @@ pub struct CombinedDisksClientCreateOrUpdateOperationStatus {
 
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,
 
@@ -35,19 +35,19 @@ pub struct CombinedDisksClientCreateOrUpdateOperationStatus {
 
     /// The name of the operationStatus resource
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "startTime",
@@ -66,19 +66,19 @@ pub struct CombinedDisksClientCreateOrUpdateOperationStatus {
 pub struct Disk {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
     ///
-    /// Operational Visibility: Create, Read
+    /// Operational visibility: Create, Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 
     /// The name of the Disk
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -88,7 +88,7 @@ pub struct Disk {
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
@@ -98,7 +98,7 @@ pub struct Disk {
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -106,7 +106,7 @@ pub struct Disk {
 /// Disk resource properties.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DiskProperties {
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 }

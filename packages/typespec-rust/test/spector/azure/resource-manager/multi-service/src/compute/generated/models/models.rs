@@ -14,7 +14,7 @@ use std::collections::HashMap;
 pub struct CombinedVirtualMachinesClientCreateOrUpdateOperationStatus {
     /// Operation complete time
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "endTime",
@@ -25,7 +25,7 @@ pub struct CombinedVirtualMachinesClientCreateOrUpdateOperationStatus {
 
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,
 
@@ -35,19 +35,19 @@ pub struct CombinedVirtualMachinesClientCreateOrUpdateOperationStatus {
 
     /// The name of the operationStatus resource
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "startTime",
@@ -66,19 +66,19 @@ pub struct CombinedVirtualMachinesClientCreateOrUpdateOperationStatus {
 pub struct VirtualMachine {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
     ///
-    /// Operational Visibility: Create, Read
+    /// Operational visibility: Create, Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 
     /// The name of the VirtualMachine
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
@@ -88,7 +88,7 @@ pub struct VirtualMachine {
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
     pub system_data: Option<SystemData>,
 
@@ -98,14 +98,14 @@ pub struct VirtualMachine {
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct VirtualMachineProperties {
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ResourceProvisioningState>,
 }

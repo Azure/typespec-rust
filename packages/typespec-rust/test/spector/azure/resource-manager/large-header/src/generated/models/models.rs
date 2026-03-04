@@ -20,13 +20,13 @@ pub struct CancelResult {
 pub struct ErrorAdditionalInfo {
     /// The additional info.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub info: Option<Value>,
 
     /// The additional info type.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
@@ -37,31 +37,31 @@ pub struct ErrorAdditionalInfo {
 pub struct ErrorDetail {
     /// The error additional info.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
     pub additional_info: Option<Vec<ErrorAdditionalInfo>>,
 
     /// The error code.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
 
     /// The error details.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<Vec<ErrorDetail>>,
 
     /// The error message.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
 
     /// The error target.
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
 }
@@ -82,7 +82,7 @@ pub struct ErrorResponse {
 pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     /// Operation complete time
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "endTime",
@@ -93,7 +93,7 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
 
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,
 
@@ -103,19 +103,19 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
 
     /// The name of the operationStatus resource
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
     ///
-    /// Operational Visibility: Read
+    /// Operational visibility: Read
     #[serde(
         default,
         rename = "startTime",
