@@ -677,6 +677,9 @@ interface StructFieldBase {
 
   /** the value to use when emitting a Default impl for the containing struct */
   defaultValue?: string;
+
+  /** when set, a pub(crate) const with this name and value will be emitted for the containing struct, regardless of whether a Default impl is generated */
+  defaultValueConstant?: { name: string; value: string };
 }
 
 class StructBase implements StructBase {

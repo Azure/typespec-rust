@@ -2232,10 +2232,14 @@ impl AzureAppConfigurationClient {
     }
 }
 
+/// Default value for [`AzureAppConfigurationClientOptions::api_version`].
+#[allow(dead_code)]
+pub(crate) const DEFAULT_API_VERSION: &str = "2024-09-01";
+
 impl Default for AzureAppConfigurationClientOptions {
     fn default() -> Self {
         Self {
-            api_version: String::from("2024-09-01"),
+            api_version: String::from(DEFAULT_API_VERSION),
             client_options: ClientOptions::default(),
         }
     }

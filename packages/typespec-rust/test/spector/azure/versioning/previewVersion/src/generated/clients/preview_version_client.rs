@@ -206,10 +206,14 @@ impl PreviewVersionClient {
     }
 }
 
+/// Default value for [`PreviewVersionClientOptions::api_version`].
+#[allow(dead_code)]
+pub(crate) const DEFAULT_API_VERSION: &str = "2024-12-01-preview";
+
 impl Default for PreviewVersionClientOptions {
     fn default() -> Self {
         Self {
-            api_version: String::from("2024-12-01-preview"),
+            api_version: String::from(DEFAULT_API_VERSION),
             client_options: ClientOptions::default(),
         }
     }

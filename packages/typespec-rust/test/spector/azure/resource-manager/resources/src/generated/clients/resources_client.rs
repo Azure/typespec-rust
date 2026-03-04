@@ -140,10 +140,14 @@ impl ResourcesClient {
     }
 }
 
+/// Default value for [`ResourcesClientOptions::api_version`].
+#[allow(dead_code)]
+pub(crate) const DEFAULT_API_VERSION: &str = "2023-12-01-preview";
+
 impl Default for ResourcesClientOptions {
     fn default() -> Self {
         Self {
-            api_version: String::from("2023-12-01-preview"),
+            api_version: String::from(DEFAULT_API_VERSION),
             client_options: ClientOptions::default(),
         }
     }

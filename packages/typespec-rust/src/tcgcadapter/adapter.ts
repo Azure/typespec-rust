@@ -1435,7 +1435,9 @@ export class Adapter {
       paramField.docs = this.adaptDocs(param.summary, param.doc);
       constructable.options.type.fields.push(paramField);
       if (param.clientDefaultValue) {
-        paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
+        const constName = `DEFAULT_${paramName.toUpperCase()}`;
+        paramField.defaultValue = `String::from(${constName})`;
+        paramField.defaultValueConstant = { name: constName, value: <string>param.clientDefaultValue };
       }
     }
 

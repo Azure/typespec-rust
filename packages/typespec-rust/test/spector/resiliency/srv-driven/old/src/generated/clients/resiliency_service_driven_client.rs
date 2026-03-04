@@ -187,10 +187,14 @@ impl ResiliencyServiceDrivenClient {
     }
 }
 
+/// Default value for [`ResiliencyServiceDrivenClientOptions::api_version`].
+#[allow(dead_code)]
+pub(crate) const DEFAULT_API_VERSION: &str = "v1";
+
 impl Default for ResiliencyServiceDrivenClientOptions {
     fn default() -> Self {
         Self {
-            api_version: String::from("v1"),
+            api_version: String::from(DEFAULT_API_VERSION),
             client_options: ClientOptions::default(),
         }
     }

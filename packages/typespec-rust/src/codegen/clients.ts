@@ -269,6 +269,24 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
     body += '}\n\n'; // end client impl
 
+    // emit pub(crate) const declarations for fields with default value constants
+    if (client.constructable) {
+      const isSuppressed = client.constructable.suppressed === 'yes';
+      for (const field of client.constructable.options.type.fields) {
+        if (field.defaultValueConstant) {
+          if (isSuppressed) {
+            // When the client options type is suppressed, avoid emitting an intra-doc link
+            // to a type that does not exist in the generated code.
+            body += `/// Default value for \`${client.constructable.options.type.name}::${field.name}\`.\n`;
+          } else {
+            body += `/// Default value for [\`${client.constructable.options.type.name}::${field.name}\`].\n`;
+          }
+          body += `#[allow(dead_code)]\n`;
+          body += `pub(crate) const ${field.defaultValueConstant.name}: &str = "${field.defaultValueConstant.value}";\n\n`;
+        }
+      }
+    }
+
     // only implement Default when there's more than one field.
     // for the single-case field we just derive Default.
     if (client.constructable && clientOptionsImplDefault(client.constructable)) {

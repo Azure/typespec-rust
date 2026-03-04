@@ -111,11 +111,15 @@ impl MadeOptionalClient {
     }
 }
 
+/// Default value for [`MadeOptionalClientOptions::version`].
+#[allow(dead_code)]
+pub(crate) const DEFAULT_VERSION: &str = "v2";
+
 impl Default for MadeOptionalClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-            version: String::from("v2"),
+            version: String::from(DEFAULT_VERSION),
         }
     }
 }

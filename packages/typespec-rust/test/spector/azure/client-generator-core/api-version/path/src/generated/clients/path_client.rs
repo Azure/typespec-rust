@@ -99,11 +99,15 @@ impl PathClient {
     }
 }
 
+/// Default value for [`PathClientOptions::version`].
+#[allow(dead_code)]
+pub(crate) const DEFAULT_VERSION: &str = "2025-01-01";
+
 impl Default for PathClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-            version: String::from("2025-01-01"),
+            version: String::from(DEFAULT_VERSION),
         }
     }
 }

@@ -123,10 +123,14 @@ impl MethodSubscriptionIdClient {
     }
 }
 
+/// Default value for [`MethodSubscriptionIdClientOptions::api_version`].
+#[allow(dead_code)]
+pub(crate) const DEFAULT_API_VERSION: &str = "2023-12-01-preview";
+
 impl Default for MethodSubscriptionIdClientOptions {
     fn default() -> Self {
         Self {
-            api_version: String::from("2023-12-01-preview"),
+            api_version: String::from(DEFAULT_API_VERSION),
             client_options: ClientOptions::default(),
         }
     }

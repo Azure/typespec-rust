@@ -710,3 +710,7 @@ impl SecretClient {
         Ok(rsp.into())
     }
 }
+
+/// Default value for `SecretClientOptions::api_version`.
+#[allow(dead_code)]
+pub(crate) const DEFAULT_API_VERSION: &str = "2025-06-01-preview";
