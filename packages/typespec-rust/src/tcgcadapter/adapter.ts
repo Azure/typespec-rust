@@ -737,7 +737,7 @@ export class Adapter {
         switch (v.kind) {
           case 'model':
           case 'enum':
-            return utils.capitalize(v.name);
+            return utils.deconstruct(v.name).map(each => utils.capitalize(each)).join('');
           case 'string':
             return 'String';
           case 'boolean':
@@ -802,7 +802,7 @@ export class Adapter {
     rustUnion.docs = this.adaptDocs(src.summary, src.doc);
 
     // sort variants for correct serde untagged disambiguation:
-    // bool(0) < int(1) < float(2) < string/enum(3) < array(4) < model(5)
+    // bool(0) < int(1) < float(2) < enum(3) < string(4) < array(5) < model(6)
     const sorted = [...src.variantTypes].sort(
       (a, b) => this.getUntaggedVariantOrder(a) - this.getUntaggedVariantOrder(b));
 
@@ -839,15 +839,16 @@ export class Adapter {
       case 'float32':
       case 'float64':
         return 2;
-      case 'string':
       case 'enum':
         return 3;
-      case 'array':
+      case 'string':
         return 4;
-      case 'model':
+      case 'array':
         return 5;
-      default:
+      case 'model':
         return 6;
+      default:
+        return 7;
     }
   }
 
@@ -866,12 +867,15 @@ export class Adapter {
       case 'boolean':
         return 'Boolean';
       case 'int8':
+        return 'Int8';
       case 'int16':
+        return 'Int16';
       case 'int32':
         return 'Int32';
       case 'int64':
-      case 'safeint':
         return 'Int64';
+      case 'safeint':
+        return 'SafeInt';
       case 'float':
       case 'float32':
         return 'Float32';
