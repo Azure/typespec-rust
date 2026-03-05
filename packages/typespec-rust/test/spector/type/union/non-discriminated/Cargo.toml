@@ -1,5 +1,5 @@
 [package]
-name = "spector_alternatetype"
+name = "spector_union_nondiscriminated"
 version = "0.1.0"
 authors.workspace = true
 edition.workspace = true
@@ -12,10 +12,7 @@ default = ["azure_core/default"]
 
 [dependencies]
 azure_core = { workspace = true }
-geojson = { workspace = true }
-rust_decimal = { workspace = true }
 serde = { workspace = true }
-serde_json = { workspace = true }
 
 [dev-dependencies]
 tokio = { workspace = true }

@@ -64,7 +64,7 @@ const httpSpecsGroup = {
   'spector_optionality': {input: 'type/property/optionality'},
   'spector_valuetypes': {input: 'type/property/value-types'},
   'spector_scalar': {input: 'type/scalar'},
-  //'spector_union': {input: 'type/union'},
+  'spector_union_nondiscriminated': {input: 'type/union', output: 'type/union/non-discriminated'},
   'spector_union_discriminated': {input: 'type/union/discriminated'},
   //'spector_veradded': {input: 'versioning/added'},
   'spector_madeoptional': {input: 'versioning/madeOptional'},

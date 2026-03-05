@@ -160,8 +160,9 @@ function sortContent(content: rust.ModuleContainer): void {
     content.dependencies.sort((a: rust.CrateDependency, b: rust.CrateDependency) => { return sortAscending(a.name, b.name); });
   }
 
-  content.unions.sort((a: rust.DiscriminatedUnion, b: rust.DiscriminatedUnion) => { return sortAscending(a.name, b.name); });
+  content.unions.sort((a, b) => sortAscending(a.name, b.name));
   for (const rustUnion of content.unions) {
+    if (rustUnion.kind !== 'discriminatedUnion') continue;
     rustUnion.members.sort((a: rust.DiscriminatedUnionMember, b: rust.DiscriminatedUnionMember) => { return sortAscending(a.type.name, b.type.name); });
   }
 

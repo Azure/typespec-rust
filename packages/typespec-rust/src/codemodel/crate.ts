@@ -84,8 +84,8 @@ interface ModuleBase {
   /** models contains all of the models for this module. can be empty */
   models: Array<types.MarkerType | types.Model>;
 
-  /** unions contains all of the discriminated unions for this module. can be empty */
-  unions: Array<types.DiscriminatedUnion>;
+  /** unions contains all of the union types for this module. can be empty */
+  unions: Array<types.DiscriminatedUnion | types.UntaggedUnion>;
 }
 
 class ModuleBase implements ModuleBase {
@@ -93,7 +93,7 @@ class ModuleBase implements ModuleBase {
     this.clients = new Array<client.Client>();
     this.enums = new Array<types.Enum>();
     this.models = new Array<types.Model>();
-    this.unions = new Array<types.DiscriminatedUnion>();
+    this.unions = new Array<types.DiscriminatedUnion | types.UntaggedUnion>();
   }
 }
 

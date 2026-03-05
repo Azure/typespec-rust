@@ -269,6 +269,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'responseHeadersTrait':
     case 'safeint':
     case 'tokenCredential':
+    case 'untaggedUnion':
       return type.name;
     case 'external':
     case 'model':

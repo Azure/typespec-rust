@@ -79,6 +79,7 @@ export class Use {
       }
       case 'discriminatedUnion':
       case 'enum':
+      case 'untaggedUnion':
         if (this.scope === 'clients' || this.module !== type.module) {
           this.add(`${utils.buildImportPath(this.module, type.module)}::models`, type.name);
         } else {

@@ -101,6 +101,7 @@ members = [
     "spector/type/property/value-types",
     "spector/type/scalar",
     "spector/type/union/discriminated",
+    "spector/type/union/non-discriminated",
     "spector/versioning/madeOptional",
 ]
 resolver = "2"

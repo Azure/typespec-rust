@@ -19,7 +19,7 @@ export interface Docs {
 export type SdkType =  Arc | AsyncResponse | Box | ClientMethodOptions | ImplTrait | MarkerType | Option | Pager | PagerOptions | Poller | PollerOptions | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | DiscriminatedUnion | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | DiscriminatedUnion | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | UntaggedUnion | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -579,6 +579,40 @@ export interface Unit {
   kind: 'unit';
 }
 
+/** UntaggedUnion is a Rust #[serde(untagged)] enum */
+export interface UntaggedUnion {
+  kind: 'untaggedUnion';
+
+  /** the name of the untagged union */
+  name: string;
+
+  /** any docs for the type */
+  docs: Docs;
+
+  /** indicates the visibility of the type */
+  visibility: Visibility;
+
+  /** one or more variants in the untagged union */
+  variants: Array<UntaggedUnionVariant>;
+
+  /** the module to which this untagged union belongs */
+  module: ModuleContainer;
+}
+
+/** UntaggedUnionVariant is one variant inside an UntaggedUnion */
+export interface UntaggedUnionVariant {
+  kind: 'untaggedUnionVariant';
+
+  /** the Rust variant name (PascalCase) */
+  name: string;
+
+  /** any docs for the variant */
+  docs: Docs;
+
+  /** the type wrapped by this variant */
+  type: WireType;
+}
+
 /** Url is an azure_core::Url type */
 export interface Url extends External {
   kind: 'Url';
@@ -887,6 +921,26 @@ export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
 export class DiscriminatedUnionSealed implements DiscriminatedUnionSealed {
   constructor() {
     this.kind = 'discriminatedUnionSealed';
+  }
+}
+
+export class UntaggedUnion implements UntaggedUnion {
+  constructor(name: string, visibility: Visibility, module: ModuleContainer) {
+    this.kind = 'untaggedUnion';
+    this.name = name;
+    this.visibility = visibility;
+    this.variants = new Array<UntaggedUnionVariant>();
+    this.module = module;
+    this.docs = {};
+  }
+}
+
+export class UntaggedUnionVariant implements UntaggedUnionVariant {
+  constructor(name: string, type: WireType) {
+    this.kind = 'untaggedUnionVariant';
+    this.name = name;
+    this.type = type;
+    this.docs = {};
   }
 }
 

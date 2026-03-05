@@ -17,14 +17,14 @@ namespace _Specs_.Azure.ClientGenerator.Core.AlternateType;
 namespace ExternalType {
   model Geometry {
     type: string;
-    coordinates: numeric[];
+    coordinates: decimal[];
   }
 
   model Feature {
     type: "Feature";
     geometry: Geometry | null;
     properties: Record<unknown>;
-    id?: string | numeric;
+    id?: string | decimal;
   }
 
   model ModelWithFeatureProperty {

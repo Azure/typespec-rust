@@ -12,6 +12,7 @@
 ### Features Added
 
 * Define a `pub(crate)` constant for `api-version` to use in hand-authored `Default` implementation on client options.
+* Add support for TypeSpec `union` types.
 
 ### Other Changes
 

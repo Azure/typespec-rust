@@ -153,6 +153,7 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       // find the matching DU member for this model
       let duMember: rust.DiscriminatedUnionMember | undefined;
       for (const union of module.unions) {
+        if (union.kind !== 'discriminatedUnion') continue;
         for (const member of union.members) {
           if (member.type === model) {
             duMember = member;
@@ -302,6 +303,7 @@ function emitModelImpls(module: rust.ModuleContainer, context: Context): helpers
 
   // emit From<model> for tagged enum types
   for (const union of module.unions) {
+    if (union.kind !== 'discriminatedUnion') continue;
     const indent = new helpers.indentation();
     use.addForType(union);
     for (const member of union.members) {

@@ -38,53 +38,79 @@ export function emitUnions(module: rust.ModuleContainer, context: Context): Unio
   const indent = new helpers.indentation();
   const visTracker = new helpers.VisibilityTracker();
 
-  let body = '';
+  // Collect all union entries (discriminated and untagged) so they can be sorted.
+  const entries: Array<{ name: string; body: string }> = [];
+
   for (const rustUnion of module.unions) {
     visTracker.update(rustUnion.visibility);
+    let body = '';
+
     const docs = helpers.formatDocComment(rustUnion.docs, true);
     if (docs.length > 0) {
       body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
     }
 
-    const extensiblePolymorphicDU = rustUnion.unionKind?.kind === 'discriminatedUnionBase' ? rustUnion.unionKind : undefined;
-    if (!extensiblePolymorphicDU) {
-      // extensible polymorphic unions define Serialize
-      use.add('serde', 'Serialize');
-    }
-
-    use.add('serde', 'Deserialize');
-    use.add('azure_core::fmt', 'SafeDebug');
-    body += `#[derive(Clone, Deserialize, ${!extensiblePolymorphicDU ? 'Serialize, ' : ''}SafeDebug)]\n`;
-
-    const content = rustUnion.unionKind?.kind === 'discriminatedUnionEnvelope' ? `content = "${rustUnion.unionKind.envelopeName}"` : '';
-    body += `#[serde(${[content, `tag = "${rustUnion.discriminant}"`].filter(x => x !== '').join(', ')})]\n`;
-    body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
-
-    for (const member of rustUnion.members) {
-      use.addForType(member.type);
-
-      const docs = helpers.formatDocComment(member.docs, true);
-      if (docs.length > 0) {
-        body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
+    if (rustUnion.kind === 'discriminatedUnion') {
+      const extensiblePolymorphicDU = rustUnion.unionKind?.kind === 'discriminatedUnionBase' ? rustUnion.unionKind : undefined;
+      if (!extensiblePolymorphicDU) {
+        // extensible polymorphic unions define Serialize
+        use.add('serde', 'Serialize');
       }
 
-      if (member.discriminantValue !== member.type.name) {
-        body += `#[serde(rename = "${member.discriminantValue}")]\n`;
+      use.add('serde', 'Deserialize');
+      use.add('azure_core::fmt', 'SafeDebug');
+      body += `#[derive(Clone, Deserialize, ${!extensiblePolymorphicDU ? 'Serialize, ' : ''}SafeDebug)]\n`;
+
+      const content = rustUnion.unionKind?.kind === 'discriminatedUnionEnvelope' ? `content = "${rustUnion.unionKind.envelopeName}"` : '';
+      body += `#[serde(${[content, `tag = "${rustUnion.discriminant}"`].filter(x => x !== '').join(', ')})]\n`;
+      body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
+
+      for (const member of rustUnion.members) {
+        use.addForType(member.type);
+
+        const docs = helpers.formatDocComment(member.docs, true);
+        if (docs.length > 0) {
+          body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
+        }
+
+        if (member.discriminantValue !== member.type.name) {
+          body += `#[serde(rename = "${member.discriminantValue}")]\n`;
+        }
+        body += `${indent.get()}${member.type.name}(${helpers.getTypeDeclaration(member.type)})`;
+        body += ',\n\n';
       }
-      body += `${indent.get()}${member.type.name}(${helpers.getTypeDeclaration(member.type)})`;
-      body += ',\n\n';
+
+      if (extensiblePolymorphicDU) {
+        body += `${indent.get()}#[serde(untagged)]\n`;
+        body += `${indent.get()}${getPolymorphicUnknownVariant(indent, use, extensiblePolymorphicDU, rustUnion.discriminant, false)},\n`;
+      }
+    } else {
+      use.add('serde', 'Deserialize', 'Serialize');
+      use.add('azure_core::fmt', 'SafeDebug');
+      body += `#[derive(Clone, Deserialize, SafeDebug, Serialize)]\n`;
+      body += `#[serde(untagged)]\n`;
+      body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
+
+      for (const variant of rustUnion.variants) {
+        use.addForType(variant.type);
+        const docs = helpers.formatDocComment(variant.docs, true);
+        if (docs.length > 0) {
+          body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
+        }
+        body += `${indent.get()}${variant.name}(${helpers.getTypeDeclaration(variant.type)}),\n`;
+      }
     }
 
-    if (extensiblePolymorphicDU) {
-      body += `${indent.get()}#[serde(untagged)]\n`;
-      body += `${indent.get()}${getPolymorphicUnknownVariant(indent, use, extensiblePolymorphicDU, rustUnion.discriminant, false)},\n`;
-    }
-    body += '}\n\n'; // end enum declaration
+    body += '}\n\n';
+    entries.push({ name: rustUnion.name, body: body });
   }
+
+  // Sort all entries alphabetically by name.
+  entries.sort((a, b) => a.name.localeCompare(b.name));
 
   let content = helpers.contentPreamble();
   content += use.text();
-  content += body;
+  content += entries.map(e => e.body).join('');
 
   return {
     definitions: {
@@ -148,6 +174,7 @@ function emitUnionImpls(module: rust.ModuleContainer, context: Context): helpers
   const entries = new Array<string>();
 
   for (const rustUnion of module.unions) {
+    if (rustUnion.kind !== 'discriminatedUnion') continue;
     const forReq = context.getTryFromForRequestContent(rustUnion, use);
 
     // helpers aren't required for all types, so only
@@ -191,6 +218,7 @@ function emitUnionSerde(module: rust.ModuleContainer): helpers.Module | undefine
 
   let body = '';
   for (const rustUnion of module.unions) {
+    if (rustUnion.kind !== 'discriminatedUnion') continue;
     if (!isPolymorphicDU(rustUnion.unionKind) || rustUnion.unionKind.kind !== 'discriminatedUnionBase') {
       continue;
     }

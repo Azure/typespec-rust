@@ -14,7 +14,6 @@ import * as utils from '../utils/utils.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
 import {FinalStateValue} from "@azure-tools/typespec-azure-core";
-import {NoTarget} from "@typespec/compiler";
 
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
@@ -226,13 +225,9 @@ export class Adapter {
     let needsCoreAndSerde = false;
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
       if (!sdkUnion.discriminatedOptions) {
-        // When https://github.com/microsoft/typespec/issues/9749 is fixed, we can return to throwing an exception here.
-        this.ctx.program.reportDiagnostic({
-          code: 'UnsupportedTsp',
-          severity: 'warning',
-          message: `Non-discriminated unions ('${sdkUnion.name}') are not supported. No type will be generated.`,
-          target: NoTarget,
-        })
+        // getNonDiscriminatedUnion() self-registers the type into the module and caches it
+        this.getNonDiscriminatedUnion(sdkUnion);
+        needsCoreAndSerde = true;
         continue;
       }
       const rustUnion = this.getDiscriminatedUnion(sdkUnion);
@@ -696,6 +691,206 @@ export class Adapter {
   }
 
   /**
+   * converts a non-discriminated tcgc union to either a flat merged Rust Enum (union-of-enums)
+   * or a Rust UntaggedUnion (#[serde(untagged)] enum).
+   * self-registers the result in the owning module and caches it.
+   *
+   * @param src the non-discriminated tcgc union
+   * @returns a Rust Enum or UntaggedUnion
+   */
+  private getNonDiscriminatedUnion(src: tcgc.SdkUnionType): rust.Enum | rust.UntaggedUnion {
+    const unionName = src.name.length > 0
+      ? utils.deconstruct(src.name).map(each => utils.capitalize(each)).join('')
+      : this.synthesizeUnionName(src);
+
+    const keyName = `non-discriminated-union-${unionName}`;
+    const cached = this.types.get(keyName);
+    if (cached) {
+      return cached as rust.Enum | rust.UntaggedUnion;
+    }
+
+    const result = src.variantTypes.every(v => v.kind === 'enum')
+      ? this.getMergedFlatEnum(unionName, src)
+      : this.buildUntaggedUnion(unionName, src);
+
+    this.types.set(keyName, result);
+
+    const mod = this.adaptNamespace(src.namespace);
+    if (result.kind === 'enum') {
+      mod.enums.push(result);
+    } else {
+      mod.unions.push(result);
+    }
+
+    return result;
+  }
+
+  /**
+   * synthesizes a union name for anonymous inline unions by concatenating variant type names
+   *
+   * @param src the non-discriminated tcgc union
+   * @returns a PascalCase name for the union
+   */
+  private synthesizeUnionName(src: tcgc.SdkUnionType): string {
+    return src.variantTypes
+      .map(v => {
+        switch (v.kind) {
+          case 'model':
+          case 'enum':
+            return utils.capitalize(v.name);
+          case 'string':
+            return 'String';
+          case 'boolean':
+            return 'Boolean';
+          case 'int32':
+            return 'Int32';
+          case 'int64':
+            return 'Int64';
+          case 'float32':
+            return 'Float32';
+          case 'float64':
+            return 'Float64';
+          case 'array':
+            return 'Array';
+          default:
+            return 'Value';
+        }
+      })
+      .join('');
+  }
+
+  /**
+   * builds a flat merged Rust Enum from a union whose every variant is a TSP enum type.
+   * all variant enum values are merged into a single flat enum.
+   *
+   * @param unionName the PascalCase name for the resulting enum
+   * @param src the non-discriminated tcgc union
+   * @returns a flat merged Rust Enum
+   */
+  private getMergedFlatEnum(unionName: string, src: tcgc.SdkUnionType): rust.Enum {
+    const rustEnum = new rust.Enum(unionName, adaptAccessFlags(src.access), false, 'String',
+      this.adaptNamespace(src.namespace));
+    rustEnum.docs = this.adaptDocs(src.summary, src.doc);
+    this.types.set(unionName, rustEnum);
+
+    for (const variant of src.variantTypes) {
+      const sdkEnum = variant as tcgc.SdkEnumType;
+      for (const value of sdkEnum.values) {
+        const valueName = naming.fixUpEnumValueName(value);
+        if (!rustEnum.values.some(v => v.name === valueName)) {
+          const rv = new rust.EnumValue(valueName, rustEnum, value.value);
+          rv.docs = this.adaptDocs(value.summary, value.doc);
+          rustEnum.values.push(rv);
+        }
+      }
+    }
+
+    return rustEnum;
+  }
+
+  /**
+   * builds an UntaggedUnion (#[serde(untagged)] enum) from a non-discriminated tcgc union
+   * whose variants are not all enum types.
+   *
+   * @param unionName the PascalCase name for the resulting union
+   * @param src the non-discriminated tcgc union
+   * @returns a Rust UntaggedUnion
+   */
+  private buildUntaggedUnion(unionName: string, src: tcgc.SdkUnionType): rust.UntaggedUnion {
+    const mod = this.adaptNamespace(src.namespace);
+    const rustUnion = new rust.UntaggedUnion(unionName, adaptAccessFlags(src.access), mod);
+    rustUnion.docs = this.adaptDocs(src.summary, src.doc);
+
+    // sort variants for correct serde untagged disambiguation:
+    // bool(0) < int(1) < float(2) < string/enum(3) < array(4) < model(5)
+    const sorted = [...src.variantTypes].sort(
+      (a, b) => this.getUntaggedVariantOrder(a) - this.getUntaggedVariantOrder(b));
+
+    for (const variant of sorted) {
+      const variantName = this.getUntaggedVariantName(variant);
+      const variantType = this.typeToWireType(this.getType(variant));
+      const rv = new rust.UntaggedUnionVariant(variantName, variantType);
+      rustUnion.variants.push(rv);
+    }
+
+    return rustUnion;
+  }
+
+  /**
+   * returns the sort order for a variant in a #[serde(untagged)] enum.
+   * more specific types must come before more general ones to ensure correct deserialization.
+   *
+   * @param variant the tcgc type to get the order for
+   * @returns a numeric sort key (lower = earlier)
+   */
+  private getUntaggedVariantOrder(variant: tcgc.SdkType): number {
+    switch (variant.kind) {
+      case 'boolean':
+        return 0;
+      case 'constant':
+        return this.getUntaggedVariantOrder(variant.valueType);
+      case 'int8':
+      case 'int16':
+      case 'int32':
+      case 'int64':
+      case 'safeint':
+        return 1;
+      case 'float':
+      case 'float32':
+      case 'float64':
+        return 2;
+      case 'string':
+      case 'enum':
+        return 3;
+      case 'array':
+        return 4;
+      case 'model':
+        return 5;
+      default:
+        return 6;
+    }
+  }
+
+  /**
+   * returns the Rust variant name (PascalCase) for a variant in a #[serde(untagged)] enum.
+   *
+   * @param variant the tcgc type to name
+   * @returns a PascalCase Rust variant name
+   */
+  private getUntaggedVariantName(variant: tcgc.SdkType): string {
+    switch (variant.kind) {
+      case 'model':
+        return utils.deconstruct(variant.name).map(each => utils.capitalize(each)).join('');
+      case 'enum':
+        return utils.deconstruct(variant.name).map(each => utils.capitalize(each)).join('');
+      case 'boolean':
+        return 'Boolean';
+      case 'int8':
+      case 'int16':
+      case 'int32':
+        return 'Int32';
+      case 'int64':
+      case 'safeint':
+        return 'Int64';
+      case 'float':
+      case 'float32':
+        return 'Float32';
+      case 'float64':
+        return 'Float64';
+      case 'string':
+        return 'String';
+      case 'constant':
+        return this.getUntaggedVariantName(variant.valueType);
+      case 'array': {
+        const elemName = this.getUntaggedVariantName(variant.valueType);
+        return `${elemName}Array`;
+      }
+      default:
+        return 'Value';
+    }
+  }
+
+  /**
    * converts a tcgc model property to a model field
    *
    * @param modelFlags the flags for the model to which the field belongs
@@ -966,7 +1161,7 @@ export class Adapter {
       }
       case 'union': {
         if (!type.discriminatedOptions) {
-          throw new AdapterError('UnsupportedTsp', 'non-discriminated unions are not supported', type.__raw?.node);
+          return this.getNonDiscriminatedUnion(type);
         }
         return this.getDiscriminatedUnion(type);
       }
@@ -1733,7 +1928,7 @@ export class Adapter {
       // if the method param's type DOES match the op param's type and the op param has multiple corresponding method params, it's a spread param
       // - e.g. op param is an intersection of multiple model types, and each model type is exposed as a discrete param
       if (opParam.kind === 'body' && opParam.type.kind === 'model'
-        && (opParam.type.kind !== param.type.kind || opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).length > 1)
+        && (opParam.type !== param.type || opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).length > 1)
       ) {
         adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptPayloadFormat(opParam.defaultContentType), opParam.type);
       } else {
@@ -2535,6 +2730,7 @@ export class Adapter {
       case 'slice':
       case 'str':
       case 'String':
+      case 'untaggedUnion':
       case 'Url':
       case 'Vec':
         return type;
@@ -2667,6 +2863,7 @@ function recursiveKeyName(root: string, type: rust.Box | rust.Payload | rust.Req
     case 'discriminatedUnion':
     case 'model':
     case 'struct':
+    case 'untaggedUnion':
       return `${root}-${type.kind}-${type.name}`;
     case 'literal':
       return `${recursiveKeyName(`${root}-${type.kind}`, type.valueKind)}-${type.value}`;
