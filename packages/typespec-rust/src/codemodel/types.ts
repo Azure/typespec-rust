@@ -425,26 +425,6 @@ export interface PollerOptions extends External {
   lifetime: Lifetime;
 }
 
-/** PayloadFormat indicates the wire format for request bodies */
-export type PayloadFormat = 'json' | 'text' | 'xml';
-
-/**
- * Payload<T> is used for operations that send a typed payload.
- * it's a grouping of the payload type and its wire format but does not
- * actually exist as a type (i.e. there's no Payload type in emitted code).
- */
-export interface Payload<T extends WireType = WireType> {
-  kind: 'payload';
-
-  /**
-   * the generic type param
-   */
-  type: T;
-
-  /** the wire format of the request body */
-  format: PayloadFormat;
-}
-
 /** RawResponse is an azure_core::http::RawResponse */
 export interface RawResponse extends External {
   kind: 'rawResponse';
@@ -471,11 +451,8 @@ export interface Ref<T extends RefType = RefType> extends RefBase {
   type: T;
 }
 
-/** RequestContentTypes defines the type constraint when creating a RequestContent<T> */
-type RequestContentTypes = Bytes | Payload;
-
 /** RequestContent is a Rust RequestContent<T> from azure_core */
-export interface RequestContent<T extends RequestContentTypes = RequestContentTypes, Format extends PayloadFormatType = PayloadFormatType> extends External {
+export interface RequestContent<T extends WireType = WireType, Format extends PayloadFormatType = PayloadFormatType> extends External {
   kind: 'requestContent';
 
   /** the type of content sent in the request */
@@ -1018,14 +995,6 @@ export class PollerOptions extends External implements PollerOptions {
     super(crate, 'PollerOptions', 'azure_core::http::poller');
     this.kind = 'pollerOptions';
     this.lifetime = lifetime;
-  }
-}
-
-export class Payload<T> implements Payload<T> {
-  constructor(type: T, format: PayloadFormat) {
-    this.kind = 'payload';
-    this.type = type;
-    this.format = format;
   }
 }
 

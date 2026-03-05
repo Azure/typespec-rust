@@ -373,7 +373,7 @@ export interface PartialBodyParameter extends HTTPParameterBase {
   paramType: types.Type;
 
   /** the model in which the partial param is placed */
-  type: types.RequestContent<types.Payload<types.Model>>;
+  type: types.RequestContent<types.Model>;
 
   /** the name of the field over the wire in model.fields for this param */
   serde: string;
@@ -821,7 +821,7 @@ export class PageableStrategyNextLink implements PageableStrategyNextLink {
 }
 
 export class PartialBodyParameter extends HTTPParameterBase implements PartialBodyParameter {
-  constructor(name: string, location: ParameterLocation, optional: boolean, serde: string, paramType: types.Type, type: types.RequestContent<types.Payload<types.Model>>) {
+  constructor(name: string, location: ParameterLocation, optional: boolean, serde: string, paramType: types.Type, type: types.RequestContent<types.Model>) {
     super(name, location, optional, type);
     this.kind = 'partialBody';
     this.serde = serde;
