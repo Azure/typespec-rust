@@ -187,7 +187,7 @@ export function emitVisibility(visibility: rust.Visibility): string {
  *   - 'omit': Omits the lifetime annotation entirely, even if the type would normally require one.
  * @returns 
  */
-export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withLifetime: 'default' | 'anonymous' | 'omit' = 'default'): string {
+export function getTypeDeclaration(type: rust.Client | rust.ResponseHeadersTrait | rust.Type, withLifetime: 'default' | 'anonymous' | 'omit' = 'default'): string {
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
@@ -234,19 +234,11 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'poller':
       // we explicitly omit the Response<T> from the type decl
       return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;
-    case 'payload':
-      return getTypeDeclaration(type.type, withLifetime);
     case 'ref':
       return `&${getTypeDeclaration(type.type)}`;
     case 'requestContent': {
       const formatType = `${type.format !== 'JsonFormat' ? `, ${type.format}` : ''}`;
-      switch (type.content.kind) {
-        case 'bytes':
-          return `${type.name}<${getTypeDeclaration(type.content)}${formatType}>`;
-        case 'payload':
-          return `${type.name}<${getTypeDeclaration(type.content.type, withLifetime)}${formatType}>`;
-      }
-      break;
+      return `${type.name}<${getTypeDeclaration(type.content, withLifetime)}${formatType}>`;
     }
     case 'result':
       return `${type.name}<${getTypeDeclaration(type.type, withLifetime)}>`;
@@ -504,7 +496,7 @@ export function capitalize(str: string): string {
  * @param type is the type to unwrap
  * @returns the wrapped type or the original type if it wasn't wrapped
  */
-export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
+export function unwrapType(type: rust.Type): rust.Type {
   switch (type.kind) {
     case 'arc':
     case 'hashmap':
@@ -517,8 +509,6 @@ export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
       return unwrapType(type.type.content);
     case 'poller':
       return unwrapType(type.type.content);
-    case 'payload':
-      return unwrapType(type.type);
     default:
       return type;
   }
@@ -533,7 +523,7 @@ export type ModelFormat = 'json' | 'xml';
  * @param format is the format to convert
  * @returns json or xml
  */
-export function convertResponseFormat(format: Exclude<rust.PayloadFormatType, 'NoFormat'>): ModelFormat {
+export function convertResponseFormat(format: rust.ModelPayloadFormatType): ModelFormat {
   switch (format) {
     case 'JsonFormat':
       return 'json';

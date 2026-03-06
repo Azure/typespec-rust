@@ -1102,14 +1102,14 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     const requestContentType = paramGroups.partialBody[0].type;
     use.addForType(requestContentType);
     if (inClosure) {
-      body += `${indent.get()}let body: Result<${helpers.getTypeDeclaration(requestContentType)}> = ${requestContentType.content.type.name} {\n`;
+      body += `${indent.get()}let body: Result<${helpers.getTypeDeclaration(requestContentType)}> = ${requestContentType.content.name} {\n`;
     } else {
-      body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.content.type.name} {\n`;
+      body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.content.name} {\n`;
     }
     indent.push();
     for (const partialBodyParam of paramGroups.partialBody) {
-      if (partialBodyParam.type.content.type !== requestContentType.content.type) {
-        throw new CodegenError('InternalError', `spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.type.name}, expected model type ${requestContentType.content.type.name}`);
+      if (partialBodyParam.type.content !== requestContentType.content) {
+        throw new CodegenError('InternalError', `spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.name}, expected model type ${requestContentType.content.name}`);
       }
 
       if (partialBodyParam.optional) {
@@ -1121,7 +1121,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       if (inClosure) {
         initializer = initializer + '.clone()';
       }
-      if (requestContentType.content.type.visibility === 'pub') {
+      if (requestContentType.content.visibility === 'pub') {
         // spread param maps to a non-internal model, so it must be wrapped in Some()
         initializer = `Some(${initializer})`;
       }

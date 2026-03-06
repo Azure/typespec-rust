@@ -67,7 +67,7 @@ export class Use {
    * 
    * @param type the Rust type to add
    */
-  addForType(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type): void {
+  addForType(type: rust.Client | rust.ResponseHeadersTrait | rust.Type): void {
     switch (type.kind) {
       case 'arc':
         this.add('std::sync', 'Arc');
@@ -126,22 +126,12 @@ export class Use {
           this.add('azure_core::http', type.type.format);
         }
         break;
-      case 'payload':
-        this.addForType(type.type);
-        break;
       case 'requestContent':
         if (type.format !== 'JsonFormat') {
           // JsonFormat is the default so no need to bring it into scope
           this.add('azure_core::http', type.format);
         }
-        switch (type.content.kind) {
-          case 'bytes':
-            this.addForType(type.content);
-            break;
-          case 'payload':
-            this.addForType(type.content.type);
-            break;
-        }
+        this.addForType(type.content);
         break;
       case 'response':
         if (type.format !== 'JsonFormat') {

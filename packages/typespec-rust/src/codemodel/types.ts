@@ -386,7 +386,7 @@ export interface Pager extends External {
   kind: 'pager';
 
   /** the model containing the page of items */
-  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+  type: Response<Model, ModelPayloadFormatType>;
 
   /** the type of continuation used by the pager */
   continuation: PagerContinuationKind;
@@ -411,10 +411,10 @@ export interface Poller extends External {
   kind: 'poller';
 
   /** the model containing the result of a long-running-operation */
-  resultType?: Response<WireType, Exclude<PayloadFormatType, 'NoFormat'>>;
+  resultType?: Response<WireType, ModelPayloadFormatType>;
 
   /** the model containing the status of a long-running-operation */
-  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+  type: Response<Model, ModelPayloadFormatType>;
 }
 
 /** PollerOptions is a PollerOptions<'a> from azure_core */
@@ -423,26 +423,6 @@ export interface PollerOptions extends External {
 
   /** the lifetime annotation */
   lifetime: Lifetime;
-}
-
-/** PayloadFormat indicates the wire format for request bodies */
-export type PayloadFormat = 'json' | 'text' | 'xml';
-
-/**
- * Payload<T> is used for operations that send a typed payload.
- * it's a grouping of the payload type and its wire format but does not
- * actually exist as a type (i.e. there's no Payload type in emitted code).
- */
-export interface Payload<T extends WireType = WireType> {
-  kind: 'payload';
-
-  /**
-   * the generic type param
-   */
-  type: T;
-
-  /** the wire format of the request body */
-  format: PayloadFormat;
 }
 
 /** RawResponse is an azure_core::http::RawResponse */
@@ -471,11 +451,8 @@ export interface Ref<T extends RefType = RefType> extends RefBase {
   type: T;
 }
 
-/** RequestContentTypes defines the type constraint when creating a RequestContent<T> */
-type RequestContentTypes = Bytes | Payload;
-
 /** RequestContent is a Rust RequestContent<T> from azure_core */
-export interface RequestContent<T extends RequestContentTypes = RequestContentTypes, Format extends PayloadFormatType = PayloadFormatType> extends External {
+export interface RequestContent<T extends WireType = WireType, Format extends PayloadFormatType = PayloadFormatType> extends External {
   kind: 'requestContent';
 
   /** the type of content sent in the request */
@@ -486,7 +463,10 @@ export interface RequestContent<T extends RequestContentTypes = RequestContentTy
 }
 
 /** ResponseFormat is the format of the response body */
-export type PayloadFormatType = 'JsonFormat' | 'NoFormat' | 'XmlFormat';
+export type PayloadFormatType = 'BinaryFormat' | 'JsonFormat' | 'NoFormat' | 'XmlFormat';
+
+/** ModelPayloadFormatType is a PayloadFormatType for modeled payloads (i.e. excludes binary and no-format) */
+export type ModelPayloadFormatType = Exclude<PayloadFormatType, 'BinaryFormat' | 'NoFormat'>;
 
 /** ResponseTypes defines the type constraint when creating a Response<T> */
 export type ResponseTypes = MarkerType | Unit | WireType;
@@ -988,7 +968,7 @@ export class Option<T> implements Option<T> {
 }
 
 export class Pager extends External implements Pager {
-  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>, continuation: PagerContinuationKind) {
+  constructor(crate: Crate, type: Response<Model, ModelPayloadFormatType>, continuation: PagerContinuationKind) {
     super(crate, 'Pager', 'azure_core::http');
     this.kind = 'pager';
     this.type = type;
@@ -1006,7 +986,7 @@ export class PagerOptions extends External implements PagerOptions {
 }
 
 export class Poller extends External implements Poller {
-  constructor(crate: Crate, statusType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
+  constructor(crate: Crate, statusType: Response<Model, ModelPayloadFormatType>) {
     super(crate, 'Poller', 'azure_core::http');
     this.kind = 'poller';
     this.type = statusType;
@@ -1018,14 +998,6 @@ export class PollerOptions extends External implements PollerOptions {
     super(crate, 'PollerOptions', 'azure_core::http::poller');
     this.kind = 'pollerOptions';
     this.lifetime = lifetime;
-  }
-}
-
-export class Payload<T> implements Payload<T> {
-  constructor(type: T, format: PayloadFormat) {
-    this.kind = 'payload';
-    this.type = type;
-    this.format = format;
   }
 }
 

@@ -1934,7 +1934,7 @@ export class Adapter {
       if (opParam.kind === 'body' && opParam.type.kind === 'model'
         && (opParam.type !== param.type || opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).length > 1)
       ) {
-        adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptPayloadFormat(opParam.defaultContentType), opParam.type);
+        adaptedParam = this.adaptMethodSpreadParameter(param, this.getPayloadFormatType(opParam.type, opParam.defaultContentType), opParam.type);
       } else {
         adaptedParam = this.adaptMethodParameter(opParam, param);
       }
@@ -1959,9 +1959,9 @@ export class Adapter {
           // sent in the request. we want the field within the model for this param.
           // NOTE: if the param is optional then the field is optional, thus it's
           // already wrapped in an Option<T> type.
-          const field = adaptedParam.type.content.type.fields.find(f => { return f.name === adaptedParam.name; });
+          const field = adaptedParam.type.content.fields.find(f => { return f.name === adaptedParam.name; });
           if (!field) {
-            throw new AdapterError('InternalError', `didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.content.type.name}`);
+            throw new AdapterError('InternalError', `didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.content.name}`);
           }
           fieldType = field.type;
         } else {
@@ -1987,6 +1987,7 @@ export class Adapter {
     const getResponseFormat = (): rust.PayloadFormatType => {
       // fetch the body format from the HTTP responses.
       // they should all have the same type so no need to match responses to type.
+      let responseType: tcgc.SdkType | undefined;
       let defaultContentType: string | undefined;
       for (const httpResp of method.operation.responses) {
         if (!httpResp.defaultContentType) {
@@ -1997,13 +1998,14 @@ export class Adapter {
           throw new AdapterError('InternalError', `method ${method.name} has conflicting content types`, method.__raw?.node);
         }
         defaultContentType = httpResp.defaultContentType;
+        responseType = httpResp.type;
       }
 
       if (!defaultContentType) {
         return 'NoFormat';
       }
 
-      return this.adaptPayloadFormatType(defaultContentType);
+      return this.getPayloadFormatType(responseType, defaultContentType);
     };
 
     const getStatusCodes = function (httpOp: tcgc.SdkHttpOperation): Array<number> {
@@ -2054,7 +2056,7 @@ export class Adapter {
     const responseFormat = getResponseFormat();
 
     if (method.kind === 'paging') {
-      if (responseFormat === 'NoFormat') {
+      if (responseFormat !== 'JsonFormat' && responseFormat !== 'XmlFormat') {
         throw new AdapterError('InternalError', `paged method ${method.name} unexpected response format ${responseFormat}`, method.__raw?.node);
       }
 
@@ -2160,7 +2162,7 @@ export class Adapter {
         }
       }
 
-      const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
+      const format: rust.ModelPayloadFormatType = responseFormat === 'JsonFormat' || responseFormat === 'XmlFormat' ? responseFormat : 'JsonFormat';
 
       const statusModel = this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${utils.pascalCase(rustMethod.name, false)}OperationStatus`);
       const statusType = this.typeToWireType(statusModel);
@@ -2184,7 +2186,7 @@ export class Adapter {
       }
 
       rustMethod.returns = new rust.Result(this.crate, poller);
-    } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
+    } else if (method.response.type && responseFormat !== 'BinaryFormat') {
       const response = new rust.Response(this.crate, this.typeToWireType(this.getType(method.response.type)), responseFormat);
       rustMethod.returns = new rust.Result(this.crate, response);
     } else if (responseHeaders.length > 0) {
@@ -2194,15 +2196,15 @@ export class Adapter {
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       rustClient.module.models.push(markerType);
       let resultType: rust.ResultTypes;
-      if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
+      if (responseFormat === 'BinaryFormat') {
         // method returns a streaming binary response with headers
         resultType = new rust.AsyncResponse(this.crate, markerType);
       } else {
         resultType = new rust.Response(this.crate, markerType, responseFormat);
       }
       rustMethod.returns = new rust.Result(this.crate, resultType);
-    } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
-      // bytes encoding indicates a streaming binary response
+    } else if (responseFormat === 'BinaryFormat') {
+      // binary format indicates a streaming binary response
       rustMethod.returns = new rust.Result(this.crate, new rust.AsyncResponse(this.crate, this.getUnitType()));
     } else {
       rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType(), responseFormat));
@@ -2525,15 +2527,17 @@ export class Adapter {
     let adaptedParam: rust.MethodParameter;
     switch (opParam.kind) {
       case 'body': {
-        let requestType: rust.Bytes | rust.Payload;
-        if (opParam.type.kind === 'bytes' && opParam.type.encode === 'bytes') {
-          // bytes encoding indicates a streaming binary request
+        let requestType: rust.WireType;
+        const requestFormatType = this.getPayloadFormatType(opParam.type, opParam.defaultContentType);
+        if (requestFormatType === 'BinaryFormat') {
+          // binary format indicates a streaming binary request
           requestType = new rust.Bytes(this.crate);
         } else {
-          requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptPayloadFormat(opParam.defaultContentType));
+          requestType = this.typeToWireType(paramType);
         }
-        const requestFormatType = this.adaptPayloadFormatType(opParam.defaultContentType);
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, paramOptional, new rust.RequestContent(this.crate, requestType, requestFormatType));
+        // binary payloads use NoFormat as the body is sent as raw bytes
+        const wireFormat = requestFormatType === 'BinaryFormat' ? 'NoFormat' as rust.PayloadFormatType : requestFormatType;
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, paramOptional, new rust.RequestContent(this.crate, requestType, wireFormat));
         break;
       }
       case 'cookie':
@@ -2751,7 +2755,7 @@ export class Adapter {
    * @param opParamType the tcgc model to which the spread parameter belongs
    * @returns a Rust partial body parameter
    */
-  private adaptMethodSpreadParameter(param: tcgc.SdkMethodParameter, format: rust.PayloadFormat, opParamType: tcgc.SdkModelType): rust.PartialBodyParameter {
+  private adaptMethodSpreadParameter(param: tcgc.SdkMethodParameter, format: rust.PayloadFormatType, opParamType: tcgc.SdkModelType): rust.PartialBodyParameter {
     // find the corresponding field within the model so we can get its index
     let serializedName: string | undefined;
     for (const property of opParamType.properties) {
@@ -2773,44 +2777,39 @@ export class Adapter {
 
     const paramName = naming.getEscapedReservedName(utils.snakeCaseName(param.name), 'param');
     const paramLoc: rust.ParameterLocation = 'method';
-    const formatType = utils.getPayloadFormatType(format);
-    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format), formatType));
+    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, payloadType, format));
     return adaptedParam;
   }
 
   /**
-   * converts a Content-Type header value into a payload format
-   * 
-   * @param contentType the value of the Content-Type header
-   * @returns a payload format
+   * determines the payload format type from serializationOptions on the type, falling
+   * back to inspecting the defaultContentType when serializationOptions isn't available.
+   *
+   * @param type the SDK type associated with the payload, if available
+   * @param defaultContentType the value of the Accept or Content-Type header
+   * @returns a payload format type
    */
-  private adaptPayloadFormat(contentType: string): rust.PayloadFormat {
-    // we only recognize/support JSON and XML content types.
-    if (contentType.match(/json/i)) {
-      return 'json';
-    } else if (contentType.match(/xml/i)) {
-      // XML support is disabled by default
-      this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
-      return 'xml';
-    } else if (contentType.match(/text\/plain/i)) {
-      return 'text';
-    } else {
-      throw new AdapterError('InternalError', `unexpected contentType ${contentType}`);
+  private getPayloadFormatType(type: tcgc.SdkType | undefined, defaultContentType: string): rust.PayloadFormatType {
+    if (type?.kind === 'model') {
+      const opts = type.serializationOptions;
+      if (opts.json) {
+        return 'JsonFormat';
+      } else if (opts.xml) {
+        this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
+        return 'XmlFormat';
+      } else if (opts.binary) {
+        return 'BinaryFormat';
+      }
+    } else if (type?.kind === 'bytes' && type.encode === 'bytes') {
+      // fallback: check if it's a bytes type with bytes encoding (binary stream)
+      return 'BinaryFormat';
     }
-  }
 
-  /**
-   * converts an accept or content-type header value into a payload format type
-   * 
-   * @param contentType the value of the Accept or Content-Type header
-   * @returns a response format
-   */
-  private adaptPayloadFormatType(contentType: string): rust.PayloadFormatType {
-    // we only recognize/support JSON and XML content types.
-    // anything else is NoFormat
-    if (contentType.match(/json/i)) {
+    // tcgc doesn't yet have serializationOptions on types other
+    // than models.  for those cases, fall back to the header value
+    if (defaultContentType.match(/json/i)) {
       return 'JsonFormat';
-    } else if (contentType.match(/xml/i)) {
+    } else if (defaultContentType.match(/xml/i)) {
       // XML support is disabled by default
       this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
       return 'XmlFormat';
@@ -2849,7 +2848,7 @@ type tcgcScalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'i
  * @param type the type for which to create the key
  * @returns a string containing the complete map key
  */
-function recursiveKeyName(root: string, type: rust.Box | rust.Payload | rust.RequestContent | rust.Struct | rust.WireType): string {
+function recursiveKeyName(root: string, type: rust.Box | rust.RequestContent | rust.Struct | rust.WireType): string {
   switch (type.kind) {
     case 'Vec':
     case 'box':
@@ -2871,12 +2870,10 @@ function recursiveKeyName(root: string, type: rust.Box | rust.Payload | rust.Req
       return `${root}-${type.kind}-${type.name}`;
     case 'literal':
       return `${recursiveKeyName(`${root}-${type.kind}`, type.valueKind)}-${type.value}`;
-    case 'payload':
-      return recursiveKeyName(`${root}-${type.kind}-${type.format}`, type.type);
     case 'ref':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'requestContent':
-      return recursiveKeyName(`${root}-${type.kind}`, type.content);
+      return recursiveKeyName(`${root}-${type.kind}-${type.format}`, type.content);
     case 'safeint':
     case 'decimal':
       return `${root}-${type.kind}${type.stringEncoding ? '-string' : ''}`;

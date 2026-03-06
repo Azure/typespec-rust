@@ -7,7 +7,6 @@ import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
-import { getPayloadFormatType } from '../utils/utils.js';
 
 /**
  * Context contains contextual information about how types are used.
@@ -16,7 +15,7 @@ import { getPayloadFormatType } from '../utils/utils.js';
  */
 export class Context {
   private readonly bodyFormatForModels = new Map<rust.Model, helpers.ModelFormat>();
-  private readonly tryFromForRequestTypes = new Map<string, rust.PayloadFormat>();
+  private readonly tryFromForRequestTypes = new Map<string, rust.ModelPayloadFormatType>();
   private readonly pagedResponseTypes = new Set<rust.Model>();
   private readonly lroStatusTypes = new Set<rust.Model>();
   private readonly lroResultTypes = new Map<rust.Model, rust.WireType>();
@@ -75,14 +74,14 @@ export class Context {
 
         for (const param of method.params) {
           if (param.kind === 'body' || param.kind === 'partialBody') {
-            if (param.type.content.kind === 'bytes' || param.type.content.format === 'text') {
+            if (param.type.format === 'NoFormat' || param.type.format === 'BinaryFormat') {
               // no body format to propagate
               continue;
             }
-            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model' || param.type.content.type.kind === 'discriminatedUnion') {
-              this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.content.type), param.type.content.format);
+            if (param.type.content.kind === 'enum' || param.type.content.kind === 'model' || param.type.content.kind === 'discriminatedUnion') {
+              this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.content), param.type.format);
             }
-            recursiveAddBodyFormat(param.type.content.type, param.type.content.format);
+            recursiveAddBodyFormat(param.type.content, helpers.convertResponseFormat(param.type.format));
           }
         }
 
@@ -92,7 +91,7 @@ export class Context {
             break;
           }
           case 'response': {
-            if (method.returns.type.format !== 'NoFormat') {
+            if (method.returns.type.format !== 'NoFormat' && method.returns.type.format !== 'BinaryFormat') {
               recursiveAddBodyFormat(method.returns.type.content, helpers.convertResponseFormat(method.returns.type.format));
             }
             break;
@@ -120,20 +119,20 @@ export class Context {
       return '';
     }
 
-    const formatType = getPayloadFormatType(format);
-    if (formatType != 'JsonFormat') {
-      use.add('azure_core::http', formatType);
+    if (format != 'JsonFormat') {
+      use.add('azure_core::http', format);
     }
     use.add('azure_core', 'Result');
     use.add('azure_core::http', 'RequestContent');
-    use.add('azure_core', `${format}::to_${format}`);
+    const moduleName = helpers.convertResponseFormat(format);
+    use.add('azure_core', `${moduleName}::to_${moduleName}`);
 
     const indent = new helpers.indentation();
-    const formatTypeDeclaration = `${formatType !== 'JsonFormat' ? `, ${formatType}` : ''}`;
+    const formatTypeDeclaration = `${format !== 'JsonFormat' ? `, ${format}` : ''}`;
     let content = `impl TryFrom<${helpers.getTypeDeclaration(model)}> for RequestContent<${helpers.getTypeDeclaration(model)}${formatTypeDeclaration}> {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
     content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(model)}) -> Result<Self> {\n`;
-    content += `${indent.push().get()}Ok(to_${format}(&value)?.into())\n`;
+    content += `${indent.push().get()}Ok(to_${moduleName}(&value)?.into())\n`;
     content += `${indent.pop().get()}}\n`;
     content += '}\n\n';
     return content;
@@ -276,7 +275,7 @@ export class Context {
       return undefined;
     }
 
-    const formatType = getPayloadFormatType(this.getModelBodyFormat(model));
+    const formatType: rust.ModelPayloadFormatType = this.getModelBodyFormat(model) === 'json' ? 'JsonFormat' : 'XmlFormat';
     use.add('azure_core::http', formatType);
 
     use.addForType(model);
