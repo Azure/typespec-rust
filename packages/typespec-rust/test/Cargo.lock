@@ -1715,6 +1715,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_access"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+]
+
+[[package]]
 name = "spector_alternatetype"
 version = "0.1.0"
 dependencies = [
@@ -1955,6 +1963,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_clientdefault"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+]
+
+[[package]]
 name = "spector_clientinit_default"
 version = "0.1.0"
 dependencies = [
@@ -2155,6 +2171,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_documentation"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+]
+
+[[package]]
 name = "spector_duration"
 version = "0.1.0"
 dependencies = [
@@ -2180,6 +2204,14 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
+]
+
+[[package]]
+name = "spector_encarray"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
 ]
 
 [[package]]
@@ -2320,6 +2352,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_noauth"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+]
+
+[[package]]
 name = "spector_nodisc"
 version = "0.1.0"
 dependencies = [
@@ -2389,6 +2428,21 @@ version = "0.1.0"
 dependencies = [
  "azure_core",
  "tokio",
+]
+
+[[package]]
+name = "spector_query"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+]
+
+[[package]]
+name = "spector_recursive"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
 ]
 
 [[package]]
