@@ -523,7 +523,7 @@ export type ModelFormat = 'json' | 'xml';
  * @param format is the format to convert
  * @returns json or xml
  */
-export function convertResponseFormat(format: Exclude<rust.PayloadFormatType, 'NoFormat'>): ModelFormat {
+export function convertResponseFormat(format: rust.ModelPayloadFormatType): ModelFormat {
   switch (format) {
     case 'JsonFormat':
       return 'json';

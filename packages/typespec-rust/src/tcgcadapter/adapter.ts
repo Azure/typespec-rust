@@ -2056,7 +2056,7 @@ export class Adapter {
     const responseFormat = getResponseFormat();
 
     if (method.kind === 'paging') {
-      if (responseFormat === 'NoFormat') {
+      if (responseFormat !== 'JsonFormat' && responseFormat !== 'XmlFormat') {
         throw new AdapterError('InternalError', `paged method ${method.name} unexpected response format ${responseFormat}`, method.__raw?.node);
       }
 
@@ -2162,7 +2162,7 @@ export class Adapter {
         }
       }
 
-      const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
+      const format: rust.ModelPayloadFormatType = responseFormat === 'JsonFormat' || responseFormat === 'XmlFormat' ? responseFormat : 'JsonFormat';
 
       const statusModel = this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${utils.pascalCase(rustMethod.name, false)}OperationStatus`);
       const statusType = this.typeToWireType(statusModel);
@@ -2186,7 +2186,7 @@ export class Adapter {
       }
 
       rustMethod.returns = new rust.Result(this.crate, poller);
-    } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
+    } else if (method.response.type && responseFormat !== 'BinaryFormat') {
       const response = new rust.Response(this.crate, this.typeToWireType(this.getType(method.response.type)), responseFormat);
       rustMethod.returns = new rust.Result(this.crate, response);
     } else if (responseHeaders.length > 0) {
@@ -2196,15 +2196,15 @@ export class Adapter {
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       rustClient.module.models.push(markerType);
       let resultType: rust.ResultTypes;
-      if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
+      if (responseFormat === 'BinaryFormat') {
         // method returns a streaming binary response with headers
         resultType = new rust.AsyncResponse(this.crate, markerType);
       } else {
         resultType = new rust.Response(this.crate, markerType, responseFormat);
       }
       rustMethod.returns = new rust.Result(this.crate, resultType);
-    } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
-      // bytes encoding indicates a streaming binary response
+    } else if (responseFormat === 'BinaryFormat') {
+      // binary format indicates a streaming binary response
       rustMethod.returns = new rust.Result(this.crate, new rust.AsyncResponse(this.crate, this.getUnitType()));
     } else {
       rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType(), responseFormat));
@@ -2529,13 +2529,15 @@ export class Adapter {
       case 'body': {
         let requestType: rust.WireType;
         const requestFormatType = this.getPayloadFormatType(opParam.type, opParam.defaultContentType);
-        if (opParam.type.kind === 'bytes' && opParam.type.encode === 'bytes') {
-          // bytes encoding indicates a streaming binary request
+        if (requestFormatType === 'BinaryFormat') {
+          // binary format indicates a streaming binary request
           requestType = new rust.Bytes(this.crate);
         } else {
           requestType = this.typeToWireType(paramType);
         }
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, paramOptional, new rust.RequestContent(this.crate, requestType, requestFormatType));
+        // binary payloads use NoFormat as the body is sent as raw bytes
+        const wireFormat = requestFormatType === 'BinaryFormat' ? 'NoFormat' as rust.PayloadFormatType : requestFormatType;
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, paramOptional, new rust.RequestContent(this.crate, requestType, wireFormat));
         break;
       }
       case 'cookie':
@@ -2795,7 +2797,12 @@ export class Adapter {
       } else if (opts.xml) {
         this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
         return 'XmlFormat';
+      } else if (opts.binary) {
+        return 'BinaryFormat';
       }
+    } else if (type?.kind === 'bytes' && type.encode === 'bytes') {
+      // fallback: check if it's a bytes type with bytes encoding (binary stream)
+      return 'BinaryFormat';
     }
 
     // tcgc doesn't yet have serializationOptions on types other

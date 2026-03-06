@@ -386,7 +386,7 @@ export interface Pager extends External {
   kind: 'pager';
 
   /** the model containing the page of items */
-  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+  type: Response<Model, ModelPayloadFormatType>;
 
   /** the type of continuation used by the pager */
   continuation: PagerContinuationKind;
@@ -411,10 +411,10 @@ export interface Poller extends External {
   kind: 'poller';
 
   /** the model containing the result of a long-running-operation */
-  resultType?: Response<WireType, Exclude<PayloadFormatType, 'NoFormat'>>;
+  resultType?: Response<WireType, ModelPayloadFormatType>;
 
   /** the model containing the status of a long-running-operation */
-  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+  type: Response<Model, ModelPayloadFormatType>;
 }
 
 /** PollerOptions is a PollerOptions<'a> from azure_core */
@@ -463,7 +463,10 @@ export interface RequestContent<T extends WireType = WireType, Format extends Pa
 }
 
 /** ResponseFormat is the format of the response body */
-export type PayloadFormatType = 'JsonFormat' | 'NoFormat' | 'XmlFormat';
+export type PayloadFormatType = 'BinaryFormat' | 'JsonFormat' | 'NoFormat' | 'XmlFormat';
+
+/** ModelPayloadFormatType is a PayloadFormatType for modeled payloads (i.e. excludes binary and no-format) */
+export type ModelPayloadFormatType = Exclude<PayloadFormatType, 'BinaryFormat' | 'NoFormat'>;
 
 /** ResponseTypes defines the type constraint when creating a Response<T> */
 export type ResponseTypes = MarkerType | Unit | WireType;
@@ -965,7 +968,7 @@ export class Option<T> implements Option<T> {
 }
 
 export class Pager extends External implements Pager {
-  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>, continuation: PagerContinuationKind) {
+  constructor(crate: Crate, type: Response<Model, ModelPayloadFormatType>, continuation: PagerContinuationKind) {
     super(crate, 'Pager', 'azure_core::http');
     this.kind = 'pager';
     this.type = type;
@@ -983,7 +986,7 @@ export class PagerOptions extends External implements PagerOptions {
 }
 
 export class Poller extends External implements Poller {
-  constructor(crate: Crate, statusType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
+  constructor(crate: Crate, statusType: Response<Model, ModelPayloadFormatType>) {
     super(crate, 'Poller', 'azure_core::http');
     this.kind = 'poller';
     this.type = statusType;

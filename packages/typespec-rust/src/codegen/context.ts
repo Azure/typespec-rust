@@ -15,7 +15,7 @@ import * as rust from '../codemodel/index.js';
  */
 export class Context {
   private readonly bodyFormatForModels = new Map<rust.Model, helpers.ModelFormat>();
-  private readonly tryFromForRequestTypes = new Map<string, Exclude<rust.PayloadFormatType, 'NoFormat'>>();
+  private readonly tryFromForRequestTypes = new Map<string, rust.ModelPayloadFormatType>();
   private readonly pagedResponseTypes = new Set<rust.Model>();
   private readonly lroStatusTypes = new Set<rust.Model>();
   private readonly lroResultTypes = new Map<rust.Model, rust.WireType>();
@@ -74,7 +74,7 @@ export class Context {
 
         for (const param of method.params) {
           if (param.kind === 'body' || param.kind === 'partialBody') {
-            if (param.type.format === 'NoFormat') {
+            if (param.type.format === 'NoFormat' || param.type.format === 'BinaryFormat') {
               // no body format to propagate
               continue;
             }
@@ -91,7 +91,7 @@ export class Context {
             break;
           }
           case 'response': {
-            if (method.returns.type.format !== 'NoFormat') {
+            if (method.returns.type.format !== 'NoFormat' && method.returns.type.format !== 'BinaryFormat') {
               recursiveAddBodyFormat(method.returns.type.content, helpers.convertResponseFormat(method.returns.type.format));
             }
             break;
@@ -275,7 +275,7 @@ export class Context {
       return undefined;
     }
 
-    const formatType: Exclude<rust.PayloadFormatType, 'NoFormat'> = this.getModelBodyFormat(model) === 'json' ? 'JsonFormat' : 'XmlFormat';
+    const formatType: rust.ModelPayloadFormatType = this.getModelBodyFormat(model) === 'json' ? 'JsonFormat' : 'XmlFormat';
     use.add('azure_core::http', formatType);
 
     use.addForType(model);
