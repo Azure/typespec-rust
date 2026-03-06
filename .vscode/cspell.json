@@ -48,6 +48,7 @@
         "lro",
         "lros",
         "msrc",
+        "noauth",
         "pageable",
         "reinjectable",
         "reinjected",

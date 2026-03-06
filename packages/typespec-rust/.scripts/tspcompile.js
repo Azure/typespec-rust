@@ -21,16 +21,20 @@ const compiler = pkgRoot + 'node_modules/@typespec/compiler/cmd/tsp.js';
 const httpSpecsGroup = {
   'spector_apikey': {input: 'authentication/api-key'},
   'spector_customauth': {input: 'authentication/http/custom'},
+  'spector_noauth': {input: 'authentication/noauth/union'},
   'spector_oauth2': {input: 'authentication/oauth2'},
   'spector_unionauth': {input: 'authentication/union'},
+  'spector_documentation': {input: 'documentation'},
   'spector_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
   'spector_datetime': {input: 'encode/datetime'},
   'spector_duration': {input: 'encode/duration'},
+  'spector_encarray': {input: 'encode/array'},
   'spector_numeric': {input: 'encode/numeric'},
   'spector_bodyoptional': {input: 'parameters/body-optionality'},
   'spector_basicparams': {input: 'parameters/basic'},
   'spector_collectionfmt': {input: 'parameters/collection-format'},
   'spector_path': {input: 'parameters/path'},
+  'spector_query': {input: 'parameters/query'},
   'spector_spread': {input: 'parameters/spread'},
   'spector_contentneg': {input: 'payload/content-negotiation'},
   'spector_jmergepatch': {input: 'payload/json-merge-patch'},
@@ -55,7 +59,8 @@ const httpSpecsGroup = {
   'spector_empty': {input: 'type/model/empty'},
   'spector_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
   'spector_nodisc': {input: 'type/model/inheritance/not-discriminated'},
-  //'spector_recursive': {input: 'type/model/inheritance/recursive'},
+  //'spector_nesteddisc': {input: 'type/model/inheritance/nested-discriminator'},
+  'spector_recursive': {input: 'type/model/inheritance/recursive'},
   'spector_singledisc': {input: 'type/model/inheritance/single-discriminator'},
   'spector_usage': {input: 'type/model/usage'},
   'spector_visibility': {input: 'type/model/visibility'},
@@ -75,10 +80,11 @@ const httpSpecsGroup = {
 };
 
 const azureHttpSpecsGroup = {
-  //'spector_access': {input: 'azure/client-generator-core/access'},
+  'spector_access': {input: 'azure/client-generator-core/access'},
   'spector_apiverheader': {input: 'azure/client-generator-core/api-version/header/client.tsp'},
   'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
+  'spector_clientdefault': {input: 'azure/client-generator-core/client-default-value'},
   'spector_clientinit_default': {input: 'azure/client-generator-core/client-initialization/default'},
   'spector_clientinit_individually': {input: 'azure/client-generator-core/client-initialization/individually'},
   'spector_clientinit_individually_parent': {input: 'azure/client-generator-core/client-initialization/individuallyParent'},
