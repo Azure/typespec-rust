@@ -1934,7 +1934,7 @@ export class Adapter {
       if (opParam.kind === 'body' && opParam.type.kind === 'model'
         && (opParam.type !== param.type || opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).length > 1)
       ) {
-        adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptPayloadFormatType(opParam.defaultContentType), opParam.type);
+        adaptedParam = this.adaptMethodSpreadParameter(param, this.getPayloadFormatType(opParam.type, opParam.defaultContentType), opParam.type);
       } else {
         adaptedParam = this.adaptMethodParameter(opParam, param);
       }
@@ -1987,6 +1987,7 @@ export class Adapter {
     const getResponseFormat = (): rust.PayloadFormatType => {
       // fetch the body format from the HTTP responses.
       // they should all have the same type so no need to match responses to type.
+      let responseType: tcgc.SdkType | undefined;
       let defaultContentType: string | undefined;
       for (const httpResp of method.operation.responses) {
         if (!httpResp.defaultContentType) {
@@ -1997,13 +1998,14 @@ export class Adapter {
           throw new AdapterError('InternalError', `method ${method.name} has conflicting content types`, method.__raw?.node);
         }
         defaultContentType = httpResp.defaultContentType;
+        responseType = httpResp.type;
       }
 
       if (!defaultContentType) {
         return 'NoFormat';
       }
 
-      return this.adaptPayloadFormatType(defaultContentType);
+      return this.getPayloadFormatType(responseType, defaultContentType);
     };
 
     const getStatusCodes = function (httpOp: tcgc.SdkHttpOperation): Array<number> {
@@ -2526,7 +2528,7 @@ export class Adapter {
     switch (opParam.kind) {
       case 'body': {
         let requestType: rust.WireType;
-        const requestFormatType = this.adaptPayloadFormatType(opParam.defaultContentType);
+        const requestFormatType = this.getPayloadFormatType(opParam.type, opParam.defaultContentType);
         if (opParam.type.kind === 'bytes' && opParam.type.encode === 'bytes') {
           // bytes encoding indicates a streaming binary request
           requestType = new rust.Bytes(this.crate);
@@ -2778,17 +2780,29 @@ export class Adapter {
   }
 
   /**
-   * converts an accept or content-type header value into a payload format type
+   * determines the payload format type from serializationOptions on the type, falling
+   * back to inspecting the defaultContentType when serializationOptions isn't available.
    *
-   * @param contentType the value of the Accept or Content-Type header
-   * @returns a response format
+   * @param type the SDK type associated with the payload, if available
+   * @param defaultContentType the value of the Accept or Content-Type header
+   * @returns a payload format type
    */
-  private adaptPayloadFormatType(contentType: string): rust.PayloadFormatType {
-    // we only recognize/support JSON and XML content types.
-    // anything else is NoFormat
-    if (contentType.match(/json/i)) {
+  private getPayloadFormatType(type: tcgc.SdkType | undefined, defaultContentType: string): rust.PayloadFormatType {
+    if (type?.kind === 'model') {
+      const opts = type.serializationOptions;
+      if (opts.json) {
+        return 'JsonFormat';
+      } else if (opts.xml) {
+        this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
+        return 'XmlFormat';
+      }
+    }
+
+    // tcgc doesn't yet have serializationOptions on types other
+    // than models.  for those cases, fall back to the header value
+    if (defaultContentType.match(/json/i)) {
       return 'JsonFormat';
-    } else if (contentType.match(/xml/i)) {
+    } else if (defaultContentType.match(/xml/i)) {
       // XML support is disabled by default
       this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
       return 'XmlFormat';
