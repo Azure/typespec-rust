@@ -239,7 +239,6 @@ impl ResiliencyServiceDrivenClient {
 }
 
 /// Default value for [`ResiliencyServiceDrivenClientOptions::api_version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_API_VERSION: &str = "v2";
 
 impl Default for ResiliencyServiceDrivenClientOptions {

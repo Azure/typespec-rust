@@ -10,7 +10,6 @@ use serde::{Deserialize, Serialize};
 /// Paged collection of Widget items
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-#[allow(dead_code)]
 pub(crate) struct PagedWidget {
     /// The link to the next page of items
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
@@ -22,7 +21,6 @@ pub(crate) struct PagedWidget {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-#[allow(dead_code)]
 pub(crate) struct Widget {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) color: Option<Colors>,

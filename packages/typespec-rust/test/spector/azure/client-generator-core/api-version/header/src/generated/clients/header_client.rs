@@ -102,7 +102,6 @@ impl HeaderClient {
 }
 
 /// Default value for [`HeaderClientOptions::version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_VERSION: &str = "2025-01-01";
 
 impl Default for HeaderClientOptions {

@@ -10,7 +10,6 @@ use serde::Deserialize;
 #[doc = r#"Used in internal operations, should be generated but not exported."#]
 #[derive(Clone, Deserialize, SafeDebug)]
 #[serde(tag = "kind")]
-#[allow(dead_code)]
 pub(crate) enum AbstractModel {
     #[serde(rename = "real")]
     RealModel(RealModel),

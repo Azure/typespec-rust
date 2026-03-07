@@ -75,7 +75,6 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       // marker types don't have any fields
       // and don't participate in serde.
       body += '#[derive(SafeDebug)]\n';
-      body += helpers.emitDeadCodeAttribute(model.visibility);
       body += `${helpers.emitVisibility(model.visibility)}struct ${model.name};\n\n`;
       continue;
     }
@@ -168,7 +167,6 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       body += `#[serde(rename = "${duMember.discriminantValue}", tag = "${discriminator.serde}")]\n`;
     }
 
-    body += helpers.emitDeadCodeAttribute(model.visibility);
     body += `${helpers.emitVisibility(model.visibility)}struct ${model.name} {\n`;
 
     for (const field of model.fields) {

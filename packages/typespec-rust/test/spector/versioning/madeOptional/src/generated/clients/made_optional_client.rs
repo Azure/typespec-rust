@@ -112,7 +112,6 @@ impl MadeOptionalClient {
 }
 
 /// Default value for [`MadeOptionalClientOptions::version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_VERSION: &str = "v2";
 
 impl Default for MadeOptionalClientOptions {

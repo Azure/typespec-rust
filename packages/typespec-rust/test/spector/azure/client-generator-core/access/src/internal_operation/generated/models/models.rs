@@ -9,7 +9,6 @@ use serde::{Deserialize, Serialize};
 /// Used in an internal operation, should be generated but not exported.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-#[allow(dead_code)]
 pub(crate) struct InternalDecoratorModelInInternal {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) name: Option<String>,
@@ -18,7 +17,6 @@ pub(crate) struct InternalDecoratorModelInInternal {
 /// Used in an internal operation, should be generated but not exported.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-#[allow(dead_code)]
 pub(crate) struct NoDecoratorModelInInternal {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) name: Option<String>,

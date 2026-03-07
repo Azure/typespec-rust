@@ -146,7 +146,6 @@ impl OperationTemplatesClient {
 }
 
 /// Default value for [`OperationTemplatesClientOptions::api_version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_API_VERSION: &str = "2023-12-01-preview";
 
 impl Default for OperationTemplatesClientOptions {

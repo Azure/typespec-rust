@@ -274,17 +274,12 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
     // emit pub(crate) const declarations for fields with default value constants
     if (client.constructable) {
       const isSuppressed = client.constructable.suppressed === 'yes';
-      for (const field of client.constructable.options.type.fields) {
-        if (field.defaultValueConstant) {
-          if (isSuppressed) {
-            // When the client options type is suppressed, avoid emitting an intra-doc link
-            // to a type that does not exist in the generated code.
-            body += `/// Default value for \`${client.constructable.options.type.name}::${field.name}\`.\n`;
-          } else {
+      if (!isSuppressed) {
+        for (const field of client.constructable.options.type.fields) {
+          if (field.defaultValueConstant) {
             body += `/// Default value for [\`${client.constructable.options.type.name}::${field.name}\`].\n`;
+            body += `pub(crate) const ${field.defaultValueConstant.name}: &str = "${field.defaultValueConstant.value}";\n\n`;
           }
-          body += `#[allow(dead_code)]\n`;
-          body += `pub(crate) const ${field.defaultValueConstant.name}: &str = "${field.defaultValueConstant.value}";\n\n`;
         }
       }
     }
@@ -354,7 +349,6 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
       body += helpers.formatDocComment(method.options.type.docs);
       use.add('azure_core::fmt', 'SafeDebug');
       body += '#[derive(Clone, Default, SafeDebug)]\n';
-      body += helpers.emitDeadCodeAttribute(method.options.type.visibility);
       body += `${helpers.emitVisibility(method.options.type.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       visTracker.update(method.options.type.visibility);
       for (let i = 0; i < method.options.type.fields.length; ++i) {

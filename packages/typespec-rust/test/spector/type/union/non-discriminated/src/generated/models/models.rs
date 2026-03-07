@@ -147,61 +147,51 @@ pub struct MixedTypesCases {
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest {
     pub(crate) prop: GetResponseProp,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest1 {
     pub(crate) prop: GetResponseProp1,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest2 {
     pub(crate) prop: StringExtensibleNamedUnion,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest3 {
     pub(crate) prop: GetResponseProp2,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest4 {
     pub(crate) prop: GetResponseProp3,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest5 {
     pub(crate) prop: GetResponseProp4,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest6 {
     pub(crate) prop: EnumsOnlyCases,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest7 {
     pub(crate) prop: StringAndArrayCases,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest8 {
     pub(crate) prop: MixedLiteralsCases,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct SendRequest9 {
     pub(crate) prop: MixedTypesCases,
 }

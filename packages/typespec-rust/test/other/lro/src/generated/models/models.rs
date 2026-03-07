@@ -28,7 +28,6 @@ pub struct NIClientPartialBodyOperationStatus {
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct PartialBodyRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) b: Option<String>,

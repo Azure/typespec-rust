@@ -39,7 +39,6 @@ pub struct BulletPointsModel {
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
-#[allow(dead_code)]
 pub(crate) struct BulletPointsModelRequest {
     pub(crate) input: BulletPointsModel,
 }

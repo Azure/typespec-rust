@@ -986,7 +986,6 @@ impl PageBlobClient {
 }
 
 /// Default value for [`PageBlobClientOptions::version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_VERSION: &str = "2026-04-06";
 
 impl Default for PageBlobClientOptions {

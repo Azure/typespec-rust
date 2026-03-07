@@ -63,7 +63,6 @@ export function emitUnions(module: rust.ModuleContainer, context: Context): Unio
 
       const content = rustUnion.unionKind?.kind === 'discriminatedUnionEnvelope' ? `content = "${rustUnion.unionKind.envelopeName}"` : '';
       body += `#[serde(${[content, `tag = "${rustUnion.discriminant}"`].filter(x => x !== '').join(', ')})]\n`;
-      body += helpers.emitDeadCodeAttribute(rustUnion.visibility);
       body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
 
       for (const member of rustUnion.members) {
@@ -90,7 +89,6 @@ export function emitUnions(module: rust.ModuleContainer, context: Context): Unio
       use.add('azure_core::fmt', 'SafeDebug');
       body += `#[derive(Clone, Deserialize, SafeDebug, Serialize)]\n`;
       body += `#[serde(untagged)]\n`;
-      body += helpers.emitDeadCodeAttribute(rustUnion.visibility);
       body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
 
       for (const variant of rustUnion.variants) {

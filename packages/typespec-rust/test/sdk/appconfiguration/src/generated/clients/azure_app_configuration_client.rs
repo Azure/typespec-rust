@@ -2233,7 +2233,6 @@ impl AzureAppConfigurationClient {
 }
 
 /// Default value for [`AzureAppConfigurationClientOptions::api_version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_API_VERSION: &str = "2024-09-01";
 
 impl Default for AzureAppConfigurationClientOptions {
