@@ -7,6 +7,7 @@ use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
 /// Options to be passed to [`AccessRelativeModelInOperationClient::discriminator()`](crate::relative_model_in_operation::generated::clients::AccessRelativeModelInOperationClient::discriminator())
 #[derive(Clone, Default, SafeDebug)]
+#[allow(dead_code)]
 pub(crate) struct AccessRelativeModelInOperationClientDiscriminatorOptions<'a> {
     /// Allows customization of the method call.
     pub(crate) method_options: ClientMethodOptions<'a>,
@@ -14,6 +15,7 @@ pub(crate) struct AccessRelativeModelInOperationClientDiscriminatorOptions<'a> {
 
 /// Options to be passed to [`AccessRelativeModelInOperationClient::operation()`](crate::relative_model_in_operation::generated::clients::AccessRelativeModelInOperationClient::operation())
 #[derive(Clone, Default, SafeDebug)]
+#[allow(dead_code)]
 pub(crate) struct AccessRelativeModelInOperationClientOperationOptions<'a> {
     /// Allows customization of the method call.
     pub(crate) method_options: ClientMethodOptions<'a>,

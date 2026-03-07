@@ -177,6 +177,10 @@ export function emitVisibility(visibility: rust.Visibility): string {
   }
 }
 
+export function emitDeadCodeAttribute(visibility: rust.Visibility): string {
+  return visibility === 'pubCrate' ? '#[allow(dead_code)]\n' : '';
+}
+
 /**
  * returns the type declaration string for the specified Rust type
  * 

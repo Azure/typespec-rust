@@ -7,6 +7,7 @@ use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
 /// Options to be passed to [`AccessInternalOperationClient::internal_decorator_in_internal()`](crate::internal_operation::generated::clients::AccessInternalOperationClient::internal_decorator_in_internal())
 #[derive(Clone, Default, SafeDebug)]
+#[allow(dead_code)]
 pub(crate) struct AccessInternalOperationClientInternalDecoratorInInternalOptions<'a> {
     /// Allows customization of the method call.
     pub(crate) method_options: ClientMethodOptions<'a>,
@@ -14,6 +15,7 @@ pub(crate) struct AccessInternalOperationClientInternalDecoratorInInternalOption
 
 /// Options to be passed to [`AccessInternalOperationClient::no_decorator_in_internal()`](crate::internal_operation::generated::clients::AccessInternalOperationClient::no_decorator_in_internal())
 #[derive(Clone, Default, SafeDebug)]
+#[allow(dead_code)]
 pub(crate) struct AccessInternalOperationClientNoDecoratorInInternalOptions<'a> {
     /// Allows customization of the method call.
     pub(crate) method_options: ClientMethodOptions<'a>,
@@ -21,6 +23,7 @@ pub(crate) struct AccessInternalOperationClientNoDecoratorInInternalOptions<'a> 
 
 /// Options to be passed to [`AccessInternalOperationClient::public_decorator_in_internal()`](crate::internal_operation::generated::clients::AccessInternalOperationClient::public_decorator_in_internal())
 #[derive(Clone, Default, SafeDebug)]
+#[allow(dead_code)]
 pub(crate) struct AccessInternalOperationClientPublicDecoratorInInternalOptions<'a> {
     /// Allows customization of the method call.
     pub(crate) method_options: ClientMethodOptions<'a>,

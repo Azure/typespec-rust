@@ -7,16 +7,19 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[allow(dead_code)]
 pub(crate) struct SpreadAsRequestParameterRequest {
     pub(crate) name: String,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[allow(dead_code)]
 pub(crate) struct SpreadCompositeRequestMixRequest {
     pub(crate) prop: String,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[allow(dead_code)]
 pub(crate) struct SpreadParameterWithInnerAliasRequest {
     /// age of the Thing
     pub(crate) age: i32,
@@ -26,11 +29,13 @@ pub(crate) struct SpreadParameterWithInnerAliasRequest {
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[allow(dead_code)]
 pub(crate) struct SpreadParameterWithInnerModelRequest {
     pub(crate) name: String,
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[allow(dead_code)]
 pub(crate) struct SpreadWithMultipleParametersRequest {
     /// optional int
     #[serde(rename = "optionalInt", skip_serializing_if = "Option::is_none")]

@@ -354,6 +354,7 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
       body += helpers.formatDocComment(method.options.type.docs);
       use.add('azure_core::fmt', 'SafeDebug');
       body += '#[derive(Clone, Default, SafeDebug)]\n';
+      body += helpers.emitDeadCodeAttribute(method.options.type.visibility);
       body += `${helpers.emitVisibility(method.options.type.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       visTracker.update(method.options.type.visibility);
       for (let i = 0; i < method.options.type.fields.length; ++i) {

@@ -7,6 +7,7 @@ use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
 /// Options to be passed to [`AccessSharedModelInOperationClient::internal()`](crate::shared_model_in_operation::generated::clients::AccessSharedModelInOperationClient::internal())
 #[derive(Clone, Default, SafeDebug)]
+#[allow(dead_code)]
 pub(crate) struct AccessSharedModelInOperationClientInternalOptions<'a> {
     /// Allows customization of the method call.
     pub(crate) method_options: ClientMethodOptions<'a>,

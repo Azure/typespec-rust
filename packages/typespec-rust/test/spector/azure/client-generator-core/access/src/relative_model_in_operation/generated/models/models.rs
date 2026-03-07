@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 /// Used in internal operations, should be generated but not exported.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+#[allow(dead_code)]
 pub(crate) struct InnerModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) name: Option<String>,
@@ -17,6 +18,7 @@ pub(crate) struct InnerModel {
 /// Used in internal operations, should be generated but not exported.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+#[allow(dead_code)]
 pub(crate) struct OuterModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) inner: Option<InnerModel>,
@@ -29,6 +31,7 @@ pub(crate) struct OuterModel {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 #[serde(rename = "real", tag = "kind")]
+#[allow(dead_code)]
 pub(crate) struct RealModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) name: Option<String>,

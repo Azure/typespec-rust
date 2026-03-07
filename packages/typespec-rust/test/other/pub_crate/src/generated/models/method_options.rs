@@ -7,6 +7,7 @@ use azure_core::{fmt::SafeDebug, http::pager::PagerOptions};
 
 /// Options to be passed to [`MiscTestsClient::list_widgets()`](crate::generated::clients::MiscTestsClient::list_widgets())
 #[derive(Clone, Default, SafeDebug)]
+#[allow(dead_code)]
 pub(crate) struct MiscTestsClientListWidgetsOptions<'a> {
     /// Allows customization of the method call.
     pub(crate) method_options: PagerOptions<'a>,

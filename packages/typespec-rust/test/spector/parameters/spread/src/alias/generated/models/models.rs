@@ -7,6 +7,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[allow(dead_code)]
 pub(crate) struct SpreadAsRequestBodyRequest {
     pub(crate) name: String,
 }

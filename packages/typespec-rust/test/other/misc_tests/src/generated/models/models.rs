@@ -44,6 +44,7 @@ pub struct MiscTestsClientAvoidDupeHeadersOneResult;
 pub struct MiscTestsClientAvoidDupeHeadersTwoResult;
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
+#[allow(dead_code)]
 pub(crate) struct SpreadWithEnum {
     pub(crate) color: Colors,
 
