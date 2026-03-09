@@ -102,3 +102,21 @@ Two new directives for all generated code review and quality work:
 
 When you review generated code quality (like the Sprint 1 Spector crates), you should verify clippy compliance as part of your sign-off. If issues are found, work with McManus to fix them in the emitter, then regenerate and re-verify.
 
+### 2026-03-09: pub(crate) Visibility Design & DEFAULT Constants Fix
+
+**Context:** PR #887 review flagged issues with `clients.ts` constant emission. McManus's dead_code fix over-corrected by suppressing constant emission when `constructable.suppressed === 'yes'`. Keaton designed the proper fix.
+
+**Implementation (by Fenster, per Reviewer Rejection Protocol):**
+- Removed the `if (!isSuppressed)` guard in `clients.ts` — constants are now ALWAYS emitted
+- Added conditional `#[allow(dead_code)]` only for suppressed options types (SDK crate pattern)
+- Non-suppressed crates use intra-doc links; suppressed crates use plain text doc comments
+- Added rich doc comments on suppressed constants explaining SDK author usage pattern
+
+**Key design patterns learned:**
+1. `pub(crate)` types are NOT dead in real SDKs — they're called by hand-authored convenience methods. The `_touch_*` pattern or unit tests serve as exerciser in test crates.
+2. `#[allow(dead_code)]` is acceptable on convenience constants that SDK authors MAY use, but should NEVER be applied as a blanket suppression on generated types.
+3. When `constructable.suppressed === 'yes'`, the options type doesn't exist in generated code — SDK authors provide their own. Constants must still be emitted so they can reference TypeSpec-defined defaults.
+4. Intra-doc links (`[`TypeName::field`]`) must not be used when the referenced type doesn't exist (suppressed). Use backtick-only references instead.
+
+**Verification:** Build clean, 32/32 TypeScript tests pass, cargo clippy zero warnings across full workspace.
+
