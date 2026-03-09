@@ -4,12 +4,37 @@
 
 use spector_query::QueryClient;
 
+// Positive test: verify the constant query parameter post succeeds with expected status.
+
 #[tokio::test]
-async fn post() {
+async fn post_returns_204() {
     let client = QueryClient::with_no_credential("http://localhost:3000", None).unwrap();
-    client
+    let resp = client
         .get_query_constant_client()
         .post(None)
         .await
         .unwrap();
+    assert_eq!(resp.status(), 204, "post with constant query param should return 204 No Content");
+}
+
+// Client construction tests.
+
+#[tokio::test]
+async fn client_endpoint_is_stored() {
+    let client = QueryClient::with_no_credential("http://localhost:3000", None).unwrap();
+    assert_eq!(client.endpoint().as_str(), "http://localhost:3000/");
+}
+
+// Negative tests: verify client rejects invalid URLs.
+
+#[tokio::test]
+async fn client_rejects_non_http_scheme() {
+    let result = QueryClient::with_no_credential("ftp://localhost:3000", None);
+    assert!(result.is_err(), "non-http scheme should be rejected");
+}
+
+#[tokio::test]
+async fn client_rejects_malformed_url() {
+    let result = QueryClient::with_no_credential("not-a-valid-url", None);
+    assert!(result.is_err(), "malformed URL should be rejected");
 }

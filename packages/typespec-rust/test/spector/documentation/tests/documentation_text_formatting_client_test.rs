@@ -4,32 +4,59 @@
 
 use spector_documentation::DocumentationClient;
 
+// Positive tests: call each TextFormatting operation and verify status codes.
+
 #[tokio::test]
-async fn bold_text() {
+async fn bold_text_returns_204() {
     let client = DocumentationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    client
+    let resp = client
         .get_documentation_text_formatting_client()
         .bold_text(None)
         .await
         .unwrap();
+    assert_eq!(resp.status(), 204, "bold_text should return 204 No Content");
 }
 
 #[tokio::test]
-async fn italic_text() {
+async fn italic_text_returns_204() {
     let client = DocumentationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    client
+    let resp = client
         .get_documentation_text_formatting_client()
         .italic_text(None)
         .await
         .unwrap();
+    assert_eq!(resp.status(), 204, "italic_text should return 204 No Content");
 }
 
 #[tokio::test]
-async fn combined_formatting() {
+async fn combined_formatting_returns_204() {
     let client = DocumentationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    client
+    let resp = client
         .get_documentation_text_formatting_client()
         .combined_formatting(None)
         .await
         .unwrap();
+    assert_eq!(resp.status(), 204, "combined_formatting should return 204 No Content");
+}
+
+// Client construction tests: verify endpoint and sub-client access.
+
+#[tokio::test]
+async fn client_endpoint_is_stored() {
+    let client = DocumentationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    assert_eq!(client.endpoint().as_str(), "http://localhost:3000/");
+}
+
+// Negative tests: verify client rejects invalid URLs.
+
+#[tokio::test]
+async fn client_rejects_non_http_scheme() {
+    let result = DocumentationClient::with_no_credential("ftp://localhost:3000", None);
+    assert!(result.is_err(), "non-http scheme should be rejected");
+}
+
+#[tokio::test]
+async fn client_rejects_malformed_url() {
+    let result = DocumentationClient::with_no_credential("not-a-valid-url", None);
+    assert!(result.is_err(), "malformed URL should be rejected");
 }
