@@ -34,13 +34,19 @@ async fn put_returns_204() {
     let client = RecursiveClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = Extension {
         level: Some(0),
-        extension: Some(vec![Extension {
-            level: Some(1),
-            extension: Some(vec![Extension {
-                level: Some(2),
+        extension: Some(vec![
+            Extension {
+                level: Some(1),
+                extension: Some(vec![Extension {
+                    level: Some(2),
+                    extension: None,
+                }]),
+            },
+            Extension {
+                level: Some(1),
                 extension: None,
-            }]),
-        }]),
+            },
+        ]),
     };
     let resp = client.put(input.try_into().unwrap(), None).await.unwrap();
     assert_eq!(resp.status(), 204, "put should return 204 No Content");
@@ -52,13 +58,19 @@ async fn put_deeply_nested_structure() {
     let client = RecursiveClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = Extension {
         level: Some(0),
-        extension: Some(vec![Extension {
-            level: Some(1),
-            extension: Some(vec![Extension {
-                level: Some(2),
+        extension: Some(vec![
+            Extension {
+                level: Some(1),
+                extension: Some(vec![Extension {
+                    level: Some(2),
+                    extension: None,
+                }]),
+            },
+            Extension {
+                level: Some(1),
                 extension: None,
-            }]),
-        }]),
+            },
+        ]),
     };
     // This validates the serialization of deeply nested recursive types.
     client.put(input.try_into().unwrap(), None).await.unwrap();

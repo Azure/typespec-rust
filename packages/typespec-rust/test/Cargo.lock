@@ -2359,6 +2359,7 @@ dependencies = [
 name = "spector_noauth"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "azure_core",
  "tokio",
 ]

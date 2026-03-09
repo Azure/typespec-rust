@@ -16,7 +16,15 @@ use spector_clientdefault::{
 async fn get_header_parameter_returns_204() {
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let resp = client.get_header_parameter(None).await.unwrap();
+    let options = ClientDefaultValueClientGetHeaderParameterOptions {
+        accept: Some("application/json;odata.metadata=none".to_string()),
+        custom_header: Some("default-value".to_string()),
+        ..Default::default()
+    };
+    let resp = client
+        .get_header_parameter(Some(options))
+        .await
+        .unwrap();
     assert_eq!(
         resp.status(),
         204,
@@ -26,11 +34,11 @@ async fn get_header_parameter_returns_204() {
 
 #[tokio::test]
 async fn get_header_parameter_with_custom_accept() {
-    // Verify custom accept header can be set via options.
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
     let options = ClientDefaultValueClientGetHeaderParameterOptions {
-        accept: Some("application/json".to_string()),
+        accept: Some("application/json;odata.metadata=none".to_string()),
+        custom_header: Some("default-value".to_string()),
         ..Default::default()
     };
     let resp = client.get_header_parameter(Some(options)).await.unwrap();
@@ -39,11 +47,11 @@ async fn get_header_parameter_with_custom_accept() {
 
 #[tokio::test]
 async fn get_header_parameter_with_custom_header() {
-    // Verify custom x-custom-header can be set via options.
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
     let options = ClientDefaultValueClientGetHeaderParameterOptions {
-        custom_header: Some("custom-value".to_string()),
+        accept: Some("application/json;odata.metadata=none".to_string()),
+        custom_header: Some("default-value".to_string()),
         ..Default::default()
     };
     let resp = client.get_header_parameter(Some(options)).await.unwrap();
@@ -56,8 +64,13 @@ async fn get_header_parameter_with_custom_header() {
 async fn get_operation_parameter_returns_204() {
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let options = ClientDefaultValueClientGetOperationParameterOptions {
+        format: Some("json".to_string()),
+        page_size: Some(10),
+        ..Default::default()
+    };
     let resp = client
-        .get_operation_parameter("sample", None)
+        .get_operation_parameter("test", Some(options))
         .await
         .unwrap();
     assert_eq!(
@@ -69,7 +82,6 @@ async fn get_operation_parameter_returns_204() {
 
 #[tokio::test]
 async fn get_operation_parameter_with_optional_params() {
-    // Verify optional query parameters (format, pageSize) can be set.
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
     let options = ClientDefaultValueClientGetOperationParameterOptions {
@@ -78,7 +90,7 @@ async fn get_operation_parameter_with_optional_params() {
         ..Default::default()
     };
     let resp = client
-        .get_operation_parameter("sample", Some(options))
+        .get_operation_parameter("test", Some(options))
         .await
         .unwrap();
     assert_eq!(resp.status(), 204);
@@ -91,7 +103,7 @@ async fn get_path_parameter_returns_204() {
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
-        .get_path_parameter("seg1", "seg2", None)
+        .get_path_parameter("default-segment1", "segment2", None)
         .await
         .unwrap();
     assert_eq!(
@@ -103,19 +115,17 @@ async fn get_path_parameter_returns_204() {
 
 #[tokio::test]
 async fn get_path_parameter_rejects_empty_segment1() {
-    // The generated client explicitly checks for empty path parameters.
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let result = client.get_path_parameter("", "seg2", None).await;
+    let result = client.get_path_parameter("", "segment2", None).await;
     assert!(result.is_err(), "empty segment1 should be rejected");
 }
 
 #[tokio::test]
 async fn get_path_parameter_rejects_empty_segment2() {
-    // The generated client explicitly checks for empty path parameters.
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let result = client.get_path_parameter("seg1", "", None).await;
+    let result = client.get_path_parameter("default-segment1", "", None).await;
     assert!(result.is_err(), "empty segment2 should be rejected");
 }
 
@@ -135,9 +145,9 @@ async fn put_model_property_returns_200_with_matching_values() {
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = ModelWithDefaultValues {
         name: Some("test".to_string()),
-        retry: Some(true),
-        tier: Some("standard".to_string()),
-        timeout: Some(30),
+        retry: None,
+        tier: None,
+        timeout: None,
     };
     let resp = client
         .put_model_property(input.try_into().unwrap(), None)
@@ -150,13 +160,13 @@ async fn put_model_property_returns_200_with_matching_values() {
     );
     let output: ModelWithDefaultValues = resp.into_model().unwrap();
     assert_eq!(output.name, Some("test".to_string()), "name should match");
-    assert_eq!(output.retry, Some(true), "retry should match");
+    assert_eq!(output.retry, Some(true), "retry should have default value");
     assert_eq!(
         output.tier,
         Some("standard".to_string()),
-        "tier should match"
+        "tier should have default value"
     );
-    assert_eq!(output.timeout, Some(30), "timeout should match");
+    assert_eq!(output.timeout, Some(30), "timeout should have default value");
 }
 
 // --- Client construction negative tests ---
