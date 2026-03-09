@@ -62,7 +62,7 @@ pub struct Solution {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
     pub properties: Option<SolutionProperties>,
 
     #[serde(rename = "propertiesOptional", skip_serializing_if = "Option::is_none")]
