@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_flattenproperty::models::{
-    ChildFlattenModel, ChildModel, FlattenModel, NestedFlattenModel, Solution, FlattenUnknownModel,
+    ChildFlattenModel, ChildModel, FlattenModel, FlattenUnknownModel, NestedFlattenModel, Solution,
 };
 use spector_flattenproperty::FlattenPropertyClient;
 
@@ -49,8 +49,8 @@ async fn put_nested_flatten_model() {
     assert!(value.properties.is_some());
     let props = value.properties.unwrap();
     assert_eq!(props.summary, Some(String::from("test")));
-    assert!(props.properties.is_some());
 
+    assert!(props.properties.is_some());
     let props = props.properties.unwrap();
     assert_eq!(props.age, Some(1));
     assert_eq!(props.description, Some(String::from("foo")));

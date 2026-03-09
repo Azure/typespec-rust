@@ -989,6 +989,13 @@ export class Adapter {
       modelField.flags |= rust.ModelFieldFlags.Discriminator;
     }
 
+    // When flattening a property that contains only read-only properties:
+    // * For input (write): Read-only properties should not appear in the input model, regardless of flattening.
+    // * For response (read): Read-only properties should be flattened to the parent model level.
+    if (property.flatten && property.type.kind === 'model' && property.type.properties.every(p => p.visibility?.every(v => v === http.Visibility.Read))) {
+      modelField.flags |= rust.ModelFieldFlags.Flatten;
+    }
+
     // check for any client options on the field
     const clientOptions = property.decorators.filter((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@clientOption');
     for (const clientOption of clientOptions) {

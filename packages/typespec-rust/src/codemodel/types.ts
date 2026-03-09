@@ -335,6 +335,9 @@ export enum ModelFieldFlags {
 
   /** field is the discriminator in a discriminated union */
   Discriminator = 4,
+
+  /** Field is supposed to be flattened */
+  Flatten = 8,
 }
 
 /** ModelFlags contains bit flags describing model usage */
