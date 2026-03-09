@@ -12,3 +12,6 @@ default = ["azure_core/default"]
 
 [dependencies]
 azure_core = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }
