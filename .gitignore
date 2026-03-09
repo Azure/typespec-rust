@@ -412,3 +412,5 @@ spec-coverage.json
 
 packages/typespec-rust/**/target/
 packages/typespec-rust/pnpm-store/
+# Squad: ignore generated logs
+.squad/
