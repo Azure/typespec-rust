@@ -222,10 +222,6 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
         serdeParams.add(`deserialize_with = "empty_as_null::deserialize"`);
       }
 
-      if (field.flags & rust.ModelFieldFlags.Flatten) {
-        serdeParams.add('flatten');
-      }
-
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
       // https://github.com/Azure/typespec-rust/issues/78
       if (field.type.kind === 'option') {

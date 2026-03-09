@@ -989,13 +989,6 @@ export class Adapter {
       modelField.flags |= rust.ModelFieldFlags.Discriminator;
     }
 
-    // We decided to not do client-side flattening. We only do flattening when serializing, and only in one case (except additional properties):
-    // Typespec requires to do flattening when serializing properties which are models with all read-only fields,
-    // see https://github.com/Azure/typespec-azure/tree/26d915bdd3738fcd51984501d34c2f3bfb4b4159/packages/azure-http-specs/specs/azure/client-generator-core/flatten-property
-    if (property.flatten && property.type.kind === 'model' && property.type.properties.every(p => p.visibility?.every(v => v === http.Visibility.Read))) {
-      modelField.flags |= rust.ModelFieldFlags.Flatten;
-    }
-
     // check for any client options on the field
     const clientOptions = property.decorators.filter((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@clientOption');
     for (const clientOption of clientOptions) {

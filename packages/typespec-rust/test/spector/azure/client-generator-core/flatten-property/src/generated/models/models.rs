@@ -62,15 +62,8 @@ pub struct Solution {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub properties: Option<SolutionProperties>,
-
-    #[serde(
-        flatten,
-        rename = "propertiesOptional",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub properties_optional: Option<SolutionProperties>,
 }
 
 /// This is the model with all read-only properties to be flattened.
