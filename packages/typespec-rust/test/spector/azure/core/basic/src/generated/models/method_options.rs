@@ -29,16 +29,16 @@ pub struct BasicClientDeleteOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::export()`](crate::generated::clients::BasicClient::export())
+/// Options to be passed to [`BasicClient::export_all_users()`](crate::generated::clients::BasicClient::export_all_users())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BasicClientExportOptions<'a> {
+pub struct BasicClientExportAllUsersOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::export_all_users()`](crate::generated::clients::BasicClient::export_all_users())
+/// Options to be passed to [`BasicClient::export()`](crate::generated::clients::BasicClient::export())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BasicClientExportAllUsersOptions<'a> {
+pub struct BasicClientExportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

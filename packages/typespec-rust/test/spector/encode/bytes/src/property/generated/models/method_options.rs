@@ -12,16 +12,16 @@ pub struct BytesPropertyClientBase64Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesPropertyClient::base64_url()`](crate::property::generated::clients::BytesPropertyClient::base64_url())
+/// Options to be passed to [`BytesPropertyClient::base64_url_array()`](crate::property::generated::clients::BytesPropertyClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BytesPropertyClientBase64UrlOptions<'a> {
+pub struct BytesPropertyClientBase64UrlArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesPropertyClient::base64_url_array()`](crate::property::generated::clients::BytesPropertyClient::base64_url_array())
+/// Options to be passed to [`BytesPropertyClient::base64_url()`](crate::property::generated::clients::BytesPropertyClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BytesPropertyClientBase64UrlArrayOptions<'a> {
+pub struct BytesPropertyClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

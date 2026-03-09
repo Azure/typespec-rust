@@ -26,16 +26,16 @@ pub struct DatetimeHeaderClientRfc7231Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DatetimeHeaderClient::unix_timestamp()`](crate::header::generated::clients::DatetimeHeaderClient::unix_timestamp())
+/// Options to be passed to [`DatetimeHeaderClient::unix_timestamp_array()`](crate::header::generated::clients::DatetimeHeaderClient::unix_timestamp_array())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DatetimeHeaderClientUnixTimestampOptions<'a> {
+pub struct DatetimeHeaderClientUnixTimestampArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DatetimeHeaderClient::unix_timestamp_array()`](crate::header::generated::clients::DatetimeHeaderClient::unix_timestamp_array())
+/// Options to be passed to [`DatetimeHeaderClient::unix_timestamp()`](crate::header::generated::clients::DatetimeHeaderClient::unix_timestamp())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DatetimeHeaderClientUnixTimestampArrayOptions<'a> {
+pub struct DatetimeHeaderClientUnixTimestampOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

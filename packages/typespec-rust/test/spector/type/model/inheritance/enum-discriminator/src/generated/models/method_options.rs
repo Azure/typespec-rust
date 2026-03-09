@@ -5,16 +5,16 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`EnumDiscriminatorClient::get_extensible_model()`](crate::generated::clients::EnumDiscriminatorClient::get_extensible_model())
+/// Options to be passed to [`EnumDiscriminatorClient::get_extensible_model_missing_discriminator()`](crate::generated::clients::EnumDiscriminatorClient::get_extensible_model_missing_discriminator())
 #[derive(Clone, Default, SafeDebug)]
-pub struct EnumDiscriminatorClientGetExtensibleModelOptions<'a> {
+pub struct EnumDiscriminatorClientGetExtensibleModelMissingDiscriminatorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`EnumDiscriminatorClient::get_extensible_model_missing_discriminator()`](crate::generated::clients::EnumDiscriminatorClient::get_extensible_model_missing_discriminator())
+/// Options to be passed to [`EnumDiscriminatorClient::get_extensible_model()`](crate::generated::clients::EnumDiscriminatorClient::get_extensible_model())
 #[derive(Clone, Default, SafeDebug)]
-pub struct EnumDiscriminatorClientGetExtensibleModelMissingDiscriminatorOptions<'a> {
+pub struct EnumDiscriminatorClientGetExtensibleModelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -26,16 +26,16 @@ pub struct EnumDiscriminatorClientGetExtensibleModelWrongDiscriminatorOptions<'a
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`EnumDiscriminatorClient::get_fixed_model()`](crate::generated::clients::EnumDiscriminatorClient::get_fixed_model())
+/// Options to be passed to [`EnumDiscriminatorClient::get_fixed_model_missing_discriminator()`](crate::generated::clients::EnumDiscriminatorClient::get_fixed_model_missing_discriminator())
 #[derive(Clone, Default, SafeDebug)]
-pub struct EnumDiscriminatorClientGetFixedModelOptions<'a> {
+pub struct EnumDiscriminatorClientGetFixedModelMissingDiscriminatorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`EnumDiscriminatorClient::get_fixed_model_missing_discriminator()`](crate::generated::clients::EnumDiscriminatorClient::get_fixed_model_missing_discriminator())
+/// Options to be passed to [`EnumDiscriminatorClient::get_fixed_model()`](crate::generated::clients::EnumDiscriminatorClient::get_fixed_model())
 #[derive(Clone, Default, SafeDebug)]
-pub struct EnumDiscriminatorClientGetFixedModelMissingDiscriminatorOptions<'a> {
+pub struct EnumDiscriminatorClientGetFixedModelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

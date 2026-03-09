@@ -5,16 +5,16 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`NamingClient::client()`](crate::generated::clients::NamingClient::client())
+/// Options to be passed to [`NamingClient::client_name()`](crate::generated::clients::NamingClient::client_name())
 #[derive(Clone, Default, SafeDebug)]
-pub struct NamingClientClientOptions<'a> {
+pub struct NamingClientClientNameOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::client_name()`](crate::generated::clients::NamingClient::client_name())
+/// Options to be passed to [`NamingClient::client()`](crate::generated::clients::NamingClient::client())
 #[derive(Clone, Default, SafeDebug)]
-pub struct NamingClientClientNameOptions<'a> {
+pub struct NamingClientClientOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

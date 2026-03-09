@@ -12,16 +12,16 @@ pub struct BytesHeaderClientBase64Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesHeaderClient::base64_url()`](crate::header::generated::clients::BytesHeaderClient::base64_url())
+/// Options to be passed to [`BytesHeaderClient::base64_url_array()`](crate::header::generated::clients::BytesHeaderClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BytesHeaderClientBase64UrlOptions<'a> {
+pub struct BytesHeaderClientBase64UrlArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesHeaderClient::base64_url_array()`](crate::header::generated::clients::BytesHeaderClient::base64_url_array())
+/// Options to be passed to [`BytesHeaderClient::base64_url()`](crate::header::generated::clients::BytesHeaderClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BytesHeaderClientBase64UrlArrayOptions<'a> {
+pub struct BytesHeaderClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

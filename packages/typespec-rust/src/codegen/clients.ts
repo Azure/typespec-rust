@@ -343,60 +343,65 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
   const indent = new helpers.indentation();
   const visTracker = new helpers.VisibilityTracker();
 
-  let body = '';
+  // collect all struct blocks so they can be sorted by name
+  const structBlocks: Array<{ name: string; body: string }> = [];
+
   for (const client of module.clients) {
-    for (let i = 0; i < client.methods.length; ++i) {
-      const method = client.methods[i];
+    for (const method of client.methods) {
       if (method.kind === 'clientaccessor') {
         continue;
       }
 
-      body += helpers.formatDocComment(method.options.type.docs);
+      // method options struct
+      let block = '';
+      block += helpers.formatDocComment(method.options.type.docs);
       use.add('azure_core::fmt', 'SafeDebug');
-      body += '#[derive(Clone, Default, SafeDebug)]\n';
-      body += `${helpers.emitVisibility(method.options.type.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
+      block += '#[derive(Clone, Default, SafeDebug)]\n';
+      block += `${helpers.emitVisibility(method.options.type.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       visTracker.update(method.options.type.visibility);
       for (let i = 0; i < method.options.type.fields.length; ++i) {
         const field = method.options.type.fields[i];
         use.addForType(field.type);
         const fieldDocs = helpers.formatDocComment(field.docs);
         if (fieldDocs.length > 0) {
-          body += `${indent.get()}${fieldDocs}`;
+          block += `${indent.get()}${fieldDocs}`;
         }
-        body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        block += `${indent.get()}${helpers.emitVisibility(method.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         if (i + 1 < method.options.type.fields.length) {
-          body += '\n';
+          block += '\n';
         }
       }
-      body += '}\n\n'; // end options
+      block += '}\n';
 
       if (method.kind === 'pageable' || method.kind === 'lro') {
-        body += `impl ${helpers.getTypeDeclaration(method.options.type, 'anonymous')} {\n`;
+        block += '\n';
+        block += `impl ${helpers.getTypeDeclaration(method.options.type, 'anonymous')} {\n`;
         const wrappedTypeName = helpers.wrapInBackTicks(helpers.getTypeDeclaration(method.options.type, 'omit'));
-        body += `${indent.get()}/// Transforms this [${wrappedTypeName}] into a new ${wrappedTypeName} that owns the underlying data, cloning it if necessary.\n`;
-        body += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
-        body += `${indent.push().get()}${method.options.type.name} {\n`;
+        block += `${indent.get()}/// Transforms this [${wrappedTypeName}] into a new ${wrappedTypeName} that owns the underlying data, cloning it if necessary.\n`;
+        block += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
+        block += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
         for (const field of method.options.type.fields) {
           if (field.type.kind === 'clientMethodOptions' || field.type.kind === 'pagerOptions' || field.type.kind === 'pollerOptions') {
-            body += `${indent.get()}${field.name}: ${field.type.name} {\n`;
-            body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
-            body += `${indent.get()}..self.${field.name}\n`;
-            body += `${indent.pop().get()}},\n`;
+            block += `${indent.get()}${field.name}: ${field.type.name} {\n`;
+            block += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
+            block += `${indent.get()}..self.${field.name}\n`;
+            block += `${indent.pop().get()}},\n`;
             continue;
           }
-          body += `${indent.get()}${field.name}: self.${field.name},\n`;
+          block += `${indent.get()}${field.name}: self.${field.name},\n`;
         }
-        body += `${indent.pop().get()}}\n`;
-        body += `${indent.pop().get()}}\n`;
-        body += '}\n';
+        block += `${indent.pop().get()}}\n`;
+        block += `${indent.pop().get()}}\n`;
+        block += '}\n';
       }
 
-      if (i + 1 < client.methods.length) {
-        body += '\n';
-      }
+      structBlocks.push({ name: method.options.type.name, body: block });
     }
   }
+
+  structBlocks.sort((a, b) => helpers.sortAscending(a.name, b.name));
+  const body = structBlocks.map((b) => b.body).join('\n');
 
   if (body === '') {
     // client is top-level only, no methods just accessors

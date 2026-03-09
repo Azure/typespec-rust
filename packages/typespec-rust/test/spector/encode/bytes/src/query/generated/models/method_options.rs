@@ -12,16 +12,16 @@ pub struct BytesQueryClientBase64Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesQueryClient::base64_url()`](crate::query::generated::clients::BytesQueryClient::base64_url())
+/// Options to be passed to [`BytesQueryClient::base64_url_array()`](crate::query::generated::clients::BytesQueryClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BytesQueryClientBase64UrlOptions<'a> {
+pub struct BytesQueryClientBase64UrlArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesQueryClient::base64_url_array()`](crate::query::generated::clients::BytesQueryClient::base64_url_array())
+/// Options to be passed to [`BytesQueryClient::base64_url()`](crate::query::generated::clients::BytesQueryClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BytesQueryClientBase64UrlArrayOptions<'a> {
+pub struct BytesQueryClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

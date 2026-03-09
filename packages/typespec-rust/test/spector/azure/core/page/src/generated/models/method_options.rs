@@ -107,6 +107,7 @@ impl PageClientListWithRelativeNextLinkOptions<'_> {
         }
     }
 }
+
 /// Options to be passed to [`PageTwoModelsAsPageItemClient::list_first_item()`](crate::generated::clients::PageTwoModelsAsPageItemClient::list_first_item())
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageTwoModelsAsPageItemClientListFirstItemOptions<'a> {

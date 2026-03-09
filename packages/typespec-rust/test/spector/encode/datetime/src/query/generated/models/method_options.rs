@@ -26,16 +26,16 @@ pub struct DatetimeQueryClientRfc7231Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DatetimeQueryClient::unix_timestamp()`](crate::query::generated::clients::DatetimeQueryClient::unix_timestamp())
+/// Options to be passed to [`DatetimeQueryClient::unix_timestamp_array()`](crate::query::generated::clients::DatetimeQueryClient::unix_timestamp_array())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DatetimeQueryClientUnixTimestampOptions<'a> {
+pub struct DatetimeQueryClientUnixTimestampArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DatetimeQueryClient::unix_timestamp_array()`](crate::query::generated::clients::DatetimeQueryClient::unix_timestamp_array())
+/// Options to be passed to [`DatetimeQueryClient::unix_timestamp()`](crate::query::generated::clients::DatetimeQueryClient::unix_timestamp())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DatetimeQueryClientUnixTimestampArrayOptions<'a> {
+pub struct DatetimeQueryClientUnixTimestampOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

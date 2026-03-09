@@ -26,16 +26,16 @@ pub struct DatetimePropertyClientRfc7231Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DatetimePropertyClient::unix_timestamp()`](crate::property::generated::clients::DatetimePropertyClient::unix_timestamp())
+/// Options to be passed to [`DatetimePropertyClient::unix_timestamp_array()`](crate::property::generated::clients::DatetimePropertyClient::unix_timestamp_array())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DatetimePropertyClientUnixTimestampOptions<'a> {
+pub struct DatetimePropertyClientUnixTimestampArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DatetimePropertyClient::unix_timestamp_array()`](crate::property::generated::clients::DatetimePropertyClient::unix_timestamp_array())
+/// Options to be passed to [`DatetimePropertyClient::unix_timestamp()`](crate::property::generated::clients::DatetimePropertyClient::unix_timestamp())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DatetimePropertyClientUnixTimestampArrayOptions<'a> {
+pub struct DatetimePropertyClientUnixTimestampOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

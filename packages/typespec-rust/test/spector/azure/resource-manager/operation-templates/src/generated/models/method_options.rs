@@ -61,6 +61,25 @@ impl OperationTemplatesLroClientDeleteOptions<'_> {
     }
 }
 
+/// Options to be passed to [`OperationTemplatesLroClient::export_array()`](crate::generated::clients::OperationTemplatesLroClient::export_array())
+#[derive(Clone, Default, SafeDebug)]
+pub struct OperationTemplatesLroClientExportArrayOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl OperationTemplatesLroClientExportArrayOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientExportArrayOptions`] into a new `OperationTemplatesLroClientExportArrayOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> OperationTemplatesLroClientExportArrayOptions<'static> {
+        OperationTemplatesLroClientExportArrayOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
 /// Options to be passed to [`OperationTemplatesLroClient::export()`](crate::generated::clients::OperationTemplatesLroClient::export())
 #[derive(Clone, Default, SafeDebug)]
 pub struct OperationTemplatesLroClientExportOptions<'a> {
@@ -80,24 +99,6 @@ impl OperationTemplatesLroClientExportOptions<'_> {
     }
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::export_array()`](crate::generated::clients::OperationTemplatesLroClient::export_array())
-#[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientExportArrayOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl OperationTemplatesLroClientExportArrayOptions<'_> {
-    /// Transforms this [`OperationTemplatesLroClientExportArrayOptions`] into a new `OperationTemplatesLroClientExportArrayOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> OperationTemplatesLroClientExportArrayOptions<'static> {
-        OperationTemplatesLroClientExportArrayOptions {
-            method_options: PollerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
-}
 /// Options to be passed to [`OperationTemplatesOperationsClient::list()`](crate::generated::clients::OperationTemplatesOperationsClient::list())
 #[derive(Clone, Default, SafeDebug)]
 pub struct OperationTemplatesOperationsClientListOptions<'a> {
@@ -116,6 +117,7 @@ impl OperationTemplatesOperationsClientListOptions<'_> {
         }
     }
 }
+
 /// Options to be passed to [`OperationTemplatesOptionalBodyClient::get()`](crate::generated::clients::OperationTemplatesOptionalBodyClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct OperationTemplatesOptionalBodyClientGetOptions<'a> {

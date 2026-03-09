@@ -5,16 +5,16 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`OverloadClient::list()`](crate::generated::clients::OverloadClient::list())
+/// Options to be passed to [`OverloadClient::list_by_scope()`](crate::generated::clients::OverloadClient::list_by_scope())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OverloadClientListOptions<'a> {
+pub struct OverloadClientListByScopeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`OverloadClient::list_by_scope()`](crate::generated::clients::OverloadClient::list_by_scope())
+/// Options to be passed to [`OverloadClient::list()`](crate::generated::clients::OverloadClient::list())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OverloadClientListByScopeOptions<'a> {
+pub struct OverloadClientListOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

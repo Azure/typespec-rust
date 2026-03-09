@@ -26,13 +26,6 @@ pub struct DurationHeaderClientFloat64SecondsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DurationHeaderClient::float_milliseconds()`](crate::header::generated::clients::DurationHeaderClient::float_milliseconds())
-#[derive(Clone, Default, SafeDebug)]
-pub struct DurationHeaderClientFloatMillisecondsOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
 /// Options to be passed to [`DurationHeaderClient::float_milliseconds_larger_unit()`](crate::header::generated::clients::DurationHeaderClient::float_milliseconds_larger_unit())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientFloatMillisecondsLargerUnitOptions<'a> {
@@ -40,9 +33,9 @@ pub struct DurationHeaderClientFloatMillisecondsLargerUnitOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DurationHeaderClient::float_seconds()`](crate::header::generated::clients::DurationHeaderClient::float_seconds())
+/// Options to be passed to [`DurationHeaderClient::float_milliseconds()`](crate::header::generated::clients::DurationHeaderClient::float_milliseconds())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DurationHeaderClientFloatSecondsOptions<'a> {
+pub struct DurationHeaderClientFloatMillisecondsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -54,9 +47,9 @@ pub struct DurationHeaderClientFloatSecondsLargerUnitOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DurationHeaderClient::int32_milliseconds()`](crate::header::generated::clients::DurationHeaderClient::int32_milliseconds())
+/// Options to be passed to [`DurationHeaderClient::float_seconds()`](crate::header::generated::clients::DurationHeaderClient::float_seconds())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DurationHeaderClientInt32MillisecondsOptions<'a> {
+pub struct DurationHeaderClientFloatSecondsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -75,9 +68,9 @@ pub struct DurationHeaderClientInt32MillisecondsLargerUnitOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DurationHeaderClient::int32_seconds()`](crate::header::generated::clients::DurationHeaderClient::int32_seconds())
+/// Options to be passed to [`DurationHeaderClient::int32_milliseconds()`](crate::header::generated::clients::DurationHeaderClient::int32_milliseconds())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DurationHeaderClientInt32SecondsOptions<'a> {
+pub struct DurationHeaderClientInt32MillisecondsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -89,9 +82,9 @@ pub struct DurationHeaderClientInt32SecondsLargerUnitOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DurationHeaderClient::iso8601()`](crate::header::generated::clients::DurationHeaderClient::iso8601())
+/// Options to be passed to [`DurationHeaderClient::int32_seconds()`](crate::header::generated::clients::DurationHeaderClient::int32_seconds())
 #[derive(Clone, Default, SafeDebug)]
-pub struct DurationHeaderClientIso8601Options<'a> {
+pub struct DurationHeaderClientInt32SecondsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -99,6 +92,13 @@ pub struct DurationHeaderClientIso8601Options<'a> {
 /// Options to be passed to [`DurationHeaderClient::iso8601_array()`](crate::header::generated::clients::DurationHeaderClient::iso8601_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientIso8601ArrayOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationHeaderClient::iso8601()`](crate::header::generated::clients::DurationHeaderClient::iso8601())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationHeaderClientIso8601Options<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

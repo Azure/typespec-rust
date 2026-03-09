@@ -1,6 +1,9 @@
 {
     "cSpell.enabled": true,
     "editor.formatOnSave": true,
+    "files.watcherExclude": {
+        "packages/typespec-rust/test/**/*.rs": true,
+    },
     "markdownlint.config": {
         "MD024": false,
     },
@@ -8,6 +11,8 @@
         "**/SECURITY.md",
         "LICENSE"
     ],
+    "rust-analyzer.cargo.autoreload": false,
+    "rust-analyzer.check.workspace": false,
     "rust-analyzer.linkedProjects": [
         "packages/typespec-rust/test/Cargo.toml"
     ],

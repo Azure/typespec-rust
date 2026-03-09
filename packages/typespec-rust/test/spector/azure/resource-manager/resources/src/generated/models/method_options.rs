@@ -196,6 +196,7 @@ impl ResourcesNestedClientUpdateOptions<'_> {
         }
     }
 }
+
 /// Options to be passed to [`ResourcesSingletonClient::create_or_update()`](crate::generated::clients::ResourcesSingletonClient::create_or_update())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesSingletonClientCreateOrUpdateOptions<'a> {

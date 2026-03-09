@@ -5,16 +5,16 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`UsageClient::input()`](crate::generated::clients::UsageClient::input())
+/// Options to be passed to [`UsageClient::input_and_output()`](crate::generated::clients::UsageClient::input_and_output())
 #[derive(Clone, Default, SafeDebug)]
-pub struct UsageClientInputOptions<'a> {
+pub struct UsageClientInputAndOutputOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`UsageClient::input_and_output()`](crate::generated::clients::UsageClient::input_and_output())
+/// Options to be passed to [`UsageClient::input()`](crate::generated::clients::UsageClient::input())
 #[derive(Clone, Default, SafeDebug)]
-pub struct UsageClientInputAndOutputOptions<'a> {
+pub struct UsageClientInputOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
