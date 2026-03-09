@@ -18,7 +18,11 @@ async fn bullet_points_model_returns_200() {
         .bullet_points_model(input, None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 200, "bullet_points_model should return 200 OK");
+    assert_eq!(
+        resp.status(),
+        200,
+        "bullet_points_model should return 200 OK"
+    );
 }
 
 #[tokio::test]
@@ -33,7 +37,11 @@ async fn bullet_points_model_with_enum_prop() {
         .bullet_points_model(input, None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 200, "bullet_points_model with enum prop should return 200 OK");
+    assert_eq!(
+        resp.status(),
+        200,
+        "bullet_points_model with enum prop should return 200 OK"
+    );
 }
 
 #[tokio::test]
@@ -72,7 +80,11 @@ async fn bullet_points_op_returns_204() {
         .bullet_points_op(None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 204, "bullet_points_op should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "bullet_points_op should return 204 No Content"
+    );
 }
 
 #[tokio::test]

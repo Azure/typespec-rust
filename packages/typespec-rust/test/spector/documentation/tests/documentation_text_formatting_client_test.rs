@@ -25,7 +25,11 @@ async fn italic_text_returns_204() {
         .italic_text(None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 204, "italic_text should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "italic_text should return 204 No Content"
+    );
 }
 
 #[tokio::test]
@@ -36,7 +40,11 @@ async fn combined_formatting_returns_204() {
         .combined_formatting(None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 204, "combined_formatting should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "combined_formatting should return 204 No Content"
+    );
 }
 
 // Client construction tests: verify endpoint and sub-client access.

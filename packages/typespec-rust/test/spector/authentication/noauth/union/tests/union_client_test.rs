@@ -10,14 +10,22 @@ use spector_noauth::UnionClient;
 async fn valid_no_auth_returns_204() {
     let client = UnionClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.valid_no_auth(None).await.unwrap();
-    assert_eq!(resp.status(), 204, "valid_no_auth should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "valid_no_auth should return 204 No Content"
+    );
 }
 
 #[tokio::test]
 async fn valid_token_returns_204() {
     let client = UnionClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.valid_token(None).await.unwrap();
-    assert_eq!(resp.status(), 204, "valid_token should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "valid_token should return 204 No Content"
+    );
 }
 
 // Client construction tests: verify endpoint is stored correctly.

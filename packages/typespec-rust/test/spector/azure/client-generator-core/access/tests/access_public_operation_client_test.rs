@@ -18,9 +18,17 @@ async fn no_decorator_in_public_returns_200_with_name() {
         .no_decorator_in_public("sample", None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 200, "no_decorator_in_public should return 200 OK");
+    assert_eq!(
+        resp.status(),
+        200,
+        "no_decorator_in_public should return 200 OK"
+    );
     let model: NoDecoratorModelInPublic = resp.into_model().unwrap();
-    assert_eq!(model.name, Some("sample".to_string()), "name should match the query parameter");
+    assert_eq!(
+        model.name,
+        Some("sample".to_string()),
+        "name should match the query parameter"
+    );
 }
 
 #[tokio::test]
@@ -31,9 +39,17 @@ async fn public_decorator_in_public_returns_200_with_name() {
         .public_decorator_in_public("sample", None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 200, "public_decorator_in_public should return 200 OK");
+    assert_eq!(
+        resp.status(),
+        200,
+        "public_decorator_in_public should return 200 OK"
+    );
     let model: PublicDecoratorModelInPublic = resp.into_model().unwrap();
-    assert_eq!(model.name, Some("sample".to_string()), "name should match the query parameter");
+    assert_eq!(
+        model.name,
+        Some("sample".to_string()),
+        "name should match the query parameter"
+    );
 }
 
 // --- Shared model in operation tests (public method only) ---
@@ -46,9 +62,17 @@ async fn shared_model_public_returns_200_with_name() {
         .public("sample", None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 200, "shared model public should return 200 OK");
+    assert_eq!(
+        resp.status(),
+        200,
+        "shared model public should return 200 OK"
+    );
     let model: SharedModel = resp.into_model().unwrap();
-    assert_eq!(model.name, Some("sample".to_string()), "name should match the query parameter");
+    assert_eq!(
+        model.name,
+        Some("sample".to_string()),
+        "name should match the query parameter"
+    );
 }
 
 // --- Client construction tests ---

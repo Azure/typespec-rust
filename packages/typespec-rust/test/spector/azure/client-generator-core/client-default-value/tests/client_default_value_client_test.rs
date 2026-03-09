@@ -17,7 +17,11 @@ async fn get_header_parameter_returns_204() {
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.get_header_parameter(None).await.unwrap();
-    assert_eq!(resp.status(), 204, "get_header_parameter should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "get_header_parameter should return 204 No Content"
+    );
 }
 
 #[tokio::test]
@@ -56,7 +60,11 @@ async fn get_operation_parameter_returns_204() {
         .get_operation_parameter("sample", None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 204, "get_operation_parameter should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "get_operation_parameter should return 204 No Content"
+    );
 }
 
 #[tokio::test]
@@ -86,7 +94,11 @@ async fn get_path_parameter_returns_204() {
         .get_path_parameter("seg1", "seg2", None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 204, "get_path_parameter should return 204 No Content");
+    assert_eq!(
+        resp.status(),
+        204,
+        "get_path_parameter should return 204 No Content"
+    );
 }
 
 #[tokio::test]
@@ -131,11 +143,19 @@ async fn put_model_property_returns_200_with_matching_values() {
         .put_model_property(input.try_into().unwrap(), None)
         .await
         .unwrap();
-    assert_eq!(resp.status(), 200, "put_model_property should return 200 OK");
+    assert_eq!(
+        resp.status(),
+        200,
+        "put_model_property should return 200 OK"
+    );
     let output: ModelWithDefaultValues = resp.into_model().unwrap();
     assert_eq!(output.name, Some("test".to_string()), "name should match");
     assert_eq!(output.retry, Some(true), "retry should match");
-    assert_eq!(output.tier, Some("standard".to_string()), "tier should match");
+    assert_eq!(
+        output.tier,
+        Some("standard".to_string()),
+        "tier should match"
+    );
     assert_eq!(output.timeout, Some(30), "timeout should match");
 }
 

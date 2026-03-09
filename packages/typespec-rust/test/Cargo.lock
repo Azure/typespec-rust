@@ -1720,6 +1720,7 @@ version = "0.1.0"
 dependencies = [
  "azure_core",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -1968,6 +1969,7 @@ version = "0.1.0"
 dependencies = [
  "azure_core",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -2176,6 +2178,7 @@ version = "0.1.0"
 dependencies = [
  "azure_core",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -2212,6 +2215,7 @@ version = "0.1.0"
 dependencies = [
  "azure_core",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -2356,6 +2360,7 @@ name = "spector_noauth"
 version = "0.1.0"
 dependencies = [
  "azure_core",
+ "tokio",
 ]
 
 [[package]]
@@ -2435,6 +2440,7 @@ name = "spector_query"
 version = "0.1.0"
 dependencies = [
  "azure_core",
+ "tokio",
 ]
 
 [[package]]
@@ -2443,6 +2449,7 @@ version = "0.1.0"
 dependencies = [
  "azure_core",
  "serde",
+ "tokio",
 ]
 
 [[package]]

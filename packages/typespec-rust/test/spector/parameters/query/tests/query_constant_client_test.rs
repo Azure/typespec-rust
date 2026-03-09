@@ -9,12 +9,12 @@ use spector_query::QueryClient;
 #[tokio::test]
 async fn post_returns_204() {
     let client = QueryClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let resp = client
-        .get_query_constant_client()
-        .post(None)
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204, "post with constant query param should return 204 No Content");
+    let resp = client.get_query_constant_client().post(None).await.unwrap();
+    assert_eq!(
+        resp.status(),
+        204,
+        "post with constant query param should return 204 No Content"
+    );
 }
 
 // Client construction tests.

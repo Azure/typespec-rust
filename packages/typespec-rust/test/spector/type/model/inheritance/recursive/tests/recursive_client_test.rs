@@ -21,7 +21,10 @@ async fn get_returns_200_with_recursive_model() {
     assert!(!extensions.is_empty(), "extension list should not be empty");
     // Verify first nested extension.
     assert_eq!(extensions[0].level, Some(1));
-    assert!(extensions[0].extension.is_some(), "nested extension should be present");
+    assert!(
+        extensions[0].extension.is_some(),
+        "nested extension should be present"
+    );
     let nested = extensions[0].extension.as_ref().unwrap();
     assert_eq!(nested[0].level, Some(2));
 }

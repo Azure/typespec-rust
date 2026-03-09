@@ -20,11 +20,7 @@ use spector_encarray::{
 async fn comma_delimited_returns_200_with_matching_values() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = CommaDelimitedArrayProperty {
-        value: Some(vec![
-            "a".to_string(),
-            "b".to_string(),
-            "c".to_string(),
-        ]),
+        value: Some(vec!["a".to_string(), "b".to_string(), "c".to_string()]),
     };
     let resp = client
         .get_array_property_client()
@@ -91,11 +87,7 @@ async fn extensible_enum_comma_delimited_returns_200_with_matching_values() {
 async fn newline_delimited_returns_200_with_matching_values() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = NewlineDelimitedArrayProperty {
-        value: Some(vec![
-            "a".to_string(),
-            "b".to_string(),
-            "c".to_string(),
-        ]),
+        value: Some(vec!["a".to_string(), "b".to_string(), "c".to_string()]),
     };
     let resp = client
         .get_array_property_client()
@@ -162,11 +154,7 @@ async fn extensible_enum_newline_delimited_returns_200_with_matching_values() {
 async fn pipe_delimited_returns_200_with_matching_values() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = PipeDelimitedArrayProperty {
-        value: Some(vec![
-            "a".to_string(),
-            "b".to_string(),
-            "c".to_string(),
-        ]),
+        value: Some(vec!["a".to_string(), "b".to_string(), "c".to_string()]),
     };
     let resp = client
         .get_array_property_client()
@@ -233,11 +221,7 @@ async fn extensible_enum_pipe_delimited_returns_200_with_matching_values() {
 async fn space_delimited_returns_200_with_matching_values() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = SpaceDelimitedArrayProperty {
-        value: Some(vec![
-            "a".to_string(),
-            "b".to_string(),
-            "c".to_string(),
-        ]),
+        value: Some(vec!["a".to_string(), "b".to_string(), "c".to_string()]),
     };
     let resp = client
         .get_array_property_client()
