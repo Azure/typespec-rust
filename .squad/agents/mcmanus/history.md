@@ -260,3 +260,42 @@ tokio = { workspace = true }
 - Sub-client methods need `name` argument as `&str` not `String` (e.g., access public_operation methods take `name: &str`)
 - File naming convention: `{subclient_name}_client_test.rs` (e.g., `union_client_test.rs`, `array_property_client_test.rs`)
 
+### 2026-03-09: PR #887 LOCKOUT — Reviewer Rejection Per Reviewer Rejection Protocol
+
+**PR:** #887 (McManus)
+**Review:** jhendrixMSFT discussion_r2884702512
+**Status:** REJECTED
+**Lock status:** ✅ Locked — McManus cannot revise
+
+**What McManus did:** Modified `clients.ts` to stop emitting `pub(crate) const DEFAULT_*` when suppressed options types are encountered (`constructable.suppressed === 'yes'`).
+
+**Reviewer feedback:** Design misalignment. Constants should always be emitted—they represent TypeSpec-defined defaults that SDK authors need.
+
+**Why lockout applied:** Per Reviewer Rejection Protocol, when a PR is rejected as misaligned with design/architecture, a different team member implements the revision. This ensures fresh perspective and prevents author bias.
+
+**Assigned to:** Fenster (Rust Expert) — implemented as `2026-03-09T0930-fenster.md`
+
+**What changed:** 
+
+1. **Restored constant emission:** Constants now emitted for both suppressed and non-suppressed options
+2. **Conditional documentation:** 
+   - Non-suppressed: intra-doc link to options type field
+   - Suppressed: plain text doc + SDK author guidance
+3. **Conditional suppression:**
+   - Non-suppressed: no `#[allow(dead_code)]` (constant used by Default impl)
+   - Suppressed: `#[allow(dead_code)]` (SDK author may or may not use it)
+
+**Verification:** Keaton's design + Fenster's implementation passed all checks:
+- ✅ TypeScript build clean
+- ✅ 32/32 unit tests passing
+- ✅ Zero clippy warnings across full workspace
+- ✅ keyvault_secrets constant present with guidance
+- ✅ appconfiguration constant unchanged (non-suppressed path)
+
+**Key lesson:** Always emit constants. They're not dead code in real SDKs—they're used by hand-authored convenience layers. Documentation and warnings may differ by suppression status, but never suppress their existence.
+
+**Arch docs:** 
+- Keaton's recommendation: `.squad/decisions/inbox/keaton-clients-ts-design.md`
+- Fenster's implementation: `.squad/orchestration-log/2026-03-09T0930-fenster.md`
+- Session log: `.squad/log/2026-03-09-clients-ts-design-fix.md`
+

@@ -123,3 +123,23 @@ Dead code is a real signal. Blanket suppression hides bugs in production SDKs.
 - Orchestration: `.squad/orchestration-log/2026-03-07T0230-mcmanus.md` (implementation)
 - Session log: `.squad/log/2026-03-07-dead-code-fix.md`
 - Decision: `.squad/decisions/decisions.md` → 2026-03-07T01:45Z entry
+
+### 2026-03-09: PR #887 Review — DEFAULT Constants & pub(crate) Visibility Design
+
+**Triggered by:** Rick, referencing jhendrixMSFT's review at discussion_r2884702512
+
+**Investigation findings:**
+
+1. **McManus over-corrected on the constant fix.** When he removed blanket `#[allow(dead_code)]`, he also stopped emitting `pub(crate) const DEFAULT_*` for suppressed clients. This was wrong — suppressed clients (like `keyvault_secrets`) are where SDK authors MOST need the constant, because they hand-write their own `Default` impl.
+
+2. **PR #887 discussion had two participants with nuanced positions:**
+   - **jhendrixMSFT:** Remove `#[allow(dead_code)]` so clippy forces SDK authors to use the constant (or explicitly acknowledge they don't need it). Also proposed a `Constant` type refactor (#889).
+   - **heaths (Rick):** Keep `#[allow(dead_code)]` because SDK authors may not always use the constant. Parallels `std` patterns.
+
+3. **Both were partially right.** For non-suppressed clients, the constant IS used by the Default impl — no suppression needed (jhendrixMSFT wins). For suppressed clients, the constant is optional convenience — `#[allow(dead_code)]` is appropriate (heaths wins).
+
+4. **The `_touch_*` pattern in access lib.rs is structurally sound** but should eventually be replaced by `#[cfg(test)] mod tests` unit tests inside crate modules. Integration tests in `tests/*.rs` can't access `pub(crate)` items — this is a Rust module system constraint, not a bug.
+
+**Recommendation written to:** `.squad/decisions/inbox/keaton-clients-ts-design.md`
+
+**Key design principle:** Always emit DEFAULT constants. Conditionally apply `#[allow(dead_code)]` only when the options type is suppressed (constant is convenience, not mandatory). Never skip emission.

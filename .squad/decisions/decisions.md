@@ -250,3 +250,64 @@ The emitter correctly applies `#[non_exhaustive]` to output-only models and Azur
 
 - [ ] CI pipeline confirms all 7 crates compile and pass clippy
 - [ ] Fenster validates multipart/streaming/file infrastructure next (Sprint 2 readiness)
+
+---
+
+## 2026-03-09: PR #887 Review — Reviewer Rejection of McManus clients.ts Changes
+
+**Date:** 2026-03-09
+**PR:** #887 (McManus)
+**Review:** jhendrixMSFT discussion_r2884702512
+**Status:** REJECTED — Misaligned with design principles
+
+### Problem Statement
+
+McManus's fix to PR #887 over-corrected when addressing dead_code warnings on `pub(crate)` constants:
+
+- **Original constant emission:** Emitted `pub(crate) const DEFAULT_API_VERSION` for all client options
+- **McManus's fix:** Stopped emitting the constant entirely when `constructable.suppressed === 'yes'`
+- **Reviewer feedback:** This breaks SDK authors' ability to access TypeSpec-defined default values
+
+### Root Cause
+
+McManus conflated two concerns:
+1. Whether the constant is used within the crate (code generation concern)
+2. Whether it should exist for SDK authors (API/architecture concern)
+
+In real Azure SDKs, constants are NOT dead—they're used by hand-authored convenience layers that wrap suppressed options types.
+
+### Solution (Keaton Architecture → Fenster Implementation)
+
+**Part 1: Always emit DEFAULT constants**, with conditional documentation and suppression:
+
+- **Non-suppressed crates:** Emit intra-doc link to options type field, no dead_code suppression (constant used by Default impl)
+- **Suppressed crates:** Emit plain text doc comment + SDK author guidance + `#[allow(dead_code)]` (SDK author may or may not use it)
+
+**Part 2 (Deferred):** Replace `_touch_*` exercising blocks with proper `#[cfg(test)]` unit tests. Acceptable pattern but separate concern.
+
+### Implementation by Fenster
+
+Modified `packages/typespec-rust/src/codegen/clients.ts` lines 274-290:
+
+1. Removed `if (!isSuppressed)` guard
+2. Added conditional doc comments (intra-doc link vs plain text)
+3. Added conditional `#[allow(dead_code)]` only when suppressed
+
+### Verification (Fenster)
+
+- ✅ TypeScript build: clean
+- ✅ TypeScript tests: 32/32 passing
+- ✅ Cargo clippy: zero warnings across full workspace
+- ✅ keyvault_secrets constant now present with SDK author guidance
+
+### Key Decision
+
+**Always emit constants.** They represent TypeSpec-defined defaults that SDK authors need, regardless of suppression status. Documentation and warning handling may differ, but never suppress emission.
+
+---
+
+## 2026-03-09T17:31Z: User Directive — Thorough Test Requirements
+
+**By:** Rick (via Copilot)
+**What:** Integration tests must: (1) call the actual API, (2) verify return codes are as expected, (3) validate returned data matches expectations, (4) include negative test cases to verify edge conditions work correctly. Structural/smoke tests are not sufficient.
+**Why:** User request — captured for team memory. Tests need to prove correctness, not just compilation.
