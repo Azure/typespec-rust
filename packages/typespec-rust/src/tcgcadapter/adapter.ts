@@ -989,9 +989,9 @@ export class Adapter {
       modelField.flags |= rust.ModelFieldFlags.Discriminator;
     }
 
-    // When flattening a property that contains only read-only properties:
-    // * For input (write): Read-only properties should not appear in the input model, regardless of flattening.
-    // * For response (read): Read-only properties should be flattened to the parent model level.
+    // We decided to not do client-side flattening. We only do flattening when serializing, and only in one case (except additional properties):
+    // Typespec requires to do flattening when serializing properties which are models with all read-only fields,
+    // see https://github.com/Azure/typespec-azure/tree/26d915bdd3738fcd51984501d34c2f3bfb4b4159/packages/azure-http-specs/specs/azure/client-generator-core/flatten-property
     if (property.flatten && property.type.kind === 'model' && property.type.properties.every(p => p.visibility?.every(v => v === http.Visibility.Read))) {
       modelField.flags |= rust.ModelFieldFlags.Flatten;
     }
