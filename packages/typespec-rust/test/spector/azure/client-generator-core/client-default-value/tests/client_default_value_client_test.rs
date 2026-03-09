@@ -21,10 +21,7 @@ async fn get_header_parameter_returns_204() {
         custom_header: Some("default-value".to_string()),
         ..Default::default()
     };
-    let resp = client
-        .get_header_parameter(Some(options))
-        .await
-        .unwrap();
+    let resp = client.get_header_parameter(Some(options)).await.unwrap();
     assert_eq!(
         resp.status(),
         204,
@@ -125,7 +122,9 @@ async fn get_path_parameter_rejects_empty_segment1() {
 async fn get_path_parameter_rejects_empty_segment2() {
     let client =
         ClientDefaultValueClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let result = client.get_path_parameter("default-segment1", "", None).await;
+    let result = client
+        .get_path_parameter("default-segment1", "", None)
+        .await;
     assert!(result.is_err(), "empty segment2 should be rejected");
 }
 
@@ -166,7 +165,11 @@ async fn put_model_property_returns_200_with_matching_values() {
         Some("standard".to_string()),
         "tier should have default value"
     );
-    assert_eq!(output.timeout, Some(30), "timeout should have default value");
+    assert_eq!(
+        output.timeout,
+        Some(30),
+        "timeout should have default value"
+    );
 }
 
 // --- Client construction negative tests ---

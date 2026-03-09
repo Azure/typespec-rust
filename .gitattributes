@@ -1,2 +1,3 @@
 * text=auto eol=lf
 packages/typespec-rust/test/**/src/generated/**/*.rs linguist-generated=true
+# Squad: union merge for append-only team state files
