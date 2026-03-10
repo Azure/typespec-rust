@@ -7,8 +7,6 @@ use spector_documentation::{
     DocumentationClient,
 };
 
-// Positive tests: call each Lists operation and verify status codes.
-
 #[tokio::test]
 async fn bullet_points_model_returns_200() {
     let client = DocumentationClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -28,6 +26,14 @@ async fn bullet_points_model_returns_200() {
 }
 
 #[tokio::test]
+async fn bullet_points_model_with_bold_enum() {
+    let model = BulletPointsModel {
+        prop: Some(BulletPointsEnum::Bold),
+    };
+    assert_eq!(model.prop, Some(BulletPointsEnum::Bold));
+}
+
+#[tokio::test]
 async fn bullet_points_model_with_enum_prop() {
     // Verify the model can be sent with an enum value set.
     let client = DocumentationClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -44,16 +50,6 @@ async fn bullet_points_model_with_enum_prop() {
         200,
         "bullet_points_model with enum prop should return 200 OK"
     );
-}
-
-// Model construction tests: verify each enum variant can be created.
-
-#[tokio::test]
-async fn bullet_points_model_with_bold_enum() {
-    let model = BulletPointsModel {
-        prop: Some(BulletPointsEnum::Bold),
-    };
-    assert_eq!(model.prop, Some(BulletPointsEnum::Bold));
 }
 
 #[tokio::test]

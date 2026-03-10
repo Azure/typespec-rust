@@ -6,8 +6,6 @@ use spector_access::{
     relative_model_in_operation::clients::AccessRelativeModelInOperationClient, AccessClient,
 };
 
-// --- Sub-client construction tests ---
-
 #[tokio::test]
 async fn relative_model_sub_client_can_be_created() {
     let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -27,17 +25,22 @@ async fn relative_model_sub_client_endpoint_propagates() {
 }
 
 #[tokio::test]
-async fn relative_model_sub_client_preserves_custom_endpoint() {
-    let client = AccessClient::with_no_credential("http://custom-host:9090", None).unwrap();
-    let sub = client.get_access_relative_model_in_operation_client();
-    assert_eq!(
-        sub.endpoint().as_str(),
-        "http://custom-host:9090/",
-        "sub-client should preserve the custom endpoint from the parent"
+async fn relative_model_sub_client_from_empty_url_fails() {
+    let result = AccessClient::with_no_credential("", None);
+    assert!(
+        result.is_err(),
+        "creating a client with an empty URL should fail"
     );
 }
 
-// --- Multiple sub-client isolation tests ---
+#[tokio::test]
+async fn relative_model_sub_client_from_non_http_scheme_fails() {
+    let result = AccessClient::with_no_credential("ftp://localhost:3000", None);
+    assert!(
+        result.is_err(),
+        "creating a client with a non-http scheme should fail"
+    );
+}
 
 #[tokio::test]
 async fn relative_model_sub_client_independent_of_other_sub_clients() {
@@ -51,22 +54,13 @@ async fn relative_model_sub_client_independent_of_other_sub_clients() {
     );
 }
 
-// --- Negative tests ---
-
 #[tokio::test]
-async fn relative_model_sub_client_from_non_http_scheme_fails() {
-    let result = AccessClient::with_no_credential("ftp://localhost:3000", None);
-    assert!(
-        result.is_err(),
-        "creating a client with a non-http scheme should fail"
-    );
-}
-
-#[tokio::test]
-async fn relative_model_sub_client_from_empty_url_fails() {
-    let result = AccessClient::with_no_credential("", None);
-    assert!(
-        result.is_err(),
-        "creating a client with an empty URL should fail"
+async fn relative_model_sub_client_preserves_custom_endpoint() {
+    let client = AccessClient::with_no_credential("http://custom-host:9090", None).unwrap();
+    let sub = client.get_access_relative_model_in_operation_client();
+    assert_eq!(
+        sub.endpoint().as_str(),
+        "http://custom-host:9090/",
+        "sub-client should preserve the custom endpoint from the parent"
     );
 }

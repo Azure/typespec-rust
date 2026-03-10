@@ -8,7 +8,23 @@ use spector_access::{
     AccessClient,
 };
 
-// --- Public operation tests ---
+#[tokio::test]
+async fn client_endpoint_is_stored() {
+    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
+    assert_eq!(client.endpoint().as_str(), "http://localhost:3000/");
+}
+
+#[tokio::test]
+async fn client_rejects_malformed_url() {
+    let result = AccessClient::with_no_credential("not-a-valid-url", None);
+    assert!(result.is_err(), "malformed URL should be rejected");
+}
+
+#[tokio::test]
+async fn client_rejects_non_http_scheme() {
+    let result = AccessClient::with_no_credential("ftp://localhost:3000", None);
+    assert!(result.is_err(), "non-http scheme should be rejected");
+}
 
 #[tokio::test]
 async fn no_decorator_in_public_returns_200_with_name() {
@@ -52,8 +68,6 @@ async fn public_decorator_in_public_returns_200_with_name() {
     );
 }
 
-// --- Shared model in operation tests (public method only) ---
-
 #[tokio::test]
 async fn shared_model_public_returns_200_with_name() {
     let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -73,26 +87,4 @@ async fn shared_model_public_returns_200_with_name() {
         Some("sample".to_string()),
         "name should match the query parameter"
     );
-}
-
-// --- Client construction tests ---
-
-#[tokio::test]
-async fn client_endpoint_is_stored() {
-    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
-    assert_eq!(client.endpoint().as_str(), "http://localhost:3000/");
-}
-
-// --- Negative tests ---
-
-#[tokio::test]
-async fn client_rejects_non_http_scheme() {
-    let result = AccessClient::with_no_credential("ftp://localhost:3000", None);
-    assert!(result.is_err(), "non-http scheme should be rejected");
-}
-
-#[tokio::test]
-async fn client_rejects_malformed_url() {
-    let result = AccessClient::with_no_credential("not-a-valid-url", None);
-    assert!(result.is_err(), "malformed URL should be rejected");
 }

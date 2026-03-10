@@ -9,8 +9,6 @@ use spector_access::{
     AccessClient,
 };
 
-// --- Sub-client construction tests ---
-
 #[tokio::test]
 async fn internal_operation_sub_client_can_be_created() {
     let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -39,9 +37,14 @@ async fn internal_operation_sub_client_preserves_custom_endpoint() {
     );
 }
 
-// --- PublicDecoratorModelInInternal model tests ---
-// This model has the @access(Access.public) decorator, so it is exported
-// even though it is used by an internal operation.
+#[tokio::test]
+async fn internal_sub_client_from_non_http_scheme_fails() {
+    let result = AccessClient::with_no_credential("ftp://localhost:3000", None);
+    assert!(
+        result.is_err(),
+        "creating a client with a non-http scheme should fail"
+    );
+}
 
 #[tokio::test]
 async fn public_decorator_model_in_internal_default_has_none_name() {
@@ -49,6 +52,16 @@ async fn public_decorator_model_in_internal_default_has_none_name() {
     assert_eq!(
         model.name, None,
         "default PublicDecoratorModelInInternal should have None name"
+    );
+}
+
+#[tokio::test]
+async fn public_decorator_model_in_internal_deserialize_empty_object() {
+    let json = r#"{}"#;
+    let model: PublicDecoratorModelInInternal = serde_json::from_str(json).unwrap();
+    assert_eq!(
+        model.name, None,
+        "empty JSON object should deserialize to None name"
     );
 }
 
@@ -65,26 +78,5 @@ async fn public_decorator_model_in_internal_round_trip_serialization() {
     assert_eq!(
         serialized, json,
         "re-serialized JSON should match original input"
-    );
-}
-
-#[tokio::test]
-async fn public_decorator_model_in_internal_deserialize_empty_object() {
-    let json = r#"{}"#;
-    let model: PublicDecoratorModelInInternal = serde_json::from_str(json).unwrap();
-    assert_eq!(
-        model.name, None,
-        "empty JSON object should deserialize to None name"
-    );
-}
-
-// --- Negative tests ---
-
-#[tokio::test]
-async fn internal_sub_client_from_non_http_scheme_fails() {
-    let result = AccessClient::with_no_credential("ftp://localhost:3000", None);
-    assert!(
-        result.is_err(),
-        "creating a client with a non-http scheme should fail"
     );
 }

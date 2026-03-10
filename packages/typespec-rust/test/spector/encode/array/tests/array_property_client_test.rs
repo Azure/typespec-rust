@@ -17,9 +17,9 @@ async fn client_construction_succeeds() {
 }
 
 #[tokio::test]
-async fn subclient_is_accessible() {
-    let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let _property_client = client.get_array_property_client();
+async fn client_rejects_malformed_url() {
+    let result = ArrayClient::with_no_credential("not-a-valid-url", None);
+    assert!(result.is_err(), "malformed URL should be rejected");
 }
 
 #[tokio::test]
@@ -29,7 +29,7 @@ async fn client_rejects_non_http_scheme() {
 }
 
 #[tokio::test]
-async fn client_rejects_malformed_url() {
-    let result = ArrayClient::with_no_credential("not-a-valid-url", None);
-    assert!(result.is_err(), "malformed URL should be rejected");
+async fn subclient_is_accessible() {
+    let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let _property_client = client.get_array_property_client();
 }
