@@ -628,7 +628,7 @@ interface HTTPParameterBase extends method.Parameter {
   /** location of the parameter (e.g. client or method) */
   location: ParameterLocation;
 
-  /** optional params go in the method's MethodOptions type */
+  /** optional params go in the method's ParameterGroup type */
   optional: boolean;
 
   /** set when this parameter belongs to a parameter group */
