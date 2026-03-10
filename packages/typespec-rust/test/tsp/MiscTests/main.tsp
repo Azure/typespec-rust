@@ -136,3 +136,44 @@ model SpreadWithEnum {
 
 @route("/spread-params-with-enum")
 op spreadParamWithEnum(...SpreadWithEnum): void;
+
+alias GroupedHeaderParam = {
+  @doc("The docs for the header param.")
+  @header
+  size: int32;
+};
+
+alias GroupedPathParam = {
+  @doc("The docs for the path param.")
+  @path
+  color: Colors;
+};
+
+alias GroupedQueryParam = {
+  @doc("The docs for the query param.")
+  @query
+  names: Array<string>;
+};
+
+@route("/param-group/{color}")
+op paramGroup(
+  ...GroupedHeaderParam,
+  ...GroupedPathParam,
+  ...GroupedQueryParam,
+): void;
+
+@doc("The grouped params.")
+model GroupedParams {
+  ...GroupedHeaderParam,
+  ...GroupedPathParam,
+  ...GroupedQueryParam,
+}
+
+op paramGroupCustomized(
+  @doc("The inline param group docs.")
+  params: GroupedParams
+): void;
+
+@@override(paramGroup,
+  paramGroupCustomized,
+);

@@ -440,6 +440,9 @@ export interface RefBase {
 
   /** the underlying type */
   type: WireType;
+
+  /** optional lifetime for struct field contexts */
+  lifetime?: Lifetime;
 }
 
 /** RefType describes the possible types for Ref */

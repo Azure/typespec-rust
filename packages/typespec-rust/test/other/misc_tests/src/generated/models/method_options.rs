@@ -6,6 +6,19 @@
 use super::{Colors, Indices};
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
+/// The grouped params.
+#[derive(Clone, SafeDebug)]
+pub struct GroupedParams<'a> {
+    /// The docs for the header param.
+    pub size: i32,
+
+    /// The docs for the path param.
+    pub color: Colors,
+
+    /// The docs for the query param.
+    pub names: &'a [&'a str],
+}
+
 /// Options to be passed to [`MiscTestsClient::avoid_dupe_headers_one()`](crate::generated::clients::MiscTestsClient::avoid_dupe_headers_one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientAvoidDupeHeadersOneOptions<'a> {
@@ -37,6 +50,13 @@ pub struct MiscTestsClientEtagHeaderParameterOptions<'a> {
 /// Options to be passed to [`MiscTestsClient::literal_with_invalid_char()`](crate::generated::clients::MiscTestsClient::literal_with_invalid_char())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::param_group()`](crate::generated::clients::MiscTestsClient::param_group())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientParamGroupOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -192,7 +192,7 @@ function sortContent(content: rust.ModuleContainer): void {
       } else if (method.kind === 'pageable' && method.strategy?.kind === 'nextLink') {
         method.strategy.reinjectedParams.sort((a: rust.MethodParameter, b: rust.MethodParameter) => sortAscending(a.name, b.name));
       }
-      method.options.type.fields.sort((a: rust.StructField, b: rust.StructField) => { return sortAscending(a.name, b.name); });
+      method.options.type.type.fields.sort((a: rust.StructField, b: rust.StructField) => { return sortAscending(a.name, b.name); });
       method.responseHeaders?.headers.sort((a: rust.ResponseHeader, b: rust.ResponseHeader) => sortAscending(a.header, b.header));
     }
   }

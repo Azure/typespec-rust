@@ -316,7 +316,16 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
         // client method options types are always in the same module as their client method
-        use.add(`${utils.buildImportPath(client.module, client.module)}::models`, method.options.type.name);
+        use.add(`${utils.buildImportPath(client.module, client.module)}::models`, method.options.type.type.name);
+
+        // add imports for parameter group types
+        const seenGroups = new Set<string>();
+        for (const param of method.params) {
+          if (param.group && !seenGroups.has(param.group.type.name)) {
+            seenGroups.add(param.group.type.name);
+            use.add(`${utils.buildImportPath(client.module, client.module)}::models`, param.group.type.name);
+          }
+        }
       }
     }
 
@@ -354,20 +363,21 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
 
       // method options struct
       let block = '';
-      block += helpers.formatDocComment(method.options.type.docs);
+      const optionsStruct = method.options.type.type;
+      block += helpers.formatDocComment(optionsStruct.docs);
       use.add('azure_core::fmt', 'SafeDebug');
       block += '#[derive(Clone, Default, SafeDebug)]\n';
-      block += `${helpers.emitVisibility(method.options.type.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
-      visTracker.update(method.options.type.visibility);
-      for (let i = 0; i < method.options.type.fields.length; ++i) {
-        const field = method.options.type.fields[i];
+      block += `${helpers.emitVisibility(optionsStruct.visibility)}struct ${helpers.getTypeDeclaration(optionsStruct)} {\n`;
+      visTracker.update(optionsStruct.visibility);
+      for (let i = 0; i < optionsStruct.fields.length; ++i) {
+        const field = optionsStruct.fields[i];
         use.addForType(field.type);
         const fieldDocs = helpers.formatDocComment(field.docs);
         if (fieldDocs.length > 0) {
           block += `${indent.get()}${fieldDocs}`;
         }
         block += `${indent.get()}${helpers.emitVisibility(method.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
-        if (i + 1 < method.options.type.fields.length) {
+        if (i + 1 < optionsStruct.fields.length) {
           block += '\n';
         }
       }
@@ -375,13 +385,13 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
 
       if (method.kind === 'pageable' || method.kind === 'lro') {
         block += '\n';
-        block += `impl ${helpers.getTypeDeclaration(method.options.type, 'anonymous')} {\n`;
-        const wrappedTypeName = helpers.wrapInBackTicks(helpers.getTypeDeclaration(method.options.type, 'omit'));
+        block += `impl ${helpers.getTypeDeclaration(optionsStruct, 'anonymous')} {\n`;
+        const wrappedTypeName = helpers.wrapInBackTicks(helpers.getTypeDeclaration(optionsStruct, 'omit'));
         block += `${indent.get()}/// Transforms this [${wrappedTypeName}] into a new ${wrappedTypeName} that owns the underlying data, cloning it if necessary.\n`;
-        block += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
-        block += `${indent.push().get()}${method.options.type.name} {\n`;
+        block += `${indent.get()}pub fn into_owned(self) -> ${optionsStruct.name}<'static> {\n`;
+        block += `${indent.push().get()}${optionsStruct.name} {\n`;
         indent.push();
-        for (const field of method.options.type.fields) {
+        for (const field of optionsStruct.fields) {
           if (field.type.kind === 'clientMethodOptions' || field.type.kind === 'pagerOptions' || field.type.kind === 'pollerOptions') {
             block += `${indent.get()}${field.name}: ${field.type.name} {\n`;
             block += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
@@ -396,7 +406,39 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
         block += '}\n';
       }
 
-      structBlocks.push({ name: method.options.type.name, body: block });
+      structBlocks.push({ name: optionsStruct.name, body: block });
+
+      // parameter group structs
+      const seenGroups = new Set<rust.ParameterGroup<rust.Struct>>();
+      for (const param of method.params) {
+        if (param.group) {
+          seenGroups.add(param.group);
+        }
+      }
+
+      for (const group of seenGroups) {
+        const groupParams = method.params.filter(p => p.group === group);
+        let groupBlock = '';
+        groupBlock += helpers.formatDocComment(group.type.docs);
+        use.add('azure_core::fmt', 'SafeDebug');
+        groupBlock += '#[derive(Clone, SafeDebug)]\n';
+        groupBlock += `${helpers.emitVisibility(group.type.visibility)}struct ${group.type.name}${group.type.lifetime ? `<${group.type.lifetime.name}>` : ''} {\n`;
+        visTracker.update(group.type.visibility);
+        for (let i = 0; i < groupParams.length; i++) {
+          const field = groupParams[i];
+          use.addForType(field.type);
+          const fieldDocs = helpers.formatDocComment(field.docs);
+          if (fieldDocs.length > 0) {
+            if (i > 0) {
+              groupBlock += '\n';
+            }
+            groupBlock += `${indent.get()}${fieldDocs}`;
+          }
+          groupBlock += `${indent.get()}${helpers.emitVisibility(group.type.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        }
+        groupBlock += '}\n';
+        structBlocks.push({ name: group.type.name, body: groupBlock });
+      }
     }
   }
 
@@ -433,7 +475,18 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
   };
 
   let paramsContent = '';
+  const documentedGroups = new Set<string>();
   for (const param of callable.params) {
+    if ('group' in param && param.group) {
+      // required parameter group appears as a single param in the method sig
+      const group = param.group;
+      if (!documentedGroups.has(group.name)) {
+        documentedGroups.add(group.name);
+        paramsContent += helpers.formatDocComment(group.docs, false, formatParamBullet(group.name), indent);
+      }
+      continue;
+    }
+
     let optional = false;
     if ('optional' in param) {
       optional = param.optional;
@@ -517,7 +570,18 @@ function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): { count:
       ++count;
     }
   } else {
+    const emittedGroups = new Set<string>();
     for (const param of method.params) {
+      if (param.group) {
+        if (!emittedGroups.has(param.group.name)) {
+          emittedGroups.add(param.group.name);
+          // required parameter group appears as a single struct parameter in the method signature
+          paramsSig.push(`${param.group.name}: ${helpers.getTypeDeclaration(param.group.type, 'anonymous')}`);
+          ++count;
+        }
+        continue;
+      }
+
       const paramType = helpers.unwrapType(param.type);
       if (paramType.kind === 'literal') {
         // literal params are embedded directly in the code (e.g. accept header param)
@@ -536,7 +600,7 @@ function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): { count:
       }
     }
 
-    paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, 'anonymous')}`);
+    paramsSig.push(`${method.options.name}: ${helpers.getTypeDeclaration(method.options.type, 'anonymous')}`);
     ++count;
   }
 
@@ -717,7 +781,6 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
   const pathParams = new Array<PathParamType>();
   const queryParams = new Array<QueryParamType>();
   const partialBodyParams = new Array<rust.PartialBodyParameter>();
-
   for (const param of method.params) {
     switch (param.kind) {
       case 'headerScalar':
@@ -839,8 +902,9 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         let wrapSortedVec: (s: string) => string = (s) => s;
         let paramExpression: string;
         if (pathParam.kind === 'pathHashMap') {
+          const pathParamRef = qualifiedParamName(pathParam);
           wrapSortedVec = (s) => `${indent.get()}{`
-            + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
+            + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParamRef}.iter().collect::<Vec<_>>();\n`
             + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.0);\n`
             + `${s}`
             + `${indent.pop().get()}}`;
@@ -875,16 +939,17 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
               break;
           }
         } else if (pathParam.kind === 'pathCollection') {
-          paramExpression = `&${pathParam.name}.join(",")`;
+          const pathParamRef = qualifiedParamName(pathParam);
+          paramExpression = `&${pathParamRef}.join(",")`;
           switch (pathParam.style) {
             case 'path':
-              paramExpression = `&format!("/{}", ${pathParam.name}.join("${pathParam.explode ? '/' : ','}"))`;
+              paramExpression = `&format!("/{}", ${pathParamRef}.join("${pathParam.explode ? '/' : ','}"))`;
               break;
             case 'label':
-              paramExpression = `&format!(".{}", ${pathParam.name}.join("${pathParam.explode ? '.' : ','}"))`;
+              paramExpression = `&format!(".{}", ${pathParamRef}.join("${pathParam.explode ? '.' : ','}"))`;
               break;
             case 'matrix':
-              paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.join(`
+              paramExpression = `&format!(";${pathParam.name}={}", ${pathParamRef}.join(`
                 + `"${pathParam.explode ? `;${pathParam.name}=` : ','}"))`;
               break;
           }
@@ -961,8 +1026,9 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   for (const queryParam of paramGroups.query) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
       body += getParamValueHelper(indent, queryParam, () => {
+        const queryParamRef = qualifiedParamName(queryParam);
         const valueVar = queryParam.name[0];
-        let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
+        let text = `${indent.get()}for ${valueVar} in ${queryParamRef}.iter() {\n`;
         // if queryParam is a &[&str] then we'll need to deref the iterator
         const deref = utils.asTypeOf(queryParam.type, 'str', 'ref', 'slice', 'ref') ? '*' : '';
         text += `${indent.push().get()}query_builder.append_pair("${queryParam.key}", ${deref}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false, valueVar)});\n`;
@@ -971,8 +1037,9 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       });
     } else if (queryParam.kind === 'queryHashMap') {
       body += getParamValueHelper(indent, queryParam, () => {
+        const queryParamRef = qualifiedParamName(queryParam);
         let text = `${indent.get()}{\n`;
-        text += `${indent.push().get()}let mut ${queryParam.name}_vec = ${queryParam.name}.iter().collect::<Vec<_>>();\n`;
+        text += `${indent.push().get()}let mut ${queryParam.name}_vec = ${queryParamRef}.iter().collect::<Vec<_>>();\n`;
         text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.0);\n`;
         if (queryParam.explode) {
           text += `${indent.get()}for (k, v) in ${queryParam.name}_vec.iter() {\n`;
@@ -1044,7 +1111,8 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
 
     body += getParamValueHelper(indent, headerParam, () => {
       if (headerParam.kind === 'headerHashMap') {
-        let setter = `for (k, v) in ${headerParam.name} {\n`;
+        const headerParamRef = qualifiedParamName(headerParam);
+        let setter = `for (k, v) in ${headerParamRef} {\n`;
         setter += `${indent.push().get()}${requestVarName}.insert_header(format!("${headerParam.header}-{k}"), v);\n`;
         setter += `${indent.pop().get()}}\n`;
         return setter;
@@ -1215,8 +1283,9 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
       // no length to check so bail
       return '';
   }
+  const paramRef = qualifiedParamName(param);
   return helpers.buildIfBlock(indent, {
-    condition: `${param.name}${toString}.is_empty()`,
+    condition: `${paramRef}${toString}.is_empty()`,
     body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));\n`,
   });
 }
@@ -1852,6 +1921,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     paramName = 'self.' + paramName;
   } else if (overrideParamName) {
     paramName = overrideParamName;
+  } else if (param.group) {
+    paramName = qualifiedParamName(param);
   }
 
   const encodeBytes = function (type: rust.EncodedBytes, param?: string): string {
@@ -1886,6 +1957,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
   // param requires borrowing.
   let mustBorrow = !helpers.isQueryParameter(param);
 
+  const isGrouped = !!param.group;
+
   const paramType = helpers.unwrapType(param.type);
   // we want multi to hit the else case so the necessary conversions etc can happen
   if ((param.kind === 'headerCollection' || param.kind === 'queryCollection') && param.format !== 'multi') {
@@ -1911,8 +1984,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     switch (paramType.kind) {
       case 'String':
         paramValue = paramName;
-        // if the param is on the client, then we must borrow
-        mustBorrow = param.location === 'client' && fromSelf;
+        // if the param is on the client or in a group struct, then we must borrow
+        mustBorrow = isGrouped || (param.location === 'client' && fromSelf);
         break;
       case 'str':
         paramValue = paramName;
@@ -1956,8 +2029,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     case 'headerHashMap':
     case 'headerScalar':
       // for non-copyable params (e.g. String), we need to borrow them if they're on the
-      // client or we're in a closure and the param is required (header params are always owned)
-      mustBorrow = nonCopyableType(param.type) && (param.location === 'client' || (!fromSelf && !param.optional));
+      // client, in a group struct, or we're in a closure and the param is required (header params are always owned)
+      mustBorrow = nonCopyableType(param.type) && (isGrouped || param.location === 'client' || (!fromSelf && !param.optional));
       break;
   }
 
@@ -2036,4 +2109,9 @@ function getPipelineOptions(indent: helpers.indentation, use: Use, method: Clien
 function isEnumString(type: rust.Type): type is rust.Enum {
   const unwrapped = helpers.unwrapType(type);
   return unwrapped.kind === 'enum' && unwrapped.type === 'String';
+}
+
+/** returns the qualified name for a param, prefixing with the group name when the param belongs to a parameter group */
+function qualifiedParamName(param: rust.MethodParameter): string {
+  return param.group ? `${param.group.name}.${param.name}` : param.name;
 }

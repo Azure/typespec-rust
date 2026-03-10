@@ -357,9 +357,19 @@ export interface HeaderScalarParameter extends HTTPParameterBase {
   isApiVersion: boolean;
 }
 
-/** MethodOptions is the struct containing optional method params */
-export interface MethodOptions extends types.Option {
-  type: types.Struct;
+/** ParameterGroup is a group of parameters */
+export interface ParameterGroup<T extends types.Option<types.Struct> | types.Struct> {
+  /** the name of the parameter */
+  name: string;
+
+  /** any docs for the parameter */
+  docs: types.Docs;
+
+  /**
+   * the parameter group's type. for the optional
+   * params group the type will be an Option<Struct>
+   */
+  type: T;
 }
 
 /** PartialBodyParameter is a param that's a field within a type passed via the HTTP request body */
@@ -592,7 +602,7 @@ interface HTTPMethodBase extends method.Method<types.Type> {
   params: Array<HTTPParameterBase>;
 
   /** the method options type for this method */
-  options: MethodOptions;
+  options: ParameterGroup<types.Option<types.Struct>>;
 
   /** the type returned by the method */
   returns: types.Result;
@@ -620,6 +630,9 @@ interface HTTPParameterBase extends method.Parameter {
 
   /** optional params go in the method's MethodOptions type */
   optional: boolean;
+
+  /** set when this parameter belongs to a parameter group */
+  group?: ParameterGroup<types.Struct>;
 }
 
 class ClientParameterBase implements ClientParameterBase {
@@ -653,7 +666,7 @@ class HTTPParameterBase extends method.Parameter {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: ParameterGroup<types.Option<types.Struct>>, httpMethod: HTTPMethod, httpPath: string) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'async';
     this.params = new Array<MethodParameter>();
@@ -766,14 +779,8 @@ export class HeaderScalarParameter extends HTTPParameterBase implements HeaderSc
   }
 }
 
-export class MethodOptions extends types.Option implements MethodOptions {
-  constructor(type: types.Struct) {
-    super(type);
-  }
-}
-
 export class PageableMethod extends HTTPMethodBase implements PageableMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: ParameterGroup<types.Option<types.Struct>>, httpMethod: HTTPMethod, httpPath: string) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'pageable';
     this.params = new Array<MethodParameter>();
@@ -795,7 +802,7 @@ export class LroFinalResultStrategyHeader implements LroFinalResultStrategyHeade
 }
 
 export class LroMethod extends HTTPMethodBase implements LroMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultStrategy: LroFinalResultStrategyKind) {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: ParameterGroup<types.Option<types.Struct>>, httpMethod: HTTPMethod, httpPath: string, finalResultStrategy: LroFinalResultStrategyKind) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'lro';
     this.params = new Array<MethodParameter>();
@@ -817,6 +824,14 @@ export class PageableStrategyNextLink implements PageableStrategyNextLink {
     this.kind = 'nextLink';
     this.nextLinkPath = nextLinkPath;
     this.reinjectedParams = new Array<QueryCollectionParameter | QueryHashMapParameter | QueryScalarParameter>();
+  }
+}
+
+export class ParameterGroup<T extends types.Option<types.Struct> | types.Struct> implements ParameterGroup<T> {
+  constructor(name: string, type: T) {
+    this.name = name;
+    this.docs = {};
+    this.type = type;
   }
 }
 

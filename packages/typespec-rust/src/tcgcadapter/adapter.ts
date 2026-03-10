@@ -1245,11 +1245,12 @@ export class Adapter {
   }
 
   /** returns the specified type wrapped in a Ref */
-  private getRefType(type: rust.RefType): rust.Ref {
-    const typeKey = recursiveKeyName('ref', type);
+  private getRefType(type: rust.RefType, lifetime?: rust.Lifetime): rust.Ref {
+    const typeKey = recursiveKeyName(`ref${lifetime ? `-${lifetime.name}` : ''}`, type);
     let refType = this.types.get(typeKey);
     if (!refType) {
       refType = new rust.Ref(type);
+      refType.lifetime = lifetime;
       this.types.set(typeKey, refType);
     }
     return <rust.Ref>refType;
@@ -1849,7 +1850,7 @@ export class Adapter {
     methodOptionsField.docs.summary = 'Allows customization of the method call.';
     methodOptionsStruct.fields.push(methodOptionsField);
 
-    const methodOptions = new rust.MethodOptions(methodOptionsStruct);
+    const methodOptions = new rust.ParameterGroup('options', new rust.Option(methodOptionsStruct));
     const httpMethod = method.operation.verb;
 
     let rustMethod: MethodType;
@@ -1905,48 +1906,23 @@ export class Adapter {
     // maps tcgc method header/query params to their Rust method params
     const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | QueryParamType>();
 
-    for (const param of method.parameters) {
-      // we need to translate from the method param to its underlying operation param.
-      // most params have a one-to-one mapping. however, for spread params, there will
-      // be a many-to-one mapping. i.e. multiple params will map to the same underlying
-      // operation param. each param corresponds to a field within the operation param.
-      const opParam = allOpParams.find((opParam: tcgc.SdkHttpParameter) => {
-        return opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).some((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
-          return methodParam.name === param.name;
-        });
-      });
-      if (!opParam) {
-        throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
-      }
+    /** returns true if the op param should be omitted */
+    const skipOpParam = function (opParam: tcgc.SdkHttpParameter): boolean {
+      // x-ms-client-request-id is automatically inserted into requests via
+      // a pipeline policy. so we don't want to expose this as an actual param.
+      return opParam.kind === 'header' && opParam.serializedName.toLowerCase() === 'x-ms-client-request-id';
+    };
 
-      if (opParam.kind === 'header' && opParam.serializedName.toLowerCase() === 'x-ms-client-request-id') {
-        // x-ms-client-request-id is automatically inserted into requests via
-        // a pipeline policy. so we don't want to expose this as an actual param.
-        continue;
-      }
-
-      let adaptedParam: rust.MethodParameter;
-      // for spread params there are two cases we need to consider.
-      // if the method param's type doesn't match the op param's type then it's a spread param
-      // - e.g. method param's type is string/int/etc which is a field in the op param's body type
-      // if the method param's type DOES match the op param's type and the op param has multiple corresponding method params, it's a spread param
-      // - e.g. op param is an intersection of multiple model types, and each model type is exposed as a discrete param
-      if (opParam.kind === 'body' && opParam.type.kind === 'model'
-        && (opParam.type !== param.type || opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).length > 1)
-      ) {
-        adaptedParam = this.adaptMethodSpreadParameter(param, this.getPayloadFormatType(opParam.type, opParam.defaultContentType), opParam.type);
-      } else {
-        adaptedParam = this.adaptMethodParameter(opParam, param);
-      }
-
+    /** adds adapted params to the method's param list and optional params to method options */
+    const processAdaptedParam = (adaptedParam: rust.MethodParameter, methodParam: tcgc.SdkMethodParameter): void => {
       switch (adaptedParam.kind) {
         case 'headerScalar':
         case 'queryScalar':
-          paramsMap.set(param, adaptedParam);
+          paramsMap.set(methodParam, adaptedParam);
           break;
       }
 
-      adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
+      adaptedParam.docs = this.adaptDocs(methodParam.summary, methodParam.doc);
       rustMethod.params.push(adaptedParam);
 
       // we specially handle an optional content-type header to ensure it's omitted
@@ -1970,7 +1946,132 @@ export class Adapter {
 
         const optionsField = new rust.StructField(adaptedParam.name, pub, fieldType);
         optionsField.docs = adaptedParam.docs;
-        rustMethod.options.type.fields.push(optionsField);
+        rustMethod.options.type.type.fields.push(optionsField);
+      }
+    };
+
+    for (const param of method.parameters) {
+      // we need to translate from the method param to its underlying operation param.
+      // most params have a one-to-one mapping. however, for spread params, there will
+      // be a many-to-one mapping. i.e. multiple params will map to the same underlying
+      // operation param. each param corresponds to a field within the operation param.
+      // there are three distinct cases
+      //   - one-to-one mapping (header param -> header op param)
+      //   - many-to-one mapping (spread params, multiple params map to one op param)
+      //   - one-to-many mapping (grouped params, one param maps to multiple op params)
+      // two-phase filter: first try strict match on the last segment element (cases 1 and 2).
+      // if no matches, try matching the first segment element (case 3: parameter group from @@override).
+      // this avoids false case-3 matches when a body model has fields extracted as HTTP params
+      // (e.g. @query fields), where segment[0] is the body param name but it's not a parameter group.
+      let opParams = allOpParams.filter((opParam: tcgc.SdkHttpParameter) => {
+        return opParam.methodParameterSegments.some((segment) => segment[segment.length - 1].name === param.name);
+      });
+      if (opParams.length === 0) {
+        opParams = allOpParams.filter((opParam: tcgc.SdkHttpParameter) => {
+          return opParam.methodParameterSegments.some((segment) => segment[0].name === param.name);
+        });
+      }
+
+      let adaptedParam: rust.MethodParameter;
+
+      if (opParams.length === 1) {
+        // case 1 or 2
+        const opParam = opParams[0];
+
+        if (skipOpParam(opParam)) {
+          continue;
+        }
+
+        // for spread params there are two cases we need to consider.
+        // if the method param's type doesn't match the op param's type then it's a spread param
+        // - e.g. method param's type is string/int/etc which is a field in the op param's body type
+        // if the method param's type DOES match the op param's type and the op param has multiple corresponding method params, it's a spread param
+        // - e.g. op param is an intersection of multiple model types, and each model type is exposed as a discrete param
+        if (opParam.kind === 'body' && opParam.type.kind === 'model'
+          && (opParam.type !== param.type || opParam.methodParameterSegments.map((segment) => segment[segment.length - 1]).length > 1)
+        ) {
+          adaptedParam = this.adaptMethodSpreadParameter(param, this.getPayloadFormatType(opParam.type, opParam.defaultContentType), opParam.type);
+        } else {
+          adaptedParam = this.adaptMethodParameter(opParam, param);
+        }
+
+        processAdaptedParam(adaptedParam, param);
+      } else if (opParams.length > 1) {
+        // case 3 (param group)
+        // Parameter group handling:
+        //   - required params stay in the named parameter group
+        //   - optional params are moved to the method's options type
+        //   - if no required params remain, the param group evaporates
+        let paramGroup: rust.ParameterGroup<rust.Struct> | undefined;
+        const groupedParams = new Array<rust.MethodParameter>();
+        const lifetime = new rust.Lifetime('a');
+        let hasRefs = false;
+        for (const opParam of opParams) {
+          if (skipOpParam(opParam)) {
+            continue;
+          }
+
+          // for grouped params, the segment is [groupMethodParam, fieldProp].
+          // we need the field property to get the correct type for this specific
+          // operation parameter (the opParam's own type might be the group model type).
+          const fieldProp = opParam.methodParameterSegments
+            .flatMap((segment) => segment.length > 1 ? [segment[segment.length - 1]] : [])
+            .find((prop) => prop.name === opParam.name);
+
+          // pass fieldProp as methodParam so adaptMethodParameter uses the field's type.
+          // cast is safe as we only need .type, .optional, .summary, .doc from it.
+          const groupedParam = this.adaptMethodParameter(opParam, fieldProp as tcgc.SdkMethodParameter | undefined, lifetime);
+          const fieldOptional = fieldProp ? (fieldProp as tcgc.SdkMethodParameter).optional : opParam.optional;
+          if (!fieldOptional) {
+            if (!paramGroup) {
+              if (param.type.kind !== 'model') {
+                throw new AdapterError('InternalError', `expected model type for parameter group but got ${param.type.kind}`, param.__raw?.node);
+              }
+              const groupName = utils.capitalize(param.type.name).replace(/\W/g, '');
+              const paramName = naming.getEscapedReservedName(utils.snakeCaseName(param.name), 'param', reservedParams);
+              // param group's visibility is tied to its matching method
+              const groupStruct = new rust.Struct(groupName, rustMethod.visibility);
+              groupStruct.docs = this.adaptDocs(param.type.summary, param.type.doc);
+              paramGroup = new rust.ParameterGroup(paramName, groupStruct);
+              paramGroup.docs = this.adaptDocs(param.summary, param.doc);
+            }
+            groupedParam.docs = this.adaptDocs(opParam.summary, opParam.doc);
+            groupedParams.push(groupedParam);
+            groupedParam.group = paramGroup;
+            if (groupedParam.type.kind === 'ref') {
+              hasRefs = true;
+            }
+          } else {
+            // optional params within a group are moved to the method's options type
+            processAdaptedParam(groupedParam, param);
+          }
+        }
+
+        if (paramGroup) {
+          if (hasRefs) {
+            paramGroup.type.lifetime = lifetime;
+          }
+
+          // push each grouped param individually; they already have .group set
+          for (const gp of groupedParams) {
+            rustMethod.params.push(gp);
+          }
+
+          // remove the group's model type from the module's models list.
+          // the parameter group struct will be emitted by the client codegen
+          // in method_options.rs. leaving the model in models.rs would create
+          // a duplicate struct definition with incompatible field types.
+          if (param.type.kind === 'model') {
+            const groupModelName = utils.capitalize(param.type.name).replace(/\W/g, '');
+            const ns = this.adaptNamespace(param.type.namespace);
+            const idx = ns.models.findIndex(m => m.kind === 'model' && m.name === groupModelName);
+            if (idx >= 0) {
+              ns.models.splice(idx, 1);
+            }
+          }
+        }
+      } else {
+        throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
       }
     }
 
@@ -2233,7 +2334,7 @@ export class Adapter {
       } else if (pageableMethod.strategy?.kind === 'continuationToken') {
         // set the continuation type to token on the Pager and the PagerOptions field in the method options
         pageableMethod.returns.type.continuation = 'token';
-        for (const field of pageableMethod.options.type.fields) {
+        for (const field of pageableMethod.options.type.type.fields) {
           if (field.type.kind === 'pagerOptions') {
             field.type.continuation = 'token';
           }
@@ -2476,9 +2577,10 @@ export class Adapter {
    * 
    * @param opParam the tcgc operation parameter to convert
    * @param methodParam the tcgc method parameter associated with opParam
+   * @param lifetime optional lifetime to stamp on borrowed ref types (used for grouped params that are struct fields)
    * @returns a Rust method parameter
    */
-  private adaptMethodParameter(opParam: tcgc.SdkHttpParameter, methodParam?: tcgc.SdkMethodParameter): rust.MethodParameter {
+  private adaptMethodParameter(opParam: tcgc.SdkHttpParameter, methodParam?: tcgc.SdkMethodParameter, lifetime?: rust.Lifetime): rust.MethodParameter {
     /**
      * used to create keys for this.clientMethodParams
      * @param param the param for which to create a key
@@ -2516,9 +2618,9 @@ export class Adapter {
     const paramOptional = methodParam ? methodParam.optional : opParam.optional;
     let paramType = this.getType(methodParam ? methodParam.type : opParam.type);
 
-    // for required header/path/query method string params, we might emit them as borrowed types
+    // for required header/path/query method string params, we might emit them as borrowed types.
     if (!paramOptional && paramLoc !== 'client' && (opParam.kind === 'header' || opParam.kind === 'path' || opParam.kind === 'query')) {
-      const borrowedType = this.canBorrowMethodParam(paramType, opParam.kind);
+      const borrowedType = this.canBorrowMethodParam(paramType, opParam.kind, lifetime);
       if (borrowedType) {
         paramType = borrowedType;
       }
@@ -2654,17 +2756,18 @@ export class Adapter {
    * 
    * @param type the param type to be updated
    * @param kind the kind of param
+   * @param lifetime optional lifetime to stamp on Ref types (used for struct fields)
    * @returns the updated param type or undefined
    */
-  private canBorrowMethodParam(type: rust.Type, kind: 'header' | 'path' | 'query'): rust.Type | undefined {
+  private canBorrowMethodParam(type: rust.Type, kind: 'header' | 'path' | 'query', lifetime?: rust.Lifetime): rust.Type | undefined {
     const recursiveBuildVecStr = (v: rust.WireType): rust.WireType => {
       switch (v.kind) {
         case 'encodedBytes':
-          return this.getRefType(this.getEncodedBytes(v.encoding, true));
+          return this.getRefType(this.getEncodedBytes(v.encoding, true), lifetime);
         case 'hashmap':
           return this.getHashMap(this.typeToWireType(recursiveBuildVecStr(v.type)));
         case 'String':
-          return this.getRefType(this.getStringSlice());
+          return this.getRefType(this.getStringSlice(), lifetime);
         case 'Vec':
           return this.getVec(this.typeToWireType(recursiveBuildVecStr(v.type)));
         default:
@@ -2683,19 +2786,19 @@ export class Adapter {
       case 'String':
         // header String params are always owned
         if (kind !== 'header') {
-          return this.getRefType(this.getStringSlice());
+          return this.getRefType(this.getStringSlice(), lifetime);
         }
         break;
       case 'Vec': {
         // if this is an array of string, we ultimately want a slice of &str
         const unwrapped = recursiveUnwrapVec(type);
         if (unwrapped.kind === 'String' || unwrapped.kind === 'encodedBytes') {
-          return this.getRefType(this.getSlice(recursiveBuildVecStr(type.type)));
+          return this.getRefType(this.getSlice(recursiveBuildVecStr(type.type)), lifetime);
         }
-        return this.getRefType(this.getSlice(type.type));
+        return this.getRefType(this.getSlice(type.type), lifetime);
       }
       case 'encodedBytes':
-        return this.getRefType(this.getEncodedBytes(type.encoding, true));
+        return this.getRefType(this.getEncodedBytes(type.encoding, true), lifetime);
       case 'decimal':
       case 'Etag':
       case 'hashmap':
@@ -2705,7 +2808,7 @@ export class Adapter {
       case 'Url':
         // these types all require conversion
         // to String so we don't need to own them
-        return this.getRefType(type);
+        return this.getRefType(type, lifetime);
     }
     return undefined;
   }
@@ -2871,7 +2974,7 @@ function recursiveKeyName(root: string, type: rust.Box | rust.RequestContent | r
     case 'literal':
       return `${recursiveKeyName(`${root}-${type.kind}`, type.valueKind)}-${type.value}`;
     case 'ref':
-      return recursiveKeyName(`${root}-${type.kind}`, type.type);
+      return recursiveKeyName(`${root}-${type.kind}${type.lifetime ? `-${type.lifetime.name}` : ''}`, type.type);
     case 'requestContent':
       return recursiveKeyName(`${root}-${type.kind}-${type.format}`, type.content);
     case 'safeint':

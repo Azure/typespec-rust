@@ -30,6 +30,7 @@ members = [
     "spector/azure/client-generator-core/deserialize-empty-string-as-null",
     "spector/azure/client-generator-core/flatten-property",
     "spector/azure/client-generator-core/next-link-verb",
+    "spector/azure/client-generator-core/override",
     "spector/azure/client-generator-core/usage",
     "spector/azure/client/namespace",
     "spector/azure/core/basic",
