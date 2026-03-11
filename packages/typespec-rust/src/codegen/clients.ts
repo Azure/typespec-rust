@@ -882,8 +882,8 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   let body = '';
 
-  // if path is just "/" no need to set it again, we're already there
-  if (pathChunks[0] !== '/') {
+  // if path is just "/" or empty, no need to set it again, we're already there
+  if (pathChunks[0] !== '/' && pathChunks[0] !== '') {
     use.add('azure_core::http', 'UrlExt');
     let path = `"${pathChunks[0]}"`;
     if (paramGroups.path.length === 0) {

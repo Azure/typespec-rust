@@ -188,7 +188,7 @@ pub struct BytesVectors {
 #[non_exhaustive]
 pub struct MiddleType {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<RecursiveType>,
+    pub value: Option<Box<RecursiveType>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
@@ -406,7 +406,7 @@ pub struct OuterWithNullableValue {
 #[non_exhaustive]
 pub struct RecursiveType {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Box<MiddleType>>,
+    pub value: Option<MiddleType>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
