@@ -1965,15 +1965,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "spector_clientdefault"
-version = "0.1.0"
-dependencies = [
- "azure_core",
- "serde",
- "tokio",
-]
-
-[[package]]
 name = "spector_clientinit_default"
 version = "0.1.0"
 dependencies = [
