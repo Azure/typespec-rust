@@ -899,42 +899,36 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += `${indent.get()}let mut ${pathVarName} = String::from(${path});\n`;
 
       for (const pathParam of paramGroups.path) {
-        let wrapSortedVec: (s: string) => string = (s) => s;
         let paramExpression: string;
         if (pathParam.kind === 'pathHashMap') {
           const pathParamRef = qualifiedParamName(pathParam);
-          wrapSortedVec = (s) => `${indent.get()}{`
-            + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParamRef}.iter().collect::<Vec<_>>();\n`
-            + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.0);\n`
-            + `${s}`
-            + `${indent.pop().get()}}`;
 
           const kEqualsV = '"{k}={v}"';
           const kCommaV = '"{k},{v}"';
 
-          paramExpression = `&${pathParam.name}_vec.iter().map(|(k,v)| `
+          paramExpression = `&${pathParamRef}.iter().map(|(k,v)| `
             + (pathParam.explode
               ? `format!(${kEqualsV})).collect::<Vec<_>>().join(",")`
               : `format!(${kCommaV})).collect::<Vec<_>>().join(",")`);
 
           switch (pathParam.style) {
             case 'path':
-              paramExpression = `&format!("/{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
+              paramExpression = `&format!("/{}", ${pathParamRef}.iter().map(|(k,v)| `
                 + (pathParam.explode
                   ? `format!(${kEqualsV})).collect::<Vec<_>>().join("/"))`
                   : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'label':
-              paramExpression = `&format!(".{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
+              paramExpression = `&format!(".{}", ${pathParamRef}.iter().map(|(k,v)| `
                 + (pathParam.explode
                   ? `format!(${kEqualsV})).collect::<Vec<_>>().join("."))`
                   : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'matrix':
               paramExpression = pathParam.explode
-                ? (`&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                ? (`&format!(";{}", ${pathParamRef}.iter().map(|(k,v)| `
                   + `format!(${kEqualsV})).collect::<Vec<_>>().join(";"))`)
-                : (`&format!(";${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                : (`&format!(";${pathParam.name}={}", ${pathParamRef}.iter().map(|(k,v)| `
                   + `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
           }
@@ -975,13 +969,13 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         if (pathParam.optional) {
           body += `${indent.get()}${pathVarName} = ${helpers.buildMatch(indent, `options.${pathParam.name}${nonCopyableType(pathParam.type) ? '.as_ref()' : ''}`, [{
             pattern: `Some(${pathParam.name})`,
-            body: (indent) => wrapSortedVec(`${indent.get()}${pathVarName}.replace("{${pathParam.segment}}", ${paramExpression})\n`),
+            body: (indent) => `${indent.get()}${pathVarName}.replace("{${pathParam.segment}}", ${paramExpression})\n`,
           }, {
             pattern: `None`,
             body: (indent) => `${indent.get()}${pathVarName}.replace("{${pathParam.segment}}", "")\n`,
           }])};\n`;
         } else {
-          body += wrapSortedVec(`${indent.get()}${pathVarName} = ${pathVarName}.replace("{${pathParam.segment}}", ${paramExpression});\n`);
+          body += `${indent.get()}${pathVarName} = ${pathVarName}.replace("{${pathParam.segment}}", ${paramExpression});\n`;
         }
       }
       path = `&${pathVarName}`;
@@ -1038,18 +1032,12 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     } else if (queryParam.kind === 'queryHashMap') {
       body += getParamValueHelper(indent, queryParam, () => {
         const queryParamRef = qualifiedParamName(queryParam);
-        let text = `${indent.get()}{\n`;
-        text += `${indent.push().get()}let mut ${queryParam.name}_vec = ${queryParamRef}.iter().collect::<Vec<_>>();\n`;
-        text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.0);\n`;
-        if (queryParam.explode) {
-          text += `${indent.get()}for (k, v) in ${queryParam.name}_vec.iter() {\n`;
-          text += `${indent.push().get()}query_builder.append_pair(*k, v.to_string());\n`;
-          text += `${indent.pop().get()}}\n`;
-        } else {
-          text += `${indent.get()}query_builder.set_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(","));\n`;
-        }
-        text += `${indent.pop().get()}}\n`;
-        return text;
+        return (queryParam.explode)
+          ? `${indent.get()}for (k, v) in ${queryParamRef}.iter() {\n`
+            + `${indent.push().get()}query_builder.append_pair(k.as_str(), v.to_string());\n`
+            + `${indent.pop().get()}}\n`
+          : `${indent.get()}query_builder.set_pair("${queryParam.key}", `
+            + `${queryParamRef}.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(","));\n`;
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
