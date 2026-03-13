@@ -79,6 +79,7 @@ const azureHttpSpecsGroup = {
   'spector_apiverheader': {input: 'azure/client-generator-core/api-version/header/client.tsp'},
   'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
+  'spector_client_default_value': {input: 'azure/client-generator-core/client-default-value'},
   'spector_clientinit_default': {input: 'azure/client-generator-core/client-initialization/default'},
   'spector_clientinit_individually': {input: 'azure/client-generator-core/client-initialization/individually'},
   'spector_clientinit_individually_parent': {input: 'azure/client-generator-core/client-initialization/individuallyParent'},

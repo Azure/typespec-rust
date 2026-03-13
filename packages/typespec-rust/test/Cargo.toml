@@ -20,6 +20,7 @@ members = [
     "spector/azure/client-generator-core/api-version/path",
     "spector/azure/client-generator-core/api-version/query",
     "spector/azure/client-generator-core/alternate-type",
+    "spector/azure/client-generator-core/client-default-value",
     "spector/azure/client-generator-core/client-initialization/default",
     "spector/azure/client-generator-core/client-initialization/individually",
     "spector/azure/client-generator-core/client-initialization/individuallyParent",
