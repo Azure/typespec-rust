@@ -112,12 +112,8 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let mut url = self.endpoint.clone();
         url.append_path("/routes/query/query-expansion/explode/record");
         let mut query_builder = url.query_builder();
-        {
-            let mut param_vec = param.iter().collect::<Vec<_>>();
-            param_vec.sort_by_key(|p| p.0);
-            for (k, v) in param_vec.iter() {
-                query_builder.append_pair(*k, v.to_string());
-            }
+        for (k, v) in param.iter() {
+            query_builder.append_pair(k.as_str(), v.to_string());
         }
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
