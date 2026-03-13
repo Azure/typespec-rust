@@ -172,7 +172,7 @@ export interface DiscriminatedUnionMember {
   docs: Docs;
 
   /** the type of the discriminated union member */
-  type: Model;
+  type: DiscriminatedUnion | Model;
 
   /** discriminator property value */
   discriminantValue: string;
@@ -893,7 +893,7 @@ export class DiscriminatedUnionEnvelope implements DiscriminatedUnionEnvelope {
 }
 
 export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
-  constructor(type: Model, discriminantValue: string) {
+  constructor(type: DiscriminatedUnion | Model, discriminantValue: string) {
     this.kind = 'discriminatedUnionMember';
     this.type = type;
     this.discriminantValue = discriminantValue;
