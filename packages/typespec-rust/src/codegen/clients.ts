@@ -271,19 +271,37 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
 
     body += '}\n\n'; // end client impl
 
-    // emit pub(crate) const declarations for fields with default value constants
+    // Emit pub(crate) const declarations for fields with default value constants.
+    //
+    // These constants are ALWAYS emitted, even when the options type is suppressed.
+    // In SDK crates with suppressed options, SDK authors need these constants to
+    // reference TypeSpec-defined default values (e.g., api-version) in their
+    // hand-authored Default impl. Suppressing them would force hardcoding.
+    //
+    // Visibility design:
+    // - Non-suppressed: constant is referenced by the generated Default impl, so
+    //   it's alive and no dead_code suppression is needed.
+    // - Suppressed: the generated options type doesn't exist — SDK authors provide
+    //   their own. The constant is a convenience they SHOULD use, but may not.
+    //   #[allow(dead_code)] is appropriate here (parallels std library patterns).
     if (client.constructable) {
       const isSuppressed = client.constructable.suppressed === 'yes';
       for (const field of client.constructable.options.type.fields) {
         if (field.defaultValueConstant) {
           if (isSuppressed) {
-            // When the client options type is suppressed, avoid emitting an intra-doc link
-            // to a type that does not exist in the generated code.
+            // Plain text doc comment — the options type doesn't exist when suppressed,
+            // so intra-doc links would be broken.
             body += `/// Default value for \`${client.constructable.options.type.name}::${field.name}\`.\n`;
+            body += `///\n`;
+            body += `/// This constant is available for SDK authors to use in hand-authored code.\n`;
+            body += `/// When the options type is suppressed (via \`@access(Access.internal)\`), the\n`;
+            body += `/// SDK author provides a custom options type and should reference this constant\n`;
+            body += `/// in their \`Default\` implementation rather than hardcoding the value.\n`;
+            body += `#[allow(dead_code)]\n`;
           } else {
+            // Intra-doc link — the options type exists and the link resolves.
             body += `/// Default value for [\`${client.constructable.options.type.name}::${field.name}\`].\n`;
           }
-          body += `#[allow(dead_code)]\n`;
           body += `pub(crate) const ${field.defaultValueConstant.name}: &str = "${field.defaultValueConstant.value}";\n\n`;
         }
       }

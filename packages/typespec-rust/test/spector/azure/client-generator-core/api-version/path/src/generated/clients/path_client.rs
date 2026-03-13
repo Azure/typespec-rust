@@ -100,7 +100,6 @@ impl PathClient {
 }
 
 /// Default value for [`PathClientOptions::version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_VERSION: &str = "2025-01-01";
 
 impl Default for PathClientOptions {

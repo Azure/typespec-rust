@@ -422,7 +422,6 @@ impl BasicClient {
 }
 
 /// Default value for [`BasicClientOptions::api_version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_API_VERSION: &str = "2022-12-01-preview";
 
 impl Default for BasicClientOptions {

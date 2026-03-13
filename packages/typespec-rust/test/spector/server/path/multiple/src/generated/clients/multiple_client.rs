@@ -142,7 +142,6 @@ impl MultipleClient {
 }
 
 /// Default value for [`MultipleClientOptions::api_version`].
-#[allow(dead_code)]
 pub(crate) const DEFAULT_API_VERSION: &str = "v1.0";
 
 impl Default for MultipleClientOptions {
