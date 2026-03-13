@@ -2237,6 +2237,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_hierarchy_building"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_jmergepatch"
 version = "0.1.0"
 dependencies = [

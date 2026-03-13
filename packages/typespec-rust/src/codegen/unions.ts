@@ -66,7 +66,11 @@ export function emitUnions(module: rust.ModuleContainer, context: Context): Unio
       body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
 
       for (const member of rustUnion.members) {
-        use.addForType(member.type);
+        // Use isn't granular enough to realize we're in unions.rs
+        // so skip adding when the member is also a DU
+        if (member.type.kind !== 'discriminatedUnion') {
+          use.addForType(member.type);
+        }
 
         const docs = helpers.formatDocComment(member.docs, true);
         if (docs.length > 0) {

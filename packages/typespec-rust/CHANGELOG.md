@@ -1,5 +1,11 @@
 # Release History
 
+## 0.37.1 (unreleased)
+
+### Bugs Fixed
+
+* Fixed an issue with discriminated unions containing other discriminated unions.
+
 ## 0.37.0 (2026-03-11)
 
 ### Breaking Changes
