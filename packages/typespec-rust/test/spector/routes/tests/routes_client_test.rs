@@ -394,11 +394,11 @@ async fn query_query_continuation_explode_array() {
 }
 
 // Spector does not handle reordered hashmaps. Other SDKs did not run into this problem.
-// It would be more expensive to fix this at the spector side. Something can be fone for query parameters at the scope
+// It would be more expensive to fix this at the spector side. Something can be done for query parameters at the scope
 // of a specific mockapi.ts for query parameters.
 // But for path parameters, the whole test infrastructure needs to be updated, so that it would listen on two URLs (i.e.
 // with path containing "a,1,b,2" and "b,2,a,1"), and would mark the test as passed if only one of the URLs were hit.
-// That would me more expensive update, and it looks like only Rust would benefit from it.
+// That would be a more expensive update, and it looks like only Rust would benefit from it.
 // So instead of doing that, we would use the client policy below when testing HashMaps as query and path parameters.
 // When used responsively as we do (i.e. only to flip "b,2,a,1" into "a,1,b,2"), it will not mask any real code issue.
 #[derive(Clone, Debug)]
