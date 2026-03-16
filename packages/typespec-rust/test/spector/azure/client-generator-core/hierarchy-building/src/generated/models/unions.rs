@@ -37,10 +37,10 @@ pub enum Pet {
         /// Field has constant value pet. Any specified value will be ignored.
         kind: Option<String>,
 
-        /// Whether the pet is trained
-        trained: Option<bool>,
-
         /// Name of the animal
         name: Option<String>,
+
+        /// Whether the pet is trained
+        trained: Option<bool>,
     },
 }

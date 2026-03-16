@@ -154,11 +154,14 @@ function getPolymorphicUnknownVariant(indent: helpers.indentation, use: Use, bas
     if (!abbreviated) {
       unknownDef += helpers.formatDocComment(field.docs, false, undefined, indent);
     }
-    use.addForType(field.type);
+
     if (abbreviated) {
       unknownDef += `${field.name}, `;
     } else {
-      unknownDef += `${indent.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
+      use.addForType(field.type);
+      // the base internal type declares its fields with refs and a lifetime.
+      // we need to omit those for the inline anonymous unknown kind definition.
+      unknownDef += `${indent.get()}${field.name}: ${helpers.getTypeDeclaration(field.type, 'omit')},\n\n`;
     }
   }
   unknownDef += `${abbreviated ? '' : indent.pop().get()}}`;
@@ -247,21 +250,8 @@ function emitUnionSerde(module: rust.ModuleContainer): helpers.Module | undefine
     matchArms.push({
       pattern: `${indent.get()}${rustUnion.name}::${getPolymorphicUnknownVariant(indent, use, unionBaseKind, rustUnion.discriminant, true)}`,
       body: (indent) => {
-        let content = `${indent.push().get()}#[derive(Serialize)]\n`;
-        const unknownVariantName = getPolymorphicUnknownVariantName(rustUnion.discriminant);
-        content += `${indent.get()}struct ${unknownVariantName}<'a> {\n`;
-        indent.push();
-        for (const field of unionBaseKind.baseType.fields) {
-          if (field.kind === 'additionalProperties') {
-            // TODO
-            continue;
-          }
-          content += `${indent.get()}#[serde(skip_serializing_if = "Option::is_none")]\n`;
-          content += `${indent.get()}${field.name}: &'a ${helpers.getTypeDeclaration(field.type)},\n`;
-        }
-        content += `${indent.pop().get()}}\n`;
-        content += `${indent.get()}${unknownVariantName}::serialize(&${unknownVariantName} { ${unionBaseKind.baseType.fields.map((field) => field.name).join(', ')} }, serializer)\n`;
-        return content;
+        use.addForType(unionBaseKind.baseType);
+        return `${indent.get()}${unionBaseKind.baseType.name}::serialize(&${unionBaseKind.baseType.name} { ${unionBaseKind.baseType.fields.map((field) => field.name).join(', ')} }, serializer)\n`;
       },
     });
     body += `${indent.get()}${helpers.buildMatch(indent, 'self', matchArms)}\n`;

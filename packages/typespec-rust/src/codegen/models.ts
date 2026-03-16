@@ -104,8 +104,15 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
     }
     const isOperationStatus = hasAzureErrorDetailFields(model);
 
-    // we add this here to avoid using serde for marker-only models
-    use.add('serde', 'Deserialize');
+    // we add these here to avoid using serde for marker-only models.
+    // NOTE: PolymorphicBase are pub(crate) serialization helpers used
+    // for polymorphic base types.  they are Serialize only and the
+    // flag is mutually exclusive with all other flags.
+
+    if (model.flags !== rust.ModelFlags.PolymorphicBase) {
+      use.add('serde', 'Deserialize');
+    }
+
     if (!isOperationStatus) {
       use.add('serde', 'Serialize');
     }
@@ -125,9 +132,13 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
     // default impl (e.g. enum types).
     if (isOperationStatus) {
       body += `#[derive(Default, Deserialize, SafeDebug)]\n`;
-    } else {
+    } else if (model.flags !== rust.ModelFlags.PolymorphicBase) {
       body += helpers.annotationDerive(!hasXmlAddlProps, model.flags !== rust.ModelFlags.Unspecified ? 'Default' : '');
+    } else {
+      // rust.ModelFlags.PolymorphicBase only needs this
+      body += '#[derive(Serialize)]\n';
     }
+
     if (<rust.ModelFlags>(model.flags & rust.ModelFlags.Output) === rust.ModelFlags.Output && (model.flags & rust.ModelFlags.Input) === 0) {
       // output-only models get the non_exhaustive annotation
       body += helpers.AnnotationNonExhaustive;
@@ -167,7 +178,7 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       body += `#[serde(rename = "${duMember.discriminantValue}", tag = "${discriminator.serde}")]\n`;
     }
 
-    body += `${helpers.emitVisibility(model.visibility)}struct ${model.name} {\n`;
+    body += `${helpers.emitVisibility(model.visibility)}struct ${helpers.getTypeDeclaration(model)} {\n`;
 
     for (const field of model.fields) {
       if (field.kind === 'modelField' && (field.flags & rust.ModelFieldFlags.Discriminator)) {
@@ -638,7 +649,7 @@ function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, se
   const buildSerDeModName = function (type: rust.Type): string {
     let name = utils.deconstruct(type.kind).join('_');
     let unwrapped = type;
-    while (unwrapped.kind === 'hashmap' || unwrapped.kind === 'option' || unwrapped.kind === 'Vec') {
+    while (unwrapped.kind === 'hashmap' || unwrapped.kind === 'option' || unwrapped.kind === 'ref' || unwrapped.kind === 'Vec') {
       unwrapped = unwrapped.type;
       name += '_' + utils.deconstruct(unwrapped.kind).join('_');
     }
@@ -754,14 +765,15 @@ function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, se
         return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
       }
       return addSerDeHelper();
-    default:
-      if (field.type.kind === 'option') {
-        switch (field.type.type.kind) {
+    default: {
+      const unwrappedRef = utils.unwrapRef(field.type);
+      if (unwrappedRef.kind === 'option') {
+        switch (unwrappedRef.type.kind) {
           case 'encodedBytes':
             return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding, true);
           case 'enumValue':
           case 'literal':
-            return serdeLiteral(field.type.type);
+            return serdeLiteral(unwrappedRef.type);
           case 'offsetDateTime':
             if (format === 'json' || ((<rust.OffsetDateTime>unwrapped).encoding !== 'rfc3339' && (<rust.OffsetDateTime>unwrapped).encoding !== 'rfc3339-fixed-width')) {
               return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
@@ -774,6 +786,7 @@ function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, se
       //  - Option of HashMap/Vec of encoded thing
       addSerDeHelper();
       break;
+    }
   }
 }
 
@@ -948,7 +961,7 @@ function buildXmlAddlPropsSerializeForModel(model: rust.Model, addlProps: rust.M
  * @returns the pub(crate) serialize function definition
  */
 function buildLiteralSerialize(indent: helpers.indentation, name: string, field: rust.ModelField, use: Use): string {
-  const literal = utils.unwrapOption(field.type);
+  const literal = utils.unwrapOption(utils.unwrapRef(field.type));
   if (literal.kind !== 'enumValue' && literal.kind !== 'literal') {
     throw new CodegenError('InternalError', `unexpected kind ${literal.kind}`);
   }
@@ -960,7 +973,7 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, field:
     // disable per instance instead of for the entire file
     content += '#[allow(non_snake_case)]\n';
   }
-  content += `pub(crate) fn ${name}<S>(${fieldVar}: &${helpers.getTypeDeclaration(field.type)}, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
+  content += `pub(crate) fn ${name}<S>(${fieldVar}: &${helpers.getTypeDeclaration(field.type, 'omit')}, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
 
   let serializeMethod: string;
   let serializeValue: string | number | boolean;

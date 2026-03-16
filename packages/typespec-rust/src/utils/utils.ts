@@ -21,6 +21,19 @@ export function unwrapOption(type: rust.Type): rust.Type {
 }
 
 /**
+ * if type is a ref type, returns the referenced type, else returns type
+ * 
+ * @param type is the type to unwrap
+ * @returns the wrapped type or the original type if it wasn't wrapped
+ */
+export function unwrapRef(type: rust.Type): rust.Type {
+  if (type.kind === 'ref') {
+    return type.type;
+  }
+  return type;
+}
+
+/**
  * returns the object of type targetKind extracted from type or undefined.
  * if targetKind is wrapped within one or more types, their kind(s) must be specified in wrappedIn.
  * if the specified sequence of types (wrappedIn + targetKind) don't match, undefined is returned.

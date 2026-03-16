@@ -8,6 +8,10 @@ mod enums_impl;
 mod enums_serde;
 #[allow(clippy::module_inception)]
 mod models;
+mod models_impl;
 mod models_serde;
+mod unions;
+mod unions_serde;
 pub use enums::*;
 pub use models::*;
+pub use unions::*;

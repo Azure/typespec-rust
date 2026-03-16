@@ -5,6 +5,7 @@
 ### Bugs Fixed
 
 * Fixed an issue with discriminated unions containing other discriminated unions.
+* Fixed missing custom serialization for base polymorphic types.
 
 ## 0.37.0 (2026-03-11)
 

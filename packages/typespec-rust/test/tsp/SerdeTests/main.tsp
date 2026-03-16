@@ -115,6 +115,20 @@ model WithNumericEnum {
   value: ExtensibleValues;
 }
 
+@discriminator("kind")
+model BaseType {
+  kind: string;
+  @encode(DateTimeKnownEncoding.rfc7231)
+  time: offsetDateTime;
+  @encode(BytesKnownEncoding.base64url)
+  data: bytes;
+}
+
+model Derivedtype extends BaseType {
+  kind: "derived";
+  count: int32;
+}
+
 @@access(SerdeTests.BytesVectors, Access.public);
 @@usage(SerdeTests.BytesVectors, Usage.output);
 @@access(SerdeTests.BytesRecords, Access.public);
@@ -150,3 +164,8 @@ model WithNumericEnum {
 
 @@access(SerdeTests.WithNumericEnum, Access.public);
 @@usage(SerdeTests.WithNumericEnum, Usage.output);
+
+@@access(SerdeTests.BaseType, Access.public);
+@@usage(SerdeTests.BaseType, Usage.output);
+@@access(SerdeTests.Derivedtype, Access.public);
+@@usage(SerdeTests.Derivedtype, Usage.output);

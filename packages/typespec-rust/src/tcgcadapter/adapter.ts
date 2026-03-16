@@ -619,7 +619,30 @@ export class Adapter {
           // base type when the discriminator value is unknown or missing.
           rustUnion.unionKind = new rust.DiscriminatedUnionSealed();
         } else {
-          rustUnion.unionKind = new rust.DiscriminatedUnionBase(this.getModel(src));
+          const typeName = `Unknown${utils.capitalize(src.name).replace(/\W/g, '')}${utils.capitalize(rustUnion.discriminant)}`;
+          const baseModel = this.getModel(src, undefined, typeName);
+          const module = this.adaptNamespace(src.namespace);
+          if (!module.models.includes(baseModel)) {
+            // we only fix up the base model if it's not
+            // in the collection of models for this module
+            baseModel.flags = rust.ModelFlags.PolymorphicBase;
+            // internal serde helper only
+            baseModel.visibility = 'pubCrate';
+            const lifetime = new rust.Lifetime('a');
+            baseModel.lifetime = lifetime;
+            for (const field of baseModel.fields) {
+              if (field.kind === 'modelField') {
+                // strip off the discriminator flag
+                field.flags &= ~rust.ModelFieldFlags.Discriminator;
+              }
+              if (!typeToRefType(field.type)) {
+                throw new Error('boom');
+              }
+              field.type = this.getRefType(field.type, lifetime);
+            }
+            module.models.push(baseModel);
+          }
+          rustUnion.unionKind = new rust.DiscriminatedUnionBase(baseModel);
         }
 
         for (const subType of Object.values(src.discriminatedSubtypes)) {
@@ -2394,7 +2417,7 @@ export class Adapter {
      * @param type the type for which to build a name
      * @returns the name
      */
-    const recursiveTypeName = function (type: rust.MarkerType | rust.WireType): string {
+    const recursiveTypeName = function (type: rust.MarkerType | rust.Option<rust.WireType> | rust.WireType): string {
       switch (type.kind) {
         case 'enum':
         case 'marker':
@@ -2402,6 +2425,8 @@ export class Adapter {
           return type.name;
         case 'hashmap':
           return `${type.name}${recursiveTypeName(type.type)}`;
+        case 'option':
+          return `Option${recursiveTypeName(type.type)}`;
         case 'ref':
           return `Ref${recursiveTypeName(type.type)}`;
         case 'scalar':
@@ -2951,10 +2976,11 @@ type tcgcScalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'i
  * @param type the type for which to create the key
  * @returns a string containing the complete map key
  */
-function recursiveKeyName(root: string, type: rust.Box | rust.RequestContent | rust.Struct | rust.WireType): string {
+function recursiveKeyName(root: string, type: rust.Box | rust.Option | rust.RequestContent | rust.Struct | rust.WireType): string {
   switch (type.kind) {
     case 'Vec':
     case 'box':
+    case 'option':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'encodedBytes':
       return `${root}-${type.kind}-${type.encoding}${type.slice ? '-slice' : ''}`;
@@ -3149,4 +3175,33 @@ const LIB_NAMESPACE = [
 function isLibNamespace(namespace: string): boolean {
   const ns = namespace.toLowerCase();
   return LIB_NAMESPACE.some((lib) => ns === lib || ns.startsWith(lib + '.'));
+}
+
+function typeToRefType(type: rust.Type): type is rust.RefType {
+  switch (type.kind) {
+    case 'bytes':
+    case 'decimal':
+    case 'discriminatedUnion':
+    case 'encodedBytes':
+    case 'enum':
+    case 'enumValue':
+    case 'Etag':
+    case 'external':
+    case 'hashmap':
+    case 'jsonValue':
+    case 'model':
+    case 'offsetDateTime':
+    case 'option':
+    case 'safeint':
+    case 'scalar':
+    case 'slice':
+    case 'str':
+    case 'String':
+    case 'untaggedUnion':
+    case 'Url':
+    case 'Vec':
+      return true;
+    default:
+      throw new AdapterError('InternalError', `cannot convert ${type.kind} to a ref type`);
+  }
 }

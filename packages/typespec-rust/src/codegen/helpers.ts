@@ -235,6 +235,9 @@ export function getTypeDeclaration(type: rust.Client | rust.ResponseHeadersTrait
       // we explicitly omit the Response<T> from the type decl
       return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;
     case 'ref':
+      if (withLifetime === 'omit') {
+        return getTypeDeclaration(type.type);
+      }
       return `&${type.lifetime ? `${type.lifetime.name} ` : ''}${getTypeDeclaration(type.type)}`;
     case 'requestContent': {
       const formatType = `${type.format !== 'JsonFormat' ? `, ${type.format}` : ''}`;

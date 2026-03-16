@@ -57,3 +57,20 @@ pub struct TRex {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i32>,
 }
+
+/// This is base model for polymorphic single level inheritance with a discriminator.
+#[derive(Serialize)]
+pub(crate) struct UnknownBirdKind<'a> {
+    pub kind: &'a Option<String>,
+
+    pub wingspan: &'a Option<i32>,
+}
+
+/// Define a base class in the legacy way. Discriminator property is not explicitly defined in the model.
+#[derive(Serialize)]
+pub(crate) struct UnknownDinosaurKind<'a> {
+    /// Discriminator property for Dinosaur.
+    pub kind: &'a Option<String>,
+
+    pub size: &'a Option<i32>,
+}

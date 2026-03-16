@@ -352,6 +352,12 @@ export enum ModelFlags {
 
   /** model is an error */
   Error = 8,
+
+  /**
+   * model is a pub(crate) helper for polymoprhic base types.
+   * this flag is mutually exclusive with all other flags.
+   */
+  PolymorphicBase = 16,
 }
 
 /** DateTimeEncoding is the wire format of the date/time */
@@ -439,14 +445,14 @@ export interface RefBase {
   kind: 'ref';
 
   /** the underlying type */
-  type: WireType;
+  type: Option<WireType> | WireType;
 
   /** optional lifetime for struct field contexts */
   lifetime?: Lifetime;
 }
 
 /** RefType describes the possible types for Ref */
-export type RefType = Exclude<WireType, Literal | RefBase>;
+export type RefType = Exclude<WireType, Literal | RefBase> | Option<WireType>;
 
 /** Ref is a reference to a type */
 export interface Ref<T extends RefType = RefType> extends RefBase {

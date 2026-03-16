@@ -5,9 +5,11 @@
 use azure_core::{
     http::{headers::Headers, RawResponse, Response, StatusCode},
     json::to_json,
+    time::OffsetDateTime,
 };
 use serde_tests::models::{
-    AddlPropsInt, AddlPropsString, AddlPropsUnknown, ExtensibleValues, WithNumericEnum,
+    AddlPropsInt, AddlPropsString, AddlPropsUnknown, BaseType, Derivedtype, ExtensibleValues,
+    WithNumericEnum,
 };
 use std::collections::HashMap;
 
@@ -101,4 +103,37 @@ async fn test_with_numeric_enum_se() {
     with_numeric_enum.value = Some(ExtensibleValues::UnknownValue(789));
     let json_body = to_json(&with_numeric_enum).unwrap();
     assert_eq!(json_body, r#"{"value":789}"#);
+}
+
+#[tokio::test]
+async fn test_base_type_se() {
+    let mut derived = Derivedtype::default();
+    derived.count = Some(7);
+    derived.data = Some(vec![0xFF]);
+    derived.time = Some(OffsetDateTime::UNIX_EPOCH);
+    let base = BaseType::Derivedtype(derived);
+    let json_body = to_json(&base).unwrap();
+    let v: serde_json::Value = serde_json::from_slice(&json_body).unwrap();
+    assert_eq!(v["kind"], "derived");
+    assert_eq!(v["count"], 7);
+    // 0xFF -> base64-url no pad -> "_w"
+    assert_eq!(v["data"], "_w");
+    // time is RFC 7231 formatted
+    assert_eq!(v["time"], "Thu, 01 Jan 1970 00:00:00 GMT");
+}
+
+#[tokio::test]
+async fn test_derived_type_se() {
+    let mut derived = Derivedtype::default();
+    derived.count = Some(42);
+    derived.data = Some(vec![0xDE, 0xAD]);
+    derived.time = Some(OffsetDateTime::UNIX_EPOCH);
+    let json_body = to_json(&derived).unwrap();
+    let v: serde_json::Value = serde_json::from_slice(&json_body).unwrap();
+    assert_eq!(v["kind"], "derived");
+    assert_eq!(v["count"], 42);
+    // data is base64-url encoded (no padding): 0xDE 0xAD -> "3q0"
+    assert_eq!(v["data"], "3q0");
+    // time is RFC 7231 formatted
+    assert_eq!(v["time"], "Thu, 01 Jan 1970 00:00:00 GMT");
 }
