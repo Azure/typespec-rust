@@ -636,7 +636,11 @@ export class Adapter {
                 field.flags &= ~rust.ModelFieldFlags.Discriminator;
               }
               if (!typeToRefType(field.type)) {
-                throw new Error('boom');
+                throw new AdapterError(
+                  'InternalError',
+                  `unsupported field kind ${field.type.kind} in polymorphic base model ${baseModel.name}`,
+                  src.__raw?.node,
+                );
               }
               field.type = this.getRefType(field.type, lifetime);
             }
