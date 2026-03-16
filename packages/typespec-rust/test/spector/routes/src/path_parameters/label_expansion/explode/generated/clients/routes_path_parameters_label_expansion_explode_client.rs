@@ -113,17 +113,21 @@ impl RoutesPathParametersLabelExpansionExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/routes/path/label/explode/record{param}");
-        path = path.replace(
-            "{param}",
-            &format!(
-                ".{}",
-                param
-                    .iter()
-                    .map(|(k, v)| format!("{k}={v}"))
-                    .collect::<Vec<_>>()
-                    .join(".")
-            ),
-        );
+        {
+            let mut param_vec = param.iter().collect::<Vec<_>>();
+            param_vec.sort_by_key(|p| p.0);
+            path = path.replace(
+                "{param}",
+                &format!(
+                    ".{}",
+                    param_vec
+                        .iter()
+                        .map(|(k, v)| format!("{k}={v}"))
+                        .collect::<Vec<_>>()
+                        .join(".")
+                ),
+            );
+        }
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self

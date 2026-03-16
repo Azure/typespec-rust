@@ -14,5 +14,4 @@ default = ["azure_core/default"]
 azure_core = { workspace = true }
 
 [dev-dependencies]
-async-trait = { workspace = true }
 tokio = { workspace = true }

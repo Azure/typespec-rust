@@ -100,6 +100,24 @@ async fn path_simple_standard_array() {
 }
 
 #[tokio::test]
+async fn path_simple_standard_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_simple_expansion_client()
+        .get_routes_path_parameters_simple_expansion_standard_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
 async fn path_simple_explode_primitive() {
     let client = RoutesClient::with_no_credential("http://localhost:3000", None)
         .unwrap()
@@ -120,6 +138,24 @@ async fn path_simple_explode_array() {
         .get_routes_path_parameters_simple_expansion_explode_client();
 
     let resp = client.array(&["a", "b"], None).await.unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
+async fn path_simple_explode_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_simple_expansion_client()
+        .get_routes_path_parameters_simple_expansion_explode_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
@@ -148,6 +184,24 @@ async fn path_path_standard_array() {
 }
 
 #[tokio::test]
+async fn path_path_standard_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_path_expansion_client()
+        .get_routes_path_parameters_path_expansion_standard_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
 async fn path_path_explode_primitive() {
     let client = RoutesClient::with_no_credential("http://localhost:3000", None)
         .unwrap()
@@ -168,6 +222,24 @@ async fn path_path_explode_array() {
         .get_routes_path_parameters_path_expansion_explode_client();
 
     let resp = client.array(&["a", "b"], None).await.unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
+async fn path_path_explode_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_path_expansion_client()
+        .get_routes_path_parameters_path_expansion_explode_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
@@ -196,6 +268,24 @@ async fn path_label_standard_array() {
 }
 
 #[tokio::test]
+async fn path_label_standard_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_label_expansion_client()
+        .get_routes_path_parameters_label_expansion_standard_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
 async fn path_label_explode_primitive() {
     let client = RoutesClient::with_no_credential("http://localhost:3000", None)
         .unwrap()
@@ -216,6 +306,24 @@ async fn path_label_explode_array() {
         .get_routes_path_parameters_label_expansion_explode_client();
 
     let resp = client.array(&["a", "b"], None).await.unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
+async fn path_label_explode_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_label_expansion_client()
+        .get_routes_path_parameters_label_expansion_explode_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
@@ -244,6 +352,24 @@ async fn path_matrix_standard_array() {
 }
 
 #[tokio::test]
+async fn path_matrix_standard_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_matrix_expansion_client()
+        .get_routes_path_parameters_matrix_expansion_standard_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
 async fn path_matrix_explode_primitive() {
     let client = RoutesClient::with_no_credential("http://localhost:3000", None)
         .unwrap()
@@ -264,6 +390,24 @@ async fn path_matrix_explode_array() {
         .get_routes_path_parameters_matrix_expansion_explode_client();
 
     let resp = client.array(&["a", "b"], None).await.unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
+async fn path_matrix_explode_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_path_parameters_client()
+        .get_routes_path_parameters_matrix_expansion_client()
+        .get_routes_path_parameters_matrix_expansion_explode_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
@@ -322,6 +466,24 @@ async fn query_query_expansion_standard_array() {
 }
 
 #[tokio::test]
+async fn query_query_expansion_standard_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_query_parameters_client()
+        .get_routes_query_parameters_query_expansion_client()
+        .get_routes_query_parameters_query_expansion_standard_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
 async fn query_query_expansion_explode_primitive() {
     let client = RoutesClient::with_no_credential("http://localhost:3000", None)
         .unwrap()
@@ -342,6 +504,24 @@ async fn query_query_expansion_explode_array() {
         .get_routes_query_parameters_query_expansion_explode_client();
 
     let resp = client.array(&["a", "b"], None).await.unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
+async fn query_query_expansion_explode_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_query_parameters_client()
+        .get_routes_query_parameters_query_expansion_client()
+        .get_routes_query_parameters_query_expansion_explode_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
@@ -370,6 +550,24 @@ async fn query_query_continuation_standard_array() {
 }
 
 #[tokio::test]
+async fn query_query_continuation_standard_record() {
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
+        .get_routes_query_parameters_client()
+        .get_routes_query_parameters_query_continuation_client()
+        .get_routes_query_parameters_query_continuation_standard_client();
+
+    let resp = client
+        .record(
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
 async fn query_query_continuation_explode_primitive() {
     let client = RoutesClient::with_no_credential("http://localhost:3000", None)
         .unwrap()
@@ -393,379 +591,8 @@ async fn query_query_continuation_explode_array() {
     assert_eq!(resp.status(), 204);
 }
 
-// Spector does not handle reordered hash maps. Other SDKs did not run into this problem.
-// It would be more expensive to fix this on the Spector side. Something can be done for query parameters within the scope
-// of a specific mockapi.ts for query parameters.
-// But for path parameters, the whole test infrastructure needs to be updated, so that it would listen on two URLs (i.e.
-// with a path containing "a,1,b,2" and "b,2,a,1"), and would mark the test as passed if only one of the URLs were hit.
-// That would be a more expensive update, and it looks like only Rust would benefit from it.
-// So instead of doing that, we use the client policy below when testing HashMaps as query and path parameters.
-// When used responsibly as we do (i.e. only to flip "b,2,a,1" into "a,1,b,2"), it will not mask any real code issue.
-#[derive(Clone, Debug)]
-struct UrlUpdatePolicy {
-    from_url: String,
-    to_url: String,
-}
-
-impl UrlUpdatePolicy {
-    fn new(from_url: String, to_url: String) -> Self {
-        Self { from_url, to_url }
-    }
-}
-
-#[async_trait::async_trait]
-impl azure_core::http::policies::Policy for UrlUpdatePolicy {
-    async fn send(
-        &self,
-        ctx: &azure_core::http::Context,
-        request: &mut azure_core::http::Request,
-        next: &[std::sync::Arc<dyn azure_core::http::policies::Policy>],
-    ) -> azure_core::http::policies::PolicyResult {
-        if request.url().to_string() == self.from_url {
-            *request.url_mut() = azure_core::http::Url::parse(self.to_url.as_str()).unwrap();
-        }
-
-        if request.url().to_string() != self.to_url {
-            // We expect Spector to pass if the request URL matches the to_url.
-            // If this is not happening, then it's for one of 3 reasons:
-            // 1. Codegen could be generating the wrong URL, Spector would've failed. Fix the codegen.
-            // 2. The URL is correct, Spector was updated, the substitute URLs in the test need to be updated.
-            // 3. You are just writing the test, and it never has passed before. Put the correct substitute URLs in the test.
-            //
-            // The reason we do this check here is for consistency - so that we know that the test will either pass each time,
-            // or fail each time. Otherwise, substitute URL could've been wrong, but the test would pass a couple of times if
-            // the sort gives the right order, and it would start failing inconsistently.
-            //
-            // We either consistently fail, or consistently pass, every time,
-            // regardless of whether the URL really needed modification or not.
-            return Err(azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!(
-                    "Unexpected request URL.  Actual: {}  Expected: {}",
-                    request.url(),
-                    self.to_url
-                ),
-            ));
-        }
-
-        next[0].send(ctx, request, &next[1..]).await
-    }
-}
-
-#[tokio::test]
-async fn path_simple_standard_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/simple/standard/recordb,2,a,1".to_string(),
-                    "http://localhost:3000/routes/path/simple/standard/recorda,1,b,2".to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_simple_expansion_client()
-    .get_routes_path_parameters_simple_expansion_standard_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn path_simple_explode_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/simple/explode/recordb=2,a=1".to_string(),
-                    "http://localhost:3000/routes/path/simple/explode/recorda=1,b=2".to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_simple_expansion_client()
-    .get_routes_path_parameters_simple_expansion_explode_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn path_path_standard_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/path/standard/record/b,2,a,1".to_string(),
-                    "http://localhost:3000/routes/path/path/standard/record/a,1,b,2".to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_path_expansion_client()
-    .get_routes_path_parameters_path_expansion_standard_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn path_path_explode_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/path/explode/record/b=2/a=1".to_string(),
-                    "http://localhost:3000/routes/path/path/explode/record/a=1/b=2".to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_path_expansion_client()
-    .get_routes_path_parameters_path_expansion_explode_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn path_label_standard_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/label/standard/record.b,2,a,1".to_string(),
-                    "http://localhost:3000/routes/path/label/standard/record.a,1,b,2".to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_label_expansion_client()
-    .get_routes_path_parameters_label_expansion_standard_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn path_label_explode_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/label/explode/record.b=2.a=1".to_string(),
-                    "http://localhost:3000/routes/path/label/explode/record.a=1.b=2".to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_label_expansion_client()
-    .get_routes_path_parameters_label_expansion_explode_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn path_matrix_standard_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/matrix/standard/record;param=b,2,a,1"
-                        .to_string(),
-                    "http://localhost:3000/routes/path/matrix/standard/record;param=a,1,b,2"
-                        .to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_matrix_expansion_client()
-    .get_routes_path_parameters_matrix_expansion_standard_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn path_matrix_explode_record() {
-    let client = RoutesClient::with_no_credential(
-        "http://localhost:3000",
-        Some(spector_routes::RoutesClientOptions {
-            client_options: azure_core::http::ClientOptions {
-                per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                    "http://localhost:3000/routes/path/matrix/explode/record;b=2;a=1".to_string(),
-                    "http://localhost:3000/routes/path/matrix/explode/record;a=1;b=2".to_string(),
-                ))],
-                ..Default::default()
-            },
-        }),
-    )
-    .unwrap()
-    .get_routes_path_parameters_client()
-    .get_routes_path_parameters_matrix_expansion_client()
-    .get_routes_path_parameters_matrix_expansion_explode_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn query_query_expansion_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000",
-            Some(spector_routes::RoutesClientOptions {
-                client_options: azure_core::http::ClientOptions {
-                    per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                        "http://localhost:3000/routes/query/query-expansion/standard/record?param=b%2C2%2Ca%2C1".to_string(),
-                        "http://localhost:3000/routes/query/query-expansion/standard/record?param=a%2C1%2Cb%2C2".to_string(),
-                    ))],
-                    ..Default::default()
-                }
-            }),
-        )
-        .unwrap()
-        .get_routes_query_parameters_client()
-        .get_routes_query_parameters_query_expansion_client()
-        .get_routes_query_parameters_query_expansion_standard_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn query_query_expansion_explode_record() {
-    // No need to use UrlUpdatePolicy, because the query parameters are put as "?a=1&b=2",
-    // and Spector handles them in reverse order just as well.
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
-        .unwrap()
-        .get_routes_query_parameters_client()
-        .get_routes_query_parameters_query_expansion_client()
-        .get_routes_query_parameters_query_expansion_explode_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
-#[tokio::test]
-async fn query_query_continuation_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000",
-            Some(spector_routes::RoutesClientOptions {
-                client_options: azure_core::http::ClientOptions {
-                    per_call_policies: vec![std::sync::Arc::new(UrlUpdatePolicy::new(
-                        "http://localhost:3000/routes/query/query-continuation/standard/record?fixed=true&param=b%2C2%2Ca%2C1".to_string(),
-                        "http://localhost:3000/routes/query/query-continuation/standard/record?fixed=true&param=a%2C1%2Cb%2C2".to_string(),
-                    ))],
-                    ..Default::default()
-                }
-            }),
-        )
-        .unwrap()
-        .get_routes_query_parameters_client()
-        .get_routes_query_parameters_query_continuation_client()
-        .get_routes_query_parameters_query_continuation_standard_client();
-
-    let resp = client
-        .record(
-            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
-            None,
-        )
-        .await
-        .unwrap();
-    assert_eq!(resp.status(), 204);
-}
-
 #[tokio::test]
 async fn query_query_continuation_explode_record() {
-    // No need to use UrlUpdatePolicy, because the query parameters are put as "&a=1&b=2",
-    // and Spector handles them in reverse order just as well.
     let client = RoutesClient::with_no_credential("http://localhost:3000", None)
         .unwrap()
         .get_routes_query_parameters_client()
