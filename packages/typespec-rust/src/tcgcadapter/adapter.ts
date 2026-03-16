@@ -3181,6 +3181,10 @@ function isLibNamespace(namespace: string): boolean {
   return LIB_NAMESPACE.some((lib) => ns === lib || ns.startsWith(lib + '.'));
 }
 
+/**
+ * narrows type to a RefType within the conditional block.
+ * this function throws if the narrowing is not possible.
+ */
 function typeToRefType(type: rust.Type): type is rust.RefType {
   switch (type.kind) {
     case 'bytes':
