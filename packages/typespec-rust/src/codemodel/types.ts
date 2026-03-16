@@ -354,7 +354,7 @@ export enum ModelFlags {
   Error = 8,
 
   /**
-   * model is a pub(crate) helper for polymoprhic base types.
+   * model is a pub(crate) helper for polymorphic base types.
    * this flag is mutually exclusive with all other flags.
    */
   PolymorphicBase = 16,
