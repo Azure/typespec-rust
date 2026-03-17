@@ -113,18 +113,16 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/routes/path/simple/explode/record{param}");
-        {
-            let mut param_vec = param.iter().collect::<Vec<_>>();
-            param_vec.sort_by_key(|p| p.0);
-            path = path.replace(
-                "{param}",
-                &param_vec
-                    .iter()
-                    .map(|(k, v)| format!("{k}={v}"))
-                    .collect::<Vec<_>>()
-                    .join(","),
-            );
-        }
+        let mut param = param.iter().collect::<Vec<_>>();
+        param.sort_by_key(|p| p.0);
+        path = path.replace(
+            "{param}",
+            &param
+                .iter()
+                .map(|(k, v)| format!("{k}={v}"))
+                .collect::<Vec<_>>()
+                .join(","),
+        );
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self

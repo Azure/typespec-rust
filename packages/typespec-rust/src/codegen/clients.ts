@@ -903,38 +903,35 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         let paramExpression: string;
         if (pathParam.kind === 'pathHashMap') {
           const pathParamRef = qualifiedParamName(pathParam);
-          wrapSortedVec = (s) => `${indent.get()}{`
-            + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParamRef}.iter().collect::<Vec<_>>();\n`
-            + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.0);\n`
-            + `${s}`
-            + `${indent.pop().get()}}`;
+          wrapSortedVec = (s) => `${indent.get()}let mut ${pathParam.name} = ${pathParamRef}.iter().collect::<Vec<_>>();\n`
+            + `${indent.get()}${pathParam.name}.sort_by_key(|p| p.0);\n${s}`;
 
           const kEqualsV = '"{k}={v}"';
           const kCommaV = '"{k},{v}"';
 
-          paramExpression = `&${pathParam.name}_vec.iter().map(|(k,v)| `
+          paramExpression = `&${pathParam.name}.iter().map(|(k,v)| `
             + (pathParam.explode
               ? `format!(${kEqualsV})).collect::<Vec<_>>().join(",")`
               : `format!(${kCommaV})).collect::<Vec<_>>().join(",")`);
 
           switch (pathParam.style) {
             case 'path':
-              paramExpression = `&format!("/{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
+              paramExpression = `&format!("/{}", ${pathParam.name}.iter().map(|(k,v)| `
                 + (pathParam.explode
                   ? `format!(${kEqualsV})).collect::<Vec<_>>().join("/"))`
                   : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'label':
-              paramExpression = `&format!(".{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
+              paramExpression = `&format!(".{}", ${pathParam.name}.iter().map(|(k,v)| `
                 + (pathParam.explode
                   ? `format!(${kEqualsV})).collect::<Vec<_>>().join("."))`
                   : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'matrix':
               paramExpression = pathParam.explode
-                ? (`&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                ? (`&format!(";{}", ${pathParam.name}.into_iter().map(|(k,v)| `
                   + `format!(${kEqualsV})).collect::<Vec<_>>().join(";"))`)
-                : (`&format!(";${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                : (`&format!(";${pathParam.name}={}", ${pathParam.name}.into_iter().map(|(k,v)| `
                   + `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
           }
@@ -1042,11 +1039,9 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
           ? `${indent.get()}for (k, v) in ${queryParamRef}.iter() {\n`
             + `${indent.push().get()}query_builder.append_pair(k.as_str(), v.to_string());\n`
             + `${indent.pop().get()}}\n`
-          : `${indent.get()}{\n`
-            + `${indent.push().get()}let mut ${queryParam.name}_vec = ${queryParamRef}.iter().collect::<Vec<_>>();\n`
-            + `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.0);\n`
-            + `${indent.get()}query_builder.set_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(","));\n`
-            + `${indent.pop().get()}}\n`;
+          : `${indent.get()}let mut ${queryParam.name} = ${queryParamRef}.iter().collect::<Vec<_>>();\n`
+            + `${indent.get()}${queryParam.name}.sort_by_key(|p| p.0);\n`
+            + `${indent.get()}query_builder.set_pair("${queryParam.key}", ${queryParam.name}.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(","));\n`;
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
