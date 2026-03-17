@@ -80,3 +80,28 @@ async fn public_decorator_model_in_internal_round_trip_serialization() {
         "re-serialized JSON should match original input"
     );
 }
+
+#[tokio::test]
+async fn internal_decorator_in_internal_returns_200() {
+    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let sub = client.get_access_internal_operation_client();
+    sub.call_internal_decorator_in_internal("sample")
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+async fn no_decorator_in_internal_returns_200() {
+    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let sub = client.get_access_internal_operation_client();
+    sub.call_no_decorator_in_internal("sample").await.unwrap();
+}
+
+#[tokio::test]
+async fn public_decorator_in_internal_returns_200() {
+    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let sub = client.get_access_internal_operation_client();
+    sub.call_public_decorator_in_internal("sample")
+        .await
+        .unwrap();
+}

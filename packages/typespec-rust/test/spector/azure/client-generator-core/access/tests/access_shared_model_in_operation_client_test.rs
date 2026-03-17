@@ -110,3 +110,10 @@ async fn shared_model_sub_client_preserves_custom_endpoint() {
         "sub-client should preserve the custom endpoint from the parent"
     );
 }
+
+#[tokio::test]
+async fn shared_model_internal_returns_200() {
+    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let sub = client.get_access_shared_model_in_operation_client();
+    sub.call_internal("sample").await.unwrap();
+}

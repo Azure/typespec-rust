@@ -64,3 +64,17 @@ async fn relative_model_sub_client_preserves_custom_endpoint() {
         "sub-client should preserve the custom endpoint from the parent"
     );
 }
+
+#[tokio::test]
+async fn relative_model_discriminator_returns_200() {
+    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let sub = client.get_access_relative_model_in_operation_client();
+    sub.call_discriminator("real").await.unwrap();
+}
+
+#[tokio::test]
+async fn relative_model_operation_returns_200() {
+    let client = AccessClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let sub = client.get_access_relative_model_in_operation_client();
+    sub.call_operation("Madge").await.unwrap();
+}

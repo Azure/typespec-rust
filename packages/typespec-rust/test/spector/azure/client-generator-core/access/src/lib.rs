@@ -12,30 +12,41 @@ pub mod public_operation;
 pub mod relative_model_in_operation;
 pub mod shared_model_in_operation;
 
-// Exercise pub(crate) client methods so dead_code warnings stay enabled
-// for real issues. These methods are internal-access and have no callers
-// in a test crate, but would be called by a public convenience layer in
-// a real SDK.
-#[allow(dead_code)]
-const _: () = {
-    fn _touch_internal_operation() {
-        let client = AccessClient::with_no_credential("https://example.com", None).unwrap();
-        let sub = client.get_access_internal_operation_client();
-        drop(sub.internal_decorator_in_internal("x", None));
-        drop(sub.no_decorator_in_internal("x", None));
-        drop(sub.public_decorator_in_internal("x", None));
+// Pub wrappers for pub(crate) methods so integration tests can call them.
+// In a real SDK these would be called by a public convenience layer.
+
+impl internal_operation::clients::AccessInternalOperationClient {
+    pub async fn call_internal_decorator_in_internal(&self, name: &str) -> azure_core::Result<()> {
+        self.internal_decorator_in_internal(name, None).await?;
+        Ok(())
     }
 
-    fn _touch_relative_model_in_operation() {
-        let client = AccessClient::with_no_credential("https://example.com", None).unwrap();
-        let sub = client.get_access_relative_model_in_operation_client();
-        drop(sub.discriminator("x", None));
-        drop(sub.operation("x", None));
+    pub async fn call_no_decorator_in_internal(&self, name: &str) -> azure_core::Result<()> {
+        self.no_decorator_in_internal(name, None).await?;
+        Ok(())
     }
 
-    fn _touch_shared_model_in_operation() {
-        let client = AccessClient::with_no_credential("https://example.com", None).unwrap();
-        let sub = client.get_access_shared_model_in_operation_client();
-        drop(sub.internal("x", None));
+    pub async fn call_public_decorator_in_internal(&self, name: &str) -> azure_core::Result<()> {
+        self.public_decorator_in_internal(name, None).await?;
+        Ok(())
     }
-};
+}
+
+impl relative_model_in_operation::clients::AccessRelativeModelInOperationClient {
+    pub async fn call_discriminator(&self, kind: &str) -> azure_core::Result<()> {
+        self.discriminator(kind, None).await?;
+        Ok(())
+    }
+
+    pub async fn call_operation(&self, name: &str) -> azure_core::Result<()> {
+        self.operation(name, None).await?;
+        Ok(())
+    }
+}
+
+impl shared_model_in_operation::clients::AccessSharedModelInOperationClient {
+    pub async fn call_internal(&self, name: &str) -> azure_core::Result<()> {
+        self.internal(name, None).await?;
+        Ok(())
+    }
+}
