@@ -33,3 +33,12 @@ pub(crate) struct RealModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) name: Option<String>,
 }
+
+/// Used in internal operations, should be generated but not exported.
+#[derive(Serialize)]
+pub(crate) struct UnknownAbstractModelKind<'a> {
+    /// Discriminator property for AbstractModel.
+    pub(crate) kind: &'a Option<String>,
+
+    pub(crate) name: &'a Option<String>,
+}
