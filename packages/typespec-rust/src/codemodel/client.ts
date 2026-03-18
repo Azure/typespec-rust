@@ -190,6 +190,7 @@ export interface LroFinalResultStrategyOriginalUri {
   kind: 'originalUri';
 }
 
+/** The header containing URL to read the LRO status from. Either a pre-defined common value, or a custom string name */
 export type LroFinalResultStrategyHeaderName = 'operation-location' | 'azure-asyncoperation' | 'location' | (string & {});
 
 /** LRO final result gets returned via the request sent to a URL that was returned in the first response, inside the  */
