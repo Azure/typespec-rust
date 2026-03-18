@@ -12,8 +12,8 @@ use azure_core::{
 
 #[tracing::client]
 pub struct CombinedClient {
-    pub(crate) combined_bar_client_api_version: String,
-    pub(crate) combined_foo_client_api_version: String,
+    pub(crate) combined_bar_api_version: String,
+    pub(crate) combined_foo_api_version: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
 }
@@ -23,8 +23,8 @@ pub struct CombinedClient {
 pub struct CombinedClientOptions {
     /// Allows customization of the client.
     pub client_options: ClientOptions,
-    pub combined_bar_client_api_version: String,
-    pub combined_foo_client_api_version: String,
+    pub combined_bar_api_version: String,
+    pub combined_foo_api_version: String,
 }
 
 impl CombinedClient {
@@ -49,8 +49,8 @@ impl CombinedClient {
         }
         Ok(Self {
             endpoint,
-            combined_bar_client_api_version: options.combined_bar_client_api_version,
-            combined_foo_client_api_version: options.combined_foo_client_api_version,
+            combined_bar_api_version: options.combined_bar_api_version,
+            combined_foo_api_version: options.combined_foo_api_version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -71,7 +71,7 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_bar_client(&self) -> CombinedBarClient {
         CombinedBarClient {
-            api_version: self.combined_bar_client_api_version.clone(),
+            api_version: self.combined_bar_api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }
@@ -81,25 +81,25 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_foo_client(&self) -> CombinedFooClient {
         CombinedFooClient {
-            api_version: self.combined_foo_client_api_version.clone(),
+            api_version: self.combined_foo_api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }
     }
 }
 
-/// Default value for [`CombinedClientOptions::combined_bar_client_api_version`].
-pub(crate) const DEFAULT_COMBINED_BAR_CLIENT_API_VERSION: &str = "bv2";
+/// Default value for [`CombinedClientOptions::combined_bar_api_version`].
+pub(crate) const DEFAULT_COMBINED_BAR_API_VERSION: &str = "bv2";
 
-/// Default value for [`CombinedClientOptions::combined_foo_client_api_version`].
-pub(crate) const DEFAULT_COMBINED_FOO_CLIENT_API_VERSION: &str = "av2";
+/// Default value for [`CombinedClientOptions::combined_foo_api_version`].
+pub(crate) const DEFAULT_COMBINED_FOO_API_VERSION: &str = "av2";
 
 impl Default for CombinedClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-            combined_bar_client_api_version: String::from(DEFAULT_COMBINED_BAR_CLIENT_API_VERSION),
-            combined_foo_client_api_version: String::from(DEFAULT_COMBINED_FOO_CLIENT_API_VERSION),
+            combined_bar_api_version: String::from(DEFAULT_COMBINED_BAR_API_VERSION),
+            combined_foo_api_version: String::from(DEFAULT_COMBINED_FOO_API_VERSION),
         }
     }
 }

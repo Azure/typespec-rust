@@ -1708,7 +1708,7 @@ export class Adapter {
           rustClient.fields.push(new rust.StructField(utils.snakeCaseName(prop.name), 'pubCrate', this.getStringType()));
 
           // we use the client name as a prefix to disambiguate the params in the parent
-          const clientParam = this.adaptClientParameter(prop, constructable, `${utils.snakeCaseName(rustClient.name)}_${name}`);
+          const clientParam = this.adaptClientParameter(prop, constructable, utils.deduplicateClientFieldName(rustClient, name));
           const field = new rust.StructField(clientParam.name, 'pubCrate', clientParam.type);
           cur.fields.push(field);
 

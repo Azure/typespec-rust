@@ -330,3 +330,21 @@ function removeIllegalChars(name: string): string {
 export function snakeCaseName(name: string): string {
   return deconstruct(fixETagName(removeIllegalChars(name))).join('_');
 }
+
+/**
+ * deduplicated fieldName by adding the client name as a prefix.
+ * if the client name has the suffix 'Client', the suffix is removed.
+ * 
+ * @param client the client used to create the unique name
+ * @param fieldName the field name to be deduplicated
+ * @returns the unique client field name
+ */
+export function deduplicateClientFieldName(client: rust.Client, fieldName: string): string {
+  const suffix = 'Client';
+  let clientName = client.name;
+  // strip off the Client suffix if the name is more than just Client (which it should be)
+  if (clientName.length > suffix.length) {
+    clientName = clientName.substring(0, clientName.length - suffix.length);
+  }
+  return `${snakeCaseName(clientName)}_${fieldName}`;
+}

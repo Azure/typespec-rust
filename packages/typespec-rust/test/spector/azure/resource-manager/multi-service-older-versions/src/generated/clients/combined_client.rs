@@ -19,8 +19,8 @@ use std::sync::Arc;
 
 #[tracing::client]
 pub struct CombinedClient {
-    pub(crate) combined_disks_client_api_version: String,
-    pub(crate) combined_virtual_machines_client_api_version: String,
+    pub(crate) combined_disks_api_version: String,
+    pub(crate) combined_virtual_machines_api_version: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
     pub(crate) subscription_id: String,
@@ -32,9 +32,9 @@ pub struct CombinedClientOptions {
     /// Allows customization of the client.
     pub client_options: ClientOptions,
     /// The API version to use for this operation.
-    pub combined_disks_client_api_version: String,
+    pub combined_disks_api_version: String,
     /// The API version to use for this operation.
-    pub combined_virtual_machines_client_api_version: String,
+    pub combined_virtual_machines_api_version: String,
 }
 
 impl CombinedClient {
@@ -69,9 +69,8 @@ impl CombinedClient {
         Ok(Self {
             endpoint,
             subscription_id,
-            combined_disks_client_api_version: options.combined_disks_client_api_version,
-            combined_virtual_machines_client_api_version: options
-                .combined_virtual_machines_client_api_version,
+            combined_disks_api_version: options.combined_disks_api_version,
+            combined_virtual_machines_api_version: options.combined_virtual_machines_api_version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -92,7 +91,7 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_disks_client(&self) -> CombinedDisksClient {
         CombinedDisksClient {
-            api_version: self.combined_disks_client_api_version.clone(),
+            api_version: self.combined_disks_api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
             subscription_id: self.subscription_id.clone(),
@@ -103,7 +102,7 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_virtual_machines_client(&self) -> CombinedVirtualMachinesClient {
         CombinedVirtualMachinesClient {
-            api_version: self.combined_virtual_machines_client_api_version.clone(),
+            api_version: self.combined_virtual_machines_api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
             subscription_id: self.subscription_id.clone(),
@@ -111,21 +110,19 @@ impl CombinedClient {
     }
 }
 
-/// Default value for [`CombinedClientOptions::combined_disks_client_api_version`].
-pub(crate) const DEFAULT_COMBINED_DISKS_CLIENT_API_VERSION: &str = "2024-03-02";
+/// Default value for [`CombinedClientOptions::combined_disks_api_version`].
+pub(crate) const DEFAULT_COMBINED_DISKS_API_VERSION: &str = "2024-03-02";
 
-/// Default value for [`CombinedClientOptions::combined_virtual_machines_client_api_version`].
-pub(crate) const DEFAULT_COMBINED_VIRTUAL_MACHINES_CLIENT_API_VERSION: &str = "2024-11-01";
+/// Default value for [`CombinedClientOptions::combined_virtual_machines_api_version`].
+pub(crate) const DEFAULT_COMBINED_VIRTUAL_MACHINES_API_VERSION: &str = "2024-11-01";
 
 impl Default for CombinedClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-            combined_disks_client_api_version: String::from(
-                DEFAULT_COMBINED_DISKS_CLIENT_API_VERSION,
-            ),
-            combined_virtual_machines_client_api_version: String::from(
-                DEFAULT_COMBINED_VIRTUAL_MACHINES_CLIENT_API_VERSION,
+            combined_disks_api_version: String::from(DEFAULT_COMBINED_DISKS_API_VERSION),
+            combined_virtual_machines_api_version: String::from(
+                DEFAULT_COMBINED_VIRTUAL_MACHINES_API_VERSION,
             ),
         }
     }
