@@ -190,8 +190,7 @@ export interface LroFinalResultStrategyOriginalUri {
   kind: 'originalUri';
 }
 
-/* eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents */
-export type LroFinalResultStrategyHeaderName = 'operation-location' | 'azure-asyncoperation' | 'location' | string;
+export type LroFinalResultStrategyHeaderName = 'operation-location' | 'azure-asyncoperation' | 'location' | (string & {});
 
 /** LRO final result gets returned via the request sent to a URL that was returned in the first response, inside the  */
 export interface LroFinalResultStrategyHeader {
