@@ -1,10 +1,14 @@
 # Release History
 
-## 0.38.0 (unreleased)
+## 0.38.0 (2026-03-18)
 
 ### Breaking Changes
 
 * The combined `api-version` parameter for multi-service clients has been replaced by per-service `api-version` parameters.
+
+### Features Added
+
+* Added support for LROs that use a custom custom link for the final result.
 
 ### Bugs Fixed
 
