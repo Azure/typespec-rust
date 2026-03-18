@@ -40,11 +40,10 @@ impl TokenCredential for FakeTokenCredential {
     }
 }
 
-fn create_client(api_version: &str) -> CombinedClient {
+fn create_client() -> CombinedClient {
     CombinedClient::new(
         "http://localhost:3000",
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
-        api_version.to_string(),
         "00000000-0000-0000-0000-000000000000".to_string(),
         None,
     )
@@ -53,7 +52,7 @@ fn create_client(api_version: &str) -> CombinedClient {
 
 #[tokio::test]
 async fn virtual_machine_get() {
-    let client = create_client("2025-05-01");
+    let client = create_client();
     let resp = client
         .get_combined_virtual_machines_client()
         .get("test-rg", "vm-shared1", None)
@@ -97,7 +96,7 @@ async fn virtual_machine_create_or_update() {
         ..Default::default()
     };
 
-    let client = create_client("2025-05-01");
+    let client = create_client();
     let poller = client
         .get_combined_virtual_machines_client()
         .create_or_update("test-rg", "vm-shared1", resource.try_into().unwrap(), None)
@@ -126,7 +125,7 @@ async fn virtual_machine_create_or_update() {
 
 #[tokio::test]
 async fn storage_account_get() {
-    let client = create_client("2025-02-01");
+    let client = create_client();
     let resp = client
         .get_combined_storage_accounts_client()
         .get("test-rg", "account1", None)
@@ -170,7 +169,7 @@ async fn storage_account_create_or_update() {
         ..Default::default()
     };
 
-    let client = create_client("2025-02-01");
+    let client = create_client();
     let poller = client
         .get_combined_storage_accounts_client()
         .create_or_update("test-rg", "account1", resource.try_into().unwrap(), None)

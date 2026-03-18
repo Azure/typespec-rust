@@ -1641,10 +1641,15 @@ export class Adapter {
             break;
           }
           case 'method': {
-            // https://github.com/Azure/typespec-rust/issues/849
-            // Azure doesn't use optional (with no explicit default value) API versions anyway.
             if (param.isApiVersionParam && param.optional && !param.clientDefaultValue) {
-              param.optional = false;
+              if (!parent) {
+                // this is the top-level client for a multi-client scenario.
+                // each sub-client will have its own api-version parameter.
+                // we omit this "merged" api-version param as it's useless.
+                continue;
+              } else {
+                throw new AdapterError('UnsupportedTsp', 'found optional apiVersion parameter with no default value', param.__raw?.node);
+              }
             }
 
             const clientParam = this.adaptClientParameter(param, rustClient.constructable);
@@ -1681,6 +1686,36 @@ export class Adapter {
         } else if (prop.kind !== 'method') {
           // we don't need to care about non-method properties (e.g. credential)
           // as these are handled in the parent client.
+          continue;
+        } else if (prop.isApiVersionParam) {
+          // we didn't find the api-version param in the parent which means
+          // this is a multi-client child with its own api-version param.
+          // we need to find the instantiable parent client.
+          let constructable: rust.ClientConstruction | undefined;
+          let cur: rust.Client | undefined = parent;
+          while (cur) {
+            constructable = cur.constructable;
+            if (constructable) {
+              break;
+            }
+            cur = cur.parent;
+          }
+
+          if (!constructable || !cur) {
+            throw new AdapterError('InternalError', `didn't find constructable client for apiVersion in client ${rustClient.name}`, prop.__raw?.node);
+          }
+
+          rustClient.fields.push(new rust.StructField(utils.snakeCaseName(prop.name), 'pubCrate', this.getStringType()));
+
+          // we use the client name as a prefix to disambiguate the params in the parent
+          const clientParam = this.adaptClientParameter(prop, constructable, `${utils.snakeCaseName(rustClient.name)}_${name}`);
+          const field = new rust.StructField(clientParam.name, 'pubCrate', clientParam.type);
+          cur.fields.push(field);
+
+          // propagate this param to all client constructors
+          for (const constructor of constructable.constructors) {
+            constructor.params.push(clientParam);
+          }
           continue;
         }
 
@@ -1749,11 +1784,12 @@ export class Adapter {
    *
    * @param param the tcgc client parameter to convert
    * @param constructable contains client construction info. if the param is optional, it will go in the options type
+   * @param name optional custom name for the parameter
    * @returns the Rust client parameter
    */
-  private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction): rust.ClientParameter {
+  private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction, name?: string): rust.ClientMethodParameter | rust.ClientSupplementalEndpointParameter {
     let paramType: rust.Type = param.isApiVersionParam ? this.getStringType() : this.getType(param.type);
-    const paramName = utils.snakeCaseName(param.name);
+    const paramName = name ?? utils.snakeCaseName(param.name);
 
     let optional = false;
     // client-side default value makes the param optional

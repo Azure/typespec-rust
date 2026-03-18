@@ -1,6 +1,10 @@
 # Release History
 
-## 0.37.1 (unreleased)
+## 0.38.0 (unreleased)
+
+### Breaking Changes
+
+* The combined `api-version` parameter for multi-service clients has been replaced by per-service `api-version` parameters.
 
 ### Bugs Fixed
 

@@ -746,6 +746,16 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
     // it's possible for child clients to not contain all fields of the parent
     if (clientAccessor.returns.fields.find((e) => e.name === field.name)) {
       initFields.push(`${field.name}: self.${field.name}${nonCopyableType(field.type) ? '.clone()' : ''}`);
+    } else {
+      // by convention the fields propagated from parent to child have the same name.
+      // there is an edge-case though for multi-client where the parent client contains
+      // multiple api-version params, one per child client. in this case, the param
+      // names include the client name as a prefix to disambiguate them. we check for
+      // that case here.
+      const disambiguatedField = clientAccessor.returns.fields.find((e) => `${utils.snakeCaseName(clientAccessor.returns.name)}_${e.name}` === field.name);
+      if (disambiguatedField) {
+        initFields.push(`${disambiguatedField.name}: self.${field.name}${nonCopyableType(field.type) ? '.clone()' : ''}`);
+      }
     }
   }
 

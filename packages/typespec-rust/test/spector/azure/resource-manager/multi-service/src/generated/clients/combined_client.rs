@@ -19,17 +19,22 @@ use std::sync::Arc;
 
 #[tracing::client]
 pub struct CombinedClient {
-    pub(crate) api_version: String,
+    pub(crate) combined_disks_client_api_version: String,
+    pub(crate) combined_virtual_machines_client_api_version: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
     pub(crate) subscription_id: String,
 }
 
 /// Options used when creating a [`CombinedClient`](CombinedClient)
-#[derive(Clone, Default, SafeDebug)]
+#[derive(Clone, SafeDebug)]
 pub struct CombinedClientOptions {
     /// Allows customization of the client.
     pub client_options: ClientOptions,
+    /// The API version to use for this operation.
+    pub combined_disks_client_api_version: String,
+    /// The API version to use for this operation.
+    pub combined_virtual_machines_client_api_version: String,
 }
 
 impl CombinedClient {
@@ -40,14 +45,12 @@ impl CombinedClient {
     /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
-    /// * `api_version` - The API version to use for this operation.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Azure.ResourceManager.MultiService.Combined")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
-        api_version: String,
         subscription_id: String,
         options: Option<CombinedClientOptions>,
     ) -> Result<Self> {
@@ -64,9 +67,11 @@ impl CombinedClient {
             vec!["user_impersonation"],
         ));
         Ok(Self {
-            api_version,
             endpoint,
             subscription_id,
+            combined_disks_client_api_version: options.combined_disks_client_api_version,
+            combined_virtual_machines_client_api_version: options
+                .combined_virtual_machines_client_api_version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -87,7 +92,7 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_disks_client(&self) -> CombinedDisksClient {
         CombinedDisksClient {
-            api_version: self.api_version.clone(),
+            api_version: self.combined_disks_client_api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
             subscription_id: self.subscription_id.clone(),
@@ -98,10 +103,30 @@ impl CombinedClient {
     #[tracing::subclient]
     pub fn get_combined_virtual_machines_client(&self) -> CombinedVirtualMachinesClient {
         CombinedVirtualMachinesClient {
-            api_version: self.api_version.clone(),
+            api_version: self.combined_virtual_machines_client_api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
             subscription_id: self.subscription_id.clone(),
+        }
+    }
+}
+
+/// Default value for [`CombinedClientOptions::combined_disks_client_api_version`].
+pub(crate) const DEFAULT_COMBINED_DISKS_CLIENT_API_VERSION: &str = "2025-01-02";
+
+/// Default value for [`CombinedClientOptions::combined_virtual_machines_client_api_version`].
+pub(crate) const DEFAULT_COMBINED_VIRTUAL_MACHINES_CLIENT_API_VERSION: &str = "2025-04-01";
+
+impl Default for CombinedClientOptions {
+    fn default() -> Self {
+        Self {
+            client_options: ClientOptions::default(),
+            combined_disks_client_api_version: String::from(
+                DEFAULT_COMBINED_DISKS_CLIENT_API_VERSION,
+            ),
+            combined_virtual_machines_client_api_version: String::from(
+                DEFAULT_COMBINED_VIRTUAL_MACHINES_CLIENT_API_VERSION,
+            ),
         }
     }
 }
