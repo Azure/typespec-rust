@@ -8,6 +8,25 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
+/// Options to be passed to [`NIClient::custom_link()`](crate::generated::clients::NIClient::custom_link())
+#[derive(Clone, Default, SafeDebug)]
+pub struct NIClientCustomLinkOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl NIClientCustomLinkOptions<'_> {
+    /// Transforms this [`NIClientCustomLinkOptions`] into a new `NIClientCustomLinkOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> NIClientCustomLinkOptions<'static> {
+        NIClientCustomLinkOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
 /// Options to be passed to [`NIClient::get_status()`](crate::generated::clients::NIClient::get_status())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NIClientGetStatusOptions<'a> {

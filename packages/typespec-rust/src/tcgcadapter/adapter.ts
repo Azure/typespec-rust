@@ -1864,21 +1864,33 @@ export class Adapter {
       case 'lro': {
         let lroFinalResultStrategy: rust.LroFinalResultStrategyKind = new rust.LroFinalResultStrategyOriginalUri();
         if (method.lroMetadata.finalStateVia !== FinalStateValue.originalUri) {
-          switch (method.lroMetadata.finalStateVia) {
-            case FinalStateValue.operationLocation:
+          switch (method.lroMetadata.finalStateVia as string) {
+            case FinalStateValue.operationLocation as string:
               lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('operation-location');
               break;
-            case FinalStateValue.location:
+            case FinalStateValue.location as string:
               lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('location');
               break;
-            case FinalStateValue.azureAsyncOperation:
+            case FinalStateValue.azureAsyncOperation as string:
               lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('azure-asyncoperation');
               break;
-            case FinalStateValue.customOperationReference:
+            case FinalStateValue.customOperationReference as string:
               // Some existing API specs are not correctly defined so that they are parsed
               // into `custom-operation-reference` which should be `operation-location`.
               // https://github.com/microsoft/typespec/blob/f3d792b252c6f40be0e174496d9f34d453676026/packages/http-client-csharp/emitter/src/type/operation-final-state-via.ts#L23-L27
               lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('operation-location');
+              break;
+            case FinalStateValue.customLink as string:
+              if (method.lroMetadata.statusMonitorStep?.kind === "nextOperationLink") {
+                const customHeaderName = method.lroMetadata.statusMonitorStep.target.property.name;
+                if (customHeaderName.trim() === '') {
+                  throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia === customLink && customHeaderName === "${customHeaderName}"`, method.__raw?.node);
+                }
+
+                lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader(customHeaderName);
+              } else {
+                throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia === customLink && lroMetadata.statusMonitorStep?.kind === "${method.lroMetadata.statusMonitorStep?.kind}"`, method.__raw?.node);
+              }
               break;
             default:
               throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia ${method.lroMetadata.finalStateVia} NYI`, method.__raw?.node);

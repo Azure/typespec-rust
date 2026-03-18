@@ -190,14 +190,12 @@ export interface LroFinalResultStrategyOriginalUri {
   kind: 'originalUri';
 }
 
-export type LroFinalResultStrategyHeaderName = 'operation-location' | 'azure-asyncoperation' | 'location';
-
 /** LRO final result gets returned via the request sent to a URL that was returned in the first response, inside the  */
 export interface LroFinalResultStrategyHeader {
   kind: 'header';
 
   /** name of the header containing the URL to read the final result from */
-  headerName: LroFinalResultStrategyHeaderName;
+  headerName: string;
 
   /** name of the field in the result response object to read the final result from.
    * If undefined, the entire object is the final result.
@@ -795,7 +793,7 @@ export class LroFinalResultStrategyOriginalUri implements LroFinalResultStrategy
 }
 
 export class LroFinalResultStrategyHeader implements LroFinalResultStrategyHeader {
-  constructor(headerName: LroFinalResultStrategyHeaderName) {
+  constructor(headerName: string) {
     this.kind = 'header';
     this.headerName = headerName;
   }

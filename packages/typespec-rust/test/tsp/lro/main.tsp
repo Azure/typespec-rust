@@ -33,6 +33,15 @@ model Y {
 
 alias r = ResourceOperations<NoClientRequestId & NoConditionalRequests & NoRepeatableRequests, Foundations.ErrorResponse>;
 
+model NullResponse {
+  @pollingLocation
+  location: ResourceLocation<ResourceOperationStatus<PutAsset>>;
+}
+
+model PutAsset {
+  assetId: string;
+}
+
 interface I {
   getStatus is r.ResourceRead<X>;
 
@@ -56,5 +65,14 @@ interface I {
     AcceptedResponse,
     {},
     Foundations.ErrorResponse
+  >;
+
+  @route("/lro/customLink")
+  @post
+  customLink is Foundations.Operation<
+    {
+      x: string;
+    },
+    NullResponse
   >;
 }
