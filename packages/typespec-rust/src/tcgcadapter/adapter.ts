@@ -1642,7 +1642,7 @@ export class Adapter {
           }
           case 'method': {
             if (param.isApiVersionParam && param.optional && !param.clientDefaultValue) {
-              if (!parent) {
+              if (!parent && client.children && client.methods.length === 0) {
                 // this is the top-level client for a multi-client scenario.
                 // each sub-client will have its own api-version parameter.
                 // we omit this "merged" api-version param as it's useless.
