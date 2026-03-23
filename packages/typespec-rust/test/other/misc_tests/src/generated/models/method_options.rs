@@ -47,6 +47,13 @@ pub struct MiscTestsClientEtagHeaderParameterOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::get_discriminated_no_sub_types()`](crate::generated::clients::MiscTestsClient::get_discriminated_no_sub_types())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientGetDiscriminatedNoSubTypesOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::literal_with_invalid_char()`](crate::generated::clients::MiscTestsClient::literal_with_invalid_char())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {

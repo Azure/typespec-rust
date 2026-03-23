@@ -177,3 +177,13 @@ op paramGroupCustomized(
 @@override(paramGroup,
   paramGroupCustomized,
 );
+
+@discriminator("kind")
+model DiscriminatedBaseNoSubTypes {
+  kind: string;
+  name: string;
+}
+
+@get
+@route("/discriminated-no-subtypes")
+op getDiscriminatedNoSubTypes(): DiscriminatedBaseNoSubTypes;

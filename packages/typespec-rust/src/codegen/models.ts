@@ -316,7 +316,9 @@ function emitModelImpls(module: rust.ModuleContainer, context: Context): helpers
   for (const union of module.unions) {
     if (union.kind !== 'discriminatedUnion') continue;
     const indent = new helpers.indentation();
-    use.addForType(union);
+    if (union.members.length > 0) {
+      use.addForType(union);
+    }
     for (const member of union.members) {
       use.addForType(member.type);
       let from = `impl From<${member.type.name}> for ${union.name} {\n`;

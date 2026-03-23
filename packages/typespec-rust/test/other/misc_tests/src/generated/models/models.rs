@@ -55,3 +55,10 @@ pub(crate) struct SpreadWithEnum {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) sides: Option<i32>,
 }
+
+#[derive(Serialize)]
+pub(crate) struct UnknownDiscriminatedBaseNoSubTypesKind<'a> {
+    pub kind: &'a Option<String>,
+
+    pub name: &'a Option<String>,
+}

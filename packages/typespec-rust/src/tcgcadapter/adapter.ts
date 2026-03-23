@@ -307,7 +307,7 @@ export class Adapter {
       }
       // END workaround
 
-      if (model.discriminatedSubtypes) {
+      if (isPolymorphicRoot(model)) {
         const rustUnion = this.getDiscriminatedUnion(model);
         this.adaptNamespace(model.namespace).unions.push(rustUnion);
 
@@ -505,7 +505,7 @@ export class Adapter {
     // aggregate the properties from the provided type and its parent types
     const allProps = new Array<tcgc.SdkModelPropertyType>();
     for (const prop of model.properties) {
-      if (prop.discriminator && !model.discriminatedSubtypes) {
+      if (prop.discriminator && !isPolymorphicRoot(model)) {
         rustModel.flags |= rust.ModelFlags.PolymorphicSubtype;
       }
       allProps.push(prop);
@@ -594,7 +594,7 @@ export class Adapter {
 
     switch (src.kind) {
       case 'model': {
-        if (!src.discriminatedSubtypes) {
+        if (!isPolymorphicRoot(src)) {
           // we should have verified this earlier.
           // having this check means the compiler won't bark
           // at us when accessing src.discriminatedSubtypes
@@ -649,7 +649,8 @@ export class Adapter {
           rustUnion.unionKind = new rust.DiscriminatedUnionBase(baseModel);
         }
 
-        for (const subType of Object.values(src.discriminatedSubtypes)) {
+        // we need to handle the case where src is a root with no child types
+        for (const subType of Object.values(src.discriminatedSubtypes ?? {})) {
           if (!subType.discriminatorValue) {
             throw new AdapterError('InternalError', `model ${subType.name} has no discriminator value`, subType.__raw?.node);
           }
@@ -1134,7 +1135,7 @@ export class Adapter {
       case 'model':
         if (type.external) {
           return this.getExternalType(type.external);
-        } else if (type.discriminatedSubtypes) {
+        } else if (isPolymorphicRoot(type)) {
           return this.getDiscriminatedUnion(type);
         } else if (tcgc.isAzureCoreModel(type)) {
           return this.getExternalType({kind: 'externalTypeInfo', identity: 'azure_core::error::ErrorDetail'});
@@ -3260,5 +3261,23 @@ function typeToRefType(type: rust.Type): type is rust.RefType {
       return true;
     default:
       throw new AdapterError('InternalError', `cannot convert ${type.kind} to a ref type`);
+  }
+}
+
+/**
+ * returns true if model is a polymorphic root type.
+ *
+ * @param model the model to inspect
+ * @returns true if the model is a polymorphic root
+ */
+function isPolymorphicRoot(model: tcgc.SdkModelType): boolean {
+  if (model.discriminatedSubtypes) {
+    // when there are sub-types we know for sure it's a polymorphic root
+    return true;
+  } else if (model.discriminatorProperty && !model.discriminatorValue) {
+    // we can land here if it's a root but has no child types
+    return true;
+  } else {
+    return false;
   }
 }

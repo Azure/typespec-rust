@@ -1,5 +1,11 @@
 # Release History
 
+## 0.38.1 (unreleased)
+
+### Bugs Fixed
+
+* Fixed incorrect codegen for polymoprhic types with no child types.
+
 ## 0.38.0 (2026-03-18)
 
 ### Breaking Changes
