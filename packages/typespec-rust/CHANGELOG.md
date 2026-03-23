@@ -4,7 +4,7 @@
 
 ### Bugs Fixed
 
-* Fixed incorrect codegen for polymoprhic types with no child types.
+* Fixed incorrect codegen for polymorphic types with no child types.
 
 ## 0.38.0 (2026-03-18)
 
