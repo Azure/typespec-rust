@@ -7,7 +7,7 @@
 * Fixed incorrect codegen for polymorphic types with no child types.
 * Removed spurious `use` statement in `unions.rs`.
 * Fixed incorrect initialization of `Option<T>` fields in explicit implementations of `Default` for client options types.
-* Remove `self` prefix from optional client parameters within the `if let Some(...)` statement.
+* Removed `self` prefix from optional client parameters within the `if let Some(...)` statement.
 
 ## 0.38.0 (2026-03-18)
 
