@@ -5,6 +5,7 @@
 ### Bugs Fixed
 
 * Fixed incorrect codegen for polymorphic types with no child types.
+* Removed spurious `use` statement in `unions.rs`.
 
 ## 0.38.0 (2026-03-18)
 

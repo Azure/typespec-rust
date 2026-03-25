@@ -187,3 +187,27 @@ model DiscriminatedBaseNoSubTypes {
 @get
 @route("/discriminated-no-subtypes")
 op getDiscriminatedNoSubTypes(): DiscriminatedBaseNoSubTypes;
+
+@get
+@route("/unions-with-cycles")
+op getUnionsWithCycles(): ChatRequestMessage;
+
+model ChatRequestUserMessage extends ChatRequestMessage {
+  role: "derived";
+  content: string | ChatMessageContentItem[];
+}
+
+@discriminator("role")
+model ChatRequestMessage {
+  role: string;
+}
+
+@discriminator("type")
+model ChatMessageContentItem {
+  type: string;
+}
+
+model ChatMessageTextContentItem extends ChatMessageContentItem {
+  type: "text";
+  text: string;
+}

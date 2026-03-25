@@ -54,6 +54,13 @@ pub struct MiscTestsClientGetDiscriminatedNoSubTypesOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::get_unions_with_cycles()`](crate::generated::clients::MiscTestsClient::get_unions_with_cycles())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientGetUnionsWithCyclesOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::literal_with_invalid_char()`](crate::generated::clients::MiscTestsClient::literal_with_invalid_char())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {
