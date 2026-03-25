@@ -320,7 +320,8 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         if (field.defaultValue) {
           body += `${indent.get()}${field.name}: ${field.defaultValue},\n`;
         } else {
-          body += `${indent.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)}::default(),\n`;
+          const initValue = field.type.kind === 'option' ? 'None' : `${helpers.getTypeDeclaration(field.type)}::default()`;
+          body += `${indent.get()}${field.name}: ${initValue},\n`;
         }
       }
       body += `${indent.pop().get()}}\n`;
@@ -1137,7 +1138,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
         setter += `${indent.pop().get()}}\n`;
         return setter;
       }
-      return `${indent.get()}${requestVarName}.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, headerParam, !inClosure, false)});\n`;
+      return `${indent.get()}${requestVarName}.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, headerParam, !inClosure && !headerParam.optional, false)});\n`;
     }, optionsPrefix);
   }
 
