@@ -12,7 +12,7 @@ import * as utils from '../utils/utils.js';
 export class Use {
   private readonly module: rust.ModuleContainer;
   private readonly trees: Array<useTree>;
-  private readonly scope: 'clients' | 'models' | 'modelsOther';
+  private readonly scope: 'clients' | 'models' | 'modelsOther' | 'unions';
 
   /**
    * instantiates a new instance of the Use type
@@ -23,8 +23,9 @@ export class Use {
    *      clients - we're in generated/clients
    *       models - we're in generated/models/models.rs
    *  modelsOther - we're in generated/models but not models.rs
+   *       unions - we're in generated/models/unions.rs
    */
-  constructor(module: rust.ModuleContainer, scope: 'clients' | 'models' | 'modelsOther') {
+  constructor(module: rust.ModuleContainer, scope: 'clients' | 'models' | 'modelsOther' | 'unions') {
     this.module = module;
     this.trees = new Array<useTree>();
     this.scope = scope;
@@ -68,6 +69,14 @@ export class Use {
    * @param type the Rust type to add
    */
   addForType(type: rust.Client | rust.ResponseHeadersTrait | rust.Type): void {
+    const addForClientsOrCrossModule = (type: rust.DiscriminatedUnion | rust.Enum | rust.Model | rust.UntaggedUnion): boolean => {
+      if (this.scope === 'clients' || this.module !== type.module) {
+        this.add(`${utils.buildImportPath(this.module, type.module)}::models`, type.name);
+        return true;
+      }
+      return false;
+    };
+
     switch (type.kind) {
       case 'arc':
         this.add('std::sync', 'Arc');
@@ -78,11 +87,13 @@ export class Use {
         break;
       }
       case 'discriminatedUnion':
-      case 'enum':
       case 'untaggedUnion':
-        if (this.scope === 'clients' || this.module !== type.module) {
-          this.add(`${utils.buildImportPath(this.module, type.module)}::models`, type.name);
-        } else {
+        if (!addForClientsOrCrossModule(type) && this.scope !== 'unions') {
+          this.add('super', type.name);
+        }
+        break;
+      case 'enum':
+        if (!addForClientsOrCrossModule(type)) {
           this.add('super', type.name);
         }
         break;
@@ -105,9 +116,7 @@ export class Use {
         }
         break;
       case 'model':
-        if (this.scope === 'clients' || this.module !== type.module) {
-          this.add(`${utils.buildImportPath(this.module, type.module)}::models`, type.name);
-        } else if (this.scope === 'modelsOther') {
+        if (!addForClientsOrCrossModule(type) && this.scope !== 'models') {
           this.add('super', type.name);
         }
         break;

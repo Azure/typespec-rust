@@ -211,7 +211,7 @@ pub struct Derivedtype {
 #[non_exhaustive]
 pub struct MiddleType {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Box<RecursiveType>>,
+    pub value: Option<RecursiveType>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
@@ -429,7 +429,7 @@ pub struct OuterWithNullableValue {
 #[non_exhaustive]
 pub struct RecursiveType {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<MiddleType>,
+    pub value: Option<Box<MiddleType>>,
 }
 
 #[derive(Serialize)]

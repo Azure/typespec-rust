@@ -34,7 +34,7 @@ export function emitUnions(module: rust.ModuleContainer, context: Context): Unio
     return {};
   }
 
-  const use = new Use(module, 'modelsOther');
+  const use = new Use(module, 'unions');
   const indent = new helpers.indentation();
   const visTracker = new helpers.VisibilityTracker();
 
@@ -66,11 +66,7 @@ export function emitUnions(module: rust.ModuleContainer, context: Context): Unio
       body += `${helpers.emitVisibility(rustUnion.visibility)}enum ${rustUnion.name} {\n`;
 
       for (const member of rustUnion.members) {
-        // Use isn't granular enough to realize we're in unions.rs
-        // so skip adding when the member is also a DU
-        if (member.type.kind !== 'discriminatedUnion') {
-          use.addForType(member.type);
-        }
+        use.addForType(member.type);
 
         const docs = helpers.formatDocComment(member.docs, true);
         if (docs.length > 0) {
