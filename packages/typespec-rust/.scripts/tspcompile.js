@@ -193,7 +193,7 @@ const lro = pkgRoot + 'test/tsp/lro';
 generate('lro', lro, 'test/other/lro');
 
 const misc_tests = pkgRoot + 'test/tsp/MiscTests';
-generate('misc_tests', misc_tests, 'test/other/misc_tests', ['omit-constructors=true']);
+generate('misc_tests', misc_tests, 'test/other/misc_tests');
 
 const pub_crate = pkgRoot + 'test/tsp/PubCrate';
 generate('pub_crate', pub_crate, 'test/other/pub_crate');

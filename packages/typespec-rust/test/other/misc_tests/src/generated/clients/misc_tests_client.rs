@@ -11,26 +11,78 @@ use crate::generated::models::{
     MiscTestsClientEtagHeaderParameterOptions, MiscTestsClientGetDiscriminatedNoSubTypesOptions,
     MiscTestsClientGetUnionsWithCyclesOptions, MiscTestsClientLiteralWithInvalidCharOptions,
     MiscTestsClientParamGroupOptions, MiscTestsClientSpreadParamWithEnumOptions,
-    MiscTestsClientVariousExplodedQueryParamsOptions,
+    MiscTestsClientVariousExplodedQueryParamsOptions, MiscTestsClientWithClientParamsOptions,
     MiscTestsClientWithOptionalClientQueryParamOptions, SpreadWithEnum,
 };
 use azure_core::{
     error::CheckSuccessOptions,
+    fmt::SafeDebug,
     http::{
-        Etag, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
-        Url, UrlExt,
+        ClientOptions, Etag, Method, NoFormat, Pipeline, PipelineSendOptions, Request,
+        RequestContent, Response, Url, UrlExt,
     },
     tracing, Result,
 };
 
 #[tracing::client]
 pub struct MiscTestsClient {
+    pub(crate) count: Option<i32>,
     pub(crate) endpoint: Url,
     pub(crate) expand: Option<String>,
     pub(crate) pipeline: Pipeline,
+    pub(crate) shape: Option<String>,
+    pub(crate) version: String,
+}
+
+/// Options used when creating a [`MiscTestsClient`](MiscTestsClient)
+#[derive(Clone, SafeDebug)]
+pub struct MiscTestsClientOptions {
+    /// Allows customization of the client.
+    pub client_options: ClientOptions,
+    pub count: Option<i32>,
+    pub expand: Option<String>,
+    pub shape: Option<String>,
+    pub version: String,
 }
 
 impl MiscTestsClient {
+    /// Creates a new MiscTestsClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
+    #[tracing::new("MiscTests")]
+    pub fn with_no_credential(
+        endpoint: &str,
+        options: Option<MiscTestsClientOptions>,
+    ) -> Result<Self> {
+        let options = options.unwrap_or_default();
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{endpoint} must use http(s)"),
+            ));
+        }
+        endpoint = endpoint.join("supplemental-path")?;
+        Ok(Self {
+            endpoint,
+            count: options.count,
+            expand: options.expand,
+            shape: options.shape,
+            version: options.version,
+            pipeline: Pipeline::new(
+                option_env!("CARGO_PKG_NAME"),
+                option_env!("CARGO_PKG_VERSION"),
+                options.client_options,
+                Vec::default(),
+                Vec::default(),
+                None,
+            ),
+        })
+    }
+
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
         &self.endpoint
@@ -458,6 +510,44 @@ impl MiscTestsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.withClientParams")]
+    pub async fn with_client_params(
+        &self,
+        options: Option<MiscTestsClientWithClientParamsOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path(&self.version);
+        let mut query_builder = url.query_builder();
+        if let Some(shape) = self.shape.as_ref() {
+            query_builder.set_pair("shape", shape);
+        }
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        if let Some(count) = self.count {
+            request.insert_header("count", count.to_string());
+        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("MiscTests.withOptionalClientQueryParam")]
     pub async fn with_optional_client_query_param(
         &self,
@@ -487,5 +577,20 @@ impl MiscTestsClient {
             )
             .await?;
         Ok(rsp.into())
+    }
+}
+
+/// Default value for [`MiscTestsClientOptions::version`].
+pub(crate) const DEFAULT_VERSION: &str = "v1";
+
+impl Default for MiscTestsClientOptions {
+    fn default() -> Self {
+        Self {
+            client_options: ClientOptions::default(),
+            count: None,
+            expand: None,
+            shape: None,
+            version: String::from(DEFAULT_VERSION),
+        }
     }
 }

@@ -101,6 +101,13 @@ pub struct MiscTestsClientVariousExplodedQueryParamsOptions<'a> {
     pub opt_strings: Option<Vec<String>>,
 }
 
+/// Options to be passed to [`MiscTestsClient::with_client_params()`](crate::generated::clients::MiscTestsClient::with_client_params())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientWithClientParamsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::with_optional_client_query_param()`](crate::generated::clients::MiscTestsClient::with_optional_client_query_param())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientWithOptionalClientQueryParamOptions<'a> {

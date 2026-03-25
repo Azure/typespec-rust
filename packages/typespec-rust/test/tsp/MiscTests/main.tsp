@@ -211,3 +211,18 @@ model ChatMessageTextContentItem extends ChatMessageContentItem {
   type: "text";
   text: string;
 }
+
+op withClientParams(
+  @clientLocation(MiscTests)
+  @header("count")
+  count?: int32,
+
+  @clientLocation(MiscTests)
+  @query("shape")
+  shape?: string,
+
+  @Legacy.clientDefaultValue("v1")
+  @clientLocation(MiscTests)
+  @path("version")
+  version?: string
+): void;
