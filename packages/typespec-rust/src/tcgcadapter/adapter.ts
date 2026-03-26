@@ -282,7 +282,6 @@ export class Adapter {
       terminalErrorModelNames = getTerminalErrorModelNames(this.ctx.sdkPackage.clients);
     }
 
-    const processedTypes = new Set<string>();
     for (const model of this.ctx.sdkPackage.models) {
       if ((model.usage & (tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread | tcgc.UsageFlags.Exception)) === 0) {
         // skip types without input and output usage. this will include core
@@ -298,14 +297,6 @@ export class Adapter {
       }
 
       needsCoreAndSerde = true;
-
-      // TODO: workaround for https://github.com/Azure/typespec-azure/issues/3614
-      if (processedTypes.has(model.name)) {
-        continue;
-      } else {
-        processedTypes.add(model.name);
-      }
-      // END workaround
 
       if (isPolymorphicRoot(model)) {
         const rustUnion = this.getDiscriminatedUnion(model);

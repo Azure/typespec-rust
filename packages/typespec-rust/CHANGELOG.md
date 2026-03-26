@@ -9,6 +9,10 @@
 * Fixed incorrect initialization of `Option<T>` fields in explicit implementations of `Default` for client options types.
 * Removed `self` prefix from optional client parameters within the `if let Some(...)` statement.
 
+### Other Changes
+
+* Removed workaround for duplicate model definitions across namespaces as it hides legitimate authoring errors.
+
 ## 0.38.0 (2026-03-18)
 
 ### Breaking Changes
