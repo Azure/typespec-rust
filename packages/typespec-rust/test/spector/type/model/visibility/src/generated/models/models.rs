@@ -13,19 +13,13 @@ pub struct ReadOnlyModel {
     /// Optional readonly nullable int list.
     ///
     /// Operational visibility: Read
-    #[serde(
-        rename = "optionalNullableIntList",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename = "optionalNullableIntList", skip_serializing)]
     pub optional_nullable_int_list: Option<Vec<i32>>,
 
     /// Optional readonly string dictionary.
     ///
     /// Operational visibility: Read
-    #[serde(
-        rename = "optionalStringRecord",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename = "optionalStringRecord", skip_serializing)]
     pub optional_string_record: Option<HashMap<String, String>>,
 }
 
@@ -53,7 +47,7 @@ pub struct VisibilityModel {
     /// Required string, illustrating a readonly property.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "readProp", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "readProp", skip_serializing)]
     pub read_prop: Option<String>,
 
     /// Required int32[], illustrating a update property.

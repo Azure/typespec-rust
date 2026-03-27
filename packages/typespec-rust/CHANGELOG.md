@@ -12,6 +12,7 @@
 ### Other Changes
 
 * Removed workaround for duplicate model definitions across namespaces as it hides legitimate authoring errors.
+* Set `skip_serializing` for read-only model fields.
 
 ## 0.38.0 (2026-03-18)
 

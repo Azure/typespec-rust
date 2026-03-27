@@ -21,13 +21,13 @@ pub struct ErrorAdditionalInfo {
     /// The additional info.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub info: Option<Value>,
 
     /// The additional info type.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "type", skip_serializing)]
     pub type_prop: Option<String>,
 }
 
@@ -38,31 +38,31 @@ pub struct ErrorDetail {
     /// The error additional info.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "additionalInfo", skip_serializing)]
     pub additional_info: Option<Vec<ErrorAdditionalInfo>>,
 
     /// The error code.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub code: Option<String>,
 
     /// The error details.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub details: Option<Vec<ErrorDetail>>,
 
     /// The error message.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub message: Option<String>,
 
     /// The error target.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub target: Option<String>,
 }
 
@@ -86,7 +86,7 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     #[serde(
         default,
         rename = "endTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub end_time: Option<OffsetDateTime>,
@@ -94,7 +94,7 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub error: Option<ErrorDetail>,
 
     /// The unique identifier for the operationStatus resource
@@ -104,13 +104,13 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     /// The name of the operationStatus resource
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
     /// Operational visibility: Read
-    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "percentComplete", skip_serializing)]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
@@ -119,7 +119,7 @@ pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
     #[serde(
         default,
         rename = "startTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub start_time: Option<OffsetDateTime>,

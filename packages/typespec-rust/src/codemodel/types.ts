@@ -335,6 +335,9 @@ export enum ModelFieldFlags {
 
   /** field is the discriminator in a discriminated union */
   Discriminator = 4,
+
+  /** field is read-only thus will never be serialized */
+  ReadOnly = 8,
 }
 
 /** ModelFlags contains bit flags describing model usage */

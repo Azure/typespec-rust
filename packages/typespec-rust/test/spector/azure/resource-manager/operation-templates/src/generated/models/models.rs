@@ -88,13 +88,13 @@ pub struct ErrorAdditionalInfo {
     /// The additional info.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub info: Option<Value>,
 
     /// The additional info type.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "type", skip_serializing)]
     pub type_prop: Option<String>,
 }
 
@@ -105,31 +105,31 @@ pub struct ErrorDetail {
     /// The error additional info.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "additionalInfo", skip_serializing)]
     pub additional_info: Option<Vec<ErrorAdditionalInfo>>,
 
     /// The error code.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub code: Option<String>,
 
     /// The error details.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub details: Option<Vec<ErrorDetail>>,
 
     /// The error message.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub message: Option<String>,
 
     /// The error target.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub target: Option<String>,
 }
 
@@ -167,7 +167,7 @@ pub struct Operation {
     /// Extensible enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "actionType", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "actionType", skip_serializing)]
     pub action_type: Option<ActionType>,
 
     /// Localized display information for this particular operation.
@@ -178,21 +178,21 @@ pub struct Operation {
     /// operations.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "isDataAction", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "isDataAction", skip_serializing)]
     pub is_data_action: Option<bool>,
 
     /// The name of the operation, as per Resource-Based Access Control (RBAC). Examples: "Microsoft.Compute/virtualMachines/write",
     /// "Microsoft.Compute/virtualMachines/capture/action"
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is
     /// "user,system"
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub origin: Option<Origin>,
 }
 
@@ -203,26 +203,26 @@ pub struct OperationDisplay {
     /// The short, localized friendly description of the operation; suitable for tool tips and detailed views.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub description: Option<String>,
 
     /// The concise, localized friendly name for the operation; suitable for dropdowns. E.g. "Create or Update Virtual Machine",
     /// "Restart Virtual Machine".
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub operation: Option<String>,
 
     /// The localized friendly form of the resource provider name, e.g. "Microsoft Monitoring Insights" or "Microsoft Compute".
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub provider: Option<String>,
 
     /// The localized friendly name of the resource type related to this operation. E.g. "Virtual Machines" or "Job Schedule Collections".
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub resource: Option<String>,
 }
 
@@ -250,7 +250,7 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
     #[serde(
         default,
         rename = "endTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub end_time: Option<OffsetDateTime>,
@@ -258,7 +258,7 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub error: Option<ErrorDetail>,
 
     /// The unique identifier for the operationStatus resource
@@ -268,13 +268,13 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
     /// The name of the operationStatus resource
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
     /// Operational visibility: Read
-    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "percentComplete", skip_serializing)]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
@@ -283,7 +283,7 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
     #[serde(
         default,
         rename = "startTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub start_time: Option<OffsetDateTime>,
@@ -303,7 +303,7 @@ pub struct OperationTemplatesLroClientDeleteOperationStatus {
     #[serde(
         default,
         rename = "endTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub end_time: Option<OffsetDateTime>,
@@ -311,7 +311,7 @@ pub struct OperationTemplatesLroClientDeleteOperationStatus {
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub error: Option<ErrorDetail>,
 
     /// The unique identifier for the operationStatus resource
@@ -321,13 +321,13 @@ pub struct OperationTemplatesLroClientDeleteOperationStatus {
     /// The name of the operationStatus resource
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
     /// Operational visibility: Read
-    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "percentComplete", skip_serializing)]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
@@ -336,7 +336,7 @@ pub struct OperationTemplatesLroClientDeleteOperationStatus {
     #[serde(
         default,
         rename = "startTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub start_time: Option<OffsetDateTime>,
@@ -356,7 +356,7 @@ pub struct OperationTemplatesLroClientExportArrayOperationStatus {
     #[serde(
         default,
         rename = "endTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub end_time: Option<OffsetDateTime>,
@@ -364,7 +364,7 @@ pub struct OperationTemplatesLroClientExportArrayOperationStatus {
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub error: Option<ErrorDetail>,
 
     /// The unique identifier for the operationStatus resource
@@ -374,13 +374,13 @@ pub struct OperationTemplatesLroClientExportArrayOperationStatus {
     /// The name of the operationStatus resource
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
     /// Operational visibility: Read
-    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "percentComplete", skip_serializing)]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
@@ -389,7 +389,7 @@ pub struct OperationTemplatesLroClientExportArrayOperationStatus {
     #[serde(
         default,
         rename = "startTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub start_time: Option<OffsetDateTime>,
@@ -409,7 +409,7 @@ pub struct OperationTemplatesLroClientExportOperationStatus {
     #[serde(
         default,
         rename = "endTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub end_time: Option<OffsetDateTime>,
@@ -417,7 +417,7 @@ pub struct OperationTemplatesLroClientExportOperationStatus {
     /// Errors that occurred if the operation ended with Canceled or Failed status
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub error: Option<ErrorDetail>,
 
     /// The unique identifier for the operationStatus resource
@@ -427,13 +427,13 @@ pub struct OperationTemplatesLroClientExportOperationStatus {
     /// The name of the operationStatus resource
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The progress made toward completing the operation
     ///
     /// Operational visibility: Read
-    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "percentComplete", skip_serializing)]
     pub percent_complete: Option<f64>,
 
     /// Operation start time
@@ -442,7 +442,7 @@ pub struct OperationTemplatesLroClientExportOperationStatus {
     #[serde(
         default,
         rename = "startTime",
-        skip_serializing_if = "Option::is_none",
+        skip_serializing,
         with = "azure_core::time::rfc3339::option"
     )]
     pub start_time: Option<OffsetDateTime>,
@@ -458,7 +458,7 @@ pub struct Order {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
@@ -470,7 +470,7 @@ pub struct Order {
     /// The name of the Order
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The resource-specific properties for this resource.
@@ -480,7 +480,7 @@ pub struct Order {
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "systemData", skip_serializing)]
     pub system_data: Option<SystemData>,
 
     /// Resource tags.
@@ -490,7 +490,7 @@ pub struct Order {
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     ///
     /// Operational visibility: Read
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "type", skip_serializing)]
     pub type_prop: Option<String>,
 }
 
@@ -507,7 +507,7 @@ pub struct OrderProperties {
     /// The provisioning state of the product.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "provisioningState", skip_serializing)]
     pub provisioning_state: Option<String>,
 }
 
@@ -518,7 +518,7 @@ pub struct Product {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
@@ -530,7 +530,7 @@ pub struct Product {
     /// The name of the Product
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The resource-specific properties for this resource.
@@ -540,7 +540,7 @@ pub struct Product {
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "systemData", skip_serializing)]
     pub system_data: Option<SystemData>,
 
     /// Resource tags.
@@ -550,7 +550,7 @@ pub struct Product {
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     ///
     /// Operational visibility: Read
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "type", skip_serializing)]
     pub type_prop: Option<String>,
 }
 
@@ -577,7 +577,7 @@ pub struct ProductProperties {
     /// The provisioning state of the product.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "provisioningState", skip_serializing)]
     pub provisioning_state: Option<String>,
 }
 
@@ -626,7 +626,7 @@ pub struct Widget {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
@@ -638,7 +638,7 @@ pub struct Widget {
     /// The name of the Widget
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The resource-specific properties for this resource.
@@ -648,7 +648,7 @@ pub struct Widget {
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "systemData", skip_serializing)]
     pub system_data: Option<SystemData>,
 
     /// Resource tags.
@@ -658,7 +658,7 @@ pub struct Widget {
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     ///
     /// Operational visibility: Read
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "type", skip_serializing)]
     pub type_prop: Option<String>,
 }
 
@@ -675,6 +675,6 @@ pub struct WidgetProperties {
     /// The provisioning state of the widget.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "provisioningState", skip_serializing)]
     pub provisioning_state: Option<String>,
 }

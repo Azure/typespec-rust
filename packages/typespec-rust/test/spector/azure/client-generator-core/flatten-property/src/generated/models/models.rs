@@ -70,14 +70,14 @@ pub struct Solution {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SolutionProperties {
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub content: Option<String>,
 
     /// Operational visibility: Read
-    #[serde(rename = "solutionId", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "solutionId", skip_serializing)]
     pub solution_id: Option<String>,
 
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub title: Option<String>,
 }

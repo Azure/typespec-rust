@@ -13,7 +13,7 @@ pub struct FirstItem {
     /// The id of the item.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub id: Option<i32>,
 }
 
@@ -81,7 +81,7 @@ pub struct SecondItem {
     /// The name of the item.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 }
 
@@ -92,13 +92,13 @@ pub struct User {
     /// The entity tag for this resource.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub etag: Option<Etag>,
 
     /// The user's id.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub id: Option<i32>,
 
     /// The user's name.
@@ -133,7 +133,7 @@ pub struct UserOrder {
     /// The user's id.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub id: Option<i32>,
 
     /// The user's id.

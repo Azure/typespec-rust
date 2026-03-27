@@ -85,7 +85,7 @@ pub struct Key {
     /// The name of the key.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 }
 
@@ -116,7 +116,7 @@ pub struct KeyValue {
     /// The key of the key-value.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub key: Option<String>,
 
     /// The label the key-value belongs to.
@@ -231,27 +231,19 @@ pub struct Snapshot {
     /// The time that the snapshot was created.
     ///
     /// Operational visibility: Read
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
-    )]
+    #[serde(default, skip_serializing, with = "azure_core::time::rfc3339::option")]
     pub created: Option<OffsetDateTime>,
 
     /// A value representing the current state of the snapshot.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub etag: Option<String>,
 
     /// The time that the snapshot will expire.
     ///
     /// Operational visibility: Read
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
-    )]
+    #[serde(default, skip_serializing, with = "azure_core::time::rfc3339::option")]
     pub expires: Option<OffsetDateTime>,
 
     /// A list of filters used to filter the key-values included in the snapshot.
@@ -261,13 +253,13 @@ pub struct Snapshot {
     /// The amount of key-values in the snapshot.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub items_count: Option<i64>,
 
     /// The name of the snapshot.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The amount of time, in seconds, that a snapshot will remain in the archived
@@ -280,13 +272,13 @@ pub struct Snapshot {
     /// The size in bytes of the snapshot.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub size: Option<i64>,
 
     /// The current status of the snapshot.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub status: Option<SnapshotStatus>,
 
     /// The tags of the snapshot.

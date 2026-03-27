@@ -12,13 +12,13 @@ pub struct ErrorAdditionalInfo {
     /// The additional info.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub info: Option<Value>,
 
     /// The additional info type.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "type", skip_serializing)]
     pub type_prop: Option<String>,
 }
 
@@ -28,31 +28,31 @@ pub struct ErrorDetail {
     /// The error additional info.
     ///
     /// Operational visibility: Read
-    #[serde(rename = "additionalInfo", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "additionalInfo", skip_serializing)]
     pub additional_info: Option<Vec<ErrorAdditionalInfo>>,
 
     /// The error code.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub code: Option<String>,
 
     /// The error details.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub details: Option<Vec<ErrorDetail>>,
 
     /// The error message.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub message: Option<String>,
 
     /// The error target.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub target: Option<String>,
 }
 

@@ -81,7 +81,7 @@ pub struct User {
     /// The name of user.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub name: Option<String>,
 
     /// The role of user

@@ -969,6 +969,10 @@ export class Adapter {
       modelField.docs.description += `Operational visibility: ${visibilityStr}`;
     }
 
+    if (property.visibility && property.visibility.length === 1 && property.visibility[0] === http.Visibility.Read) {
+      modelField.flags |= rust.ModelFieldFlags.ReadOnly;
+    }
+
     // if this is a literal, add a doc comment explaining its behavior
     const unwrappedType = utils.unwrapOption(fieldType);
     if (unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal') {

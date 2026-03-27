@@ -13,7 +13,7 @@ pub struct User {
     /// The user's id.
     ///
     /// Operational visibility: Read
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing)]
     pub id: Option<i32>,
 
     /// The user's name.
