@@ -5,16 +5,16 @@
 
 use crate::models::Pet;
 use azure_core::fmt::SafeDebug;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct ListWithPageSizeResponse {
     #[serde(default)]
     pub pets: Vec<Pet>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct ListWithoutContinuationResponse {
     #[serde(default)]

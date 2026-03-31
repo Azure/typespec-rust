@@ -25,7 +25,7 @@ pub struct GenerationResult {
 }
 
 /// Provides status details for long running operations.
-#[derive(Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct RpcClientLongRunningRpcOperationStatus {
     /// Error object that describes the error when status is "Failed".

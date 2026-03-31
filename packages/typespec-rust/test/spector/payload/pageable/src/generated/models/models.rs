@@ -17,14 +17,14 @@ pub struct Pet {
     pub name: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestHeaderResponseHeaderResponse {
     #[serde(default)]
     pub pets: Vec<Pet>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestQueryResponseHeaderResponse {
     #[serde(default)]
@@ -44,7 +44,7 @@ pub struct XmlPet {
 }
 
 /// The XML response for listing pets.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 #[serde(rename = "PetListResult")]
 pub struct XmlPetListResult {
@@ -61,7 +61,7 @@ pub struct XmlPetListResult {
 }
 
 /// The XML response for listing pets with next link.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 #[serde(rename = "PetListResult")]
 pub struct XmlPetListResultWithNextLink {

@@ -124,7 +124,7 @@ pub struct BlobContainerClientReleaseLeaseResult;
 pub struct BlobContainerClientRenewLeaseResult;
 
 /// The blob flat list segment.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct BlobFlatListSegment {
     /// The blob items.
@@ -843,7 +843,7 @@ pub struct GeoReplication {
 }
 
 /// An enumeration of blobs.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 #[serde(rename = "EnumerationResults")]
 pub struct ListBlobsResponse {
@@ -877,7 +877,7 @@ pub struct ListBlobsResponse {
 }
 
 /// The list container segment response
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 #[serde(rename = "EnumerationResults")]
 pub struct ListContainersSegmentResponse {

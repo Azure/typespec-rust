@@ -7,9 +7,9 @@
 #![allow(non_snake_case)]
 
 use super::XmlPet;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 #[serde(rename = "Pets")]
 pub(crate) struct PetsPet {
     #[serde(default)]
@@ -22,15 +22,5 @@ impl PetsPet {
         D: Deserializer<'de>,
     {
         Ok(PetsPet::deserialize(deserializer)?.Pet)
-    }
-
-    pub fn wrap<S>(to_serialize: &Vec<XmlPet>, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        PetsPet {
-            Pet: to_serialize.to_owned(),
-        }
-        .serialize(serializer)
     }
 }

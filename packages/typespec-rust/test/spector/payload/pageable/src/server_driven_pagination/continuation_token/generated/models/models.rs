@@ -7,7 +7,7 @@ use crate::models::Pet;
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestHeaderNestedResponseBodyResponse {
     #[serde(default, rename = "nestedItems")]
@@ -17,7 +17,7 @@ pub struct RequestHeaderNestedResponseBodyResponse {
     pub nested_next: Option<RequestHeaderNestedResponseBodyResponseNestedNext>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestHeaderNestedResponseBodyResponseNestedItems {
     #[serde(default)]
@@ -31,7 +31,7 @@ pub struct RequestHeaderNestedResponseBodyResponseNestedNext {
     pub next_token: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestHeaderResponseBodyResponse {
     #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
@@ -41,7 +41,7 @@ pub struct RequestHeaderResponseBodyResponse {
     pub pets: Vec<Pet>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestQueryNestedResponseBodyResponse {
     #[serde(default, rename = "nestedItems")]
@@ -51,7 +51,7 @@ pub struct RequestQueryNestedResponseBodyResponse {
     pub nested_next: Option<RequestQueryNestedResponseBodyResponseNestedNext>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestQueryNestedResponseBodyResponseNestedItems {
     #[serde(default)]
@@ -65,7 +65,7 @@ pub struct RequestQueryNestedResponseBodyResponseNestedNext {
     pub next_token: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct RequestQueryResponseBodyResponse {
     #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]

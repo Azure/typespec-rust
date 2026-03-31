@@ -339,6 +339,9 @@ export class indentation {
   }
 }
 
+/** indicates if serde annotations should be included */
+export type IncludeSerde = 'true' | 'false' | 'deserialize';
+
 /**
  * emits the derive annotation with the standard and any additional values
  * 
@@ -346,10 +349,14 @@ export class indentation {
  * @param extra contains any extra derive values
  * @returns a derive macro
  */
-export function annotationDerive(serde: boolean, ...extra: Array<string>): string {
+export function annotationDerive(serde: IncludeSerde, ...extra: Array<string>): string {
   const derive = new Array<string>('Clone', 'SafeDebug');
-  if (serde) {
-    derive.push('Deserialize', 'Serialize');
+  switch (serde) {
+    case 'deserialize':
+      derive.push('Deserialize');
+      break;
+    case 'true':
+      derive.push('Deserialize', 'Serialize');  
   }
   // remove any empty values
   extra = extra.filter(entry => entry.trim() !== '');

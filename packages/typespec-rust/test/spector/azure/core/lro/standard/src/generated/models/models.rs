@@ -21,7 +21,7 @@ pub struct ExportedUser {
 }
 
 /// Provides status details for long running operations.
-#[derive(Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct StandardClientCreateOrReplaceOperationStatus {
     /// Error object that describes the error when status is "Failed".
@@ -38,7 +38,7 @@ pub struct StandardClientCreateOrReplaceOperationStatus {
 }
 
 /// Provides status details for long running operations.
-#[derive(Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct StandardClientDeleteOperationStatus {
     /// Error object that describes the error when status is "Failed".
@@ -55,7 +55,7 @@ pub struct StandardClientDeleteOperationStatus {
 }
 
 /// Provides status details for long running operations.
-#[derive(Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct StandardClientExportOperationStatus {
     /// Error object that describes the error when status is "Failed".

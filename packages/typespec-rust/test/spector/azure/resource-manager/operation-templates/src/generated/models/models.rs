@@ -228,7 +228,7 @@ pub struct OperationDisplay {
 
 /// A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of
 /// results.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct OperationListResult {
     /// The link to the next page of items

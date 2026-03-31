@@ -8,11 +8,13 @@
 * Removed spurious `use` statement in `unions.rs`.
 * Fixed incorrect initialization of `Option<T>` fields in explicit implementations of `Default` for client options types.
 * Removed `self` prefix from optional client parameters within the `if let Some(...)` statement.
+* Fixed some missing derive attributes.
 
 ### Other Changes
 
 * Removed workaround for duplicate model definitions across namespaces as it hides legitimate authoring errors.
 * Set `skip_serializing` for read-only model fields.
+* Removed `Serialize` attribute from paged response structs as these are never serialized.
 
 ## 0.38.0 (2026-03-18)
 

@@ -7,7 +7,7 @@ use azure_core::{fmt::SafeDebug, http::Etag};
 use serde::{Deserialize, Serialize};
 
 /// Paged collection of User items
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct PagedUser {
     /// The link to the next page of items

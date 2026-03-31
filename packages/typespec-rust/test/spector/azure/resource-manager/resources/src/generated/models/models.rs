@@ -103,7 +103,7 @@ pub struct ExtensionsResource {
 }
 
 /// The response of a ExtensionsResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct ExtensionsResourceListResult {
     /// The link to the next page of items
@@ -162,7 +162,7 @@ pub struct LocationResource {
 }
 
 /// The response of a LocationResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct LocationResourceListResult {
     /// The link to the next page of items
@@ -221,7 +221,7 @@ pub struct NestedProxyResource {
 }
 
 /// The response of a NestedProxyResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct NestedProxyResourceListResult {
     /// The link to the next page of items
@@ -726,7 +726,7 @@ pub struct SingletonTrackedResource {
 }
 
 /// The response of a SingletonTrackedResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct SingletonTrackedResourceListResult {
     /// The link to the next page of items
@@ -834,7 +834,7 @@ pub struct TopLevelTrackedResource {
 }
 
 /// The response of a TopLevelTrackedResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, Deserialize, SafeDebug)]
 #[non_exhaustive]
 pub struct TopLevelTrackedResourceListResult {
     /// The link to the next page of items

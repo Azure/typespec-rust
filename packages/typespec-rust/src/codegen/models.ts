@@ -79,43 +79,18 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       continue;
     }
 
-    const hasAzureErrorDetailFields = function(type: rust.Type): boolean {
-      switch (type.kind) {
-        case 'model':
-          for (const field of type.fields) {
-            if (hasAzureErrorDetailFields(field.type)) {
-              return true;
-            }
-          }
-          break;
-        case 'option':
-          if (hasAzureErrorDetailFields(type.type)) {
-            return true;
-          }
-          break;
-        case 'external':
-          if (type.name === 'ErrorDetail' && type.path === 'azure_core::error') {
-            return true;
-          }
-          break;
+    let isPagedResult = false;
+    for (const field of model.fields) {
+      if (field.kind === 'modelField' && (field.flags & rust.ModelFieldFlags.PageItems)) {
+        isPagedResult = true;
+        break;
       }
-
-      return false;
     }
-    const isOperationStatus = hasAzureErrorDetailFields(model);
 
     // we add these here to avoid using serde for marker-only models.
     // NOTE: PolymorphicBase are pub(crate) serialization helpers used
     // for polymorphic base types.  they are Serialize only and the
     // flag is mutually exclusive with all other flags.
-
-    if (model.flags !== rust.ModelFlags.PolymorphicBase) {
-      use.add('serde', 'Deserialize');
-    }
-
-    if (!isOperationStatus) {
-      use.add('serde', 'Serialize');
-    }
 
     const bodyFormat = context.getModelBodyFormat(model);
 
@@ -126,16 +101,30 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
 
     body += helpers.formatDocComment(model.docs);
 
-    // skip deriving Default for spread param models.
-    // it's not necessary and will cause compilation failures
-    // when the type contains something that doesn't have a
-    // default impl (e.g. enum types).
-    if (isOperationStatus) {
-      body += `#[derive(Default, Deserialize, SafeDebug)]\n`;
-    } else if (model.flags !== rust.ModelFlags.PolymorphicBase) {
-      body += helpers.annotationDerive(!hasXmlAddlProps, model.flags !== rust.ModelFlags.Unspecified ? 'Default' : '');
+    if (model.flags !== rust.ModelFlags.PolymorphicBase) {
+      let serde: helpers.IncludeSerde = hasXmlAddlProps ? 'false' : 'true';
+      if (isPagedResult) {
+        // paged result models are never serialized
+        serde = 'deserialize';
+      }
+
+      switch (serde) {
+        case 'deserialize':
+          use.add('serde', 'Deserialize');
+          break;
+        case 'true':
+          use.add('serde', 'Deserialize');
+          use.add('serde', 'Serialize');
+      }
+
+      // skip deriving Default for spread param models.
+      // it's not necessary and will cause compilation failures
+      // when the type contains something that doesn't have a
+      // default impl (e.g. enum types).
+      body += helpers.annotationDerive(serde, model.flags !== rust.ModelFlags.Unspecified ? 'Default' : '');
     } else {
       // rust.ModelFlags.PolymorphicBase only needs this
+      use.add('serde', 'Serialize');
       body += '#[derive(Serialize)]\n';
     }
 
@@ -220,7 +209,7 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
         addSerDeHelper(module, field, serdeParams, bodyFormat, use, deserializeWith);
       } else if (bodyFormat === 'xml' && utils.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
-        const xmlListWrapper = getXMLListWrapper(field);
+        const xmlListWrapper = getXMLListWrapper(field, isPagedResult);
         serdeParams.add('default');
         serdeParams.add(`deserialize_with = ${deserializeWith ? `"${deserializeWith.name}"` : `"${xmlListWrapper.name}::unwrap"`}`);
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
@@ -438,13 +427,17 @@ interface XMLListWrapper {
    * should be an Option<Vec<T>>
    */
   fieldType: rust.Type;
+
+  /** indicates if the field is part of a paged result */
+  inPagedResult: boolean;
 }
 
 class XMLListWrapper implements XMLListWrapper {
-  constructor(name: string, fieldName: string, fieldType: rust.Type) {
+  constructor(name: string, fieldName: string, fieldType: rust.Type, inPagedResult: boolean) {
     this.name = name;
     this.fieldName = fieldName;
     this.fieldType = fieldType;
+    this.inPagedResult = inPagedResult;
   }
 }
 
@@ -456,9 +449,10 @@ const xmlListWrappers = new Map<string, XMLListWrapper>();
  * assumes that it's been determined that the wrapper is required.
  * 
  * @param field the field for which to create an XMLWrapper
+ * @param isPagedResult indicates if the field is part of a paged result
  * @returns the XMLListWrapper for the provided field
  */
-function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
+function getXMLListWrapper(field: rust.ModelField, inPagedResult: boolean): XMLListWrapper {
   // for wrapped lists of scalar types, the element names for
   // scalar types use the TypeSpec defined names. so, we need
   // to translate from Rust scalar types back to TypeSpec.
@@ -521,7 +515,7 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
   const wrapperTypeName = `${helpers.capitalize(field.name)}${helpers.capitalize(unwrappedFieldTypeName)}`;
   let xmlListWrapper = xmlListWrappers.get(wrapperTypeName);
   if (!xmlListWrapper) {
-    xmlListWrapper = new XMLListWrapper(wrapperTypeName, unwrappedFieldTypeName, field.type);
+    xmlListWrapper = new XMLListWrapper(wrapperTypeName, unwrappedFieldTypeName, field.type, inPagedResult);
     xmlListWrapper.serde = wrapperTypeName === field.serde ? undefined : field.serde;
     xmlListWrappers.set(wrapperTypeName, xmlListWrapper);
   }
@@ -546,11 +540,15 @@ function emitXMLListWrappers(module: rust.ModuleContainer): helpers.Module | und
   const indent = new helpers.indentation();
   const use = new Use(module, 'modelsOther');
 
-  use.add('serde', 'Deserialize', 'Deserializer', 'Serialize', 'Serializer');
-
   let body = '';
   for (const wrapperType of wrapperTypes) {
-    body += '#[derive(Deserialize, Serialize)]\n';
+    // NOTE: paged results are deserialize only
+    use.add('serde', 'Deserialize', 'Deserializer');
+    if (!wrapperType.inPagedResult) {
+      use.add('serde', 'Serialize', 'Serializer');
+    }
+
+    body += `#[derive(Deserialize${wrapperType.inPagedResult ? '' : ', Serialize'})]\n`;
     if (wrapperType.serde) {
       body += `#[serde(rename = "${wrapperType.serde}")]\n`;
     }
@@ -569,13 +567,15 @@ function emitXMLListWrappers(module: rust.ModuleContainer): helpers.Module | und
     body += `${indent.push().get()}Ok(${wrapperType.name}::deserialize(deserializer)?.${wrapperType.fieldName})\n`;
     body += `${indent.pop().get()}}\n\n`;
 
-    const fieldTypeParam = 'to_serialize';
-    body += `${indent.get()}pub fn wrap<S>(${fieldTypeParam}: &${fieldType}, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {\n`;
-    body += `${indent.push().get()}${wrapperType.name} {\n`;
-    body += `${indent.push().get()}${wrapperType.fieldName}: ${fieldTypeParam}.to_owned(),\n`;
-    body += `${indent.pop().get()}}\n`;
-    body += `${indent.get()}.serialize(serializer)\n`;
-    body += `${indent.pop().get()}}\n`;
+    if (!wrapperType.inPagedResult) {
+      const fieldTypeParam = 'to_serialize';
+      body += `${indent.get()}pub fn wrap<S>(${fieldTypeParam}: &${fieldType}, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {\n`;
+      body += `${indent.push().get()}${wrapperType.name} {\n`;
+      body += `${indent.push().get()}${wrapperType.fieldName}: ${fieldTypeParam}.to_owned(),\n`;
+      body += `${indent.pop().get()}}\n`;
+      body += `${indent.get()}.serialize(serializer)\n`;
+      body += `${indent.pop().get()}}\n`;
+    }
 
     body += '}\n\n'; // end impl
   }
