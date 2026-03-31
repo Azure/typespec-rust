@@ -7,7 +7,7 @@ use crate::models::Pet;
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct LinkResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -17,7 +17,7 @@ pub struct LinkResponse {
     pub pets: Vec<Pet>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct LinkStringResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -27,7 +27,7 @@ pub struct LinkStringResponse {
     pub pets: Vec<Pet>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct NestedLinkResponse {
     #[serde(default, rename = "nestedItems")]
@@ -37,7 +37,7 @@ pub struct NestedLinkResponse {
     pub nested_next: Option<NestedLinkResponseNestedNext>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct NestedLinkResponseNestedItems {
     #[serde(default)]

@@ -8,7 +8,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 /// Paged collection of Widget items
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub(crate) struct PagedWidget {
     /// The link to the next page of items

@@ -179,7 +179,7 @@ pub struct KeyVaultErrorError {
 }
 
 /// The deleted secret list result
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ListDeletedSecretPropertiesResult {
     /// The URL to get the next set of deleted secrets.
@@ -197,7 +197,7 @@ pub struct ListDeletedSecretPropertiesResult {
 }
 
 /// The secret list result.
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ListSecretPropertiesResult {
     /// The URL to get the next set of secrets.

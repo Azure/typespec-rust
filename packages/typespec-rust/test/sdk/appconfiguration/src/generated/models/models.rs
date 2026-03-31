@@ -90,7 +90,7 @@ pub struct Key {
 }
 
 /// The result of a list request.
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct KeyListResult {
     /// The collection value.
@@ -162,7 +162,7 @@ pub struct KeyValueFilter {
 }
 
 /// The result of a list request.
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct KeyValueListResult {
     /// An identifier representing the returned state of the resource.
@@ -188,7 +188,7 @@ pub struct Label {
 }
 
 /// The result of a list request.
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct LabelListResult {
     /// The collection value.
@@ -287,7 +287,7 @@ pub struct Snapshot {
 }
 
 /// The result of a snapshot list request.
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SnapshotListResult {
     /// The collection value.

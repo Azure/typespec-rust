@@ -90,7 +90,7 @@ impl Committed_blocksBlock {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(rename = "Containers")]
 pub(crate) struct Container_itemsContainer {
     #[serde(default)]
@@ -103,6 +103,16 @@ impl Container_itemsContainer {
         D: Deserializer<'de>,
     {
         Ok(Container_itemsContainer::deserialize(deserializer)?.Container)
+    }
+
+    pub fn wrap<S>(to_serialize: &Vec<ContainerItem>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Container_itemsContainer {
+            Container: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
     }
 }
 

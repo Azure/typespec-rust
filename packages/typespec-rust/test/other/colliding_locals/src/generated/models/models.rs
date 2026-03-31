@@ -12,14 +12,14 @@ pub struct Widget {
     pub weight: Option<i32>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct WidgetPage {
     #[serde(default)]
     pub values: Vec<Widget>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct WidgetPages {
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]

@@ -7,7 +7,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 /// Paged response model.
-#[derive(Clone, Default, Deserialize, SafeDebug)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ListTestResult {
     /// List of items.
