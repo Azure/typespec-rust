@@ -64,7 +64,10 @@ impl MethodSubscriptionIdClient {
         }
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(
             credential,
-            vec!["user_impersonation"],
+            vec![format!(
+                "{}/.default",
+                endpoint.origin().ascii_serialization()
+            )],
         ));
         Ok(Self {
             endpoint,
