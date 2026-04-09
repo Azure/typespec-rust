@@ -1266,7 +1266,7 @@ function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): s
 function checkEmptyRequiredPathParams(indent: helpers.indentation, params: Array<PathParamType>): string {
   let checks = '';
   for (const param of params) {
-    if (param.optional || param.location === 'client') {
+    if (param.optional || param.location === 'client' || param.minLength === 0) {
       continue;
     }
     checks += emitEmptyPathParamCheck(indent, param);

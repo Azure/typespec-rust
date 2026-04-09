@@ -45,6 +45,9 @@ export interface Parameter {
 
   /** indicates if the parameter is mutable. defaults to false */
   mut: boolean;
+
+  /** indicates minimum length for the parameter */
+  minLength: number | undefined;
 }
 
 /** Self is a method's self parameter */
@@ -79,6 +82,7 @@ export class Parameter implements Parameter {
     this.type = type;
     this.mut = false;
     this.docs = {};
+    this.minLength = undefined;
   }
 }
 

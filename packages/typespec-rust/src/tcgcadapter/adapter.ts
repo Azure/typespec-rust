@@ -2784,6 +2784,14 @@ export class Adapter {
           }
 
           adaptedParam = new rust.PathScalarParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, opParam.allowReserved, style);
+          const allowEmpty: boolean = opParam.decorators.find(
+            d => d.name === 'Azure.ClientGenerator.Core.@clientOption'
+              && d.arguments['name'] === 'allowEmpty'
+              && d.arguments['scope'] === 'rust'
+          )?.arguments['value'] === true;
+          if (allowEmpty) {
+            adaptedParam.minLength = 0;
+          }
         }
       } break;
       case 'query':

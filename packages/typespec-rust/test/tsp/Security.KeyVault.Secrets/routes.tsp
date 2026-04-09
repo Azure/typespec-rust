@@ -52,6 +52,8 @@ op deleteSecret is KeyVaultOperation<
      */
     @path("secret-name")
     @clientName("name", "go")
+    #suppress "@azure-tools/typespec-client-generator-core/client-option" "Allowing empty string for secret name to support deletion of secrets with empty name"
+    @clientOption("allowEmpty", true, "rust")
     secretName: string;
   },
   DeletedSecretBundle
