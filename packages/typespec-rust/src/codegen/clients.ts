@@ -126,7 +126,7 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         }
 
         // if there's a credential param, create the necessary auth policy
-        const authPolicy = getAuthPolicy(constructor, use);
+        const authPolicy = getAuthPolicy(constructor, use, endpointParamName);
         if (authPolicy) {
           body += `${indent.get()}${authPolicy}\n`;
         }
@@ -680,11 +680,19 @@ function getHeaderTraitDocComment(indent: helpers.indentation, module: rust.Modu
  * @param use the use statement builder currently in scope
  * @returns the auth policy instantiation code or undefined if not required
  */
-function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
+function getAuthPolicy(ctor: rust.Constructor, use: Use, endpointParamName: string): string | undefined {
   for (const param of ctor.params) {
     const arcTokenCred = utils.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
     if (arcTokenCred) {
       use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
+      const hasRelativeScopes = arcTokenCred.scopes.some(s => !s.startsWith('http'));
+      if (hasRelativeScopes) {
+        // Relative scopes (e.g. "user_impersonation" from ARM specs) must be
+        // qualified at runtime using the service endpoint so that sovereign
+        // clouds work correctly.  The standard Azure SDK pattern is
+        // "{endpoint_origin}/.default".
+        return `let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![format!("{}/.default", ${endpointParamName}.origin().ascii_serialization())]));`;
+      }
       const scopes = new Array<string>();
       for (const scope of arcTokenCred.scopes) {
         scopes.push(`"${scope}"`);
