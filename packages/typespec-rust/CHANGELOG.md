@@ -1,6 +1,6 @@
 # Release History
 
-## 0.38.1 (unreleased)
+## 0.38.1 (2026-04-10)
 
 ### Bugs Fixed
 
@@ -9,6 +9,7 @@
 * Fixed incorrect initialization of `Option<T>` fields in explicit implementations of `Default` for client options types.
 * Removed `self` prefix from optional client parameters within the `if let Some(...)` statement.
 * Fixed some missing derive attributes.
+* Added support for `allowEmpty` `@clientOption` decorator, which can be used to remove empty string check for path parameters.
 
 ### Other Changes
 
