@@ -10,9 +10,10 @@ use crate::generated::models::{
     MiscTestsClientAvoidDupeHeadersTwoResult, MiscTestsClientCollidingOptionsParamOptions,
     MiscTestsClientEtagHeaderParameterOptions, MiscTestsClientGetDiscriminatedNoSubTypesOptions,
     MiscTestsClientGetUnionsWithCyclesOptions, MiscTestsClientLiteralWithInvalidCharOptions,
-    MiscTestsClientParamGroupOptions, MiscTestsClientSpreadParamWithEnumOptions,
-    MiscTestsClientVariousExplodedQueryParamsOptions, MiscTestsClientWithClientParamsOptions,
-    MiscTestsClientWithOptionalClientQueryParamOptions, SpreadWithEnum,
+    MiscTestsClientParamGroupOptions, MiscTestsClientRequiredPathParamNoEmptyCheckOptions,
+    MiscTestsClientSpreadParamWithEnumOptions, MiscTestsClientVariousExplodedQueryParamsOptions,
+    MiscTestsClientWithClientParamsOptions, MiscTestsClientWithOptionalClientQueryParamOptions,
+    SpreadWithEnum,
 };
 use azure_core::{
     error::CheckSuccessOptions,
@@ -381,6 +382,39 @@ impl MiscTestsClient {
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("size", params.size.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.requiredPathParamNoEmptyCheck")]
+    pub async fn required_path_param_no_empty_check(
+        &self,
+        can_be_empty: &str,
+        options: Option<MiscTestsClientRequiredPathParamNoEmptyCheckOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/{canBeEmpty}");
+        path = path.replace("{canBeEmpty}", can_be_empty);
+        url.append_path(&path);
+        let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
             .send(

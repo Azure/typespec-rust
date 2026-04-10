@@ -226,3 +226,10 @@ op withClientParams(
   @path("version")
   version?: string
 ): void;
+
+op requiredPathParamNoEmptyCheck(
+  @path("canBeEmpty")
+  #suppress "@azure-tools/typespec-client-generator-core/client-option" "Allowing empty string for non-optional path parameter to support KeyVault scenarios, where empty key_version means latest version"
+  @clientOption("allowEmpty", true, "rust")
+  canBeEmpty: string
+): void;

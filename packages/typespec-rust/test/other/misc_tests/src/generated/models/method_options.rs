@@ -75,6 +75,13 @@ pub struct MiscTestsClientParamGroupOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::required_path_param_no_empty_check()`](crate::generated::clients::MiscTestsClient::required_path_param_no_empty_check())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientRequiredPathParamNoEmptyCheckOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::spread_param_with_enum()`](crate::generated::clients::MiscTestsClient::spread_param_with_enum())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientSpreadParamWithEnumOptions<'a> {
