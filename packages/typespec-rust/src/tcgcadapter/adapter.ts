@@ -1083,6 +1083,11 @@ export class Adapter {
       }
       case 'constant':
         return this.getLiteral(type);
+      // Per https://typespec.io/docs/language-basics/built-in-types/:
+      // "Parent type for all numeric types" - decimal fits the best.
+      // No Azure spec, no Spector test uses this type, we only need it here for spector/tcgc/alternate-type test,
+      // but only until https://github.com/Azure/typespec-azure/issues/3965 is fixed.
+      case 'numeric':
       case 'decimal':
       case 'decimal128': {
         const keyName = 'decimal' + (type.encode ? `-${type.encode}` : '');

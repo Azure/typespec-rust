@@ -1,5 +1,11 @@
 # Release History
 
+## 0.39.0 (2026-04-10)
+
+### Features Added
+
+* Updated TypeSpec dependencies to `1.11.0`.
+
 ## 0.38.1 (2026-04-10)
 
 ### Bugs Fixed

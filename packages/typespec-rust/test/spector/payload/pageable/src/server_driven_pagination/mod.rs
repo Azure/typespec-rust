@@ -5,4 +5,5 @@
 
 mod generated;
 pub use generated::*;
+pub mod alternate_initial_verb;
 pub mod continuation_token;

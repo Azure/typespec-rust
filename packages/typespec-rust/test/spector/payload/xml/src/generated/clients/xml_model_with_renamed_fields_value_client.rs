@@ -16,7 +16,7 @@ use azure_core::{
     tracing, Result,
 };
 
-/// Operations for the ModelWithRenamedFields type.
+/// §1.3, §2.3 — Operations for the ModelWithRenamedFields type.
 #[tracing::client]
 pub struct XmlModelWithRenamedFieldsValueClient {
     pub(crate) endpoint: Url,

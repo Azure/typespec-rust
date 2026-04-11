@@ -15,7 +15,7 @@ use azure_core::{
     tracing, Result,
 };
 
-/// Operations for the ModelWithText type.
+/// §8.1 — Operations for the ModelWithText type.
 #[tracing::client]
 pub struct XmlModelWithTextValueClient {
     pub(crate) endpoint: Url,

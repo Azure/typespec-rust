@@ -35,15 +35,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
-name = "appconfiguration"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "azure_core",
- "serde",
-]
-
-[[package]]
 name = "approx"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1856,16 +1847,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "spector_arm_multi_service_older_versions"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "azure_core",
- "serde",
- "tokio",
-]
-
-[[package]]
 name = "spector_arm_multi_service_shared_models"
 version = "0.1.0"
 dependencies = [
@@ -2428,15 +2409,6 @@ name = "spector_multiple"
 version = "0.1.0"
 dependencies = [
  "azure_core",
- "tokio",
-]
-
-[[package]]
-name = "spector_naming"
-version = "0.1.0"
-dependencies = [
- "azure_core",
- "serde",
  "tokio",
 ]
 

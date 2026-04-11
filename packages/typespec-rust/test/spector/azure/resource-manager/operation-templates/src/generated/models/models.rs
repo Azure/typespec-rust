@@ -240,7 +240,8 @@ pub struct OperationListResult {
     pub value: Vec<Operation>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
@@ -293,7 +294,8 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationTemplatesLroClientDeleteOperationStatus {
@@ -346,7 +348,8 @@ pub struct OperationTemplatesLroClientDeleteOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationTemplatesLroClientExportArrayOperationStatus {
@@ -399,7 +402,8 @@ pub struct OperationTemplatesLroClientExportArrayOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationTemplatesLroClientExportOperationStatus {

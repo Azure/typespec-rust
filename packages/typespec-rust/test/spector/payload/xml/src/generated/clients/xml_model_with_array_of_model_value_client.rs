@@ -16,7 +16,7 @@ use azure_core::{
     tracing, Result,
 };
 
-/// Operations for the ModelWithArrayOfModel type.
+/// §4.1 — Operations for the ModelWithArrayOfModel type.
 #[tracing::client]
 pub struct XmlModelWithArrayOfModelValueClient {
     pub(crate) endpoint: Url,

@@ -5,9 +5,13 @@
 
 use super::{
     ModelWithArrayOfModel, ModelWithAttributes, ModelWithDatetime, ModelWithDictionary,
-    ModelWithEmptyArray, ModelWithEncodedNames, ModelWithEnum, ModelWithOptionalField,
-    ModelWithRenamedArrays, ModelWithRenamedFields, ModelWithSimpleArrays, ModelWithText,
-    ModelWithUnwrappedArray, SimpleModel,
+    ModelWithEmptyArray, ModelWithEncodedNames, ModelWithEnum, ModelWithNamespace,
+    ModelWithNamespaceOnProperties, ModelWithNestedModel, ModelWithOptionalField,
+    ModelWithRenamedArrays, ModelWithRenamedAttribute, ModelWithRenamedFields,
+    ModelWithRenamedNestedModel, ModelWithRenamedProperty, ModelWithRenamedUnwrappedModelArray,
+    ModelWithRenamedWrappedAndItemModelArray, ModelWithRenamedWrappedModelArray,
+    ModelWithSimpleArrays, ModelWithText, ModelWithUnwrappedArray, ModelWithUnwrappedModelArray,
+    ModelWithWrappedPrimitiveCustomItemNames, SimpleModel,
 };
 use azure_core::{
     http::{RequestContent, XmlFormat},
@@ -64,6 +68,29 @@ impl TryFrom<ModelWithEnum> for RequestContent<ModelWithEnum, XmlFormat> {
     }
 }
 
+impl TryFrom<ModelWithNamespace> for RequestContent<ModelWithNamespace, XmlFormat> {
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithNamespace) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithNamespaceOnProperties>
+    for RequestContent<ModelWithNamespaceOnProperties, XmlFormat>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithNamespaceOnProperties) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithNestedModel> for RequestContent<ModelWithNestedModel, XmlFormat> {
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithNestedModel) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
 impl TryFrom<ModelWithOptionalField> for RequestContent<ModelWithOptionalField, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithOptionalField) -> Result<Self> {
@@ -78,9 +105,59 @@ impl TryFrom<ModelWithRenamedArrays> for RequestContent<ModelWithRenamedArrays, 
     }
 }
 
+impl TryFrom<ModelWithRenamedAttribute> for RequestContent<ModelWithRenamedAttribute, XmlFormat> {
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithRenamedAttribute) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
 impl TryFrom<ModelWithRenamedFields> for RequestContent<ModelWithRenamedFields, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithRenamedFields) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithRenamedNestedModel>
+    for RequestContent<ModelWithRenamedNestedModel, XmlFormat>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithRenamedNestedModel) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithRenamedProperty> for RequestContent<ModelWithRenamedProperty, XmlFormat> {
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithRenamedProperty) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithRenamedUnwrappedModelArray>
+    for RequestContent<ModelWithRenamedUnwrappedModelArray, XmlFormat>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithRenamedUnwrappedModelArray) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithRenamedWrappedAndItemModelArray>
+    for RequestContent<ModelWithRenamedWrappedAndItemModelArray, XmlFormat>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithRenamedWrappedAndItemModelArray) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithRenamedWrappedModelArray>
+    for RequestContent<ModelWithRenamedWrappedModelArray, XmlFormat>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithRenamedWrappedModelArray) -> Result<Self> {
         Ok(to_xml(&value)?.into())
     }
 }
@@ -102,6 +179,24 @@ impl TryFrom<ModelWithText> for RequestContent<ModelWithText, XmlFormat> {
 impl TryFrom<ModelWithUnwrappedArray> for RequestContent<ModelWithUnwrappedArray, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithUnwrappedArray) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithUnwrappedModelArray>
+    for RequestContent<ModelWithUnwrappedModelArray, XmlFormat>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithUnwrappedModelArray) -> Result<Self> {
+        Ok(to_xml(&value)?.into())
+    }
+}
+
+impl TryFrom<ModelWithWrappedPrimitiveCustomItemNames>
+    for RequestContent<ModelWithWrappedPrimitiveCustomItemNames, XmlFormat>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: ModelWithWrappedPrimitiveCustomItemNames) -> Result<Self> {
         Ok(to_xml(&value)?.into())
     }
 }

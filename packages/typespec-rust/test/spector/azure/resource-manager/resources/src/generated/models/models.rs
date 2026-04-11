@@ -259,7 +259,8 @@ pub struct NotificationDetails {
     pub urgent: Option<bool>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus {
@@ -312,7 +313,8 @@ pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesNestedClientCreateOrReplaceOperationStatus {
@@ -365,7 +367,8 @@ pub struct ResourcesNestedClientCreateOrReplaceOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesNestedClientDeleteOperationStatus {
@@ -418,7 +421,8 @@ pub struct ResourcesNestedClientDeleteOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesNestedClientUpdateOperationStatus {
@@ -471,7 +475,8 @@ pub struct ResourcesNestedClientUpdateOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesSingletonClientCreateOrUpdateOperationStatus {
@@ -524,7 +529,8 @@ pub struct ResourcesSingletonClientCreateOrUpdateOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesTopLevelClientCreateOrReplaceOperationStatus {
@@ -577,7 +583,8 @@ pub struct ResourcesTopLevelClientCreateOrReplaceOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesTopLevelClientDeleteOperationStatus {
@@ -630,7 +637,8 @@ pub struct ResourcesTopLevelClientDeleteOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResourcesTopLevelClientUpdateOperationStatus {

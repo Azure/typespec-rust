@@ -76,7 +76,8 @@ pub struct ErrorResponse {
     pub error: Option<ErrorDetail>,
 }
 
-/// Standard Azure Resource Manager operation status response
+/// Standard Azure Resource Manager operation status response, used as the response
+/// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {

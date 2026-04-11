@@ -16,7 +16,7 @@ use azure_core::{
     tracing, Result,
 };
 
-/// Operations for the ModelWithUnwrappedArray type.
+/// §3.2 — Operations for the ModelWithUnwrappedArray type.
 #[tracing::client]
 pub struct XmlModelWithUnwrappedArrayValueClient {
     pub(crate) endpoint: Url,

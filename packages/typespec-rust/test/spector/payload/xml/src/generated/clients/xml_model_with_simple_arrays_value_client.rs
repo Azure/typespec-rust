@@ -16,7 +16,7 @@ use azure_core::{
     tracing, Result,
 };
 
-/// Operations for the ModelWithSimpleArrays type.
+/// §3.1 — Operations for the ModelWithSimpleArrays type.
 #[tracing::client]
 pub struct XmlModelWithSimpleArraysValueClient {
     pub(crate) endpoint: Url,

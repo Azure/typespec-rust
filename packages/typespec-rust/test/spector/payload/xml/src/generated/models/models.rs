@@ -5,14 +5,30 @@
 
 use super::{
     models_serde,
-    xml_helpers::{ColorsString, CountsInt32, ItemsSimpleModel},
+    xml_helpers::{BooksXmlBook, ColorsString, CountsInt32, ItemsSimpleModel, TagsString},
     Status,
 };
 use azure_core::{fmt::SafeDebug, time::OffsetDateTime};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// Contains an array of models.
+/// Author model with a custom XML name.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[serde(rename = "XmlAuthor")]
+pub struct Author {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+}
+
+/// Book model with a custom XML name.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[serde(rename = "XmlBook")]
+pub struct Book {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+}
+
+/// §4.1 — Contains an array of models.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithArrayOfModel {
     #[serde(
@@ -24,7 +40,7 @@ pub struct ModelWithArrayOfModel {
     pub items: Option<Vec<SimpleModel>>,
 }
 
-/// Contains fields that are XML attributes.
+/// §5.1 — Contains fields that are XML attributes.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithAttributes {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -100,6 +116,36 @@ pub struct ModelWithEnum {
     pub status: Option<Status>,
 }
 
+/// §6.1, §7.1 — Contains fields with XML namespace on the model.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithNamespace {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<i32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+}
+
+/// §6.2, §7.2 — Contains fields with different XML namespaces on individual properties.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithNamespaceOnProperties {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub author: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<i32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+}
+
+/// §2.1 — Contains a property that references another model.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithNestedModel {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nested: Option<SimpleModel>,
+}
+
 /// Contains an optional field.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithOptionalField {
@@ -110,7 +156,7 @@ pub struct ModelWithOptionalField {
     pub value: Option<i32>,
 }
 
-/// Contains fields of wrapped and unwrapped arrays of primitive types that have different XML representations.
+/// §3.3, §3.4 — Contains fields of wrapped and unwrapped arrays of primitive types that have different XML representations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithRenamedArrays {
     #[serde(rename = "Colors", skip_serializing_if = "Option::is_none")]
@@ -126,7 +172,20 @@ pub struct ModelWithRenamedArrays {
     pub counts: Option<Vec<i32>>,
 }
 
-/// Contains fields of the same type that have different XML representation.
+/// §5.2 — Contains a renamed XML attribute.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithRenamedAttribute {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub author: Option<String>,
+
+    #[serde(rename = "@xml-id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<i32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+}
+
+/// §1.3, §2.3 — Contains fields of the same type that have different XML representation.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[serde(rename = "ModelWithRenamedFieldsSrc")]
 pub struct ModelWithRenamedFields {
@@ -137,7 +196,57 @@ pub struct ModelWithRenamedFields {
     pub output_data: Option<SimpleModel>,
 }
 
-/// Contains fields of arrays of primitive types.
+/// §2.2 — Contains a property whose type has
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithRenamedNestedModel {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub author: Option<Author>,
+}
+
+/// §1.2 — Contains a scalar property with a custom XML name.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithRenamedProperty {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub author: Option<String>,
+
+    #[serde(rename = "renamedTitle", skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+}
+
+/// §4.4 — Contains an unwrapped array of models with a custom item name.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithRenamedUnwrappedModelArray {
+    #[serde(rename = "ModelItem", skip_serializing_if = "Option::is_none")]
+    pub items: Option<Vec<SimpleModel>>,
+}
+
+/// §4.5 — Contains a wrapped array of models with custom wrapper and item names.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithRenamedWrappedAndItemModelArray {
+    #[serde(
+        default,
+        deserialize_with = "BooksXmlBook::unwrap",
+        rename = "AllBooks",
+        serialize_with = "BooksXmlBook::wrap",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub books: Option<Vec<Book>>,
+}
+
+/// §4.3 — Contains a wrapped array of models with a custom wrapper name.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithRenamedWrappedModelArray {
+    #[serde(
+        default,
+        deserialize_with = "ItemsSimpleModel::unwrap",
+        rename = "AllItems",
+        serialize_with = "ItemsSimpleModel::wrap",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub items: Option<Vec<SimpleModel>>,
+}
+
+/// §3.1 — Contains fields of arrays of primitive types.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithSimpleArrays {
     #[serde(
@@ -157,7 +266,7 @@ pub struct ModelWithSimpleArrays {
     pub counts: Option<Vec<i32>>,
 }
 
-/// Contains an attribute and text.
+/// §8.1 — Contains an attribute and text.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithText {
     #[serde(rename = "$text", skip_serializing_if = "Option::is_none")]
@@ -167,7 +276,7 @@ pub struct ModelWithText {
     pub language: Option<String>,
 }
 
-/// Contains fields of wrapped and unwrapped arrays of primitive types.
+/// §3.2 — Contains fields of wrapped and unwrapped arrays of primitive types.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ModelWithUnwrappedArray {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -182,7 +291,27 @@ pub struct ModelWithUnwrappedArray {
     pub counts: Option<Vec<i32>>,
 }
 
-/// Contains fields of primitive types.
+/// §4.2 — Contains an unwrapped array of models.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithUnwrappedModelArray {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub items: Option<Vec<SimpleModel>>,
+}
+
+/// §3.5 — Contains a wrapped primitive array with custom wrapper and item names.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ModelWithWrappedPrimitiveCustomItemNames {
+    #[serde(
+        default,
+        deserialize_with = "TagsString::unwrap",
+        rename = "ItemsTags",
+        serialize_with = "TagsString::wrap",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub tags: Option<Vec<String>>,
+}
+
+/// §1.1 — Contains fields of primitive types.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SimpleModel {
     #[serde(skip_serializing_if = "Option::is_none")]

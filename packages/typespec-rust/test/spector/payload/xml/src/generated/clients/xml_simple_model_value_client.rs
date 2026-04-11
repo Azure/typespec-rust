@@ -15,7 +15,7 @@ use azure_core::{
     tracing, Result,
 };
 
-/// Operations for the SimpleModel type.
+/// §1.1 — Operations for the SimpleModel type.
 #[tracing::client]
 pub struct XmlSimpleModelValueClient {
     pub(crate) endpoint: Url,

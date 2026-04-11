@@ -81,6 +81,7 @@ const httpSpecsGroup = {
 
 const azureHttpSpecsGroup = {
   'spector_access': {input: 'azure/client-generator-core/access'},
+  'spector_alternatetype': {input: 'azure/client-generator-core/alternate-type/client.tsp'},
   'spector_apiverheader': {input: 'azure/client-generator-core/api-version/header/client.tsp'},
   'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
@@ -114,12 +115,11 @@ const azureHttpSpecsGroup = {
   'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
   'spector_armresources': {input: 'azure/resource-manager/resources'},
   'spector_arm_multi_service': {input: 'azure/resource-manager/multi-service/client.tsp'},
-  'spector_arm_multi_service_older_versions': {input: 'azure/resource-manager/multi-service-older-versions/client.tsp'},
   'spector_arm_multi_service_shared_models': {input: 'azure/resource-manager/multi-service-shared-models/client.tsp'},
   'spector_requestidheader': {input: 'azure/special-headers/client-request-id'},
   'spector_azpreviewversion': {input: 'azure/versioning/previewVersion'},
   'spector_azure_client_namespace': {input: 'client/namespace/client.tsp', output: 'azure/client/namespace'},
-  'spector_naming': {input: 'client/naming'},
+  //'spector_naming': {input: 'client/naming'},
   'spector_enumconflict': {input: 'client/naming/enum-conflict', output: 'client/enum-conflict'},
   'spector_overload': {input: 'client/overload/client.tsp'},
   'spector_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},
@@ -162,14 +162,11 @@ function should_generate(name) {
   return true
 }
 
-// When https://github.com/Azure/typespec-azure/pull/3950 is merged, and we use the newer version of @azure-tools/azure-http-specs,
-// we can remove alternate_types from below, add it to azureHttpSpecsGroup above, and remove the checked-in tsp files
-// from packages\typespec-rust\test\spector\azure\client-generator-core\alternate-type\.
 const alternate_types = pkgRoot + 'test/tsp/AlternateTypes';
 generate('alternate_types', alternate_types, 'test/other/alternate_types');
 
-const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration/client.tsp';
-generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
+//const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration/client.tsp';
+//generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
 
 const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrets/client.tsp';
 generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets', ['omit-constructors=true']);
@@ -200,9 +197,6 @@ generate('pub_crate', pub_crate, 'test/other/pub_crate');
 
 const client_option = pkgRoot + 'test/tsp/ClientOption';
 generate('client_option', client_option, 'test/other/client_option');
-
-const spector_alternatetype = pkgRoot + 'test/spector/azure/client-generator-core/alternate-type/client.tsp';
-generate('spector_alternatetype', spector_alternatetype, 'test/spector/azure/client-generator-core/alternate-type');
 
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)

@@ -7,10 +7,18 @@ use crate::generated::clients::{
     XmlModelWithArrayOfModelValueClient, XmlModelWithAttributesValueClient,
     XmlModelWithDatetimeValueClient, XmlModelWithDictionaryValueClient,
     XmlModelWithEmptyArrayValueClient, XmlModelWithEncodedNamesValueClient,
-    XmlModelWithEnumValueClient, XmlModelWithOptionalFieldValueClient,
-    XmlModelWithRenamedArraysValueClient, XmlModelWithRenamedFieldsValueClient,
-    XmlModelWithSimpleArraysValueClient, XmlModelWithTextValueClient,
-    XmlModelWithUnwrappedArrayValueClient, XmlSimpleModelValueClient, XmlXmlErrorValueClient,
+    XmlModelWithEnumValueClient, XmlModelWithNamespaceOnPropertiesValueClient,
+    XmlModelWithNamespaceValueClient, XmlModelWithNestedModelValueClient,
+    XmlModelWithOptionalFieldValueClient, XmlModelWithRenamedArraysValueClient,
+    XmlModelWithRenamedAttributeValueClient, XmlModelWithRenamedFieldsValueClient,
+    XmlModelWithRenamedNestedModelValueClient, XmlModelWithRenamedPropertyValueClient,
+    XmlModelWithRenamedUnwrappedModelArrayValueClient,
+    XmlModelWithRenamedWrappedAndItemModelArrayValueClient,
+    XmlModelWithRenamedWrappedModelArrayValueClient, XmlModelWithSimpleArraysValueClient,
+    XmlModelWithTextValueClient, XmlModelWithUnwrappedArrayValueClient,
+    XmlModelWithUnwrappedModelArrayValueClient,
+    XmlModelWithWrappedPrimitiveCustomItemNamesValueClient, XmlSimpleModelValueClient,
+    XmlXmlErrorValueClient,
 };
 use azure_core::{
     fmt::SafeDebug,
@@ -134,6 +142,37 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithNamespaceOnPropertiesValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_namespace_on_properties_value_client(
+        &self,
+    ) -> XmlModelWithNamespaceOnPropertiesValueClient {
+        XmlModelWithNamespaceOnPropertiesValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithNamespaceValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_namespace_value_client(&self) -> XmlModelWithNamespaceValueClient {
+        XmlModelWithNamespaceValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithNestedModelValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_nested_model_value_client(
+        &self,
+    ) -> XmlModelWithNestedModelValueClient {
+        XmlModelWithNestedModelValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
     /// Returns a new instance of XmlModelWithOptionalFieldValueClient.
     #[tracing::subclient]
     pub fn get_xml_model_with_optional_field_value_client(
@@ -156,12 +195,78 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithRenamedAttributeValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_renamed_attribute_value_client(
+        &self,
+    ) -> XmlModelWithRenamedAttributeValueClient {
+        XmlModelWithRenamedAttributeValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
     /// Returns a new instance of XmlModelWithRenamedFieldsValueClient.
     #[tracing::subclient]
     pub fn get_xml_model_with_renamed_fields_value_client(
         &self,
     ) -> XmlModelWithRenamedFieldsValueClient {
         XmlModelWithRenamedFieldsValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithRenamedNestedModelValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_renamed_nested_model_value_client(
+        &self,
+    ) -> XmlModelWithRenamedNestedModelValueClient {
+        XmlModelWithRenamedNestedModelValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithRenamedPropertyValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_renamed_property_value_client(
+        &self,
+    ) -> XmlModelWithRenamedPropertyValueClient {
+        XmlModelWithRenamedPropertyValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithRenamedUnwrappedModelArrayValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_renamed_unwrapped_model_array_value_client(
+        &self,
+    ) -> XmlModelWithRenamedUnwrappedModelArrayValueClient {
+        XmlModelWithRenamedUnwrappedModelArrayValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithRenamedWrappedAndItemModelArrayValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_renamed_wrapped_and_item_model_array_value_client(
+        &self,
+    ) -> XmlModelWithRenamedWrappedAndItemModelArrayValueClient {
+        XmlModelWithRenamedWrappedAndItemModelArrayValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithRenamedWrappedModelArrayValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_renamed_wrapped_model_array_value_client(
+        &self,
+    ) -> XmlModelWithRenamedWrappedModelArrayValueClient {
+        XmlModelWithRenamedWrappedModelArrayValueClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }
@@ -193,6 +298,28 @@ impl XmlClient {
         &self,
     ) -> XmlModelWithUnwrappedArrayValueClient {
         XmlModelWithUnwrappedArrayValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithUnwrappedModelArrayValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_unwrapped_model_array_value_client(
+        &self,
+    ) -> XmlModelWithUnwrappedModelArrayValueClient {
+        XmlModelWithUnwrappedModelArrayValueClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of XmlModelWithWrappedPrimitiveCustomItemNamesValueClient.
+    #[tracing::subclient]
+    pub fn get_xml_model_with_wrapped_primitive_custom_item_names_value_client(
+        &self,
+    ) -> XmlModelWithWrappedPrimitiveCustomItemNamesValueClient {
+        XmlModelWithWrappedPrimitiveCustomItemNamesValueClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }

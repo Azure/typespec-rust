@@ -103,6 +103,48 @@ pub struct XmlModelWithEnumValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithNamespaceOnPropertiesValueClient::get()`](crate::generated::clients::XmlModelWithNamespaceOnPropertiesValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithNamespaceOnPropertiesValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithNamespaceOnPropertiesValueClient::put()`](crate::generated::clients::XmlModelWithNamespaceOnPropertiesValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithNamespaceOnPropertiesValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithNamespaceValueClient::get()`](crate::generated::clients::XmlModelWithNamespaceValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithNamespaceValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithNamespaceValueClient::put()`](crate::generated::clients::XmlModelWithNamespaceValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithNamespaceValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithNestedModelValueClient::get()`](crate::generated::clients::XmlModelWithNestedModelValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithNestedModelValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithNestedModelValueClient::put()`](crate::generated::clients::XmlModelWithNestedModelValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithNestedModelValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`XmlModelWithOptionalFieldValueClient::get()`](crate::generated::clients::XmlModelWithOptionalFieldValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithOptionalFieldValueClientGetOptions<'a> {
@@ -131,6 +173,20 @@ pub struct XmlModelWithRenamedArraysValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithRenamedAttributeValueClient::get()`](crate::generated::clients::XmlModelWithRenamedAttributeValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedAttributeValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedAttributeValueClient::put()`](crate::generated::clients::XmlModelWithRenamedAttributeValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedAttributeValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`XmlModelWithRenamedFieldsValueClient::get()`](crate::generated::clients::XmlModelWithRenamedFieldsValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedFieldsValueClientGetOptions<'a> {
@@ -141,6 +197,76 @@ pub struct XmlModelWithRenamedFieldsValueClientGetOptions<'a> {
 /// Options to be passed to [`XmlModelWithRenamedFieldsValueClient::put()`](crate::generated::clients::XmlModelWithRenamedFieldsValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedFieldsValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedNestedModelValueClient::get()`](crate::generated::clients::XmlModelWithRenamedNestedModelValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedNestedModelValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedNestedModelValueClient::put()`](crate::generated::clients::XmlModelWithRenamedNestedModelValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedNestedModelValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedPropertyValueClient::get()`](crate::generated::clients::XmlModelWithRenamedPropertyValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedPropertyValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedPropertyValueClient::put()`](crate::generated::clients::XmlModelWithRenamedPropertyValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedPropertyValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedUnwrappedModelArrayValueClient::get()`](crate::generated::clients::XmlModelWithRenamedUnwrappedModelArrayValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedUnwrappedModelArrayValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedUnwrappedModelArrayValueClient::put()`](crate::generated::clients::XmlModelWithRenamedUnwrappedModelArrayValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedUnwrappedModelArrayValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedWrappedAndItemModelArrayValueClient::get()`](crate::generated::clients::XmlModelWithRenamedWrappedAndItemModelArrayValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedWrappedAndItemModelArrayValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedWrappedAndItemModelArrayValueClient::put()`](crate::generated::clients::XmlModelWithRenamedWrappedAndItemModelArrayValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedWrappedAndItemModelArrayValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedWrappedModelArrayValueClient::get()`](crate::generated::clients::XmlModelWithRenamedWrappedModelArrayValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedWrappedModelArrayValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithRenamedWrappedModelArrayValueClient::put()`](crate::generated::clients::XmlModelWithRenamedWrappedModelArrayValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithRenamedWrappedModelArrayValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -183,6 +309,34 @@ pub struct XmlModelWithUnwrappedArrayValueClientGetOptions<'a> {
 /// Options to be passed to [`XmlModelWithUnwrappedArrayValueClient::put()`](crate::generated::clients::XmlModelWithUnwrappedArrayValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithUnwrappedArrayValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithUnwrappedModelArrayValueClient::get()`](crate::generated::clients::XmlModelWithUnwrappedModelArrayValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithUnwrappedModelArrayValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithUnwrappedModelArrayValueClient::put()`](crate::generated::clients::XmlModelWithUnwrappedModelArrayValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithUnwrappedModelArrayValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithWrappedPrimitiveCustomItemNamesValueClient::get()`](crate::generated::clients::XmlModelWithWrappedPrimitiveCustomItemNamesValueClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithWrappedPrimitiveCustomItemNamesValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`XmlModelWithWrappedPrimitiveCustomItemNamesValueClient::put()`](crate::generated::clients::XmlModelWithWrappedPrimitiveCustomItemNamesValueClient::put())
+#[derive(Clone, Default, SafeDebug)]
+pub struct XmlModelWithWrappedPrimitiveCustomItemNamesValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

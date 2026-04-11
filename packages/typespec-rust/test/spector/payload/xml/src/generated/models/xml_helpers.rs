@@ -6,8 +6,34 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use super::SimpleModel;
+use super::{Book, SimpleModel};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename = "AllBooks")]
+pub(crate) struct BooksXmlBook {
+    #[serde(default)]
+    XmlBook: Option<Vec<Book>>,
+}
+
+impl BooksXmlBook {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<Book>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(BooksXmlBook::deserialize(deserializer)?.XmlBook)
+    }
+
+    pub fn wrap<S>(to_serialize: &Option<Vec<Book>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        BooksXmlBook {
+            XmlBook: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "PossibleColors")]
@@ -85,6 +111,32 @@ impl ItemsSimpleModel {
     {
         ItemsSimpleModel {
             SimpleModel: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename = "ItemsTags")]
+pub(crate) struct TagsString {
+    #[serde(default)]
+    string: Option<Vec<String>>,
+}
+
+impl TagsString {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<String>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(TagsString::deserialize(deserializer)?.string)
+    }
+
+    pub fn wrap<S>(to_serialize: &Option<Vec<String>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        TagsString {
+            string: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
