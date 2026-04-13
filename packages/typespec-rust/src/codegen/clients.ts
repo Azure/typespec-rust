@@ -2041,7 +2041,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         paramValue = encodeDateTime(paramType, paramName);
         break;
       default:
-        throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${paramType.kind}`);
+        paramValue = `${paramName}.to_string()`;
     }
   }
 

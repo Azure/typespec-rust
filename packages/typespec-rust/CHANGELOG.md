@@ -1,5 +1,11 @@
 # Release History
 
+## 0.39.1 (unreleased)
+
+### Bugs Fixed
+
+* Fixed handling of alternate types for header/path/query parameters.
+
 ## 0.39.0 (2026-04-10)
 
 ### Features Added
