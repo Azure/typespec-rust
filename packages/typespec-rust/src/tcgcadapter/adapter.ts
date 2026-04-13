@@ -2789,13 +2789,16 @@ export class Adapter {
           }
 
           adaptedParam = new rust.PathScalarParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, opParam.allowReserved, style);
-          const allowEmpty: boolean = methodParam?.decorators.find(
+          const minLength: any = methodParam?.decorators.find(
             d => d.name === 'Azure.ClientGenerator.Core.@clientOption'
-              && d.arguments['name'] === 'allowEmpty'
+              && d.arguments['name'] === 'minLength'
               && d.arguments['scope'] === 'rust'
-          )?.arguments['value'] === true;
-          if (allowEmpty) {
-            adaptedParam.minLength = 0;
+          )?.arguments['value'];
+          if (minLength !== undefined) {
+            if (minLength !== 0) {
+              throw new AdapterError('UnsupportedTsp', `minLength decorator with a non-zero value (${minLength}).)`);
+            }
+            adaptedParam.minLength = minLength as number;
           }
         }
       } break;
