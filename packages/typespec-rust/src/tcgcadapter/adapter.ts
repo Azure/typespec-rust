@@ -2789,7 +2789,7 @@ export class Adapter {
           }
 
           adaptedParam = new rust.PathScalarParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, opParam.allowReserved, style);
-          const allowEmpty: boolean = opParam.decorators.find(
+          const allowEmpty: boolean = methodParam?.decorators.find(
             d => d.name === 'Azure.ClientGenerator.Core.@clientOption'
               && d.arguments['name'] === 'allowEmpty'
               && d.arguments['scope'] === 'rust'

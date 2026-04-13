@@ -1,5 +1,11 @@
 # Release History
 
+## 0.39.1 (2026-04-12)
+
+### Features Added
+
+* Fixed the `allowEmpty` `@clientOption` decorator to get applied when it comes from the client spec, and not only from the routes.
+
 ## 0.39.0 (2026-04-10)
 
 ### Features Added

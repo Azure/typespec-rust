@@ -168,6 +168,9 @@ generate('alternate_types', alternate_types, 'test/other/alternate_types');
 //const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration/client.tsp';
 //generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
 
+const keyvault_keys = pkgRoot + 'test/tsp/Security.KeyVault.Keys/client.tsp';
+generate('keyvault_keys', keyvault_keys, 'test/sdk/keyvault_keys', ['omit-constructors=true', 'api-version=2025-07-01']);
+
 const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrets/client.tsp';
 generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets', ['omit-constructors=true']);
 
