@@ -18,3 +18,10 @@ pub struct AlternateTypesClientBodyWithHandwrittenTypeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
+
+/// Options to be passed to [`AlternateTypesClient::external_header_param()`](crate::generated::clients::AlternateTypesClient::external_header_param())
+#[derive(Clone, Default, SafeDebug)]
+pub struct AlternateTypesClientExternalHeaderParamOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}

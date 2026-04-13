@@ -7,6 +7,7 @@ use crate::{
     generated::models::{
         AlternateTypesClientBodyWithExternalTypeOptions,
         AlternateTypesClientBodyWithHandwrittenTypeOptions,
+        AlternateTypesClientExternalHeaderParamOptions,
     },
     models::HandWrittenType,
 };
@@ -122,6 +123,38 @@ impl AlternateTypesClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("AlternateTypes.externalHeaderParam")]
+    pub async fn external_header_param(
+        &self,
+        value: HandWrittenType,
+        options: Option<AlternateTypesClientExternalHeaderParamOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/header-external-type");
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("value", value.to_string());
         let rsp = self
             .pipeline
             .send(
