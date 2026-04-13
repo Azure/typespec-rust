@@ -4,7 +4,16 @@
 
 pub use super::generated::models::*;
 
-use serde::{Deserialize, Serialize};
+use {
+    serde::{Deserialize, Serialize},
+    std::fmt,
+};
 
 #[derive(Clone, Default, Deserialize, Serialize)]
 pub struct HandWrittenType {}
+
+impl fmt::Display for HandWrittenType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "handwritten-type")
+    }
+}

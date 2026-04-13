@@ -34,6 +34,9 @@ op bodyWithHandwrittenType(@body body: CrateTypeToReplace): void;
 @route("/external-type")
 op bodyWithExternalType(@body body: ExternalTypeToReplace): void;
 
+@route("/header-external-type")
+op externalHeaderParam(@header("value") value: HttpRangeString): void;
+
 @@access(AlternateTypes.CrateAlternateType, Access.public);
 @@usage(AlternateTypes.CrateAlternateType, Usage.output);
 
@@ -59,7 +62,7 @@ op bodyWithExternalType(@body body: ExternalTypeToReplace): void;
 
 @@alternateType(HttpRangeString,
   {
-    identity: "http::models::HandWrittenType",
+    identity: "crate::models::HandWrittenType",
   },
   "rust"
 );
