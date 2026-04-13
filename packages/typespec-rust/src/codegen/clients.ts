@@ -2015,6 +2015,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         break;
       case 'decimal':
       case 'Etag':
+      case 'external':
+        // NOTE: for external we're assuming the type provides a to_string() implementation
         paramValue = `${paramName}.to_string()`;
         break;
       case 'encodedBytes':
@@ -2041,7 +2043,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         paramValue = encodeDateTime(paramType, paramName);
         break;
       default:
-        paramValue = `${paramName}.to_string()`;
+        throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${paramType.kind}`);
     }
   }
 
