@@ -2789,7 +2789,8 @@ export class Adapter {
           }
 
           adaptedParam = new rust.PathScalarParameter(paramName, opParam.serializedName, paramLoc, paramOptional, paramType, opParam.allowReserved, style);
-          const minLength: any = methodParam?.decorators.find(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const minLength = methodParam?.decorators.find(
             d => d.name === 'Azure.ClientGenerator.Core.@clientOption'
               && d.arguments['name'] === 'minLength'
               && d.arguments['scope'] === 'rust'
