@@ -5,6 +5,7 @@
 
 use crate::generated::clients::LargeHeaderLargeHeadersClient;
 use azure_core::{
+    cloud::CloudConfiguration,
     credentials::TokenCredential,
     fmt::SafeDebug,
     http::{
@@ -38,30 +39,34 @@ impl LargeHeaderClient {
     ///
     /// # Arguments
     ///
-    /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Azure.ResourceManager.LargeHeader")]
     pub fn new(
-        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         subscription_id: String,
         options: Option<LargeHeaderClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
+        let (endpoint, scope) = match options.client_options.cloud.as_deref() {
+            Some(CloudConfiguration::AzureGovernment) => (
+                "https://management.usgovcloudapi.net",
+                "https://management.usgovcloudapi.net/.default",
+            ),
+            Some(CloudConfiguration::AzureChina) => (
+                "https://management.chinacloudapi.cn",
+                "https://management.chinacloudapi.cn/.default",
+            ),
+            _ => (
+                "https://management.azure.com",
+                "https://management.azure.com/.default",
+            ),
+        };
         let endpoint = Url::parse(endpoint)?;
-        if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{endpoint} must use http(s)"),
-            ));
-        }
-        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(
-            credential,
-            vec!["user_impersonation"],
-        ));
+        let auth_policy: Arc<dyn Policy> =
+            Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));
         Ok(Self {
             endpoint,
             subscription_id,

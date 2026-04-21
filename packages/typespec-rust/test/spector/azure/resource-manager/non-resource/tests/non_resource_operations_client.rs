@@ -38,7 +38,6 @@ impl TokenCredential for FakeTokenCredential {
 #[tokio::test]
 async fn create() {
     let client = NonResourceClient::new(
-        "http://localhost:3000",
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
         None,
@@ -64,7 +63,6 @@ async fn create() {
 #[tokio::test]
 async fn get() {
     let client = NonResourceClient::new(
-        "http://localhost:3000",
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
         None,

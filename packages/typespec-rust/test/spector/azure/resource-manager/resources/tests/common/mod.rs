@@ -35,7 +35,6 @@ impl TokenCredential for FakeTokenCredential {
 
 pub fn create_client() -> ResourcesClient {
     ResourcesClient::new(
-        "http://localhost:3000",
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
         None,
