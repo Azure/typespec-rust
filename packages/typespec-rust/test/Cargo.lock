@@ -1048,6 +1048,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "keyvault_keys"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "azure_core",
+ "serde",
+]
+
+[[package]]
 name = "keyvault_secrets"
 version = "0.1.0"
 dependencies = [
