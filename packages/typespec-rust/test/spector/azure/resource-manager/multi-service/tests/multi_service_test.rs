@@ -2,14 +2,16 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::cloud::{CloudConfiguration, CustomConfiguration};
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
+use azure_core::http::ClientOptions;
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
 use spector_arm_multi_service::{
     compute::models::{VirtualMachine, VirtualMachineProperties},
     compute_disk::models::{Disk, DiskProperties},
     models::ResourceProvisioningState,
-    CombinedClient,
+    CombinedClient, CombinedClientOptions,
 };
 use std::sync::Arc;
 
@@ -39,10 +41,18 @@ impl TokenCredential for FakeTokenCredential {
 }
 
 fn create_client() -> CombinedClient {
+    let mut custom = CustomConfiguration::default();
+    custom.authority_host = "http://localhost:3000".to_string();
     CombinedClient::new(
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
+        Some(CombinedClientOptions {
+            client_options: ClientOptions {
+                cloud: Some(Arc::new(CloudConfiguration::Custom(custom))),
+                ..Default::default()
+            },
+            ..Default::default()
+        }),
     )
     .unwrap()
 }

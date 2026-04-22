@@ -2,10 +2,12 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::cloud::{CloudConfiguration, CustomConfiguration};
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
+use azure_core::http::ClientOptions;
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_armmethodsub::MethodSubscriptionIdClient;
+use spector_armmethodsub::{MethodSubscriptionIdClient, MethodSubscriptionIdClientOptions};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -34,10 +36,18 @@ impl TokenCredential for FakeTokenCredential {
 }
 
 pub fn create_client() -> MethodSubscriptionIdClient {
+    let mut custom = CustomConfiguration::default();
+    custom.authority_host = "http://localhost:3000".to_string();
     MethodSubscriptionIdClient::new(
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
+        Some(MethodSubscriptionIdClientOptions {
+            client_options: ClientOptions {
+                cloud: Some(Arc::new(CloudConfiguration::Custom(custom))),
+                ..Default::default()
+            },
+            ..Default::default()
+        }),
     )
     .unwrap()
 }

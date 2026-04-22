@@ -57,23 +57,23 @@ impl CombinedClient {
         let options = options.unwrap_or_default();
         let (endpoint, scope) = match options.client_options.cloud.as_deref() {
             Some(CloudConfiguration::AzureGovernment) => (
-                "https://management.usgovcloudapi.net",
-                "https://management.usgovcloudapi.net/.default",
+                "https://management.usgovcloudapi.net".to_string(),
+                "https://management.usgovcloudapi.net/.default".to_string(),
             ),
             Some(CloudConfiguration::AzureChina) => (
-                "https://management.chinacloudapi.cn",
-                "https://management.chinacloudapi.cn/.default",
+                "https://management.chinacloudapi.cn".to_string(),
+                "https://management.chinacloudapi.cn/.default".to_string(),
             ),
-            Some(CloudConfiguration::Custom(_)) => (
-                "https://management.azure.com",
-                "https://management.azure.com/.default",
+            Some(CloudConfiguration::Custom(custom)) => (
+                custom.authority_host.clone(),
+                format!("{}/.default", custom.authority_host),
             ),
             _ => (
-                "https://management.azure.com",
-                "https://management.azure.com/.default",
+                "https://management.azure.com".to_string(),
+                "https://management.azure.com/.default".to_string(),
             ),
         };
-        let endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(&endpoint)?;
         let auth_policy: Arc<dyn Policy> =
             Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));
         Ok(Self {

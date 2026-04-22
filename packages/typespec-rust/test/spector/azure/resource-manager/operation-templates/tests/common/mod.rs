@@ -2,12 +2,14 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::cloud::{CloudConfiguration, CustomConfiguration};
+use azure_core::http::ClientOptions;
 use azure_core::Result;
 use azure_core::{
     credentials::{AccessToken, TokenCredential, TokenRequestOptions},
     time::OffsetDateTime,
 };
-use spector_armoptemplates::OperationTemplatesClient;
+use spector_armoptemplates::{OperationTemplatesClient, OperationTemplatesClientOptions};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -36,10 +38,18 @@ impl TokenCredential for FakeTokenCredential {
 }
 
 pub fn create_client() -> OperationTemplatesClient {
+    let mut custom = CustomConfiguration::default();
+    custom.authority_host = "http://localhost:3000".to_string();
     OperationTemplatesClient::new(
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
+        Some(OperationTemplatesClientOptions {
+            client_options: ClientOptions {
+                cloud: Some(Arc::new(CloudConfiguration::Custom(custom))),
+                ..Default::default()
+            },
+            ..Default::default()
+        }),
     )
     .unwrap()
 }
