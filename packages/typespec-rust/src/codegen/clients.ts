@@ -109,10 +109,34 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
           use.add('azure_core::cloud', 'CloudConfiguration');
           use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
           body += `${indent.push().get()}let (endpoint, scope) = ${helpers.buildMatch(indent, 'options.client_options.cloud.as_deref()', [
-            { pattern: 'Some(CloudConfiguration::AzureGovernment)', body: (indent) => `${indent.get()}(\n${indent.push().get()}"https://management.usgovcloudapi.net".to_string(),\n${indent.get()}"https://management.usgovcloudapi.net/.default".to_string(),\n${indent.pop().get()})\n` },
-            { pattern: 'Some(CloudConfiguration::AzureChina)', body: (indent) => `${indent.get()}(\n${indent.push().get()}"https://management.chinacloudapi.cn".to_string(),\n${indent.get()}"https://management.chinacloudapi.cn/.default".to_string(),\n${indent.pop().get()})\n` },
-            { pattern: 'Some(CloudConfiguration::Custom(custom))', body: (indent) => `${indent.get()}(\n${indent.push().get()}custom.authority_host.clone(),\n${indent.get()}format!("{}/.default", custom.authority_host),\n${indent.pop().get()})\n` },
-            { pattern: '_', body: (indent) => `${indent.get()}(\n${indent.push().get()}"https://management.azure.com".to_string(),\n${indent.get()}"https://management.azure.com/.default".to_string(),\n${indent.pop().get()})\n` },
+            {
+              pattern: 'Some(CloudConfiguration::AzureGovernment)',
+              body: (indent) => `${indent.get()}`
+                + `(\n${indent.push().get()}"https://management.usgovcloudapi.net".to_string(),`
+                + `\n${indent.get()}"https://management.usgovcloudapi.net/.default".to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
+            {
+              pattern: 'Some(CloudConfiguration::AzureChina)',
+              body: (indent) => `${indent.get()}`
+                + `(\n${indent.push().get()}"https://management.chinacloudapi.cn".to_string(),`
+                + `\n${indent.get()}"https://management.chinacloudapi.cn/.default".to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
+            {
+              pattern: 'Some(CloudConfiguration::Custom(custom))',
+              body: (indent) => `${indent.get()}(`
+                + `\n${indent.push().get()}custom.authority_host.clone(),`
+                + `\n${indent.get()}format!("{}/.default", custom.authority_host),`
+                + `\n${indent.pop().get()})\n`
+            },
+            {
+              pattern: '_',
+              body: (indent) => `${indent.get()}(\n`
+                + `${indent.push().get()}"https://management.azure.com".to_string(),`
+                + `\n${indent.get()}"https://management.azure.com/.default".to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
           ])};\n`;
           body += `${indent.get()}let endpoint = Url::parse(&endpoint)?;\n`;
           body += `${indent.get()}let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));\n`;
