@@ -108,20 +108,23 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
           // for ARM, derive endpoint and scope from cloud config
           use.add('azure_core::cloud', 'CloudConfiguration');
           use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
-          body += `${indent.push().get()}let (endpoint, scope) = match options.client_options.cloud.as_deref() {\n`;
-          body += `${indent.push().get()}Some(CloudConfiguration::AzureGovernment) => (\n`;
-          body += `${indent.push().get()}"https://management.usgovcloudapi.net",\n`;
-          body += `${indent.get()}"https://management.usgovcloudapi.net/.default",\n`;
-          body += `${indent.pop().get()}),\n`;
-          body += `${indent.get()}Some(CloudConfiguration::AzureChina) => (\n`;
-          body += `${indent.push().get()}"https://management.chinacloudapi.cn",\n`;
-          body += `${indent.get()}"https://management.chinacloudapi.cn/.default",\n`;
-          body += `${indent.pop().get()}),\n`;
-          body += `${indent.get()}_ => (\n`;
-          body += `${indent.push().get()}"https://management.azure.com",\n`;
-          body += `${indent.get()}"https://management.azure.com/.default",\n`;
-          body += `${indent.pop().get()}),\n`;
-          body += `${indent.pop().get()}};\n`;
+          // build a helper to construct a match arm body that returns the (endpoint, scope) tuple for the given ARM endpoint URL
+          const armEndpointArm = (endpoint: string): helpers.matchArm['body'] => {
+            return (indent) => {
+              const scope = `${endpoint}/.default`;
+              let s = `${indent.get()}(\n`;
+              s += `${indent.push().get()}"${endpoint}",\n`;
+              s += `${indent.get()}"${scope}",\n`;
+              s += `${indent.pop().get()})\n`;
+              return s;
+            };
+          };
+          body += `${indent.push().get()}let (endpoint, scope) = ${helpers.buildMatch(indent, 'options.client_options.cloud.as_deref()', [
+            { pattern: 'Some(CloudConfiguration::AzureGovernment)', body: armEndpointArm('https://management.usgovcloudapi.net') },
+            { pattern: 'Some(CloudConfiguration::AzureChina)', body: armEndpointArm('https://management.chinacloudapi.cn') },
+            { pattern: 'Some(CloudConfiguration::Custom(_))', body: armEndpointArm('https://management.azure.com') },
+            { pattern: '_', body: armEndpointArm('https://management.azure.com') },
+          ])};\n`;
           body += `${indent.get()}let endpoint = Url::parse(endpoint)?;\n`;
           body += `${indent.get()}let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));\n`;
           hasAuthPolicy = true;

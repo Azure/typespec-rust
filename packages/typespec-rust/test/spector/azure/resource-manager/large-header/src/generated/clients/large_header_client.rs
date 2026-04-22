@@ -59,6 +59,10 @@ impl LargeHeaderClient {
                 "https://management.chinacloudapi.cn",
                 "https://management.chinacloudapi.cn/.default",
             ),
+            Some(CloudConfiguration::Custom(_)) => (
+                "https://management.azure.com",
+                "https://management.azure.com/.default",
+            ),
             _ => (
                 "https://management.azure.com",
                 "https://management.azure.com/.default",
