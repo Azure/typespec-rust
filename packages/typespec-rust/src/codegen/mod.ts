@@ -65,6 +65,10 @@ export function emitGeneratedModRs(module: rust.ModuleContainer): string {
     }
   }
 
+  if (module.kind == 'crate' && module.type == 'azure-arm') {
+    content += 'pub struct Audience;\n';
+  }
+
   return content;
 }
 

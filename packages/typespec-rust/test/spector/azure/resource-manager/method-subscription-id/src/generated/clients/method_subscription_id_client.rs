@@ -7,16 +7,18 @@ use crate::{
     generated::clients::MethodSubscriptionIdOperationsClient,
     mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementClient,
     two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelClient,
+    Audience,
 };
 use azure_core::{
     cloud::CloudConfiguration,
     credentials::TokenCredential,
+    error::ErrorKind,
     fmt::SafeDebug,
     http::{
         policies::{auth::BearerTokenAuthorizationPolicy, Policy},
         ClientOptions, Pipeline, Url,
     },
-    tracing, Result,
+    tracing, Error, Result,
 };
 use std::sync::Arc;
 
@@ -65,7 +67,16 @@ impl MethodSubscriptionIdClient {
             ),
             Some(CloudConfiguration::Custom(custom)) => (
                 custom.authority_host.clone(),
-                format!("{}/.default", custom.authority_host),
+                custom
+                    .audiences
+                    .get::<Audience>()
+                    .ok_or_else(|| {
+                        Error::new(
+                            ErrorKind::Credential,
+                            "missing custom cloud configuration audience",
+                        )
+                    })?
+                    .to_string(),
             ),
             _ => (
                 "https://management.azure.com".to_string(),

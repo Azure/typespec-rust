@@ -105,6 +105,9 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         const crate = helpers.getCrate(module);
         let hasAuthPolicy: boolean;
         if (crate.type === 'azure-arm') {
+          use.add('azure_core', 'Error');
+          use.add('azure_core::error', 'ErrorKind');
+          use.add('crate', 'Audience');
           // for ARM, derive endpoint and scope from cloud config
           use.add('azure_core::cloud', 'CloudConfiguration');
           use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
@@ -127,7 +130,7 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
               pattern: 'Some(CloudConfiguration::Custom(custom))',
               body: (indent) => `${indent.get()}(`
                 + `\n${indent.push().get()}custom.authority_host.clone(),`
-                + `\n${indent.get()}format!("{}/.default", custom.authority_host),`
+                + `\n${indent.get()}custom.audiences.get::<Audience>().ok_or_else(|| { Error::new(ErrorKind::Credential, "missing custom cloud configuration audience")})?.to_string(),`
                 + `\n${indent.pop().get()})\n`
             },
             {
