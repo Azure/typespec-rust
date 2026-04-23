@@ -7,15 +7,18 @@ use crate::{
     generated::clients::MethodSubscriptionIdOperationsClient,
     mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementClient,
     two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelClient,
+    Audience,
 };
 use azure_core::{
+    cloud::CloudConfiguration,
     credentials::TokenCredential,
+    error::ErrorKind,
     fmt::SafeDebug,
     http::{
         policies::{auth::BearerTokenAuthorizationPolicy, Policy},
         ClientOptions, Pipeline, Url,
     },
-    tracing, Result,
+    tracing, Error, Result,
 };
 use std::sync::Arc;
 
@@ -42,30 +45,47 @@ impl MethodSubscriptionIdClient {
     ///
     /// # Arguments
     ///
-    /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Azure.ResourceManager.MethodSubscriptionId")]
     pub fn new(
-        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         subscription_id: String,
         options: Option<MethodSubscriptionIdClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let endpoint = Url::parse(endpoint)?;
-        if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{endpoint} must use http(s)"),
-            ));
-        }
-        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(
-            credential,
-            vec!["user_impersonation"],
-        ));
+        let (endpoint, scope) = match options.client_options.cloud.as_deref() {
+            Some(CloudConfiguration::AzureGovernment) => (
+                "https://management.usgovcloudapi.net".to_string(),
+                "https://management.usgovcloudapi.net/.default".to_string(),
+            ),
+            Some(CloudConfiguration::AzureChina) => (
+                "https://management.chinacloudapi.cn".to_string(),
+                "https://management.chinacloudapi.cn/.default".to_string(),
+            ),
+            Some(CloudConfiguration::Custom(custom)) => (
+                custom.authority_host.clone(),
+                custom
+                    .audiences
+                    .get::<Audience>()
+                    .ok_or_else(|| {
+                        Error::new(
+                            ErrorKind::Credential,
+                            "missing custom cloud configuration audience",
+                        )
+                    })?
+                    .to_string(),
+            ),
+            _ => (
+                "https://management.azure.com".to_string(),
+                "https://management.azure.com/.default".to_string(),
+            ),
+        };
+        let endpoint = Url::parse(&endpoint)?;
+        let auth_policy: Arc<dyn Policy> =
+            Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));
         Ok(Self {
             endpoint,
             subscription_id,

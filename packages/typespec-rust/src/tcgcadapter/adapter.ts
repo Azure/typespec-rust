@@ -1611,7 +1611,10 @@ export class Adapter {
                 const endpointName = hasClientNameDecorator(templateArg.decorators) ? utils.snakeCaseName(templateArg.name) : 'endpoint';
                 const adaptedParam = new rust.ClientEndpointParameter(endpointName);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
-                ctorParams.push(adaptedParam);
+                // for ARM, the endpoint is derived from cloud config at runtime; don't expose it as a ctor param
+                if (this.crate.type !== 'azure-arm') {
+                  ctorParams.push(adaptedParam);
+                }
                 const endpointField = new rust.StructField(endpointName, 'pubCrate', new rust.Url(this.crate));
                 rustClient.endpoint = endpointField;
                 rustClient.fields.push(endpointField);
@@ -1766,11 +1769,14 @@ export class Adapter {
       throw new AdapterError('InternalError', `no flows defined for credential type ${cred.type}`, cred.model);
     }
     const scopes = new Array<string>();
-    for (const scope of cred.flows[0].scopes) {
-      scopes.push(scope.value);
-    }
-    if (scopes.length === 0) {
-      throw new AdapterError('InternalError', 'scopes must contain at least one entry', cred.model);
+    // for ARM, scopes are derived from cloud config at runtime; ignore TypeSpec-defined scopes
+    if (this.crate.type !== 'azure-arm') {
+      for (const scope of cred.flows[0].scopes) {
+        scopes.push(scope.value);
+      }
+      if (scopes.length === 0) {
+        throw new AdapterError('InternalError', 'scopes must contain at least one entry', cred.model);
+      }
     }
     const ctorTokenCredential = new rust.Constructor('new');
     const tokenCredParam = new rust.ClientCredentialParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)));

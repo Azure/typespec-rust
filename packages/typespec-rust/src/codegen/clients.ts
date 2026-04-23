@@ -102,33 +102,78 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         body += `${indent.get()}#[tracing::new("${client.languageIndependentName}")]\n`;
         body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.params, client.constructable.options, use)}) -> Result<Self> {\n`;
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
-        // by convention, the endpoint param is always the first ctor param
-        const endpointParamName = constructor.params[0].name;
-        body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ' : ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
-        body += `${indent.get()}${helpers.buildIfBlock(indent, {
-          condition: `!${endpointParamName}.scheme().starts_with("http")`,
-          body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
-        })}`
+        const crate = helpers.getCrate(module);
+        let hasAuthPolicy: boolean;
+        if (crate.type === 'azure-arm') {
+          use.add('azure_core', 'Error');
+          use.add('azure_core::error', 'ErrorKind');
+          use.add('crate', 'Audience');
+          // for ARM, derive endpoint and scope from cloud config
+          use.add('azure_core::cloud', 'CloudConfiguration');
+          use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
+          body += `${indent.push().get()}let (endpoint, scope) = ${helpers.buildMatch(indent, 'options.client_options.cloud.as_deref()', [
+            {
+              pattern: 'Some(CloudConfiguration::AzureGovernment)',
+              body: (indent) => `${indent.get()}`
+                + `(\n${indent.push().get()}"https://management.usgovcloudapi.net".to_string(),`
+                + `\n${indent.get()}"https://management.usgovcloudapi.net/.default".to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
+            {
+              pattern: 'Some(CloudConfiguration::AzureChina)',
+              body: (indent) => `${indent.get()}`
+                + `(\n${indent.push().get()}"https://management.chinacloudapi.cn".to_string(),`
+                + `\n${indent.get()}"https://management.chinacloudapi.cn/.default".to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
+            {
+              pattern: 'Some(CloudConfiguration::Custom(custom))',
+              body: (indent) => `${indent.get()}(`
+                + `\n${indent.push().get()}custom.authority_host.clone(),`
+                + `\n${indent.get()}custom.audiences.get::<Audience>().ok_or_else(|| { Error::new(ErrorKind::Credential, "missing custom cloud configuration audience")})?.to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
+            {
+              pattern: '_',
+              body: (indent) => `${indent.get()}(\n`
+                + `${indent.push().get()}"https://management.azure.com".to_string(),`
+                + `\n${indent.get()}"https://management.azure.com/.default".to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
+          ])};\n`;
+          body += `${indent.get()}let endpoint = Url::parse(&endpoint)?;\n`;
+          body += `${indent.get()}let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));\n`;
+          hasAuthPolicy = true;
+        } else {
+          // by convention, the endpoint param is always the first ctor param
+          const endpointParamName = constructor.params[0].name;
+          body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ' : ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
+          body += `${indent.get()}${helpers.buildIfBlock(indent, {
+            condition: `!${endpointParamName}.scheme().starts_with("http")`,
+            body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
+          })}`
 
-        // construct the supplemental path and join it to the endpoint
-        if (client.constructable.endpoint) {
-          const supplementalEndpoint = client.constructable.endpoint;
-          if (supplementalEndpoint.parameters.length > 0) {
-            body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
-            for (const param of supplementalEndpoint.parameters) {
-              body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
+          // construct the supplemental path and join it to the endpoint
+          if (client.constructable.endpoint) {
+            const supplementalEndpoint = client.constructable.endpoint;
+            if (supplementalEndpoint.parameters.length > 0) {
+              body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
+              for (const param of supplementalEndpoint.parameters) {
+                body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
+              }
+              body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
+            } else {
+              // there are no params for the supplemental host, so just append it
+              body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join("${supplementalEndpoint.path}")?;\n`;
             }
-            body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
-          } else {
-            // there are no params for the supplemental host, so just append it
-            body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join("${supplementalEndpoint.path}")?;\n`;
           }
-        }
 
-        // if there's a credential param, create the necessary auth policy
-        const authPolicy = getAuthPolicy(constructor, use);
-        if (authPolicy) {
-          body += `${indent.get()}${authPolicy}\n`;
+          // if there's a credential param, create the necessary auth policy
+          const authPolicy = getAuthPolicy(constructor, use);
+          if (authPolicy) {
+            body += `${indent.get()}${authPolicy}\n`;
+          }
+          hasAuthPolicy = authPolicy !== undefined;
         }
         body += `${indent.get()}Ok(Self {\n`;
 
@@ -140,6 +185,11 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         const sortedParams = [...constructor.params]
           .filter((each) => each.kind !== 'clientSupplementalEndpoint' && each.kind !== 'clientCredential')
           .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); });
+
+        // for ARM, explicitly add the endpoint field (derived from cloud config, not a ctor param)
+        if (crate.type === 'azure-arm') {
+          body += `${indent.get()}endpoint,\n`;
+        }
 
         for (const param of sortedParams) {
           if (param.optional) {
@@ -177,7 +227,7 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         body += `${indent.get()}option_env!("CARGO_PKG_VERSION"),\n`;
         body += `${indent.get()}options.client_options,\n`;
         body += `${indent.get()}Vec::default(),\n`;
-        body += `${indent.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'}, None,\n`;
+        body += `${indent.get()}${hasAuthPolicy ? 'vec![auth_policy]' : 'Vec::default()'}, None,\n`;
         body += `${indent.pop().get()}),\n`; // end Pipeline::new
         body += `${indent.pop().get()}})\n`; // end Ok
         body += `${indent.pop().get()}}\n`; // end constructor
