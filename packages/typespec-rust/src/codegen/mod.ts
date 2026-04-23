@@ -65,7 +65,7 @@ export function emitGeneratedModRs(module: rust.ModuleContainer): string {
     }
   }
 
-  if (module.kind == 'crate' && module.type == 'azure-arm') {
+  if (module.kind === 'crate' && module.type === 'azure-arm') {
     content += '/// Marker type for Azure Resource Manager audience configuration.\npub struct Audience;\n';
   }
 
