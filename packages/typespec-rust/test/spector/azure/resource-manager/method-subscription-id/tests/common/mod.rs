@@ -41,11 +41,11 @@ pub fn create_client() -> MethodSubscriptionIdClient {
     let mut custom_cloud_config = CustomConfiguration::default();
     custom_cloud_config.authority_host = "http://localhost:3000".to_string();
     custom_cloud_config.audiences =
-        Audiences::new().with::<Audience>("http://localhost:3000/.default".to_string());
+        Audiences::new().with::<Audience>("http://localhost:3000".to_string());
 
     MethodSubscriptionIdClient::new(
-        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
+        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         Some(MethodSubscriptionIdClientOptions {
             client_options: ClientOptions {
                 cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),

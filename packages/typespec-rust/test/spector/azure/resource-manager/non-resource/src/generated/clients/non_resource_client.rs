@@ -40,18 +40,22 @@ impl NonResourceClient {
     ///
     /// # Arguments
     ///
+    /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
-    /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Azure.ResourceManager.NonResource")]
     pub fn new(
-        credential: Arc<dyn TokenCredential>,
         subscription_id: String,
+        credential: Arc<dyn TokenCredential>,
         options: Option<NonResourceClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
         let (endpoint, scope) = match options.client_options.cloud.as_deref() {
+            Some(CloudConfiguration::AzurePublic) => (
+                "https://management.azure.com".to_string(),
+                "https://management.azure.com/.default".to_string(),
+            ),
             Some(CloudConfiguration::AzureGovernment) => (
                 "https://management.usgovcloudapi.net".to_string(),
                 "https://management.usgovcloudapi.net/.default".to_string(),
@@ -60,23 +64,18 @@ impl NonResourceClient {
                 "https://management.chinacloudapi.cn".to_string(),
                 "https://management.chinacloudapi.cn/.default".to_string(),
             ),
-            Some(CloudConfiguration::Custom(custom)) => (
-                custom.authority_host.clone(),
-                custom
-                    .audiences
-                    .get::<Audience>()
-                    .ok_or_else(|| {
-                        Error::new(
-                            ErrorKind::Credential,
-                            "missing custom cloud configuration audience",
-                        )
-                    })?
-                    .to_string(),
-            ),
-            _ => (
-                "https://management.azure.com".to_string(),
-                "https://management.azure.com/.default".to_string(),
-            ),
+            Some(CloudConfiguration::Custom(custom)) => {
+                let audience = custom.audiences.get::<Audience>().ok_or_else(|| {
+                    Error::new(
+                        ErrorKind::Credential,
+                        "missing custom cloud configuration audience",
+                    )
+                })?;
+                (audience.to_string(), format!("{}/.default", audience))
+            }
+            _ => {
+                unreachable!()
+            }
         };
         let endpoint = Url::parse(&endpoint)?;
         let auth_policy: Arc<dyn Policy> =

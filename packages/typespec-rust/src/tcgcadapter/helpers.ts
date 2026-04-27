@@ -20,6 +20,15 @@ export function sortClientParameters(params: Array<rust.ClientParameter>): void 
     }
     return 0;
   });
+
+  // For a non-ARM client, 'credential' will never be a first parameter - 'endpoint' will be first.
+  // And if there is no 'endpoint' parameter, it means that we're generating an ARM client.
+  // In which case we want the 'credential' to be the last constructor parameter
+  // (before the options, but they are not passed to this function).
+  if (params.length >= 2 && params[0].kind === 'clientCredential') {
+    const credential = params.shift()!;
+    params.push(credential);
+  }
 }
 
 // used by formatDocs

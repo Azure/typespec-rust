@@ -113,6 +113,13 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
           use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
           body += `${indent.push().get()}let (endpoint, scope) = ${helpers.buildMatch(indent, 'options.client_options.cloud.as_deref()', [
             {
+              pattern: 'Some(CloudConfiguration::AzurePublic)',
+              body: (indent) => `${indent.get()}(\n`
+                + `${indent.push().get()}"https://management.azure.com".to_string(),`
+                + `\n${indent.get()}"https://management.azure.com/.default".to_string(),`
+                + `\n${indent.pop().get()})\n`
+            },
+            {
               pattern: 'Some(CloudConfiguration::AzureGovernment)',
               body: (indent) => `${indent.get()}`
                 + `(\n${indent.push().get()}"https://management.usgovcloudapi.net".to_string(),`
@@ -128,17 +135,14 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
             },
             {
               pattern: 'Some(CloudConfiguration::Custom(custom))',
-              body: (indent) => `${indent.get()}(`
-                + `\n${indent.push().get()}custom.authority_host.clone(),`
-                + `\n${indent.get()}custom.audiences.get::<Audience>().ok_or_else(|| { Error::new(ErrorKind::Credential, "missing custom cloud configuration audience")})?.to_string(),`
-                + `\n${indent.pop().get()})\n`
+              body: (indent) => `${indent.get()}{\n`
+                + `${indent.push().get()}let audience = custom.audiences.get::<Audience>().ok_or_else(|| { Error::new(ErrorKind::Credential, "missing custom cloud configuration audience")})?;\n`
+                + `${indent.get()}(audience.to_string(), format!("{}/.default", audience))\n`
+                + `${indent.pop().get()}}\n`
             },
             {
               pattern: '_',
-              body: (indent) => `${indent.get()}(\n`
-                + `${indent.push().get()}"https://management.azure.com".to_string(),`
-                + `\n${indent.get()}"https://management.azure.com/.default".to_string(),`
-                + `\n${indent.pop().get()})\n`
+              body: (indent) => `${indent.get()}unreachable!()\n`
             },
           ])};\n`;
           body += `${indent.get()}let endpoint = Url::parse(&endpoint)?;\n`;
