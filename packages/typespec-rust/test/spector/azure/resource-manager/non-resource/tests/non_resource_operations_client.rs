@@ -2,12 +2,16 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::cloud::{Audiences, CloudConfiguration, CustomConfiguration};
+use azure_core::http::ClientOptions;
 use azure_core::{
     credentials::{AccessToken, TokenCredential, TokenRequestOptions},
     time::OffsetDateTime,
     Result,
 };
-use spector_armnonresource::{models::NonResource, NonResourceClient};
+use spector_armnonresource::{
+    models::NonResource, Audience, NonResourceClient, NonResourceClientOptions,
+};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -35,15 +39,29 @@ impl TokenCredential for FakeTokenCredential {
     }
 }
 
+fn create_client() -> NonResourceClient {
+    let mut custom_cloud_config = CustomConfiguration::default();
+    custom_cloud_config.authority_host = "http://localhost:3000".to_string();
+    custom_cloud_config.audiences =
+        Audiences::new().with::<Audience>("http://localhost:3000".to_string());
+
+    NonResourceClient::new(
+        "00000000-0000-0000-0000-000000000000".to_string(),
+        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
+        Some(NonResourceClientOptions {
+            client_options: ClientOptions {
+                cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
+                ..Default::default()
+            },
+            ..Default::default()
+        }),
+    )
+    .unwrap()
+}
+
 #[tokio::test]
 async fn create() {
-    let client = NonResourceClient::new(
-        "http://localhost:3000",
-        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
-        "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
-    )
-    .unwrap();
+    let client = create_client();
     let body = NonResource {
         id: Some("id".to_string()),
         name: Some("hello".to_string()),
@@ -63,13 +81,7 @@ async fn create() {
 
 #[tokio::test]
 async fn get() {
-    let client = NonResourceClient::new(
-        "http://localhost:3000",
-        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
-        "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
-    )
-    .unwrap();
+    let client = create_client();
     let resp = client
         .get_non_resource_non_resource_operations_client()
         .get("eastus", "hello", None)

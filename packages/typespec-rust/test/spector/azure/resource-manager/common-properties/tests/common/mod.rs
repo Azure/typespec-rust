@@ -2,10 +2,12 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::cloud::{Audiences, CloudConfiguration, CustomConfiguration};
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
+use azure_core::http::ClientOptions;
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_armcommon::CommonPropertiesClient;
+use spector_armcommon::{Audience, CommonPropertiesClient, CommonPropertiesClientOptions};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -34,11 +36,21 @@ impl TokenCredential for FakeTokenCredential {
 }
 
 pub fn create_client() -> CommonPropertiesClient {
+    let mut custom_cloud_config = CustomConfiguration::default();
+    custom_cloud_config.authority_host = "http://localhost:3000".to_string();
+    custom_cloud_config.audiences =
+        Audiences::new().with::<Audience>("http://localhost:3000".to_string());
+
     CommonPropertiesClient::new(
-        "http://localhost:3000",
-        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         "00000000-0000-0000-0000-000000000000".to_string(),
-        None,
+        Arc::new(FakeTokenCredential::new("fake_token".to_string())),
+        Some(CommonPropertiesClientOptions {
+            client_options: ClientOptions {
+                cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
+                ..Default::default()
+            },
+            ..Default::default()
+        }),
     )
     .unwrap()
 }
