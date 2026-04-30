@@ -51,7 +51,7 @@
   "devDependencies": {
     "@azure-tools/azure-http-specs": "0.1.0-alpha.39",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^25.6.0",
+    "@types/node": "^20.19.0",
     "@types/turndown": "^5.0.6",
     "@typespec/http-specs": "0.1.0-alpha.36",
     "@typespec/spector": "0.1.0-alpha.25",

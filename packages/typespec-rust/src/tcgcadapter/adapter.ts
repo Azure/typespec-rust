@@ -476,6 +476,7 @@ export class Adapter {
     }
 
     let modelFlags = rust.ModelFlags.Unspecified;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Input) === tcgc.UsageFlags.Input) {
       modelFlags |= rust.ModelFlags.Input;
     }
