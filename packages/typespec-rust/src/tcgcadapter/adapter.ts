@@ -236,6 +236,7 @@ export class Adapter {
     }
 
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       if (<tcgc.UsageFlags>(sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
         // we skip generating the enums for API
         // versions as we expose it as a String
@@ -481,7 +482,9 @@ export class Adapter {
 
     // include error and LRO polling types as output types
     if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output ||
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.LroPolling) === tcgc.UsageFlags.LroPolling
     ) {
       modelFlags |= rust.ModelFlags.Output;
@@ -1664,6 +1667,7 @@ export class Adapter {
         }
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       if (authType === AuthTypes.Default || <AuthTypes>(authType & AuthTypes.NoAuth) === AuthTypes.NoAuth) {
         const ctorWithNoCredential = new rust.Constructor('with_no_credential');
         ctorWithNoCredential.docs.summary = `Creates a new ${rustClient.name} requiring no authentication.`;
@@ -2293,6 +2297,7 @@ export class Adapter {
           if (field.serde === serde) {
             // check if this has already been unwrapped (e.g. type is shared across operations)
             if (field.type.kind === 'option') {
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
               field.type = <rust.WireType>(field.type).type;
               field.flags |= rust.ModelFieldFlags.PageItems;
             }
@@ -2772,6 +2777,7 @@ export class Adapter {
         break;
       case 'path': {
         paramType = this.typeToWireType(paramType);
+        // eslint-disable-next-line no-useless-assignment
         let style: rust.ParameterStyle = 'simple';
         const tspStyleString = (opParam.style as string);
         if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
@@ -3193,6 +3199,7 @@ export function formatVisibility(visibility?: http.Visibility[]): string | undef
   }
 
   // if all lifecycle flags are set, there's no restriction
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   if (<http.Visibility>(combined & http.Visibility.All) === http.Visibility.All) {
     return undefined;
   }

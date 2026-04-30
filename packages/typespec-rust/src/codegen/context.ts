@@ -151,6 +151,7 @@ export class Context {
       return '';
     }
 
+    // eslint-disable-next-line no-useless-assignment
     let deserialize = '';
     const bodyFormat = this.getModelBodyFormat(model) as string;
     switch (bodyFormat) {
@@ -219,6 +220,7 @@ export class Context {
         if (field.kind === 'additionalProperties') {
           continue;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
           fieldPaths.push(field.name);
           let pageItemsField: rust.ModelField | undefined;
