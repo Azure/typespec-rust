@@ -151,6 +151,7 @@ export class Context {
       return '';
     }
 
+    // eslint-disable-next-line no-useless-assignment
     let deserialize = '';
     const bodyFormat = this.getModelBodyFormat(model) as string;
     switch (bodyFormat) {
@@ -219,7 +220,7 @@ export class Context {
         if (field.kind === 'additionalProperties') {
           continue;
         }
-        if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
+        if ((field.flags & rust.ModelFieldFlags.PageItems) !== 0) {
           fieldPaths.push(field.name);
           let pageItemsField: rust.ModelField | undefined;
           if (field.type.kind === 'model') {
