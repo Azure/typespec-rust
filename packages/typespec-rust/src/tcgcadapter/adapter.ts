@@ -3191,7 +3191,8 @@ export function formatVisibility(visibility?: http.Visibility[]): string | undef
   }
 
   // if all lifecycle flags are set, there's no restriction
-  if ((combined & http.Visibility.All) !== 0) {
+  const allFlagsSet: number = http.Visibility.All;
+  if ((combined & http.Visibility.All) === allFlagsSet) {
     return undefined;
   }
 
