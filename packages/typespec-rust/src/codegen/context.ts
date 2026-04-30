@@ -220,8 +220,7 @@ export class Context {
         if (field.kind === 'additionalProperties') {
           continue;
         }
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
+        if ((field.flags & rust.ModelFieldFlags.PageItems) !== 0) {
           fieldPaths.push(field.name);
           let pageItemsField: rust.ModelField | undefined;
           if (field.type.kind === 'model') {

@@ -236,8 +236,7 @@ export class Adapter {
     }
 
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      if (<tcgc.UsageFlags>(sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
+      if ((sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) !== 0) {
         // we skip generating the enums for API
         // versions as we expose it as a String
         continue;
@@ -476,18 +475,12 @@ export class Adapter {
     }
 
     let modelFlags = rust.ModelFlags.Unspecified;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Input) === tcgc.UsageFlags.Input) {
+    if ((model.usage & tcgc.UsageFlags.Input) !== 0) {
       modelFlags |= rust.ModelFlags.Input;
     }
 
     // include error and LRO polling types as output types
-    if (
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output ||
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      <tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.LroPolling) === tcgc.UsageFlags.LroPolling
-    ) {
+    if ((model.usage & tcgc.UsageFlags.Output) !== 0 || (model.usage & tcgc.UsageFlags.LroPolling) !== 0) {
       modelFlags |= rust.ModelFlags.Output;
     }
 
@@ -1668,8 +1661,7 @@ export class Adapter {
         }
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      if (authType === AuthTypes.Default || <AuthTypes>(authType & AuthTypes.NoAuth) === AuthTypes.NoAuth) {
+      if (authType === AuthTypes.Default || (authType & AuthTypes.NoAuth) !== 0) {
         const ctorWithNoCredential = new rust.Constructor('with_no_credential');
         ctorWithNoCredential.docs.summary = `Creates a new ${rustClient.name} requiring no authentication.`;
         rustClient.constructable.constructors.push(ctorWithNoCredential);
@@ -2298,8 +2290,7 @@ export class Adapter {
           if (field.serde === serde) {
             // check if this has already been unwrapped (e.g. type is shared across operations)
             if (field.type.kind === 'option') {
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-              field.type = <rust.WireType>(field.type).type;
+              field.type = field.type.type;
               field.flags |= rust.ModelFieldFlags.PageItems;
             }
 
@@ -3200,8 +3191,7 @@ export function formatVisibility(visibility?: http.Visibility[]): string | undef
   }
 
   // if all lifecycle flags are set, there's no restriction
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  if (<http.Visibility>(combined & http.Visibility.All) === http.Visibility.All) {
+  if ((combined & http.Visibility.All) !== 0) {
     return undefined;
   }
 

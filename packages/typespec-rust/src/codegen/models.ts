@@ -110,8 +110,7 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       body += '#[derive(Serialize)]\n';
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    if (<rust.ModelFlags>(model.flags & rust.ModelFlags.Output) === rust.ModelFlags.Output && (model.flags & rust.ModelFlags.Input) === 0) {
+    if ((model.flags & rust.ModelFlags.Output) !== 0 && (model.flags & rust.ModelFlags.Input) === 0) {
       // output-only models get the non_exhaustive annotation
       body += helpers.AnnotationNonExhaustive;
     }
@@ -200,10 +199,7 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       } else if (deserializeWith) {
         // this comes before DeserializeEmptyStringAsNone since it just replaces it
         serdeParams.add(`deserialize_with = "${deserializeWith.name}"`);
-      } else if (
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        <rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) === rust.ModelFieldFlags.DeserializeEmptyStringAsNone
-      ) {
+      } else if ((field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) !== 0) {
         use.add('azure_core::fmt', 'empty_as_null');
         serdeParams.add(`deserialize_with = "empty_as_null::deserialize"`);
       }
