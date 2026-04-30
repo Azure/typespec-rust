@@ -3,7 +3,7 @@
   "version": "0.39.1",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
-  "packageManager": "pnpm@10.30.3",
+  "packageManager": "pnpm@10.33.2",
   "main": "dist/src/index.js",
   "exports": {
     ".": "./dist/src/index.js"
@@ -50,11 +50,11 @@
   "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
     "@azure-tools/azure-http-specs": "0.1.0-alpha.39",
-    "@azure-tools/typespec-azure-core": "0.67.0",
-    "@azure-tools/typespec-azure-resource-manager": "0.67.0",
-    "@azure-tools/typespec-client-generator-core": "0.67.1",
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^20.19.25",
+    "@azure-tools/typespec-azure-core": "0.67.1",
+    "@azure-tools/typespec-azure-resource-manager": "0.67.1",
+    "@azure-tools/typespec-client-generator-core": "0.67.4",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.6.0",
     "@typespec/compiler": "1.11.0",
     "@typespec/http": "1.11.0",
     "@typespec/http-specs": "0.1.0-alpha.36",
@@ -63,28 +63,37 @@
     "@typespec/spector": "0.1.0-alpha.25",
     "@typespec/versioning": "0.81.0",
     "@typespec/xml": "0.81.0",
-    "@vitest/coverage-v8": "^4.0.10",
-    "@vitest/ui": "^4.0.10",
-    "c8": "^10.1.3",
-    "eslint": "^9.39.1",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.47.0",
-    "vitest": "^4.0.10"
+    "@vitest/coverage-v8": "^4.1.5",
+    "@vitest/ui": "^4.1.5",
+    "c8": "^11.0.0",
+    "eslint": "^10.2.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.1",
+    "vitest": "^4.1.5"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-client-generator-core": "0.67.1",
+    "@azure-tools/typespec-client-generator-core": "0.67.4",
     "@typespec/compiler": "1.11.0",
     "@typespec/events": "0.81.0",
     "@typespec/http": "1.11.0",
     "@typespec/sse": "0.81.0",
-    "@typespec/streams": "0.81.0"
+    "@typespec/streams": "0.81.0",
+    "fast-xml-parser": ">=5.7.0",
+    "flatted": ">=3.4.2",
+    "minimatch": ">=10.2.3",
+    "picomatch": ">=4.0.4",
+    "postcss": ">=8.5.10",
+    "rollup": ">=4.59.0",
+    "uuid": ">=14.0.0",
+    "vite": ">=7.3.2",
+    "yaml": ">=2.8.3"
   },
   "dependencies": {
     "@types/turndown": "^5.0.6",
     "linkifyjs": "^4.3.2",
     "query-string": "9.3.1",
     "source-map-support": "0.5.21",
-    "turndown": "^7.2.2"
+    "turndown": "^7.2.4"
   },
   "azure-sdk/emitter-package-json-pinning": [
     "@azure-tools/typespec-azure-core",
