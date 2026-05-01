@@ -251,5 +251,5 @@ model FoundWidgets {
 }
 
 model Widget {
-  name: string
+  name: string;
 }
