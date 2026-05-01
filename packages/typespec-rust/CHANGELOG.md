@@ -1,5 +1,19 @@
 # Release History
 
+## 0.40.0 (unreleased)
+
+### Breaking Changes
+
+* The constructor signature for ARM clients has changed (it no longer requires the `endpoint` parameter).
+
+### Features Added
+
+* Update ARM codegen to use cloud config.
+
+### Bugs Fixed
+
+* Optional method parameters respect the `@access` decorator.
+
 ## 0.39.1 (2026-04-12)
 
 ### Features Added
