@@ -2024,7 +2024,7 @@ export class Adapter {
           fieldType = this.getOptionType(adaptedParam.type);
         }
 
-        const optionsField = new rust.StructField(adaptedParam.name, pub, fieldType);
+        const optionsField = new rust.StructField(adaptedParam.name, adaptAccessFlags(methodParam.access), fieldType);
         optionsField.docs = adaptedParam.docs;
         rustMethod.options.type.type.fields.push(optionsField);
       }

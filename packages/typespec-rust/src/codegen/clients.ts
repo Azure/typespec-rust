@@ -449,7 +449,7 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
         if (fieldDocs.length > 0) {
           block += `${indent.get()}${fieldDocs}`;
         }
-        block += `${indent.get()}${helpers.emitVisibility(method.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        block += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         if (i + 1 < optionsStruct.fields.length) {
           block += '\n';
         }
