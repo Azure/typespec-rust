@@ -245,10 +245,12 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
 
     // emit the endpoint method before the rest of the methods.
     // we don't model this as the implementation isn't dynamic.
-    body += `${indent.get()}/// Returns the Url associated with this client.\n`;
-    body += `${indent.get()}pub fn endpoint(&self) -> &Url {\n`;
-    body += `${indent.push().get()}&self.${client.endpoint.name}\n`;
-    body += `${indent.pop().get()}}\n\n`;
+    if (!client.omitEndpointMethod) {
+      body += `${indent.get()}/// Returns the Url associated with this client.\n`;
+      body += `${indent.get()}pub fn endpoint(&self) -> &Url {\n`;
+      body += `${indent.push().get()}&self.${client.endpoint.name}\n`;
+      body += `${indent.pop().get()}}\n\n`;
+    }
 
     const crate = helpers.getCrate(module);
 

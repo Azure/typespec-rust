@@ -31,6 +31,13 @@ export interface Client {
   endpoint: types.StructField;
 
   /**
+   * indicates if the synthesized endpoint() method should be omitted.
+   * the default is false and is customized via the omitEndpointMethod
+   * clientOption decorator.
+   */
+  omitEndpointMethod: boolean;
+
+  /**
    * fields contains the ctor parameters that are
    * persisted as fields on the client type and might
    * also contain other fields that don't originate
@@ -686,6 +693,7 @@ export class Client implements Client {
   constructor(name: string, module: ModuleContainer) {
     this.kind = 'client';
     this.name = name;
+    this.omitEndpointMethod = false;
     this.fields = new Array<types.StructField>();
     this.methods = new Array<MethodType>();
     this.module = module;

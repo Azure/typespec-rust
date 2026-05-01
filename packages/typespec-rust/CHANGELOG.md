@@ -5,10 +5,12 @@
 ### Breaking Changes
 
 * The constructor signature for ARM clients has changed (it no longer requires the `endpoint` parameter).
+* Pageable operations that specify a `@clientName` decorator will skip altering the name to have the `list` prefix.
 
 ### Features Added
 
 * Update ARM codegen to use cloud config.
+* Added support for `omitEndpointMethod` `@clientOption` decorator, which can be used to omit the synthesized `endpoint()` method on clients.
 
 ### Bugs Fixed
 

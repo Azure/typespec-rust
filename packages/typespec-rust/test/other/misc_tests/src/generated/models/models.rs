@@ -32,6 +32,16 @@ pub struct ContainsInvalidChars {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+pub struct FoundWidgets {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub next: Option<String>,
+
+    #[serde(default)]
+    pub pets: Vec<Widget>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct LiteralNumericEnum {
     /// Field has constant value Indices::Two. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_enumvalue_literal_Indices_Two")]
@@ -88,4 +98,11 @@ pub(crate) struct UnknownDiscriminatedBaseNoSubTypesKind<'a> {
     pub kind: &'a Option<String>,
 
     pub name: &'a Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct Widget {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
 }

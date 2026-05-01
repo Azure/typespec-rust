@@ -6,6 +6,8 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 mod generated;
+pub use generated::*;
+pub mod test;
 
 pub mod models {
     pub use crate::generated::models::*;
