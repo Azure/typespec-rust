@@ -5,6 +5,7 @@
 ### Breaking Changes
 
 * The constructor signature for ARM clients has changed (it no longer requires the `endpoint` parameter).
+* LRO methods now have the prefix `begin_`.
 
 ### Features Added
 

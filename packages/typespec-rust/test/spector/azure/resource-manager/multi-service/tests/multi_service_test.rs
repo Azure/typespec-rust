@@ -100,7 +100,7 @@ async fn virtual_machine_create_or_update() {
     let client = create_client();
     let poller = client
         .get_combined_virtual_machines_client()
-        .create_or_update("test-rg", "vm1", resource.try_into().unwrap(), None)
+        .begin_create_or_update("test-rg", "vm1", resource.try_into().unwrap(), None)
         .unwrap();
 
     let resp = poller.await.unwrap();
@@ -160,7 +160,7 @@ async fn disk_create_or_update() {
     let client = create_client();
     let poller = client
         .get_combined_disks_client()
-        .create_or_update("test-rg", "disk1", resource.try_into().unwrap(), None)
+        .begin_create_or_update("test-rg", "disk1", resource.try_into().unwrap(), None)
         .unwrap();
 
     let resp = poller.await.unwrap();

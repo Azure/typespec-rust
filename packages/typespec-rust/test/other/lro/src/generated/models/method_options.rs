@@ -8,17 +8,58 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`NIClient::custom_link()`](crate::generated::clients::NIClient::custom_link())
+/// Options to be passed to [`NIClient::begin_custom_link()`](crate::generated::clients::NIClient::begin_custom_link())
 #[derive(Clone, Default, SafeDebug)]
-pub struct NIClientCustomLinkOptions<'a> {
+pub struct NIClientBeginCustomLinkOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl NIClientCustomLinkOptions<'_> {
-    /// Transforms this [`NIClientCustomLinkOptions`] into a new `NIClientCustomLinkOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> NIClientCustomLinkOptions<'static> {
-        NIClientCustomLinkOptions {
+impl NIClientBeginCustomLinkOptions<'_> {
+    /// Transforms this [`NIClientBeginCustomLinkOptions`] into a new `NIClientBeginCustomLinkOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> NIClientBeginCustomLinkOptions<'static> {
+        NIClientBeginCustomLinkOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
+/// Options to be passed to [`NIClient::begin_incorrect_custom_op_ref()`](crate::generated::clients::NIClient::begin_incorrect_custom_op_ref())
+#[derive(Clone, Default, SafeDebug)]
+pub struct NIClientBeginIncorrectCustomOpRefOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl NIClientBeginIncorrectCustomOpRefOptions<'_> {
+    /// Transforms this [`NIClientBeginIncorrectCustomOpRefOptions`] into a new `NIClientBeginIncorrectCustomOpRefOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> NIClientBeginIncorrectCustomOpRefOptions<'static> {
+        NIClientBeginIncorrectCustomOpRefOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
+/// Options to be passed to [`NIClient::begin_partial_body()`](crate::generated::clients::NIClient::begin_partial_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct NIClientBeginPartialBodyOptions<'a> {
+    pub b: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl NIClientBeginPartialBodyOptions<'_> {
+    /// Transforms this [`NIClientBeginPartialBodyOptions`] into a new `NIClientBeginPartialBodyOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> NIClientBeginPartialBodyOptions<'static> {
+        NIClientBeginPartialBodyOptions {
+            b: self.b,
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -32,45 +73,4 @@ impl NIClientCustomLinkOptions<'_> {
 pub struct NIClientGetStatusOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`NIClient::incorrect_custom_op_ref()`](crate::generated::clients::NIClient::incorrect_custom_op_ref())
-#[derive(Clone, Default, SafeDebug)]
-pub struct NIClientIncorrectCustomOpRefOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl NIClientIncorrectCustomOpRefOptions<'_> {
-    /// Transforms this [`NIClientIncorrectCustomOpRefOptions`] into a new `NIClientIncorrectCustomOpRefOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> NIClientIncorrectCustomOpRefOptions<'static> {
-        NIClientIncorrectCustomOpRefOptions {
-            method_options: PollerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
-}
-
-/// Options to be passed to [`NIClient::partial_body()`](crate::generated::clients::NIClient::partial_body())
-#[derive(Clone, Default, SafeDebug)]
-pub struct NIClientPartialBodyOptions<'a> {
-    pub b: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl NIClientPartialBodyOptions<'_> {
-    /// Transforms this [`NIClientPartialBodyOptions`] into a new `NIClientPartialBodyOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> NIClientPartialBodyOptions<'static> {
-        NIClientPartialBodyOptions {
-            b: self.b,
-            method_options: PollerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
 }

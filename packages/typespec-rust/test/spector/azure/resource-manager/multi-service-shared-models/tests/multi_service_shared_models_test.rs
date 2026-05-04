@@ -111,7 +111,7 @@ async fn virtual_machine_create_or_update() {
     let client = create_client();
     let poller = client
         .get_combined_virtual_machines_client()
-        .create_or_update("test-rg", "vm-shared1", resource.try_into().unwrap(), None)
+        .begin_create_or_update("test-rg", "vm-shared1", resource.try_into().unwrap(), None)
         .unwrap();
 
     let resp = poller.await.unwrap();
@@ -184,7 +184,7 @@ async fn storage_account_create_or_update() {
     let client = create_client();
     let poller = client
         .get_combined_storage_accounts_client()
-        .create_or_update("test-rg", "account1", resource.try_into().unwrap(), None)
+        .begin_create_or_update("test-rg", "account1", resource.try_into().unwrap(), None)
         .unwrap();
 
     let resp = poller.await.unwrap();

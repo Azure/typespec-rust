@@ -8,17 +8,17 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`CombinedStorageAccountsClient::create_or_update()`](crate::storage::generated::clients::CombinedStorageAccountsClient::create_or_update())
+/// Options to be passed to [`CombinedStorageAccountsClient::begin_create_or_update()`](crate::storage::generated::clients::CombinedStorageAccountsClient::begin_create_or_update())
 #[derive(Clone, Default, SafeDebug)]
-pub struct CombinedStorageAccountsClientCreateOrUpdateOptions<'a> {
+pub struct CombinedStorageAccountsClientBeginCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl CombinedStorageAccountsClientCreateOrUpdateOptions<'_> {
-    /// Transforms this [`CombinedStorageAccountsClientCreateOrUpdateOptions`] into a new `CombinedStorageAccountsClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> CombinedStorageAccountsClientCreateOrUpdateOptions<'static> {
-        CombinedStorageAccountsClientCreateOrUpdateOptions {
+impl CombinedStorageAccountsClientBeginCreateOrUpdateOptions<'_> {
+    /// Transforms this [`CombinedStorageAccountsClientBeginCreateOrUpdateOptions`] into a new `CombinedStorageAccountsClientBeginCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> CombinedStorageAccountsClientBeginCreateOrUpdateOptions<'static> {
+        CombinedStorageAccountsClientBeginCreateOrUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

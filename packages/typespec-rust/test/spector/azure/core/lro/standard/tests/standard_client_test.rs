@@ -10,8 +10,8 @@ use futures::StreamExt;
 
 use spector_lrostd::{
     models::{
-        StandardClientCreateOrReplaceOptions, StandardClientDeleteOptions,
-        StandardClientExportOptions, User,
+        StandardClientBeginCreateOrReplaceOptions, StandardClientBeginDeleteOptions,
+        StandardClientBeginExportOptions, User,
     },
     StandardClient,
 };
@@ -27,7 +27,7 @@ async fn create_or_replace() {
     .try_into()
     .unwrap();
 
-    let options = Some(StandardClientCreateOrReplaceOptions {
+    let options = Some(StandardClientBeginCreateOrReplaceOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -35,7 +35,7 @@ async fn create_or_replace() {
     });
 
     let mut poller = client
-        .create_or_replace("madge", user.clone(), options.clone())
+        .begin_create_or_replace("madge", user.clone(), options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -65,7 +65,9 @@ async fn create_or_replace() {
     }
     assert_eq!(poll_count, 3);
 
-    let poller = client.create_or_replace("madge", user, options).unwrap();
+    let poller = client
+        .begin_create_or_replace("madge", user, options)
+        .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.name, Some("madge".to_string()));
     assert_eq!(final_result.role, Some("contributor".to_string()));
@@ -74,14 +76,14 @@ async fn create_or_replace() {
 #[tokio::test]
 async fn delete() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let options = Some(StandardClientDeleteOptions {
+    let options = Some(StandardClientBeginDeleteOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
         },
     });
 
-    let mut poller = client.delete("madge", options).unwrap();
+    let mut poller = client.begin_delete("madge", options).unwrap();
 
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
@@ -114,14 +116,16 @@ async fn delete() {
 #[tokio::test]
 async fn export() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let options = Some(StandardClientExportOptions {
+    let options = Some(StandardClientBeginExportOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
         },
     });
 
-    let mut poller = client.export("madge", "json", options.clone()).unwrap();
+    let mut poller = client
+        .begin_export("madge", "json", options.clone())
+        .unwrap();
 
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
@@ -150,7 +154,7 @@ async fn export() {
     }
     assert_eq!(poll_count, 3);
 
-    let poller = client.export("madge", "json", options).unwrap();
+    let poller = client.begin_export("madge", "json", options).unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.name, Some("madge".to_string()));
     assert_eq!(final_result.resource_uri, Some("/users/madge".to_string()));

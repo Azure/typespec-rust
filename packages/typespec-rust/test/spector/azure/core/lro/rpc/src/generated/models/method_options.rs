@@ -5,17 +5,17 @@
 
 use azure_core::{fmt::SafeDebug, http::poller::PollerOptions};
 
-/// Options to be passed to [`RpcClient::long_running_rpc()`](crate::generated::clients::RpcClient::long_running_rpc())
+/// Options to be passed to [`RpcClient::begin_long_running_rpc()`](crate::generated::clients::RpcClient::begin_long_running_rpc())
 #[derive(Clone, Default, SafeDebug)]
-pub struct RpcClientLongRunningRpcOptions<'a> {
+pub struct RpcClientBeginLongRunningRpcOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl RpcClientLongRunningRpcOptions<'_> {
-    /// Transforms this [`RpcClientLongRunningRpcOptions`] into a new `RpcClientLongRunningRpcOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> RpcClientLongRunningRpcOptions<'static> {
-        RpcClientLongRunningRpcOptions {
+impl RpcClientBeginLongRunningRpcOptions<'_> {
+    /// Transforms this [`RpcClientBeginLongRunningRpcOptions`] into a new `RpcClientBeginLongRunningRpcOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> RpcClientBeginLongRunningRpcOptions<'static> {
+        RpcClientBeginLongRunningRpcOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

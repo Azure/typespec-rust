@@ -5,8 +5,8 @@
 
 use crate::generated::models::{
     ExtensionsResource, ExtensionsResourceListResult,
-    ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus,
-    ResourcesExtensionsResourcesClientCreateOrUpdateOptions,
+    ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus,
+    ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions,
     ResourcesExtensionsResourcesClientDeleteOptions, ResourcesExtensionsResourcesClientGetOptions,
     ResourcesExtensionsResourcesClientListByScopeOptions,
     ResourcesExtensionsResourcesClientUpdateOptions,
@@ -52,14 +52,14 @@ impl ResourcesExtensionsResourcesClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus, ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders};
+    /// use spector_armresources::models::{ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus, ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus> = unimplemented!();
+    ///     let response: Response<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
@@ -72,18 +72,18 @@ impl ResourcesExtensionsResourcesClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
-    /// * [`retry_after`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::retry_after) - retry-after
+    /// * [`azure_async_operation`()](crate::generated::models::ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`retry_after`()](crate::generated::models::ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatusHeaders::retry_after) - retry-after
     ///
-    /// [`ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders
+    /// [`ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.createOrUpdate")]
-    pub fn create_or_update(
+    pub fn begin_create_or_update(
         &self,
         resource_uri: &str,
         extensions_resource_name: &str,
         resource: RequestContent<ExtensionsResource>,
-        options: Option<ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'_>>,
-    ) -> Result<Poller<ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus>> {
+        options: Option<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'_>>,
+    ) -> Result<Poller<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -189,7 +189,7 @@ impl ResourcesExtensionsResourcesClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus =
+                    let res: ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus =
                         json::from_json(&body)?;
                     let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {

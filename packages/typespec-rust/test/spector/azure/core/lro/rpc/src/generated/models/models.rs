@@ -27,7 +27,7 @@ pub struct GenerationResult {
 /// Provides status details for long running operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct RpcClientLongRunningRpcOperationStatus {
+pub struct RpcClientBeginLongRunningRpcOperationStatus {
     /// Error object that describes the error when status is "Failed".
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,

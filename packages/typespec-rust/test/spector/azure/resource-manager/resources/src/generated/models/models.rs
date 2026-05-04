@@ -263,7 +263,7 @@ pub struct NotificationDetails {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus {
+pub struct ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -317,7 +317,7 @@ pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesNestedClientCreateOrReplaceOperationStatus {
+pub struct ResourcesNestedClientBeginCreateOrReplaceOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -371,7 +371,7 @@ pub struct ResourcesNestedClientCreateOrReplaceOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesNestedClientDeleteOperationStatus {
+pub struct ResourcesNestedClientBeginDeleteOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -425,7 +425,7 @@ pub struct ResourcesNestedClientDeleteOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesNestedClientUpdateOperationStatus {
+pub struct ResourcesNestedClientBeginUpdateOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -479,7 +479,7 @@ pub struct ResourcesNestedClientUpdateOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesSingletonClientCreateOrUpdateOperationStatus {
+pub struct ResourcesSingletonClientBeginCreateOrUpdateOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -533,7 +533,7 @@ pub struct ResourcesSingletonClientCreateOrUpdateOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesTopLevelClientCreateOrReplaceOperationStatus {
+pub struct ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -587,7 +587,7 @@ pub struct ResourcesTopLevelClientCreateOrReplaceOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesTopLevelClientDeleteOperationStatus {
+pub struct ResourcesTopLevelClientBeginDeleteOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -641,7 +641,7 @@ pub struct ResourcesTopLevelClientDeleteOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct ResourcesTopLevelClientUpdateOperationStatus {
+pub struct ResourcesTopLevelClientBeginUpdateOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read

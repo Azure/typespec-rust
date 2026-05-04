@@ -14,7 +14,7 @@ use azure_core::{
 use futures::StreamExt;
 use spector_armresources::models::{
     ExtensionsResource, ExtensionsResourceProperties, ProvisioningState,
-    ResourcesExtensionsResourcesClientCreateOrUpdateOptions,
+    ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions,
 };
 use time::{Date, Month, Time};
 
@@ -808,16 +808,18 @@ async fn create_or_update() {
     .try_into()
     .unwrap();
 
-    let options = Some(ResourcesExtensionsResourcesClientCreateOrUpdateOptions {
-        method_options: PollerOptions {
-            frequency: Duration::seconds(1),
-            ..Default::default()
+    let options = Some(
+        ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions {
+            method_options: PollerOptions {
+                frequency: Duration::seconds(1),
+                ..Default::default()
+            },
         },
-    });
+    );
 
     for id in [RESOURCE_GROUP, SUBSCRIPTION, "", RESOURCE] {
         let mut poller = client
-            .create_or_update(
+            .begin_create_or_update(
                 id.trim_start_matches('/'),
                 "extension",
                 create_or_update_request.clone(),
@@ -845,7 +847,7 @@ async fn create_or_update() {
         assert_eq!(poll_count, 1);
 
         let poller = client
-            .create_or_update(
+            .begin_create_or_update(
                 id.trim_start_matches('/'),
                 "extension",
                 create_or_update_request.clone(),

@@ -9,7 +9,7 @@ use azure_core::time::Duration;
 use futures::StreamExt;
 
 use spector_lrorpc::{
-    models::{GenerationOptions, RpcClientLongRunningRpcOptions},
+    models::{GenerationOptions, RpcClientBeginLongRunningRpcOptions},
     RpcClient,
 };
 
@@ -23,7 +23,7 @@ async fn long_running_rpc() {
     .try_into()
     .unwrap();
 
-    let options = Some(RpcClientLongRunningRpcOptions {
+    let options = Some(RpcClientBeginLongRunningRpcOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -31,7 +31,7 @@ async fn long_running_rpc() {
     });
 
     let mut poller = client
-        .long_running_rpc(body.clone(), options.clone())
+        .begin_long_running_rpc(body.clone(), options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -61,7 +61,7 @@ async fn long_running_rpc() {
     }
     assert_eq!(poll_count, 3);
 
-    let poller = client.long_running_rpc(body, options).unwrap();
+    let poller = client.begin_long_running_rpc(body, options).unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.data, Some("text data".to_string()));
 }
