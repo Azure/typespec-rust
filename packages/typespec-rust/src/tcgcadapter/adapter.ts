@@ -1877,7 +1877,7 @@ export class Adapter {
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
     // NOTE: if the method has the @clientName decorator applied then skip fixing up the name
-    if (method.kind === 'paging' && !srcMethodName.match(/^list/i) && !hasClientNameDecorator(method.decorators)) {
+    if (!hasClientNameDecorator(method.decorators) && method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = utils.deconstruct(srcMethodName);
       if (chunks[0] === 'get') {
         chunks[0] = 'list';
