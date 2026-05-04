@@ -1498,6 +1498,15 @@ export class Adapter {
     rustClient.parent = parent;
     rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'Pipeline', 'azure_core::http')));
 
+    // check if omitEndpointMethod was set to true
+    const omitEndpointMethod = client.decorators.find(
+      d => d.name === 'Azure.ClientGenerator.Core.@clientOption'
+        && d.arguments['name'] === 'omitEndpointMethod'
+    )?.arguments['value'] as boolean | undefined;
+    if (omitEndpointMethod === true) {
+      rustClient.omitEndpointMethod = omitEndpointMethod;
+    }
+
     // InitializedByFlags.CustomizeCode means the client is instantiable
     // but the constructor is to be omitted (i.e. hand-written).
     if (client.clientInitialization.initializedBy === tcgc.InitializedByFlags.CustomizeCode || client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
@@ -1867,7 +1876,8 @@ export class Adapter {
    */
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
-    if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
+    // NOTE: if the method has the @clientName decorator applied then skip fixing up the name
+    if (!hasClientNameDecorator(method.decorators) && method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = utils.deconstruct(srcMethodName);
       if (chunks[0] === 'get') {
         chunks[0] = 'list';

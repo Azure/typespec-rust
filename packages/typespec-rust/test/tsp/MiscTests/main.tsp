@@ -233,3 +233,23 @@ op requiredPathParamNoEmptyCheck(
   @clientOption("minLength", 0, "rust")
   canBeEmpty: string
 ): void;
+
+/**
+ * ensures that clientName preserves the name instead of adding the "list" prefix
+ */
+@get
+@list
+@route("/find-the-widgets")
+@clientName("findTheWidgets", "rust")
+op findTheWidgets(): FoundWidgets;
+
+model FoundWidgets {
+  @pageItems
+  pets: Widget[];
+
+  @nextLink next?: url;
+}
+
+model Widget {
+  name: string;
+}

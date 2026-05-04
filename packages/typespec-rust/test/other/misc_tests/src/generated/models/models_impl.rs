@@ -5,9 +5,23 @@
 
 use super::{
     ChatMessageContentItem, ChatMessageTextContentItem, ChatRequestMessage, ChatRequestUserMessage,
-    LiteralWithInvalidChar, SpreadWithEnum,
+    FoundWidgets, LiteralWithInvalidChar, SpreadWithEnum, Widget,
 };
-use azure_core::{http::RequestContent, json::to_json, Result};
+use async_trait::async_trait;
+use azure_core::{
+    http::{pager::Page, RequestContent},
+    json::to_json,
+    Result,
+};
+
+#[async_trait]
+impl Page for FoundWidgets {
+    type Item = Widget;
+    type IntoIter = <Vec<Widget> as IntoIterator>::IntoIter;
+    async fn into_items(self) -> Result<Self::IntoIter> {
+        Ok(self.pets.into_iter())
+    }
+}
 
 impl From<ChatMessageTextContentItem> for ChatMessageContentItem {
     fn from(value: ChatMessageTextContentItem) -> Self {
