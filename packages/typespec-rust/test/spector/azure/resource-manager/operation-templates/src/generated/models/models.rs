@@ -244,7 +244,7 @@ pub struct OperationListResult {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
+pub struct OperationTemplatesLroClientBeginCreateOrReplaceOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -298,7 +298,7 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct OperationTemplatesLroClientDeleteOperationStatus {
+pub struct OperationTemplatesLroClientBeginDeleteOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -352,7 +352,7 @@ pub struct OperationTemplatesLroClientDeleteOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct OperationTemplatesLroClientExportArrayOperationStatus {
+pub struct OperationTemplatesLroClientBeginExportArrayOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read
@@ -406,7 +406,7 @@ pub struct OperationTemplatesLroClientExportArrayOperationStatus {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct OperationTemplatesLroClientExportOperationStatus {
+pub struct OperationTemplatesLroClientBeginExportOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read

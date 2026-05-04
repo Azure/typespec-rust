@@ -8,17 +8,19 @@ use azure_core::{
     http::{pager::PagerOptions, poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`ResourcesExtensionsResourcesClient::create_or_update()`](crate::generated::clients::ResourcesExtensionsResourcesClient::create_or_update())
+/// Options to be passed to [`ResourcesExtensionsResourcesClient::begin_create_or_update()`](crate::generated::clients::ResourcesExtensionsResourcesClient::begin_create_or_update())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'a> {
+pub struct ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'_> {
-    /// Transforms this [`ResourcesExtensionsResourcesClientCreateOrUpdateOptions`] into a new `ResourcesExtensionsResourcesClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'static> {
-        ResourcesExtensionsResourcesClientCreateOrUpdateOptions {
+impl ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'_> {
+    /// Transforms this [`ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions`] into a new `ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(
+        self,
+    ) -> ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'static> {
+        ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -114,17 +116,17 @@ pub struct ResourcesLocationResourcesClientUpdateOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ResourcesNestedClient::create_or_replace()`](crate::generated::clients::ResourcesNestedClient::create_or_replace())
+/// Options to be passed to [`ResourcesNestedClient::begin_create_or_replace()`](crate::generated::clients::ResourcesNestedClient::begin_create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesNestedClientCreateOrReplaceOptions<'a> {
+pub struct ResourcesNestedClientBeginCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl ResourcesNestedClientCreateOrReplaceOptions<'_> {
-    /// Transforms this [`ResourcesNestedClientCreateOrReplaceOptions`] into a new `ResourcesNestedClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesNestedClientCreateOrReplaceOptions<'static> {
-        ResourcesNestedClientCreateOrReplaceOptions {
+impl ResourcesNestedClientBeginCreateOrReplaceOptions<'_> {
+    /// Transforms this [`ResourcesNestedClientBeginCreateOrReplaceOptions`] into a new `ResourcesNestedClientBeginCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourcesNestedClientBeginCreateOrReplaceOptions<'static> {
+        ResourcesNestedClientBeginCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -133,17 +135,36 @@ impl ResourcesNestedClientCreateOrReplaceOptions<'_> {
     }
 }
 
-/// Options to be passed to [`ResourcesNestedClient::delete()`](crate::generated::clients::ResourcesNestedClient::delete())
+/// Options to be passed to [`ResourcesNestedClient::begin_delete()`](crate::generated::clients::ResourcesNestedClient::begin_delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesNestedClientDeleteOptions<'a> {
+pub struct ResourcesNestedClientBeginDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl ResourcesNestedClientDeleteOptions<'_> {
-    /// Transforms this [`ResourcesNestedClientDeleteOptions`] into a new `ResourcesNestedClientDeleteOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesNestedClientDeleteOptions<'static> {
-        ResourcesNestedClientDeleteOptions {
+impl ResourcesNestedClientBeginDeleteOptions<'_> {
+    /// Transforms this [`ResourcesNestedClientBeginDeleteOptions`] into a new `ResourcesNestedClientBeginDeleteOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourcesNestedClientBeginDeleteOptions<'static> {
+        ResourcesNestedClientBeginDeleteOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
+/// Options to be passed to [`ResourcesNestedClient::begin_update()`](crate::generated::clients::ResourcesNestedClient::begin_update())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ResourcesNestedClientBeginUpdateOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl ResourcesNestedClientBeginUpdateOptions<'_> {
+    /// Transforms this [`ResourcesNestedClientBeginUpdateOptions`] into a new `ResourcesNestedClientBeginUpdateOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourcesNestedClientBeginUpdateOptions<'static> {
+        ResourcesNestedClientBeginUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -178,36 +199,17 @@ impl ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_> {
     }
 }
 
-/// Options to be passed to [`ResourcesNestedClient::update()`](crate::generated::clients::ResourcesNestedClient::update())
+/// Options to be passed to [`ResourcesSingletonClient::begin_create_or_update()`](crate::generated::clients::ResourcesSingletonClient::begin_create_or_update())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesNestedClientUpdateOptions<'a> {
+pub struct ResourcesSingletonClientBeginCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl ResourcesNestedClientUpdateOptions<'_> {
-    /// Transforms this [`ResourcesNestedClientUpdateOptions`] into a new `ResourcesNestedClientUpdateOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesNestedClientUpdateOptions<'static> {
-        ResourcesNestedClientUpdateOptions {
-            method_options: PollerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
-}
-
-/// Options to be passed to [`ResourcesSingletonClient::create_or_update()`](crate::generated::clients::ResourcesSingletonClient::create_or_update())
-#[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesSingletonClientCreateOrUpdateOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl ResourcesSingletonClientCreateOrUpdateOptions<'_> {
-    /// Transforms this [`ResourcesSingletonClientCreateOrUpdateOptions`] into a new `ResourcesSingletonClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesSingletonClientCreateOrUpdateOptions<'static> {
-        ResourcesSingletonClientCreateOrUpdateOptions {
+impl ResourcesSingletonClientBeginCreateOrUpdateOptions<'_> {
+    /// Transforms this [`ResourcesSingletonClientBeginCreateOrUpdateOptions`] into a new `ResourcesSingletonClientBeginCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourcesSingletonClientBeginCreateOrUpdateOptions<'static> {
+        ResourcesSingletonClientBeginCreateOrUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -256,17 +258,17 @@ pub struct ResourcesTopLevelClientActionSyncOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ResourcesTopLevelClient::create_or_replace()`](crate::generated::clients::ResourcesTopLevelClient::create_or_replace())
+/// Options to be passed to [`ResourcesTopLevelClient::begin_create_or_replace()`](crate::generated::clients::ResourcesTopLevelClient::begin_create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesTopLevelClientCreateOrReplaceOptions<'a> {
+pub struct ResourcesTopLevelClientBeginCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl ResourcesTopLevelClientCreateOrReplaceOptions<'_> {
-    /// Transforms this [`ResourcesTopLevelClientCreateOrReplaceOptions`] into a new `ResourcesTopLevelClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesTopLevelClientCreateOrReplaceOptions<'static> {
-        ResourcesTopLevelClientCreateOrReplaceOptions {
+impl ResourcesTopLevelClientBeginCreateOrReplaceOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientBeginCreateOrReplaceOptions`] into a new `ResourcesTopLevelClientBeginCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourcesTopLevelClientBeginCreateOrReplaceOptions<'static> {
+        ResourcesTopLevelClientBeginCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -275,17 +277,36 @@ impl ResourcesTopLevelClientCreateOrReplaceOptions<'_> {
     }
 }
 
-/// Options to be passed to [`ResourcesTopLevelClient::delete()`](crate::generated::clients::ResourcesTopLevelClient::delete())
+/// Options to be passed to [`ResourcesTopLevelClient::begin_delete()`](crate::generated::clients::ResourcesTopLevelClient::begin_delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesTopLevelClientDeleteOptions<'a> {
+pub struct ResourcesTopLevelClientBeginDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl ResourcesTopLevelClientDeleteOptions<'_> {
-    /// Transforms this [`ResourcesTopLevelClientDeleteOptions`] into a new `ResourcesTopLevelClientDeleteOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesTopLevelClientDeleteOptions<'static> {
-        ResourcesTopLevelClientDeleteOptions {
+impl ResourcesTopLevelClientBeginDeleteOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientBeginDeleteOptions`] into a new `ResourcesTopLevelClientBeginDeleteOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourcesTopLevelClientBeginDeleteOptions<'static> {
+        ResourcesTopLevelClientBeginDeleteOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
+/// Options to be passed to [`ResourcesTopLevelClient::begin_update()`](crate::generated::clients::ResourcesTopLevelClient::begin_update())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ResourcesTopLevelClientBeginUpdateOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl ResourcesTopLevelClientBeginUpdateOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientBeginUpdateOptions`] into a new `ResourcesTopLevelClientBeginUpdateOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourcesTopLevelClientBeginUpdateOptions<'static> {
+        ResourcesTopLevelClientBeginUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -332,25 +353,6 @@ impl ResourcesTopLevelClientListBySubscriptionOptions<'_> {
     pub fn into_owned(self) -> ResourcesTopLevelClientListBySubscriptionOptions<'static> {
         ResourcesTopLevelClientListBySubscriptionOptions {
             method_options: PagerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
-}
-
-/// Options to be passed to [`ResourcesTopLevelClient::update()`](crate::generated::clients::ResourcesTopLevelClient::update())
-#[derive(Clone, Default, SafeDebug)]
-pub struct ResourcesTopLevelClientUpdateOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl ResourcesTopLevelClientUpdateOptions<'_> {
-    /// Transforms this [`ResourcesTopLevelClientUpdateOptions`] into a new `ResourcesTopLevelClientUpdateOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> ResourcesTopLevelClientUpdateOptions<'static> {
-        ResourcesTopLevelClientUpdateOptions {
-            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
             },

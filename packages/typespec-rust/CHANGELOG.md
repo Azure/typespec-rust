@@ -6,6 +6,7 @@
 
 * The constructor signature for ARM clients has changed (it no longer requires the `endpoint` parameter).
 * Pageable operations that specify a `@clientName` decorator will skip altering the name to have the `list` prefix.
+* LRO methods now have the prefix `begin_`.
 
 ### Features Added
 

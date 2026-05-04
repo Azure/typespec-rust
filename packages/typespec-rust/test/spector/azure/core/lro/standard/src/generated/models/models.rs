@@ -23,7 +23,7 @@ pub struct ExportedUser {
 /// Provides status details for long running operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct StandardClientCreateOrReplaceOperationStatus {
+pub struct StandardClientBeginCreateOrReplaceOperationStatus {
     /// Error object that describes the error when status is "Failed".
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,
@@ -40,7 +40,7 @@ pub struct StandardClientCreateOrReplaceOperationStatus {
 /// Provides status details for long running operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct StandardClientDeleteOperationStatus {
+pub struct StandardClientBeginDeleteOperationStatus {
     /// Error object that describes the error when status is "Failed".
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,
@@ -57,7 +57,7 @@ pub struct StandardClientDeleteOperationStatus {
 /// Provides status details for long running operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct StandardClientExportOperationStatus {
+pub struct StandardClientBeginExportOperationStatus {
     /// Error object that describes the error when status is "Failed".
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,

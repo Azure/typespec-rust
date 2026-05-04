@@ -15,7 +15,7 @@ pub(crate) struct CustomLinkRequest {
 /// Provides status details for long running operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct NIClientCustomLinkOperationStatus {
+pub struct NIClientBeginCustomLinkOperationStatus {
     /// Error object that describes the error when status is "Failed".
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorDetail>,
@@ -35,7 +35,7 @@ pub struct NIClientCustomLinkOperationStatus {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct NIClientIncorrectCustomOpRefOperationStatus {
+pub struct NIClientBeginIncorrectCustomOpRefOperationStatus {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
 
@@ -45,7 +45,7 @@ pub struct NIClientIncorrectCustomOpRefOperationStatus {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct NIClientPartialBodyOperationStatus {
+pub struct NIClientBeginPartialBodyOperationStatus {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
 

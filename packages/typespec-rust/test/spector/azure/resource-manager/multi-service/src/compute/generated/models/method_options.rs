@@ -8,17 +8,17 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`CombinedVirtualMachinesClient::create_or_update()`](crate::compute::generated::clients::CombinedVirtualMachinesClient::create_or_update())
+/// Options to be passed to [`CombinedVirtualMachinesClient::begin_create_or_update()`](crate::compute::generated::clients::CombinedVirtualMachinesClient::begin_create_or_update())
 #[derive(Clone, Default, SafeDebug)]
-pub struct CombinedVirtualMachinesClientCreateOrUpdateOptions<'a> {
+pub struct CombinedVirtualMachinesClientBeginCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl CombinedVirtualMachinesClientCreateOrUpdateOptions<'_> {
-    /// Transforms this [`CombinedVirtualMachinesClientCreateOrUpdateOptions`] into a new `CombinedVirtualMachinesClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> CombinedVirtualMachinesClientCreateOrUpdateOptions<'static> {
-        CombinedVirtualMachinesClientCreateOrUpdateOptions {
+impl CombinedVirtualMachinesClientBeginCreateOrUpdateOptions<'_> {
+    /// Transforms this [`CombinedVirtualMachinesClientBeginCreateOrUpdateOptions`] into a new `CombinedVirtualMachinesClientBeginCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> CombinedVirtualMachinesClientBeginCreateOrUpdateOptions<'static> {
+        CombinedVirtualMachinesClientBeginCreateOrUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

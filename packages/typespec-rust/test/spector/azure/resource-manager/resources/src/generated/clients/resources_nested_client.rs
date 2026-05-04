@@ -5,11 +5,11 @@
 
 use crate::generated::models::{
     NestedProxyResource, NestedProxyResourceListResult,
-    ResourcesNestedClientCreateOrReplaceOperationStatus,
-    ResourcesNestedClientCreateOrReplaceOptions, ResourcesNestedClientDeleteOperationStatus,
-    ResourcesNestedClientDeleteOptions, ResourcesNestedClientGetOptions,
-    ResourcesNestedClientListByTopLevelTrackedResourceOptions,
-    ResourcesNestedClientUpdateOperationStatus, ResourcesNestedClientUpdateOptions,
+    ResourcesNestedClientBeginCreateOrReplaceOperationStatus,
+    ResourcesNestedClientBeginCreateOrReplaceOptions,
+    ResourcesNestedClientBeginDeleteOperationStatus, ResourcesNestedClientBeginDeleteOptions,
+    ResourcesNestedClientBeginUpdateOperationStatus, ResourcesNestedClientBeginUpdateOptions,
+    ResourcesNestedClientGetOptions, ResourcesNestedClientListByTopLevelTrackedResourceOptions,
 };
 use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
@@ -52,14 +52,14 @@ impl ResourcesNestedClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesNestedClientCreateOrReplaceOperationStatusHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesNestedClientBeginCreateOrReplaceOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ResourcesNestedClientCreateOrReplaceOperationStatus, ResourcesNestedClientCreateOrReplaceOperationStatusHeaders};
+    /// use spector_armresources::models::{ResourcesNestedClientBeginCreateOrReplaceOperationStatus, ResourcesNestedClientBeginCreateOrReplaceOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<ResourcesNestedClientCreateOrReplaceOperationStatus> = unimplemented!();
+    ///     let response: Response<ResourcesNestedClientBeginCreateOrReplaceOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
@@ -72,19 +72,19 @@ impl ResourcesNestedClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
-    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders::retry_after) - retry-after
+    /// * [`azure_async_operation`()](crate::generated::models::ResourcesNestedClientBeginCreateOrReplaceOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientBeginCreateOrReplaceOperationStatusHeaders::retry_after) - retry-after
     ///
-    /// [`ResourcesNestedClientCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientCreateOrReplaceOperationStatusHeaders
+    /// [`ResourcesNestedClientBeginCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientBeginCreateOrReplaceOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.createOrReplace")]
-    pub fn create_or_replace(
+    pub fn begin_create_or_replace(
         &self,
         resource_group_name: &str,
         top_level_tracked_resource_name: &str,
         nexted_proxy_resource_name: &str,
         resource: RequestContent<NestedProxyResource>,
-        options: Option<ResourcesNestedClientCreateOrReplaceOptions<'_>>,
-    ) -> Result<Poller<ResourcesNestedClientCreateOrReplaceOperationStatus>> {
+        options: Option<ResourcesNestedClientBeginCreateOrReplaceOptions<'_>>,
+    ) -> Result<Poller<ResourcesNestedClientBeginCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -195,7 +195,7 @@ impl ResourcesNestedClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: ResourcesNestedClientCreateOrReplaceOperationStatus =
+                    let res: ResourcesNestedClientBeginCreateOrReplaceOperationStatus =
                         json::from_json(&body)?;
                     let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {
@@ -247,14 +247,14 @@ impl ResourcesNestedClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesNestedClientDeleteOperationStatusHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesNestedClientBeginDeleteOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ResourcesNestedClientDeleteOperationStatus, ResourcesNestedClientDeleteOperationStatusHeaders};
+    /// use spector_armresources::models::{ResourcesNestedClientBeginDeleteOperationStatus, ResourcesNestedClientBeginDeleteOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<ResourcesNestedClientDeleteOperationStatus> = unimplemented!();
+    ///     let response: Response<ResourcesNestedClientBeginDeleteOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("location: {:?}", location);
@@ -267,18 +267,18 @@ impl ResourcesNestedClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders::location) - location
-    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders::retry_after) - retry-after
+    /// * [`location`()](crate::generated::models::ResourcesNestedClientBeginDeleteOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientBeginDeleteOperationStatusHeaders::retry_after) - retry-after
     ///
-    /// [`ResourcesNestedClientDeleteOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientDeleteOperationStatusHeaders
+    /// [`ResourcesNestedClientBeginDeleteOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientBeginDeleteOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.delete")]
-    pub fn delete(
+    pub fn begin_delete(
         &self,
         resource_group_name: &str,
         top_level_tracked_resource_name: &str,
         nexted_proxy_resource_name: &str,
-        options: Option<ResourcesNestedClientDeleteOptions<'_>>,
-    ) -> Result<Poller<ResourcesNestedClientDeleteOperationStatus>> {
+        options: Option<ResourcesNestedClientBeginDeleteOptions<'_>>,
+    ) -> Result<Poller<ResourcesNestedClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -379,13 +379,210 @@ impl ResourcesNestedClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: ResourcesNestedClientDeleteOperationStatus = json::from_json(&body)?;
+                    let res: ResourcesNestedClientBeginDeleteOperationStatus =
+                        json::from_json(&body)?;
                     let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
                             body.clone(),
+                        ));
+                    }
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(match res.status() {
+                        PollerStatus::InProgress => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
+                        PollerStatus::Succeeded => PollerResult::Succeeded {
+                            response: rsp,
+                            target: Box::new(move || {
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
+                            }),
+                        },
+                        _ => PollerResult::Done { response: rsp },
+                    })
+                })
+            },
+            Some(options.method_options),
+        ))
+    }
+
+    /// Update a NestedProxyResource
+    ///
+    /// # Arguments
+    ///
+    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
+    /// * `top_level_tracked_resource_name` - arm resource name for path
+    /// * `nexted_proxy_resource_name` - Name of the nested resource.
+    /// * `properties` - The resource properties to be updated.
+    /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesNestedClientBeginUpdateOperationStatusHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{ResourcesNestedClientBeginUpdateOperationStatus, ResourcesNestedClientBeginUpdateOperationStatusHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ResourcesNestedClientBeginUpdateOperationStatus> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("retry-after: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::ResourcesNestedClientBeginUpdateOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientBeginUpdateOperationStatusHeaders::retry_after) - retry-after
+    ///
+    /// [`ResourcesNestedClientBeginUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientBeginUpdateOperationStatusHeaders
+    #[tracing::function("Azure.ResourceManager.Resources.Nested.update")]
+    pub fn begin_update(
+        &self,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        nexted_proxy_resource_name: &str,
+        properties: RequestContent<NestedProxyResource>,
+        options: Option<ResourcesNestedClientBeginUpdateOptions<'_>>,
+    ) -> Result<Poller<ResourcesNestedClientBeginUpdateOperationStatus>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
+        path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
+        path = path.replace("{resourceGroupName}", resource_group_name);
+        path = path.replace("{subscriptionId}", &self.subscription_id);
+        path = path.replace(
+            "{topLevelTrackedResourceName}",
+            top_level_tracked_resource_name,
+        );
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
+        let api_version = self.api_version.clone();
+        Ok(Poller::new(
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
+                        let mut request = Request::new(next_link.clone(), Method::Get);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
+                    }
+                    PollerState::Initial => {
+                        let mut request = Request::new(url.clone(), Method::Patch);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+                        request.set_body(properties.clone());
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
+                    }
+                };
+                let ctx = poller_options.context.clone();
+                let pipeline = pipeline.clone();
+                let original_url = url.clone();
+                Box::pin(async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, mut body) = rsp.deconstruct();
+                    let continuation = if let Some(operation_location) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let next_link = match &continuation {
+                        PollerContinuation::Links { next_link, .. } => next_link,
+                        _ => {
+                            unreachable!()
+                        }
+                    };
+                    let mut final_body = None;
+                    if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
+                        final_body = Some(body);
+                        body = azure_core::http::response::ResponseBody::from_bytes(
+                            "{\"status\":\"Succeeded\"}",
+                        );
+                    }
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &poller_options,
+                    );
+                    let res: ResourcesNestedClientBeginUpdateOperationStatus =
+                        json::from_json(&body)?;
+                    let mut final_rsp: Option<RawResponse> = None;
+                    if res.status() == PollerStatus::Succeeded {
+                        final_rsp = Some(RawResponse::from_bytes(
+                            status,
+                            headers.clone(),
+                            if let Some(final_body) = final_body {
+                                final_body
+                            } else {
+                                body.clone()
+                            },
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
@@ -566,201 +763,6 @@ impl ResourcesNestedClient {
                             _ => PagerResult::Done { response: rsp },
                         })
                     }
-                })
-            },
-            Some(options.method_options),
-        ))
-    }
-
-    /// Update a NestedProxyResource
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
-    /// * `top_level_tracked_resource_name` - arm resource name for path
-    /// * `nexted_proxy_resource_name` - Name of the nested resource.
-    /// * `properties` - The resource properties to be updated.
-    /// * `options` - Optional parameters for the request.
-    ///
-    /// ## Response Headers
-    ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesNestedClientUpdateOperationStatusHeaders`] trait, which provides
-    /// access to response headers. For example:
-    ///
-    /// ```no_run
-    /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ResourcesNestedClientUpdateOperationStatus, ResourcesNestedClientUpdateOperationStatusHeaders};
-    /// async fn example() -> Result<()> {
-    ///     let response: Response<ResourcesNestedClientUpdateOperationStatus> = unimplemented!();
-    ///     // Access response headers
-    ///     if let Some(location) = response.location()? {
-    ///         println!("location: {:?}", location);
-    ///     }
-    ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("retry-after: {:?}", retry_after);
-    ///     }
-    ///     Ok(())
-    /// }
-    /// ```
-    ///
-    /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders::location) - location
-    /// * [`retry_after`()](crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders::retry_after) - retry-after
-    ///
-    /// [`ResourcesNestedClientUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesNestedClientUpdateOperationStatusHeaders
-    #[tracing::function("Azure.ResourceManager.Resources.Nested.update")]
-    pub fn update(
-        &self,
-        resource_group_name: &str,
-        top_level_tracked_resource_name: &str,
-        nexted_proxy_resource_name: &str,
-        properties: RequestContent<NestedProxyResource>,
-        options: Option<ResourcesNestedClientUpdateOptions<'_>>,
-    ) -> Result<Poller<ResourcesNestedClientUpdateOperationStatus>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
-        path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
-        path = path.replace("{resourceGroupName}", resource_group_name);
-        path = path.replace("{subscriptionId}", &self.subscription_id);
-        path = path.replace(
-            "{topLevelTrackedResourceName}",
-            top_level_tracked_resource_name,
-        );
-        url.append_path(&path);
-        let mut query_builder = url.query_builder();
-        query_builder.set_pair("api-version", &self.api_version);
-        query_builder.build();
-        let api_version = self.api_version.clone();
-        Ok(Poller::new(
-            move |poller_state: PollerState, poller_options| {
-                let (mut request, continuation) = match poller_state {
-                    PollerState::More(continuation) => {
-                        let (mut next_link, final_link) = match continuation {
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            } => (next_link, final_link),
-                            _ => {
-                                unreachable!()
-                            }
-                        };
-                        let mut query_builder = next_link.query_builder();
-                        query_builder.set_pair("api-version", &api_version);
-                        query_builder.build();
-                        let mut request = Request::new(next_link.clone(), Method::Get);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            },
-                        )
-                    }
-                    PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Patch);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        request.set_body(properties.clone());
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link: url.clone(),
-                                final_link: None,
-                            },
-                        )
-                    }
-                };
-                let ctx = poller_options.context.clone();
-                let pipeline = pipeline.clone();
-                let original_url = url.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &ctx,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200, 202],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, mut body) = rsp.deconstruct();
-                    let continuation = if let Some(operation_location) =
-                        headers.get_optional_string(&HeaderName::from_static("location"))
-                    {
-                        let next_link = Url::parse(&operation_location)?;
-                        match continuation {
-                            PollerContinuation::Links { final_link, .. } => {
-                                PollerContinuation::Links {
-                                    next_link,
-                                    final_link,
-                                }
-                            }
-                            _ => {
-                                unreachable!()
-                            }
-                        }
-                    } else {
-                        continuation
-                    };
-                    let next_link = match &continuation {
-                        PollerContinuation::Links { next_link, .. } => next_link,
-                        _ => {
-                            unreachable!()
-                        }
-                    };
-                    let mut final_body = None;
-                    if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
-                        final_body = Some(body);
-                        body = azure_core::http::response::ResponseBody::from_bytes(
-                            "{\"status\":\"Succeeded\"}",
-                        );
-                    }
-                    let retry_after = get_retry_after(
-                        &headers,
-                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &poller_options,
-                    );
-                    let res: ResourcesNestedClientUpdateOperationStatus = json::from_json(&body)?;
-                    let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
-                        final_rsp = Some(RawResponse::from_bytes(
-                            status,
-                            headers.clone(),
-                            if let Some(final_body) = final_body {
-                                final_body
-                            } else {
-                                body.clone()
-                            },
-                        ));
-                    }
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
-                        PollerStatus::Succeeded => PollerResult::Succeeded {
-                            response: rsp,
-                            target: Box::new(move || {
-                                Box::pin(async move {
-                                    Ok(final_rsp
-                                        .ok_or_else(|| {
-                                            Error::new(ErrorKind::Other, "missing final response")
-                                        })?
-                                        .into())
-                                })
-                            }),
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
                 })
             },
             Some(options.method_options),

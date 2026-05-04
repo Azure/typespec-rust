@@ -11,7 +11,7 @@ use azure_core::{
 };
 use futures::StreamExt;
 
-use spector_armlargeheader::models::LargeHeaderLargeHeadersClientTwo6KOptions;
+use spector_armlargeheader::models::LargeHeaderLargeHeadersClientBeginTwo6KOptions;
 
 use crate::common::create_client;
 
@@ -21,7 +21,7 @@ mod common;
 async fn two6_k() {
     let client = create_client().get_large_header_large_headers_client();
 
-    let options = Some(LargeHeaderLargeHeadersClientTwo6KOptions {
+    let options = Some(LargeHeaderLargeHeadersClientBeginTwo6KOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -29,7 +29,7 @@ async fn two6_k() {
     });
 
     let mut poller = client
-        .two6_k("test-rg", "header1", options.clone())
+        .begin_two6_k("test-rg", "header1", options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -59,7 +59,7 @@ async fn two6_k() {
     }
     assert_eq!(poll_count, 3);
 
-    let poller = client.two6_k("test-rg", "header1", options).unwrap();
+    let poller = client.begin_two6_k("test-rg", "header1", options).unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.succeeded, Some(true));
 }

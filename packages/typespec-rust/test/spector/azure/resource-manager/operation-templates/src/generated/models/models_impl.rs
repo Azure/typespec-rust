@@ -6,10 +6,10 @@
 use super::{
     ActionRequest, ChangeAllowanceRequest, CheckNameAvailabilityRequest, ExportRequest,
     ExportResult, Operation, OperationListResult,
-    OperationTemplatesLroClientCreateOrReplaceOperationStatus,
-    OperationTemplatesLroClientDeleteOperationStatus,
-    OperationTemplatesLroClientExportArrayOperationStatus,
-    OperationTemplatesLroClientExportOperationStatus, Order, Widget,
+    OperationTemplatesLroClientBeginCreateOrReplaceOperationStatus,
+    OperationTemplatesLroClientBeginDeleteOperationStatus,
+    OperationTemplatesLroClientBeginExportArrayOperationStatus,
+    OperationTemplatesLroClientBeginExportOperationStatus, Order, Widget,
 };
 use async_trait::async_trait;
 use azure_core::{
@@ -31,7 +31,7 @@ impl Page for OperationListResult {
     }
 }
 
-impl StatusMonitor for OperationTemplatesLroClientCreateOrReplaceOperationStatus {
+impl StatusMonitor for OperationTemplatesLroClientBeginCreateOrReplaceOperationStatus {
     type Output = Order;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -42,7 +42,7 @@ impl StatusMonitor for OperationTemplatesLroClientCreateOrReplaceOperationStatus
     }
 }
 
-impl StatusMonitor for OperationTemplatesLroClientDeleteOperationStatus {
+impl StatusMonitor for OperationTemplatesLroClientBeginDeleteOperationStatus {
     type Output = ();
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -53,7 +53,7 @@ impl StatusMonitor for OperationTemplatesLroClientDeleteOperationStatus {
     }
 }
 
-impl StatusMonitor for OperationTemplatesLroClientExportArrayOperationStatus {
+impl StatusMonitor for OperationTemplatesLroClientBeginExportArrayOperationStatus {
     type Output = Vec<ExportResult>;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -64,7 +64,7 @@ impl StatusMonitor for OperationTemplatesLroClientExportArrayOperationStatus {
     }
 }
 
-impl StatusMonitor for OperationTemplatesLroClientExportOperationStatus {
+impl StatusMonitor for OperationTemplatesLroClientBeginExportOperationStatus {
     type Output = ExportResult;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {

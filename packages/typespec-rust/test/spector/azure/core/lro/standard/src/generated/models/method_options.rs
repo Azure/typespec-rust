@@ -5,17 +5,17 @@
 
 use azure_core::{fmt::SafeDebug, http::poller::PollerOptions};
 
-/// Options to be passed to [`StandardClient::create_or_replace()`](crate::generated::clients::StandardClient::create_or_replace())
+/// Options to be passed to [`StandardClient::begin_create_or_replace()`](crate::generated::clients::StandardClient::begin_create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientCreateOrReplaceOptions<'a> {
+pub struct StandardClientBeginCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl StandardClientCreateOrReplaceOptions<'_> {
-    /// Transforms this [`StandardClientCreateOrReplaceOptions`] into a new `StandardClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> StandardClientCreateOrReplaceOptions<'static> {
-        StandardClientCreateOrReplaceOptions {
+impl StandardClientBeginCreateOrReplaceOptions<'_> {
+    /// Transforms this [`StandardClientBeginCreateOrReplaceOptions`] into a new `StandardClientBeginCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> StandardClientBeginCreateOrReplaceOptions<'static> {
+        StandardClientBeginCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -24,17 +24,17 @@ impl StandardClientCreateOrReplaceOptions<'_> {
     }
 }
 
-/// Options to be passed to [`StandardClient::delete()`](crate::generated::clients::StandardClient::delete())
+/// Options to be passed to [`StandardClient::begin_delete()`](crate::generated::clients::StandardClient::begin_delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientDeleteOptions<'a> {
+pub struct StandardClientBeginDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl StandardClientDeleteOptions<'_> {
-    /// Transforms this [`StandardClientDeleteOptions`] into a new `StandardClientDeleteOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> StandardClientDeleteOptions<'static> {
-        StandardClientDeleteOptions {
+impl StandardClientBeginDeleteOptions<'_> {
+    /// Transforms this [`StandardClientBeginDeleteOptions`] into a new `StandardClientBeginDeleteOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> StandardClientBeginDeleteOptions<'static> {
+        StandardClientBeginDeleteOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -43,17 +43,17 @@ impl StandardClientDeleteOptions<'_> {
     }
 }
 
-/// Options to be passed to [`StandardClient::export()`](crate::generated::clients::StandardClient::export())
+/// Options to be passed to [`StandardClient::begin_export()`](crate::generated::clients::StandardClient::begin_export())
 #[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientExportOptions<'a> {
+pub struct StandardClientBeginExportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl StandardClientExportOptions<'_> {
-    /// Transforms this [`StandardClientExportOptions`] into a new `StandardClientExportOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> StandardClientExportOptions<'static> {
-        StandardClientExportOptions {
+impl StandardClientBeginExportOptions<'_> {
+    /// Transforms this [`StandardClientBeginExportOptions`] into a new `StandardClientBeginExportOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> StandardClientBeginExportOptions<'static> {
+        StandardClientBeginExportOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

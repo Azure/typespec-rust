@@ -5,12 +5,12 @@
 
 use crate::generated::models::{
     NotificationDetails, ResourcesTopLevelClientActionSyncOptions,
-    ResourcesTopLevelClientCreateOrReplaceOperationStatus,
-    ResourcesTopLevelClientCreateOrReplaceOptions, ResourcesTopLevelClientDeleteOperationStatus,
-    ResourcesTopLevelClientDeleteOptions, ResourcesTopLevelClientGetOptions,
-    ResourcesTopLevelClientListByResourceGroupOptions,
-    ResourcesTopLevelClientListBySubscriptionOptions, ResourcesTopLevelClientUpdateOperationStatus,
-    ResourcesTopLevelClientUpdateOptions, TopLevelTrackedResource,
+    ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus,
+    ResourcesTopLevelClientBeginCreateOrReplaceOptions,
+    ResourcesTopLevelClientBeginDeleteOperationStatus, ResourcesTopLevelClientBeginDeleteOptions,
+    ResourcesTopLevelClientBeginUpdateOperationStatus, ResourcesTopLevelClientBeginUpdateOptions,
+    ResourcesTopLevelClientGetOptions, ResourcesTopLevelClientListByResourceGroupOptions,
+    ResourcesTopLevelClientListBySubscriptionOptions, TopLevelTrackedResource,
     TopLevelTrackedResourceListResult,
 };
 use azure_core::{
@@ -114,14 +114,14 @@ impl ResourcesTopLevelClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesTopLevelClientBeginCreateOrReplaceOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ResourcesTopLevelClientCreateOrReplaceOperationStatus, ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders};
+    /// use spector_armresources::models::{ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus, ResourcesTopLevelClientBeginCreateOrReplaceOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<ResourcesTopLevelClientCreateOrReplaceOperationStatus> = unimplemented!();
+    ///     let response: Response<ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("azure-asyncoperation: {:?}", azure_async_operation);
@@ -134,18 +134,18 @@ impl ResourcesTopLevelClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
-    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders::retry_after) - retry-after
+    /// * [`azure_async_operation`()](crate::generated::models::ResourcesTopLevelClientBeginCreateOrReplaceOperationStatusHeaders::azure_async_operation) - azure-asyncoperation
+    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientBeginCreateOrReplaceOperationStatusHeaders::retry_after) - retry-after
     ///
-    /// [`ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientCreateOrReplaceOperationStatusHeaders
+    /// [`ResourcesTopLevelClientBeginCreateOrReplaceOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientBeginCreateOrReplaceOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.createOrReplace")]
-    pub fn create_or_replace(
+    pub fn begin_create_or_replace(
         &self,
         resource_group_name: &str,
         top_level_tracked_resource_name: &str,
         resource: RequestContent<TopLevelTrackedResource>,
-        options: Option<ResourcesTopLevelClientCreateOrReplaceOptions<'_>>,
-    ) -> Result<Poller<ResourcesTopLevelClientCreateOrReplaceOperationStatus>> {
+        options: Option<ResourcesTopLevelClientBeginCreateOrReplaceOptions<'_>>,
+    ) -> Result<Poller<ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -255,7 +255,7 @@ impl ResourcesTopLevelClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: ResourcesTopLevelClientCreateOrReplaceOperationStatus =
+                    let res: ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus =
                         json::from_json(&body)?;
                     let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {
@@ -306,14 +306,14 @@ impl ResourcesTopLevelClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesTopLevelClientDeleteOperationStatusHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesTopLevelClientBeginDeleteOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ResourcesTopLevelClientDeleteOperationStatus, ResourcesTopLevelClientDeleteOperationStatusHeaders};
+    /// use spector_armresources::models::{ResourcesTopLevelClientBeginDeleteOperationStatus, ResourcesTopLevelClientBeginDeleteOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<ResourcesTopLevelClientDeleteOperationStatus> = unimplemented!();
+    ///     let response: Response<ResourcesTopLevelClientBeginDeleteOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("location: {:?}", location);
@@ -326,17 +326,17 @@ impl ResourcesTopLevelClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders::location) - location
-    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders::retry_after) - retry-after
+    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientBeginDeleteOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientBeginDeleteOperationStatusHeaders::retry_after) - retry-after
     ///
-    /// [`ResourcesTopLevelClientDeleteOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientDeleteOperationStatusHeaders
+    /// [`ResourcesTopLevelClientBeginDeleteOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientBeginDeleteOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.delete")]
-    pub fn delete(
+    pub fn begin_delete(
         &self,
         resource_group_name: &str,
         top_level_tracked_resource_name: &str,
-        options: Option<ResourcesTopLevelClientDeleteOptions<'_>>,
-    ) -> Result<Poller<ResourcesTopLevelClientDeleteOperationStatus>> {
+        options: Option<ResourcesTopLevelClientBeginDeleteOptions<'_>>,
+    ) -> Result<Poller<ResourcesTopLevelClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -436,13 +436,207 @@ impl ResourcesTopLevelClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: ResourcesTopLevelClientDeleteOperationStatus = json::from_json(&body)?;
+                    let res: ResourcesTopLevelClientBeginDeleteOperationStatus =
+                        json::from_json(&body)?;
                     let mut final_rsp: Option<RawResponse> = None;
                     if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
                             body.clone(),
+                        ));
+                    }
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(match res.status() {
+                        PollerStatus::InProgress => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
+                        PollerStatus::Succeeded => PollerResult::Succeeded {
+                            response: rsp,
+                            target: Box::new(move || {
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
+                            }),
+                        },
+                        _ => PollerResult::Done { response: rsp },
+                    })
+                })
+            },
+            Some(options.method_options),
+        ))
+    }
+
+    /// Update a TopLevelTrackedResource
+    ///
+    /// # Arguments
+    ///
+    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
+    /// * `top_level_tracked_resource_name` - arm resource name for path
+    /// * `properties` - The resource properties to be updated.
+    /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesTopLevelClientBeginUpdateOperationStatusHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{ResourcesTopLevelClientBeginUpdateOperationStatus, ResourcesTopLevelClientBeginUpdateOperationStatusHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ResourcesTopLevelClientBeginUpdateOperationStatus> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("retry-after: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientBeginUpdateOperationStatusHeaders::location) - location
+    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientBeginUpdateOperationStatusHeaders::retry_after) - retry-after
+    ///
+    /// [`ResourcesTopLevelClientBeginUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientBeginUpdateOperationStatusHeaders
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]
+    pub fn begin_update(
+        &self,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        properties: RequestContent<TopLevelTrackedResource>,
+        options: Option<ResourcesTopLevelClientBeginUpdateOptions<'_>>,
+    ) -> Result<Poller<ResourcesTopLevelClientBeginUpdateOperationStatus>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
+        path = path.replace("{resourceGroupName}", resource_group_name);
+        path = path.replace("{subscriptionId}", &self.subscription_id);
+        path = path.replace(
+            "{topLevelTrackedResourceName}",
+            top_level_tracked_resource_name,
+        );
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
+        let api_version = self.api_version.clone();
+        Ok(Poller::new(
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
+                        let mut request = Request::new(next_link.clone(), Method::Get);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
+                    }
+                    PollerState::Initial => {
+                        let mut request = Request::new(url.clone(), Method::Patch);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+                        request.set_body(properties.clone());
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
+                    }
+                };
+                let ctx = poller_options.context.clone();
+                let pipeline = pipeline.clone();
+                let original_url = url.clone();
+                Box::pin(async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, mut body) = rsp.deconstruct();
+                    let continuation = if let Some(operation_location) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let next_link = match &continuation {
+                        PollerContinuation::Links { next_link, .. } => next_link,
+                        _ => {
+                            unreachable!()
+                        }
+                    };
+                    let mut final_body = None;
+                    if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
+                        final_body = Some(body);
+                        body = azure_core::http::response::ResponseBody::from_bytes(
+                            "{\"status\":\"Succeeded\"}",
+                        );
+                    }
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &poller_options,
+                    );
+                    let res: ResourcesTopLevelClientBeginUpdateOperationStatus =
+                        json::from_json(&body)?;
+                    let mut final_rsp: Option<RawResponse> = None;
+                    if res.status() == PollerStatus::Succeeded {
+                        final_rsp = Some(RawResponse::from_bytes(
+                            status,
+                            headers.clone(),
+                            if let Some(final_body) = final_body {
+                                final_body
+                            } else {
+                                body.clone()
+                            },
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
@@ -671,198 +865,6 @@ impl ResourcesTopLevelClient {
                             _ => PagerResult::Done { response: rsp },
                         })
                     }
-                })
-            },
-            Some(options.method_options),
-        ))
-    }
-
-    /// Update a TopLevelTrackedResource
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
-    /// * `top_level_tracked_resource_name` - arm resource name for path
-    /// * `properties` - The resource properties to be updated.
-    /// * `options` - Optional parameters for the request.
-    ///
-    /// ## Response Headers
-    ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesTopLevelClientUpdateOperationStatusHeaders`] trait, which provides
-    /// access to response headers. For example:
-    ///
-    /// ```no_run
-    /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ResourcesTopLevelClientUpdateOperationStatus, ResourcesTopLevelClientUpdateOperationStatusHeaders};
-    /// async fn example() -> Result<()> {
-    ///     let response: Response<ResourcesTopLevelClientUpdateOperationStatus> = unimplemented!();
-    ///     // Access response headers
-    ///     if let Some(location) = response.location()? {
-    ///         println!("location: {:?}", location);
-    ///     }
-    ///     if let Some(retry_after) = response.retry_after()? {
-    ///         println!("retry-after: {:?}", retry_after);
-    ///     }
-    ///     Ok(())
-    /// }
-    /// ```
-    ///
-    /// ### Available headers
-    /// * [`location`()](crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders::location) - location
-    /// * [`retry_after`()](crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders::retry_after) - retry-after
-    ///
-    /// [`ResourcesTopLevelClientUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesTopLevelClientUpdateOperationStatusHeaders
-    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]
-    pub fn update(
-        &self,
-        resource_group_name: &str,
-        top_level_tracked_resource_name: &str,
-        properties: RequestContent<TopLevelTrackedResource>,
-        options: Option<ResourcesTopLevelClientUpdateOptions<'_>>,
-    ) -> Result<Poller<ResourcesTopLevelClientUpdateOperationStatus>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
-        path = path.replace("{resourceGroupName}", resource_group_name);
-        path = path.replace("{subscriptionId}", &self.subscription_id);
-        path = path.replace(
-            "{topLevelTrackedResourceName}",
-            top_level_tracked_resource_name,
-        );
-        url.append_path(&path);
-        let mut query_builder = url.query_builder();
-        query_builder.set_pair("api-version", &self.api_version);
-        query_builder.build();
-        let api_version = self.api_version.clone();
-        Ok(Poller::new(
-            move |poller_state: PollerState, poller_options| {
-                let (mut request, continuation) = match poller_state {
-                    PollerState::More(continuation) => {
-                        let (mut next_link, final_link) = match continuation {
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            } => (next_link, final_link),
-                            _ => {
-                                unreachable!()
-                            }
-                        };
-                        let mut query_builder = next_link.query_builder();
-                        query_builder.set_pair("api-version", &api_version);
-                        query_builder.build();
-                        let mut request = Request::new(next_link.clone(), Method::Get);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            },
-                        )
-                    }
-                    PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Patch);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        request.set_body(properties.clone());
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link: url.clone(),
-                                final_link: None,
-                            },
-                        )
-                    }
-                };
-                let ctx = poller_options.context.clone();
-                let pipeline = pipeline.clone();
-                let original_url = url.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &ctx,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200, 202],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, mut body) = rsp.deconstruct();
-                    let continuation = if let Some(operation_location) =
-                        headers.get_optional_string(&HeaderName::from_static("location"))
-                    {
-                        let next_link = Url::parse(&operation_location)?;
-                        match continuation {
-                            PollerContinuation::Links { final_link, .. } => {
-                                PollerContinuation::Links {
-                                    next_link,
-                                    final_link,
-                                }
-                            }
-                            _ => {
-                                unreachable!()
-                            }
-                        }
-                    } else {
-                        continuation
-                    };
-                    let next_link = match &continuation {
-                        PollerContinuation::Links { next_link, .. } => next_link,
-                        _ => {
-                            unreachable!()
-                        }
-                    };
-                    let mut final_body = None;
-                    if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
-                        final_body = Some(body);
-                        body = azure_core::http::response::ResponseBody::from_bytes(
-                            "{\"status\":\"Succeeded\"}",
-                        );
-                    }
-                    let retry_after = get_retry_after(
-                        &headers,
-                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &poller_options,
-                    );
-                    let res: ResourcesTopLevelClientUpdateOperationStatus = json::from_json(&body)?;
-                    let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
-                        final_rsp = Some(RawResponse::from_bytes(
-                            status,
-                            headers.clone(),
-                            if let Some(final_body) = final_body {
-                                final_body
-                            } else {
-                                body.clone()
-                            },
-                        ));
-                    }
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
-                        PollerStatus::Succeeded => PollerResult::Succeeded {
-                            response: rsp,
-                            target: Box::new(move || {
-                                Box::pin(async move {
-                                    Ok(final_rsp
-                                        .ok_or_else(|| {
-                                            Error::new(ErrorKind::Other, "missing final response")
-                                        })?
-                                        .into())
-                                })
-                            }),
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
                 })
             },
             Some(options.method_options),

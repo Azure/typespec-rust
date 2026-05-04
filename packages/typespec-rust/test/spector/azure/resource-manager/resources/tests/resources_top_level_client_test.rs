@@ -13,8 +13,8 @@ use azure_core::{
 };
 use futures::StreamExt;
 use spector_armresources::models::{
-    CreatedByType, ProvisioningState, ResourcesTopLevelClientCreateOrReplaceOptions,
-    ResourcesTopLevelClientDeleteOptions, ResourcesTopLevelClientUpdateOptions,
+    CreatedByType, ProvisioningState, ResourcesTopLevelClientBeginCreateOrReplaceOptions,
+    ResourcesTopLevelClientBeginDeleteOptions, ResourcesTopLevelClientBeginUpdateOptions,
     TopLevelTrackedResource, TopLevelTrackedResourceProperties,
 };
 use time::{Date, Month, Time};
@@ -341,7 +341,7 @@ async fn create_or_replace() {
         .try_into()
         .unwrap();
 
-    let options = Some(ResourcesTopLevelClientCreateOrReplaceOptions {
+    let options = Some(ResourcesTopLevelClientBeginCreateOrReplaceOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -349,7 +349,7 @@ async fn create_or_replace() {
     });
 
     let mut poller = client
-        .create_or_replace(
+        .begin_create_or_replace(
             "test-rg",
             "top",
             create_or_replace_request.clone(),
@@ -377,7 +377,7 @@ async fn create_or_replace() {
     assert_eq!(poll_count, 1);
 
     let poller = client
-        .create_or_replace("test-rg", "top", create_or_replace_request, options)
+        .begin_create_or_replace("test-rg", "top", create_or_replace_request, options)
         .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
 
@@ -439,14 +439,14 @@ async fn create_or_replace() {
 async fn delete() {
     let client = common::create_client().get_resources_top_level_client();
 
-    let options = Some(ResourcesTopLevelClientDeleteOptions {
+    let options = Some(ResourcesTopLevelClientBeginDeleteOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
         },
     });
 
-    let mut poller = client.delete("test-rg", "top", options).unwrap();
+    let mut poller = client.begin_delete("test-rg", "top", options).unwrap();
 
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
@@ -482,7 +482,7 @@ async fn update() {
     .try_into()
     .unwrap();
 
-    let options = Some(ResourcesTopLevelClientUpdateOptions {
+    let options = Some(ResourcesTopLevelClientBeginUpdateOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -490,7 +490,7 @@ async fn update() {
     });
 
     let mut poller = client
-        .update("test-rg", "top", update_request.clone(), options.clone())
+        .begin_update("test-rg", "top", update_request.clone(), options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -513,7 +513,7 @@ async fn update() {
     assert_eq!(poll_count, 1);
 
     let poller = client
-        .update("test-rg", "top", update_request, options)
+        .begin_update("test-rg", "top", update_request, options)
         .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
 
