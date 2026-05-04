@@ -17,9 +17,11 @@ use time::{Date, Month, Time};
 use futures::StreamExt;
 
 use spector_armoptemplates::models::{
-    CreatedByType, ExportRequest, ExportResult, OperationTemplatesLroClientCreateOrReplaceOptions,
-    OperationTemplatesLroClientDeleteOptions, OperationTemplatesLroClientExportArrayOptions,
-    OperationTemplatesLroClientExportOptions, Order, OrderProperties,
+    CreatedByType, ExportRequest, ExportResult,
+    OperationTemplatesLroClientBeginCreateOrReplaceOptions,
+    OperationTemplatesLroClientBeginDeleteOptions,
+    OperationTemplatesLroClientBeginExportArrayOptions,
+    OperationTemplatesLroClientBeginExportOptions, Order, OrderProperties,
 };
 
 #[tokio::test]
@@ -38,7 +40,7 @@ async fn create_or_replace() {
     .try_into()
     .unwrap();
 
-    let options = Some(OperationTemplatesLroClientCreateOrReplaceOptions {
+    let options = Some(OperationTemplatesLroClientBeginCreateOrReplaceOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -46,7 +48,7 @@ async fn create_or_replace() {
     });
 
     let mut poller = client
-        .create_or_replace(
+        .begin_create_or_replace(
             "test-rg",
             "order1",
             create_or_replace_request.clone(),
@@ -82,7 +84,7 @@ async fn create_or_replace() {
     assert_eq!(poll_count, 3);
 
     let poller = client
-        .create_or_replace("test-rg", "order1", create_or_replace_request, options)
+        .begin_create_or_replace("test-rg", "order1", create_or_replace_request, options)
         .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
 
@@ -148,14 +150,14 @@ async fn create_or_replace() {
 async fn lro_client_delete() {
     let client = common::create_client().get_operation_templates_lro_client();
 
-    let options = Some(OperationTemplatesLroClientDeleteOptions {
+    let options = Some(OperationTemplatesLroClientBeginDeleteOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
         },
     });
 
-    let mut poller = client.delete("test-rg", "order1", options).unwrap();
+    let mut poller = client.begin_delete("test-rg", "order1", options).unwrap();
 
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
@@ -195,7 +197,7 @@ async fn lro_client_export() {
     .try_into()
     .unwrap();
 
-    let options = Some(OperationTemplatesLroClientExportOptions {
+    let options = Some(OperationTemplatesLroClientBeginExportOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -203,7 +205,7 @@ async fn lro_client_export() {
     });
 
     let mut poller = client
-        .export("test-rg", "order1", export_request.clone(), options.clone())
+        .begin_export("test-rg", "order1", export_request.clone(), options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -234,7 +236,7 @@ async fn lro_client_export() {
     assert_eq!(poll_count, 3);
 
     let poller = client
-        .export("test-rg", "order1", export_request, options)
+        .begin_export("test-rg", "order1", export_request, options)
         .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.content, Some("order1,product1,1".to_string()));
@@ -250,7 +252,7 @@ async fn lro_client_export_array() {
     .try_into()
     .unwrap();
 
-    let options = Some(OperationTemplatesLroClientExportArrayOptions {
+    let options = Some(OperationTemplatesLroClientBeginExportArrayOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -258,7 +260,7 @@ async fn lro_client_export_array() {
     });
 
     let mut poller = client
-        .export_array(export_request.clone(), options.clone())
+        .begin_export_array(export_request.clone(), options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -288,7 +290,7 @@ async fn lro_client_export_array() {
     }
     assert_eq!(poll_count, 3);
 
-    let poller = client.export_array(export_request, options).unwrap();
+    let poller = client.begin_export_array(export_request, options).unwrap();
     let final_result: Vec<ExportResult> = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.len(), 2);
     assert_eq!(

@@ -23,17 +23,17 @@ pub struct OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::create_or_replace())
+/// Options to be passed to [`OperationTemplatesLroClient::begin_create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::begin_create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientCreateOrReplaceOptions<'a> {
+pub struct OperationTemplatesLroClientBeginCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl OperationTemplatesLroClientCreateOrReplaceOptions<'_> {
-    /// Transforms this [`OperationTemplatesLroClientCreateOrReplaceOptions`] into a new `OperationTemplatesLroClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> OperationTemplatesLroClientCreateOrReplaceOptions<'static> {
-        OperationTemplatesLroClientCreateOrReplaceOptions {
+impl OperationTemplatesLroClientBeginCreateOrReplaceOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientBeginCreateOrReplaceOptions`] into a new `OperationTemplatesLroClientBeginCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> OperationTemplatesLroClientBeginCreateOrReplaceOptions<'static> {
+        OperationTemplatesLroClientBeginCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -42,17 +42,17 @@ impl OperationTemplatesLroClientCreateOrReplaceOptions<'_> {
     }
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::delete()`](crate::generated::clients::OperationTemplatesLroClient::delete())
+/// Options to be passed to [`OperationTemplatesLroClient::begin_delete()`](crate::generated::clients::OperationTemplatesLroClient::begin_delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientDeleteOptions<'a> {
+pub struct OperationTemplatesLroClientBeginDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl OperationTemplatesLroClientDeleteOptions<'_> {
-    /// Transforms this [`OperationTemplatesLroClientDeleteOptions`] into a new `OperationTemplatesLroClientDeleteOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> OperationTemplatesLroClientDeleteOptions<'static> {
-        OperationTemplatesLroClientDeleteOptions {
+impl OperationTemplatesLroClientBeginDeleteOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientBeginDeleteOptions`] into a new `OperationTemplatesLroClientBeginDeleteOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> OperationTemplatesLroClientBeginDeleteOptions<'static> {
+        OperationTemplatesLroClientBeginDeleteOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -61,17 +61,17 @@ impl OperationTemplatesLroClientDeleteOptions<'_> {
     }
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::export_array()`](crate::generated::clients::OperationTemplatesLroClient::export_array())
+/// Options to be passed to [`OperationTemplatesLroClient::begin_export_array()`](crate::generated::clients::OperationTemplatesLroClient::begin_export_array())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientExportArrayOptions<'a> {
+pub struct OperationTemplatesLroClientBeginExportArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl OperationTemplatesLroClientExportArrayOptions<'_> {
-    /// Transforms this [`OperationTemplatesLroClientExportArrayOptions`] into a new `OperationTemplatesLroClientExportArrayOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> OperationTemplatesLroClientExportArrayOptions<'static> {
-        OperationTemplatesLroClientExportArrayOptions {
+impl OperationTemplatesLroClientBeginExportArrayOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientBeginExportArrayOptions`] into a new `OperationTemplatesLroClientBeginExportArrayOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> OperationTemplatesLroClientBeginExportArrayOptions<'static> {
+        OperationTemplatesLroClientBeginExportArrayOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -80,17 +80,17 @@ impl OperationTemplatesLroClientExportArrayOptions<'_> {
     }
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::export()`](crate::generated::clients::OperationTemplatesLroClient::export())
+/// Options to be passed to [`OperationTemplatesLroClient::begin_export()`](crate::generated::clients::OperationTemplatesLroClient::begin_export())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientExportOptions<'a> {
+pub struct OperationTemplatesLroClientBeginExportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl OperationTemplatesLroClientExportOptions<'_> {
-    /// Transforms this [`OperationTemplatesLroClientExportOptions`] into a new `OperationTemplatesLroClientExportOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> OperationTemplatesLroClientExportOptions<'static> {
-        OperationTemplatesLroClientExportOptions {
+impl OperationTemplatesLroClientBeginExportOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientBeginExportOptions`] into a new `OperationTemplatesLroClientBeginExportOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> OperationTemplatesLroClientBeginExportOptions<'static> {
+        OperationTemplatesLroClientBeginExportOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

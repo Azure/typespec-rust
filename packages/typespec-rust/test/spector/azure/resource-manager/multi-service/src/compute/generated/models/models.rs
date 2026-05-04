@@ -12,7 +12,7 @@ use std::collections::HashMap;
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct CombinedVirtualMachinesClientCreateOrUpdateOperationStatus {
+pub struct CombinedVirtualMachinesClientBeginCreateOrUpdateOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read

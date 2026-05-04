@@ -1881,6 +1881,16 @@ export class Adapter {
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
         target: method.__raw?.node ?? tsp.NoTarget,
       });
+    } else if ((method.kind === 'lro' || method.kind === 'lropaging') && !srcMethodName.match(/^begin/i)) {
+      const chunks = utils.deconstruct(srcMethodName);
+      chunks.unshift('begin');
+      srcMethodName = utils.camelCase(chunks);
+      this.ctx.program.reportDiagnostic({
+        code: 'PollingMethodRename',
+        severity: 'warning',
+        message: `renamed polling method from ${method.name} to ${srcMethodName}`,
+        target: method.__raw?.node ?? tsp.NoTarget,
+      });
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;

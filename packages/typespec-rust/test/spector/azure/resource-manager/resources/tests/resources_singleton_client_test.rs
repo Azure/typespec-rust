@@ -13,7 +13,7 @@ use azure_core::{
 };
 use futures::StreamExt;
 use spector_armresources::models::{
-    CreatedByType, ProvisioningState, ResourcesSingletonClientCreateOrUpdateOptions,
+    CreatedByType, ProvisioningState, ResourcesSingletonClientBeginCreateOrUpdateOptions,
     SingletonTrackedResource, SingletonTrackedResourceProperties,
 };
 use time::{Date, Month, Time};
@@ -266,7 +266,7 @@ async fn create_or_update() {
         .try_into()
         .unwrap();
 
-    let options = Some(ResourcesSingletonClientCreateOrUpdateOptions {
+    let options = Some(ResourcesSingletonClientBeginCreateOrUpdateOptions {
         method_options: PollerOptions {
             frequency: Duration::seconds(1),
             ..Default::default()
@@ -274,7 +274,7 @@ async fn create_or_update() {
     });
 
     let mut poller = client
-        .create_or_update("test-rg", create_or_update_request.clone(), options.clone())
+        .begin_create_or_update("test-rg", create_or_update_request.clone(), options.clone())
         .unwrap();
 
     let mut poll_count = 0;
@@ -297,7 +297,7 @@ async fn create_or_update() {
     assert_eq!(poll_count, 1);
 
     let poller = client
-        .create_or_update("test-rg", create_or_update_request, options)
+        .begin_create_or_update("test-rg", create_or_update_request, options)
         .unwrap();
     let final_result = poller.await.unwrap().into_model().unwrap();
 

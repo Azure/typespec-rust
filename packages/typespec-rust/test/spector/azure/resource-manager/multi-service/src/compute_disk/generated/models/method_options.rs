@@ -8,17 +8,17 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`CombinedDisksClient::create_or_update()`](crate::compute_disk::generated::clients::CombinedDisksClient::create_or_update())
+/// Options to be passed to [`CombinedDisksClient::begin_create_or_update()`](crate::compute_disk::generated::clients::CombinedDisksClient::begin_create_or_update())
 #[derive(Clone, Default, SafeDebug)]
-pub struct CombinedDisksClientCreateOrUpdateOptions<'a> {
+pub struct CombinedDisksClientBeginCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl CombinedDisksClientCreateOrUpdateOptions<'_> {
-    /// Transforms this [`CombinedDisksClientCreateOrUpdateOptions`] into a new `CombinedDisksClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> CombinedDisksClientCreateOrUpdateOptions<'static> {
-        CombinedDisksClientCreateOrUpdateOptions {
+impl CombinedDisksClientBeginCreateOrUpdateOptions<'_> {
+    /// Transforms this [`CombinedDisksClientBeginCreateOrUpdateOptions`] into a new `CombinedDisksClientBeginCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> CombinedDisksClientBeginCreateOrUpdateOptions<'static> {
+        CombinedDisksClientBeginCreateOrUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

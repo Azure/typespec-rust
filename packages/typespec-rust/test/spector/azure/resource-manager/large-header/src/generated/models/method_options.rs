@@ -5,17 +5,17 @@
 
 use azure_core::{fmt::SafeDebug, http::poller::PollerOptions};
 
-/// Options to be passed to [`LargeHeaderLargeHeadersClient::two6_k()`](crate::generated::clients::LargeHeaderLargeHeadersClient::two6_k())
+/// Options to be passed to [`LargeHeaderLargeHeadersClient::begin_two6_k()`](crate::generated::clients::LargeHeaderLargeHeadersClient::begin_two6_k())
 #[derive(Clone, Default, SafeDebug)]
-pub struct LargeHeaderLargeHeadersClientTwo6KOptions<'a> {
+pub struct LargeHeaderLargeHeadersClientBeginTwo6KOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl LargeHeaderLargeHeadersClientTwo6KOptions<'_> {
-    /// Transforms this [`LargeHeaderLargeHeadersClientTwo6KOptions`] into a new `LargeHeaderLargeHeadersClientTwo6KOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> LargeHeaderLargeHeadersClientTwo6KOptions<'static> {
-        LargeHeaderLargeHeadersClientTwo6KOptions {
+impl LargeHeaderLargeHeadersClientBeginTwo6KOptions<'_> {
+    /// Transforms this [`LargeHeaderLargeHeadersClientBeginTwo6KOptions`] into a new `LargeHeaderLargeHeadersClientBeginTwo6KOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> LargeHeaderLargeHeadersClientBeginTwo6KOptions<'static> {
+        LargeHeaderLargeHeadersClientBeginTwo6KOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

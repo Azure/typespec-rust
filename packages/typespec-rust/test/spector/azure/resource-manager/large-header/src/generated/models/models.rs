@@ -80,7 +80,7 @@ pub struct ErrorResponse {
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct LargeHeaderLargeHeadersClientTwo6KOperationStatus {
+pub struct LargeHeaderLargeHeadersClientBeginTwo6KOperationStatus {
     /// Operation complete time
     ///
     /// Operational visibility: Read

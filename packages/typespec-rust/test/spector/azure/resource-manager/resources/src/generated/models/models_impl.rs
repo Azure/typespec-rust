@@ -6,14 +6,15 @@
 use super::{
     ExtensionsResource, ExtensionsResourceListResult, LocationResource, LocationResourceListResult,
     NestedProxyResource, NestedProxyResourceListResult, NotificationDetails,
-    ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus,
-    ResourcesNestedClientCreateOrReplaceOperationStatus,
-    ResourcesNestedClientDeleteOperationStatus, ResourcesNestedClientUpdateOperationStatus,
-    ResourcesSingletonClientCreateOrUpdateOperationStatus,
-    ResourcesTopLevelClientCreateOrReplaceOperationStatus,
-    ResourcesTopLevelClientDeleteOperationStatus, ResourcesTopLevelClientUpdateOperationStatus,
-    SingletonTrackedResource, SingletonTrackedResourceListResult, TopLevelTrackedResource,
-    TopLevelTrackedResourceListResult,
+    ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus,
+    ResourcesNestedClientBeginCreateOrReplaceOperationStatus,
+    ResourcesNestedClientBeginDeleteOperationStatus,
+    ResourcesNestedClientBeginUpdateOperationStatus,
+    ResourcesSingletonClientBeginCreateOrUpdateOperationStatus,
+    ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus,
+    ResourcesTopLevelClientBeginDeleteOperationStatus,
+    ResourcesTopLevelClientBeginUpdateOperationStatus, SingletonTrackedResource,
+    SingletonTrackedResourceListResult, TopLevelTrackedResource, TopLevelTrackedResourceListResult,
 };
 use async_trait::async_trait;
 use azure_core::{
@@ -71,7 +72,7 @@ impl Page for TopLevelTrackedResourceListResult {
     }
 }
 
-impl StatusMonitor for ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus {
+impl StatusMonitor for ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus {
     type Output = ExtensionsResource;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -82,7 +83,7 @@ impl StatusMonitor for ResourcesExtensionsResourcesClientCreateOrUpdateOperation
     }
 }
 
-impl StatusMonitor for ResourcesNestedClientCreateOrReplaceOperationStatus {
+impl StatusMonitor for ResourcesNestedClientBeginCreateOrReplaceOperationStatus {
     type Output = NestedProxyResource;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -93,7 +94,7 @@ impl StatusMonitor for ResourcesNestedClientCreateOrReplaceOperationStatus {
     }
 }
 
-impl StatusMonitor for ResourcesNestedClientDeleteOperationStatus {
+impl StatusMonitor for ResourcesNestedClientBeginDeleteOperationStatus {
     type Output = ();
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -104,7 +105,7 @@ impl StatusMonitor for ResourcesNestedClientDeleteOperationStatus {
     }
 }
 
-impl StatusMonitor for ResourcesNestedClientUpdateOperationStatus {
+impl StatusMonitor for ResourcesNestedClientBeginUpdateOperationStatus {
     type Output = NestedProxyResource;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -115,7 +116,7 @@ impl StatusMonitor for ResourcesNestedClientUpdateOperationStatus {
     }
 }
 
-impl StatusMonitor for ResourcesSingletonClientCreateOrUpdateOperationStatus {
+impl StatusMonitor for ResourcesSingletonClientBeginCreateOrUpdateOperationStatus {
     type Output = SingletonTrackedResource;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -126,7 +127,7 @@ impl StatusMonitor for ResourcesSingletonClientCreateOrUpdateOperationStatus {
     }
 }
 
-impl StatusMonitor for ResourcesTopLevelClientCreateOrReplaceOperationStatus {
+impl StatusMonitor for ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus {
     type Output = TopLevelTrackedResource;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -137,7 +138,7 @@ impl StatusMonitor for ResourcesTopLevelClientCreateOrReplaceOperationStatus {
     }
 }
 
-impl StatusMonitor for ResourcesTopLevelClientDeleteOperationStatus {
+impl StatusMonitor for ResourcesTopLevelClientBeginDeleteOperationStatus {
     type Output = ();
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
@@ -148,7 +149,7 @@ impl StatusMonitor for ResourcesTopLevelClientDeleteOperationStatus {
     }
 }
 
-impl StatusMonitor for ResourcesTopLevelClientUpdateOperationStatus {
+impl StatusMonitor for ResourcesTopLevelClientBeginUpdateOperationStatus {
     type Output = TopLevelTrackedResource;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
