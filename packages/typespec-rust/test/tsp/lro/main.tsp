@@ -1,9 +1,11 @@
 import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-client-generator-core";
 import "@typespec/rest";
 import "@typespec/http";
 
 using TypeSpec.Rest;
 using TypeSpec.Http;
+using Azure.ClientGenerator.Core;
 using Azure.Core;
 using Azure.Core.Traits;
 
@@ -74,5 +76,15 @@ interface I {
       x: string;
     },
     NullResponse
+  >;
+
+  @clientName("startPartialBody", "rust")
+  @route("/lro/client-name")
+  @pollingOperation(I.getStatus)
+  op startPartialBody is Foundations.LongRunningOperation<
+    Y,
+    AcceptedResponse,
+    {},
+    Foundations.ErrorResponse
   >;
 }

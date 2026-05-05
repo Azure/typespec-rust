@@ -7,7 +7,8 @@ use crate::generated::models::{
     CustomLinkRequest, NIClientBeginCustomLinkOperationStatus, NIClientBeginCustomLinkOptions,
     NIClientBeginIncorrectCustomOpRefOperationStatus, NIClientBeginIncorrectCustomOpRefOptions,
     NIClientBeginPartialBodyOperationStatus, NIClientBeginPartialBodyOptions,
-    NIClientGetStatusOptions, PartialBodyRequest, X,
+    NIClientGetStatusOptions, NIClientStartPartialBodyOperationStatus,
+    NIClientStartPartialBodyOptions, PartialBodyRequest, StartPartialBodyRequest, X,
 };
 use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
@@ -529,5 +530,165 @@ impl NIClient {
             )
             .await?;
         Ok(rsp.into())
+    }
+
+    /// Long-running operation.
+    ///
+    /// # Arguments
+    ///
+    /// * `api_version` - The API version to use for this operation.
+    /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`NIClientStartPartialBodyOperationStatusHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use lro::models::{NIClientStartPartialBodyOperationStatus, NIClientStartPartialBodyOperationStatusHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<NIClientStartPartialBodyOperationStatus> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("operation-location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](crate::generated::models::NIClientStartPartialBodyOperationStatusHeaders::operation_location) - operation-location
+    ///
+    /// [`NIClientStartPartialBodyOperationStatusHeaders`]: crate::generated::models::NIClientStartPartialBodyOperationStatusHeaders
+    #[tracing::function("N.I.startPartialBody")]
+    pub fn start_partial_body(
+        &self,
+        api_version: &str,
+        options: Option<NIClientStartPartialBodyOptions<'_>>,
+    ) -> Result<Poller<NIClientStartPartialBodyOperationStatus>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut url = self.endpoint.clone();
+        url.append_path("/lro/client-name");
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", api_version);
+        query_builder.build();
+        Ok(Poller::new(
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (next_link, final_link) = match continuation {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
+                        let mut request = Request::new(next_link.clone(), Method::Get);
+                        request.insert_header("content-type", "application/json");
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
+                    }
+                    PollerState::Initial => {
+                        let mut request = Request::new(url.clone(), Method::Post);
+                        request.insert_header("content-type", "application/json");
+                        let body: Result<RequestContent<StartPartialBodyRequest>> =
+                            StartPartialBodyRequest {
+                                b: options.b.clone(),
+                            }
+                            .try_into();
+                        if let Ok(body) = body {
+                            request.set_body(body);
+                        }
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
+                    }
+                };
+                let ctx = poller_options.context.clone();
+                let pipeline = pipeline.clone();
+                Box::pin(async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, body) = rsp.deconstruct();
+                    let continuation = if let Some(operation_location) =
+                        headers.get_optional_string(&HeaderName::from_static("operation-location"))
+                    {
+                        let next_link = Url::parse(&operation_location)?;
+                        match continuation {
+                            PollerContinuation::Links { final_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link,
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &poller_options,
+                    );
+                    let res: NIClientStartPartialBodyOperationStatus = json::from_json(&body)?;
+                    let mut final_rsp: Option<RawResponse> = None;
+                    if res.status() == PollerStatus::Succeeded {
+                        final_rsp = Some(RawResponse::from_bytes(
+                            status,
+                            headers.clone(),
+                            body.clone(),
+                        ));
+                    }
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(match res.status() {
+                        PollerStatus::InProgress => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
+                        PollerStatus::Succeeded => PollerResult::Succeeded {
+                            response: rsp,
+                            target: Box::new(move || {
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
+                            }),
+                        },
+                        _ => PollerResult::Done { response: rsp },
+                    })
+                })
+            },
+            Some(options.method_options),
+        ))
     }
 }

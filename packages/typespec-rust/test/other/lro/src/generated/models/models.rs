@@ -53,6 +53,16 @@ pub struct NIClientBeginPartialBodyOperationStatus {
     pub status: Option<S>,
 }
 
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct NIClientStartPartialBodyOperationStatus {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub a: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<S>,
+}
+
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct PartialBodyRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -64,6 +74,12 @@ pub(crate) struct PartialBodyRequest {
 pub struct PutAsset {
     #[serde(rename = "assetId", skip_serializing_if = "Option::is_none")]
     pub asset_id: Option<String>,
+}
+
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
+pub(crate) struct StartPartialBodyRequest {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(crate) b: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]

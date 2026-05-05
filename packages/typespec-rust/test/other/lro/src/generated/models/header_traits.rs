@@ -5,6 +5,7 @@
 
 use super::{
     NIClientBeginIncorrectCustomOpRefOperationStatus, NIClientBeginPartialBodyOperationStatus,
+    NIClientStartPartialBodyOperationStatus,
 };
 use azure_core::{
     http::{
@@ -74,9 +75,39 @@ impl NIClientBeginPartialBodyOperationStatusHeaders
     }
 }
 
+/// Provides access to typed response headers for [`NIClient::start_partial_body()`](crate::generated::clients::NIClient::start_partial_body())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use lro::models::{NIClientStartPartialBodyOperationStatus, NIClientStartPartialBodyOperationStatusHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<NIClientStartPartialBodyOperationStatus> = unimplemented!();
+///     // Access response headers
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("operation-location: {:?}", operation_location);
+///     }
+///     Ok(())
+/// }
+/// ```
+pub trait NIClientStartPartialBodyOperationStatusHeaders: private::Sealed {
+    fn operation_location(&self) -> Result<Option<String>>;
+}
+
+impl NIClientStartPartialBodyOperationStatusHeaders
+    for Response<NIClientStartPartialBodyOperationStatus>
+{
+    /// The location for monitoring the operation state.
+    fn operation_location(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &OPERATION_LOCATION)
+    }
+}
+
 mod private {
     use super::{
         NIClientBeginIncorrectCustomOpRefOperationStatus, NIClientBeginPartialBodyOperationStatus,
+        NIClientStartPartialBodyOperationStatus,
     };
     use azure_core::http::Response;
 
@@ -84,4 +115,5 @@ mod private {
 
     impl Sealed for Response<NIClientBeginIncorrectCustomOpRefOperationStatus> {}
     impl Sealed for Response<NIClientBeginPartialBodyOperationStatus> {}
+    impl Sealed for Response<NIClientStartPartialBodyOperationStatus> {}
 }

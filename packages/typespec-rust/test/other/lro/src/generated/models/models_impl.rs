@@ -6,7 +6,7 @@
 use super::{
     CustomLinkRequest, NIClientBeginCustomLinkOperationStatus,
     NIClientBeginIncorrectCustomOpRefOperationStatus, NIClientBeginPartialBodyOperationStatus,
-    PartialBodyRequest, PutAsset,
+    NIClientStartPartialBodyOperationStatus, PartialBodyRequest, PutAsset, StartPartialBodyRequest,
 };
 use azure_core::{
     http::{
@@ -50,6 +50,17 @@ impl StatusMonitor for NIClientBeginPartialBodyOperationStatus {
     }
 }
 
+impl StatusMonitor for NIClientStartPartialBodyOperationStatus {
+    type Output = ();
+    type Format = JsonFormat;
+    fn status(&self) -> PollerStatus {
+        match &self.status {
+            Some(v) => PollerStatus::from(v.as_ref()),
+            None => PollerStatus::InProgress,
+        }
+    }
+}
+
 impl TryFrom<CustomLinkRequest> for RequestContent<CustomLinkRequest> {
     type Error = azure_core::Error;
     fn try_from(value: CustomLinkRequest) -> Result<Self> {
@@ -60,6 +71,13 @@ impl TryFrom<CustomLinkRequest> for RequestContent<CustomLinkRequest> {
 impl TryFrom<PartialBodyRequest> for RequestContent<PartialBodyRequest> {
     type Error = azure_core::Error;
     fn try_from(value: PartialBodyRequest) -> Result<Self> {
+        Ok(to_json(&value)?.into())
+    }
+}
+
+impl TryFrom<StartPartialBodyRequest> for RequestContent<StartPartialBodyRequest> {
+    type Error = azure_core::Error;
+    fn try_from(value: StartPartialBodyRequest) -> Result<Self> {
         Ok(to_json(&value)?.into())
     }
 }

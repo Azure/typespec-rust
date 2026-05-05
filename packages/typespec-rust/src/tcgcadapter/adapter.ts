@@ -1877,30 +1877,32 @@ export class Adapter {
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
     // NOTE: if the method has the @clientName decorator applied then skip fixing up the name
-    if (!hasClientNameDecorator(method.decorators) && method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
-      const chunks = utils.deconstruct(srcMethodName);
-      if (chunks[0] === 'get') {
-        chunks[0] = 'list';
-      } else {
-        chunks.unshift('list');
+    if (!hasClientNameDecorator(method.decorators)) {
+      if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
+        const chunks = utils.deconstruct(srcMethodName);
+        if (chunks[0] === 'get') {
+          chunks[0] = 'list';
+        } else {
+          chunks.unshift('list');
+        }
+        srcMethodName = utils.camelCase(chunks);
+        this.ctx.program.reportDiagnostic({
+          code: 'PagingMethodRename',
+          severity: 'warning',
+          message: `renamed paging method from ${method.name} to ${srcMethodName}`,
+          target: method.__raw?.node ?? tsp.NoTarget,
+        });
+      } else if ((method.kind === 'lro' || method.kind === 'lropaging') && !srcMethodName.match(/^begin/i)) {
+        const chunks = utils.deconstruct(srcMethodName);
+        chunks.unshift('begin');
+        srcMethodName = utils.camelCase(chunks);
+        this.ctx.program.reportDiagnostic({
+          code: 'PollingMethodRename',
+          severity: 'warning',
+          message: `renamed polling method from ${method.name} to ${srcMethodName}`,
+          target: method.__raw?.node ?? tsp.NoTarget,
+        });
       }
-      srcMethodName = utils.camelCase(chunks);
-      this.ctx.program.reportDiagnostic({
-        code: 'PagingMethodRename',
-        severity: 'warning',
-        message: `renamed paging method from ${method.name} to ${srcMethodName}`,
-        target: method.__raw?.node ?? tsp.NoTarget,
-      });
-    } else if ((method.kind === 'lro' || method.kind === 'lropaging') && !srcMethodName.match(/^begin/i)) {
-      const chunks = utils.deconstruct(srcMethodName);
-      chunks.unshift('begin');
-      srcMethodName = utils.camelCase(chunks);
-      this.ctx.program.reportDiagnostic({
-        code: 'PollingMethodRename',
-        severity: 'warning',
-        message: `renamed polling method from ${method.name} to ${srcMethodName}`,
-        target: method.__raw?.node ?? tsp.NoTarget,
-      });
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;

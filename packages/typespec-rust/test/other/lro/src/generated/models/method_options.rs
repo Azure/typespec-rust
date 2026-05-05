@@ -74,3 +74,25 @@ pub struct NIClientGetStatusOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
+
+/// Options to be passed to [`NIClient::start_partial_body()`](crate::generated::clients::NIClient::start_partial_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct NIClientStartPartialBodyOptions<'a> {
+    pub b: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl NIClientStartPartialBodyOptions<'_> {
+    /// Transforms this [`NIClientStartPartialBodyOptions`] into a new `NIClientStartPartialBodyOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> NIClientStartPartialBodyOptions<'static> {
+        NIClientStartPartialBodyOptions {
+            b: self.b,
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
