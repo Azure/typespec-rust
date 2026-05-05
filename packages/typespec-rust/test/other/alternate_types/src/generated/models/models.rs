@@ -6,6 +6,7 @@
 use crate::models::HandWrittenType;
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
+use time::Duration;
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
@@ -18,7 +19,7 @@ pub struct CrateAlternateType {
 #[non_exhaustive]
 pub struct ExternalType {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub thing: Option<HandWrittenType>,
+    pub thing: Option<Duration>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]

@@ -15,6 +15,7 @@
 ### Bugs Fixed
 
 * Optional method parameters respect the `@access` decorator.
+* Fixed type cache key for external types.
 
 ## 0.39.1 (2026-04-12)
 
