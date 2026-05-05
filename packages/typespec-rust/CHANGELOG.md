@@ -1,6 +1,6 @@
 # Release History
 
-## 0.40.0 (unreleased)
+## 0.40.0 (2026-05-05)
 
 ### Breaking Changes
 
@@ -17,6 +17,7 @@
 ### Bugs Fixed
 
 * Optional method parameters respect the `@access` decorator.
+* Fixed type cache key for external types.
 
 ## 0.39.1 (2026-04-12)
 

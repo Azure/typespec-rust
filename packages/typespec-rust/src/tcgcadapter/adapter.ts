@@ -3080,6 +3080,8 @@ function recursiveKeyName(root: string, type: rust.Box | rust.Option | rust.Requ
       return `${root}-${type.kind}-${type.name}`;
     case 'enumValue':
       return `${root}-${type.type.name}-${type.name}`;
+    case 'external':
+      return `${root}-${type.path}::${type.name}`;
     case 'hashmap':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'offsetDateTime':
