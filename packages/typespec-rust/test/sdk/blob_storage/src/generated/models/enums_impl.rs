@@ -37,6 +37,7 @@ impl<'a> From<&'a AccessTier> for &'a str {
             AccessTier::P70 => "P70",
             AccessTier::P80 => "P80",
             AccessTier::Premium => "Premium",
+            AccessTier::Smart => "Smart",
             AccessTier::UnknownValue(s) => s.as_ref(),
         }
     }
@@ -62,6 +63,7 @@ impl FromStr for AccessTier {
             "P70" => AccessTier::P70,
             "P80" => AccessTier::P80,
             "Premium" => AccessTier::Premium,
+            "Smart" => AccessTier::Smart,
             _ => AccessTier::UnknownValue(s.to_string()),
         })
     }
@@ -86,6 +88,7 @@ impl AsRef<str> for AccessTier {
             AccessTier::P70 => "P70",
             AccessTier::P80 => "P80",
             AccessTier::Premium => "Premium",
+            AccessTier::Smart => "Smart",
             AccessTier::UnknownValue(s) => s.as_str(),
         }
     }
@@ -110,6 +113,7 @@ impl Display for AccessTier {
             AccessTier::P70 => f.write_str("P70"),
             AccessTier::P80 => f.write_str("P80"),
             AccessTier::Premium => f.write_str("Premium"),
+            AccessTier::Smart => f.write_str("Smart"),
             AccessTier::UnknownValue(s) => f.write_str(s.as_str()),
         }
     }
@@ -163,6 +167,7 @@ impl<'a> From<&'a ArchiveStatus> for &'a str {
             ArchiveStatus::RehydratePendingToCold => "rehydrate-pending-to-cold",
             ArchiveStatus::RehydratePendingToCool => "rehydrate-pending-to-cool",
             ArchiveStatus::RehydratePendingToHot => "rehydrate-pending-to-hot",
+            ArchiveStatus::RehydratePendingToSmart => "rehydrate-pending-to-smart",
             ArchiveStatus::UnknownValue(s) => s.as_ref(),
         }
     }
@@ -175,6 +180,7 @@ impl FromStr for ArchiveStatus {
             "rehydrate-pending-to-cold" => ArchiveStatus::RehydratePendingToCold,
             "rehydrate-pending-to-cool" => ArchiveStatus::RehydratePendingToCool,
             "rehydrate-pending-to-hot" => ArchiveStatus::RehydratePendingToHot,
+            "rehydrate-pending-to-smart" => ArchiveStatus::RehydratePendingToSmart,
             _ => ArchiveStatus::UnknownValue(s.to_string()),
         })
     }
@@ -186,6 +192,7 @@ impl AsRef<str> for ArchiveStatus {
             ArchiveStatus::RehydratePendingToCold => "rehydrate-pending-to-cold",
             ArchiveStatus::RehydratePendingToCool => "rehydrate-pending-to-cool",
             ArchiveStatus::RehydratePendingToHot => "rehydrate-pending-to-hot",
+            ArchiveStatus::RehydratePendingToSmart => "rehydrate-pending-to-smart",
             ArchiveStatus::UnknownValue(s) => s.as_str(),
         }
     }
@@ -197,6 +204,7 @@ impl Display for ArchiveStatus {
             ArchiveStatus::RehydratePendingToCold => f.write_str("rehydrate-pending-to-cold"),
             ArchiveStatus::RehydratePendingToCool => f.write_str("rehydrate-pending-to-cool"),
             ArchiveStatus::RehydratePendingToHot => f.write_str("rehydrate-pending-to-hot"),
+            ArchiveStatus::RehydratePendingToSmart => f.write_str("rehydrate-pending-to-smart"),
             ArchiveStatus::UnknownValue(s) => f.write_str(s.as_str()),
         }
     }
@@ -1087,6 +1095,9 @@ impl<'a> From<&'a StorageErrorCode> for &'a str {
             StorageErrorCode::EmptyMetadataKey => "EmptyMetadataKey",
             StorageErrorCode::FeatureVersionMismatch => "FeatureVersionMismatch",
             StorageErrorCode::IncrementalCopyBlobMismatch => "IncrementalCopyBlobMismatch",
+            StorageErrorCode::IncrementalCopyOfEarlierSnapshotNotAllowed => {
+                "IncrementalCopyOfEarlierSnapshotNotAllowed"
+            }
             StorageErrorCode::IncrementalCopyOfEarlierVersionSnapshotNotAllowed => {
                 "IncrementalCopyOfEarlierVersionSnapshotNotAllowed"
             }
@@ -1112,6 +1123,7 @@ impl<'a> From<&'a StorageErrorCode> for &'a str {
             StorageErrorCode::InvalidQueryParameterValue => "InvalidQueryParameterValue",
             StorageErrorCode::InvalidRange => "InvalidRange",
             StorageErrorCode::InvalidRequestUrl => "InvalidRequestUrl",
+            StorageErrorCode::InvalidResourceName => "InvalidResourceName",
             StorageErrorCode::InvalidSourceBlobType => "InvalidSourceBlobType",
             StorageErrorCode::InvalidSourceBlobUrl => "InvalidSourceBlobUrl",
             StorageErrorCode::InvalidUri => "InvalidUri",
@@ -1159,6 +1171,7 @@ impl<'a> From<&'a StorageErrorCode> for &'a str {
             StorageErrorCode::MultipleConditionHeadersNotSupported => {
                 "MultipleConditionHeadersNotSupported"
             }
+            StorageErrorCode::NoAuthenticationInformation => "NoAuthenticationInformation",
             StorageErrorCode::NoPendingCopyOperation => "NoPendingCopyOperation",
             StorageErrorCode::OperationNotAllowedOnIncrementalCopyBlob => {
                 "OperationNotAllowedOnIncrementalCopyBlob"
@@ -1247,6 +1260,9 @@ impl FromStr for StorageErrorCode {
             "EmptyMetadataKey" => StorageErrorCode::EmptyMetadataKey,
             "FeatureVersionMismatch" => StorageErrorCode::FeatureVersionMismatch,
             "IncrementalCopyBlobMismatch" => StorageErrorCode::IncrementalCopyBlobMismatch,
+            "IncrementalCopyOfEarlierSnapshotNotAllowed" => {
+                StorageErrorCode::IncrementalCopyOfEarlierSnapshotNotAllowed
+            }
             "IncrementalCopyOfEarlierVersionSnapshotNotAllowed" => {
                 StorageErrorCode::IncrementalCopyOfEarlierVersionSnapshotNotAllowed
             }
@@ -1272,6 +1288,7 @@ impl FromStr for StorageErrorCode {
             "InvalidQueryParameterValue" => StorageErrorCode::InvalidQueryParameterValue,
             "InvalidRange" => StorageErrorCode::InvalidRange,
             "InvalidRequestUrl" => StorageErrorCode::InvalidRequestUrl,
+            "InvalidResourceName" => StorageErrorCode::InvalidResourceName,
             "InvalidSourceBlobType" => StorageErrorCode::InvalidSourceBlobType,
             "InvalidSourceBlobUrl" => StorageErrorCode::InvalidSourceBlobUrl,
             "InvalidUri" => StorageErrorCode::InvalidUri,
@@ -1319,6 +1336,7 @@ impl FromStr for StorageErrorCode {
             "MultipleConditionHeadersNotSupported" => {
                 StorageErrorCode::MultipleConditionHeadersNotSupported
             }
+            "NoAuthenticationInformation" => StorageErrorCode::NoAuthenticationInformation,
             "NoPendingCopyOperation" => StorageErrorCode::NoPendingCopyOperation,
             "OperationNotAllowedOnIncrementalCopyBlob" => {
                 StorageErrorCode::OperationNotAllowedOnIncrementalCopyBlob
@@ -1406,6 +1424,9 @@ impl AsRef<str> for StorageErrorCode {
             StorageErrorCode::EmptyMetadataKey => "EmptyMetadataKey",
             StorageErrorCode::FeatureVersionMismatch => "FeatureVersionMismatch",
             StorageErrorCode::IncrementalCopyBlobMismatch => "IncrementalCopyBlobMismatch",
+            StorageErrorCode::IncrementalCopyOfEarlierSnapshotNotAllowed => {
+                "IncrementalCopyOfEarlierSnapshotNotAllowed"
+            }
             StorageErrorCode::IncrementalCopyOfEarlierVersionSnapshotNotAllowed => {
                 "IncrementalCopyOfEarlierVersionSnapshotNotAllowed"
             }
@@ -1431,6 +1452,7 @@ impl AsRef<str> for StorageErrorCode {
             StorageErrorCode::InvalidQueryParameterValue => "InvalidQueryParameterValue",
             StorageErrorCode::InvalidRange => "InvalidRange",
             StorageErrorCode::InvalidRequestUrl => "InvalidRequestUrl",
+            StorageErrorCode::InvalidResourceName => "InvalidResourceName",
             StorageErrorCode::InvalidSourceBlobType => "InvalidSourceBlobType",
             StorageErrorCode::InvalidSourceBlobUrl => "InvalidSourceBlobUrl",
             StorageErrorCode::InvalidUri => "InvalidUri",
@@ -1478,6 +1500,7 @@ impl AsRef<str> for StorageErrorCode {
             StorageErrorCode::MultipleConditionHeadersNotSupported => {
                 "MultipleConditionHeadersNotSupported"
             }
+            StorageErrorCode::NoAuthenticationInformation => "NoAuthenticationInformation",
             StorageErrorCode::NoPendingCopyOperation => "NoPendingCopyOperation",
             StorageErrorCode::OperationNotAllowedOnIncrementalCopyBlob => {
                 "OperationNotAllowedOnIncrementalCopyBlob"
@@ -1581,6 +1604,9 @@ impl Display for StorageErrorCode {
             StorageErrorCode::IncrementalCopyBlobMismatch => {
                 f.write_str("IncrementalCopyBlobMismatch")
             }
+            StorageErrorCode::IncrementalCopyOfEarlierSnapshotNotAllowed => {
+                f.write_str("IncrementalCopyOfEarlierSnapshotNotAllowed")
+            }
             StorageErrorCode::IncrementalCopyOfEarlierVersionSnapshotNotAllowed => {
                 f.write_str("IncrementalCopyOfEarlierVersionSnapshotNotAllowed")
             }
@@ -1612,6 +1638,7 @@ impl Display for StorageErrorCode {
             }
             StorageErrorCode::InvalidRange => f.write_str("InvalidRange"),
             StorageErrorCode::InvalidRequestUrl => f.write_str("InvalidRequestUrl"),
+            StorageErrorCode::InvalidResourceName => f.write_str("InvalidResourceName"),
             StorageErrorCode::InvalidSourceBlobType => f.write_str("InvalidSourceBlobType"),
             StorageErrorCode::InvalidSourceBlobUrl => f.write_str("InvalidSourceBlobUrl"),
             StorageErrorCode::InvalidUri => f.write_str("InvalidUri"),
@@ -1666,6 +1693,9 @@ impl Display for StorageErrorCode {
             StorageErrorCode::MissingRequiredXmlNode => f.write_str("MissingRequiredXmlNode"),
             StorageErrorCode::MultipleConditionHeadersNotSupported => {
                 f.write_str("MultipleConditionHeadersNotSupported")
+            }
+            StorageErrorCode::NoAuthenticationInformation => {
+                f.write_str("NoAuthenticationInformation")
             }
             StorageErrorCode::NoPendingCopyOperation => f.write_str("NoPendingCopyOperation"),
             StorageErrorCode::OperationNotAllowedOnIncrementalCopyBlob => {

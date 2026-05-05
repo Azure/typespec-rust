@@ -54,6 +54,9 @@ pub enum AccessTier {
     /// The Premium access tier.
     Premium,
 
+    /// The Smart access tier.
+    Smart,
+
     /// Any other value not defined in `AccessTier`.
     UnknownValue(String),
 }
@@ -80,7 +83,7 @@ pub enum AccountKind {
 /// The archive status.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum ArchiveStatus {
-    /// The archive status is rehydrating pending to archive.
+    /// The archive status is rehydrating pending to cold.
     RehydratePendingToCold,
 
     /// The archive status is rehydrating pending to cool.
@@ -88,6 +91,9 @@ pub enum ArchiveStatus {
 
     /// The archive status is rehydrating pending to hot.
     RehydratePendingToHot,
+
+    /// The archive status is rehydrating pending to smart.
+    RehydratePendingToSmart,
 
     /// Any other value not defined in `ArchiveStatus`.
     UnknownValue(String),
@@ -527,6 +533,9 @@ pub enum StorageErrorCode {
     /// Incremental copy blob mismatch.
     IncrementalCopyBlobMismatch,
 
+    /// Incremental copy of an earlier snapshot is not allowed.
+    IncrementalCopyOfEarlierSnapshotNotAllowed,
+
     /// Incremental copy of earlier version snapshot not allowed.
     IncrementalCopyOfEarlierVersionSnapshotNotAllowed,
 
@@ -589,6 +598,9 @@ pub enum StorageErrorCode {
 
     /// Invalid request URL.
     InvalidRequestUrl,
+
+    /// Invalid resource name.
+    InvalidResourceName,
 
     /// Invalid source blob type.
     InvalidSourceBlobType,
@@ -670,6 +682,9 @@ pub enum StorageErrorCode {
 
     /// Multiple condition headers not supported.
     MultipleConditionHeadersNotSupported,
+
+    /// No authentication information.
+    NoAuthenticationInformation,
 
     /// No pending copy operation.
     NoPendingCopyOperation,

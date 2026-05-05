@@ -13,7 +13,7 @@ use super::{
     ImmutabilityPolicyMode, LeaseDuration, LeaseState, LeaseStatus, PublicAccessType,
     RehydratePriority, StorageErrorCode,
 };
-use azure_core::{base64, fmt::SafeDebug, time::OffsetDateTime};
+use azure_core::{base64, fmt::SafeDebug, http::Etag, time::OffsetDateTime};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -346,7 +346,7 @@ pub struct BlobProperties {
 
     /// The blob ETag.
     #[serde(rename = "Etag", skip_serializing_if = "Option::is_none")]
-    pub etag: Option<String>,
+    pub etag: Option<Etag>,
 
     /// The expire time of the blob.
     #[serde(
@@ -429,6 +429,10 @@ pub struct BlobProperties {
     /// Whether the blob is encrypted on the server.
     #[serde(rename = "ServerEncrypted", skip_serializing_if = "Option::is_none")]
     pub server_encrypted: Option<bool>,
+
+    /// The smart access tier of the blob.
+    #[serde(rename = "SmartAccessTier", skip_serializing_if = "Option::is_none")]
+    pub smart_access_tier: Option<AccessTier>,
 
     /// The number of tags for the blob.
     #[serde(rename = "TagCount", skip_serializing_if = "Option::is_none")]
@@ -628,7 +632,7 @@ pub struct ClearRange {
 pub struct ContainerItem {
     /// Whether the container is deleted.
     #[serde(rename = "Deleted", skip_serializing_if = "Option::is_none")]
-    pub delete: Option<bool>,
+    pub deleted: Option<bool>,
 
     /// The metadata of the container.
     #[serde(rename = "Metadata", skip_serializing_if = "Option::is_none")]
@@ -669,7 +673,7 @@ pub struct ContainerProperties {
 
     /// The ETag of the container.
     #[serde(rename = "Etag", skip_serializing_if = "Option::is_none")]
-    pub etag: Option<String>,
+    pub etag: Option<Etag>,
 
     /// Whether it has an immutability policy.
     #[serde(
@@ -733,6 +737,7 @@ pub struct ContainerProperties {
 /// Web browsers implement a security restriction known as same-origin policy that prevents a web page from calling APIs in
 /// a different domain; CORS provides a secure way to allow one domain (the origin domain) to call APIs in another domain
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[serde(rename = "CorsRule")]
 pub struct CorsRule {
     /// The allowed headers.
     #[serde(rename = "AllowedHeaders", skip_serializing_if = "Option::is_none")]
@@ -764,9 +769,48 @@ pub struct Error {
     #[serde(rename = "Code", skip_serializing_if = "Option::is_none")]
     pub code: Option<StorageErrorCode>,
 
+    /// Copy source error code
+    #[serde(
+        rename = "CopySourceErrorCode",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub copy_source_error_code: Option<String>,
+
+    /// Copy source error message
+    #[serde(
+        rename = "CopySourceErrorMessage",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub copy_source_error_message: Option<String>,
+
+    /// Copy source status code
+    #[serde(
+        rename = "CopySourceStatusCode",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub copy_source_status_code: Option<i32>,
+
+    /// The error code.
+    #[serde(rename = "errorCode", skip_serializing_if = "Option::is_none")]
+    pub error_code: Option<String>,
+
     /// The error message.
     #[serde(rename = "Message", skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
+
+    /// The error code for the copy source.
+    #[serde(
+        rename = "xMsCopySourceErrorCode",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub x_ms_copy_source_error_code: Option<String>,
+
+    /// The status code for the copy source.
+    #[serde(
+        rename = "xMsCopySourceStatusCode",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub x_ms_copy_source_status_code: Option<i32>,
 }
 
 /// The filter blob item.

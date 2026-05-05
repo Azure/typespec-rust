@@ -100,6 +100,7 @@ const REQUEST_SERVER_ENCRYPTED: HeaderName =
     HeaderName::from_static("x-ms-request-server-encrypted");
 const SERVER_ENCRYPTED: HeaderName = HeaderName::from_static("x-ms-server-encrypted");
 const SKU_NAME: HeaderName = HeaderName::from_static("x-ms-sku-name");
+const SMART_ACCESS_TIER: HeaderName = HeaderName::from_static("x-ms-smart-access-tier");
 const SNAPSHOT: HeaderName = HeaderName::from_static("x-ms-snapshot");
 const TAG_COUNT: HeaderName = HeaderName::from_static("x-ms-tag-count");
 const VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
@@ -1037,6 +1038,7 @@ pub trait BlobClientGetPropertiesResultHeaders: private::Sealed {
     fn object_replication_policy_id(&self) -> Result<Option<String>>;
     fn rehydrate_priority(&self) -> Result<Option<RehydratePriority>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
+    fn smart_access_tier(&self) -> Result<Option<String>>;
     fn tag_count(&self) -> Result<Option<i64>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
@@ -1306,6 +1308,11 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
     /// algorithm, and false otherwise.
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         Headers::get_optional_as(self.headers(), &SERVER_ENCRYPTED)
+    }
+
+    /// The underlying tier of a smart tier blob. Only returned if the blob is in Smart tier.
+    fn smart_access_tier(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &SMART_ACCESS_TIER)
     }
 
     /// The number of tags associated with the blob
@@ -2171,6 +2178,7 @@ pub trait BlockBlobClientUploadInternalResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn etag(&self) -> Result<Option<Etag>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn content_crc64(&self) -> Result<Option<Vec<u8>>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
@@ -2195,6 +2203,13 @@ impl BlockBlobClientUploadInternalResultHeaders
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             parse_rfc7231(h.as_str())
+        })
+    }
+
+    /// This response header is returned so that the client can check for the integrity of the copied content.
+    fn content_crc64(&self) -> Result<Option<Vec<u8>>> {
+        Headers::get_optional_with(self.headers(), &CONTENT_CRC64, |h| {
+            base64::decode(h.as_str())
         })
     }
 

@@ -1,12 +1,14 @@
 import "@azure-tools/typespec-azure-core";
 import "@typespec/http";
 import "./models.tsp";
+import "@typespec/versioning";
 
 namespace Storage.Blob;
 
 using TypeSpec.Http;
 using Azure.Core;
 using Azure.ClientGenerator.Core;
+using TypeSpec.Versioning;
 
 alias ApiVersionHeader = {
   /** Specifies the version of the operation to use for this request. */
@@ -200,14 +202,19 @@ interface Service {
   submitBatch(
     /** Required. The value of this header must be multipart/mixed with a batch boundary. Example header value: multipart/mixed; boundary=batch_<GUID> */
     @header("Content-Type")
-    multipartContentType: "multipart/mixed",
+    @alternateType(string, "javascript,csharp")
+    contentType: "multipart/mixed",
 
     ...ApiVersionHeader,
     ...TimeoutParameter,
     ...ClientRequestIdHeader,
     ...ContentLengthParameter,
+
+    /** The batch request content */
     ...MultipartBodyParameter,
   ): (MultipartBodyParameter & {
+    @statusCode statusCode: 202;
+
     /** The media type of the body of the response. For batch requests, this is multipart/mixed; boundary=batchresponse_GUID */
     #suppress "@typespec/http/content-type-ignored" "Template for existing API"
     @header("Content-Type")
@@ -250,13 +257,13 @@ interface Container {
     {
       ...TimeoutParameter;
       ...MetadataHeaders;
-      ...BlobPublicAccess;
+      ...BlobPublicAccessParameter;
 
       /** Optional.  Version 2019-07-07 and later.  Specifies the default encryption scope to set on the container and use for all future writes. */
       @header("x-ms-default-encryption-scope")
       defaultEncryptionScope?: string;
 
-      ...DenyEncryptionScopeOverride;
+      ...DenyEncryptionScopeOverrideParameter;
     },
     {
       @statusCode statusCode: 201;
@@ -282,7 +289,7 @@ interface Container {
       ...LeaseDurationResponseHeader;
       ...LeaseStateResponseHeader;
       ...LeaseStatusResponseHeader;
-      ...BlobPublicAccess;
+      ...BlobPublicAccessResponseHeader;
 
       /** Indicates whether the container has an immutability policy set on it. */
       @header("x-ms-has-immutability-policy")
@@ -296,7 +303,7 @@ interface Container {
       @header("x-ms-default-encryption-scope")
       defaultEncryptionScope?: string;
 
-      ...DenyEncryptionScopeOverride;
+      ...DenyEncryptionScopeOverrideResponseHeader;
 
       /** Indicates whether version level worm is enabled on a container */
       @header("x-ms-immutable-storage-with-versioning-enabled")
@@ -331,7 +338,7 @@ interface Container {
     {
       ...TimeoutParameter;
       ...LeaseIdOptionalParameter;
-      ...MetadataHeadersParameter;
+      ...MetadataHeaders;
       ...IfModifiedSinceParameter;
     },
     {
@@ -353,7 +360,7 @@ interface Container {
       /** Signed identifiers */
       @body body: SignedIdentifiers;
 
-      ...BlobPublicAccess;
+      ...BlobPublicAccessResponseHeader;
       ...EtagResponseHeader;
       ...LastModifiedResponseHeader;
     }
@@ -365,16 +372,20 @@ interface Container {
   #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
   @put
   @route("?restype=container&comp=acl")
-  setAccessPolicy is StorageOperationRequestBody<
+  setAccessPolicy is StorageOperationNoBody<
     {
+      /** The media type of the requestbody */
+      @header("Content-Type")
+      contentType?: "application/xml";
+
       /** The access control list for the container. */
       #suppress "@azure-tools/typespec-azure-core/request-body-problem" "Existing API"
       @body
-      containerAcl: SignedIdentifiers;
+      containerAcl?: SignedIdentifiers;
 
       ...TimeoutParameter;
       ...LeaseIdOptionalParameter;
-      ...BlobPublicAccess;
+      ...BlobPublicAccessParameter;
       ...IfModifiedSinceParameter;
       ...IfUnmodifiedSinceParameter;
     },
@@ -434,23 +445,24 @@ interface Container {
   @post
   @route("?restype=container&comp=batch")
   submitBatch(
-    /** The batch request content */
-    ...MultipartBodyParameter,
-
     /** Required. The value of this header must be multipart/mixed with a batch boundary. Example header value: multipart/mixed; boundary=batch_<GUID> */
     @header("Content-Type")
-    multipartContentType: "multipart/mixed",
+    @alternateType(string, "javascript")
+    contentType: "multipart/mixed",
 
-    ...ContentLengthParameter,
-    ...TimeoutParameter,
     ...ApiVersionHeader,
+    ...TimeoutParameter,
     ...ClientRequestIdHeader,
+    ...ContentLengthParameter,
+
+    /** The batch request content */
+    ...MultipartBodyParameter,
   ): ({
     @statusCode statusCode: 202;
 
     /** Required. The value of this header must be multipart/mixed with a batch boundary. Example header value: multipart/mixed; boundary=batch_<GUID> */
     @header("Content-Type")
-    multipartContentType: "multipart/mixed";
+    contentType: "multipart/mixed";
 
     ...RequestIdResponseHeader;
     ...ApiVersionHeader;
@@ -672,6 +684,7 @@ interface Blob {
     ...LeaseIdOptionalParameter,
 
     /** When set to true and specified together with the Range, the service returns the MD5 hash for the range, as long as the range is less than or equal to 4 MB in size. */
+    @clientName("rangeGetContentMD5", "javascript")
     @header("x-ms-range-get-content-md5")
     rangeGetContentMd5?: boolean,
 
@@ -688,7 +701,10 @@ interface Blob {
     ...EncryptionKeySha256Parameter,
     ...EncryptionAlgorithmParameter,
     ...IfTagsParameter,
-    ...ConditionalRequestHeaders,
+    ...IfModifiedSinceParameter,
+    ...IfUnmodifiedSinceParameter,
+    ...IfNoneMatchParameter,
+    ...IfMatchParameter,
   ): (BodyParameter & {
     /** The media type of the body of the response. */
     @header("Content-Type")
@@ -866,6 +882,7 @@ interface Blob {
 
       /** For blob storage LRS accounts, valid values are rehydrate-pending-to-hot/rehydrate-pending-to-cool. If the blob is being rehydrated and is not complete then this header is returned indicating that rehydrate is pending and also tells the destination tier. */
       @header("x-ms-archive-status")
+      @alternateType(string, "go")
       archiveStatus?: ArchiveStatus;
 
       /** The time the tier was changed on the object. This is only returned if the tier on the block blob was ever set. */
@@ -874,12 +891,17 @@ interface Blob {
       @header("x-ms-access-tier-change-time")
       accessTierChangeTime?: utcDateTime;
 
+      /** The underlying tier of a smart tier blob. Only returned if the blob is in Smart tier. */
+      @added(Versions.v2026_06_06)
+      @header("x-ms-smart-access-tier")
+      smartAccessTier?: string;
+
       ...VersionIdResponseHeader;
       ...IsCurrentVersionResponseHeader;
       ...TagCountResponseHeader;
-      ...ExpiryTimeHeader;
+      ...ExpiryTimeResponseHeader;
       ...IsSealedResponseHeader;
-      ...RehydratePriorityHeader;
+      ...RehydratePriorityResponseHeader;
       ...LastAccessedResponseHeader;
       ...ImmutabilityPolicyExpiresOnResponseHeader;
       ...ImmutabilityPolicyModeResponseHeader;
@@ -944,7 +966,7 @@ interface Blob {
     {
       ...TimeoutParameter;
       ...BlobExpiryOptionsParameter;
-      ...ExpiryTimeHeader;
+      ...ExpiryTimeParameter;
     },
     {
       ...EtagResponseHeader;
@@ -992,7 +1014,12 @@ interface Blob {
     {
       ...TimeoutParameter;
       ...IfUnmodifiedSinceParameter;
+
+      // Note: this property is intentionally named `expiry` (rather than `immutabilityPolicyExpiry`
+      // like the optional sibling alias) so that it surfaces simply as `expiry` in emitted
+      // languages without requiring a `@clientName` override.
       ...ImmutabilityPolicyExpiryRequiredParameter;
+
       ...ImmutabilityPolicyModeParameter;
       ...SnapshotParameter;
       ...VersionIdParameter;
@@ -1044,7 +1071,7 @@ interface Blob {
   setMetadata is StorageOperationNoBody<
     {
       ...TimeoutParameter;
-      ...MetadataHeadersParameter;
+      ...MetadataHeaders;
       ...LeaseIdOptionalParameter;
       ...EncryptionKeyParameter;
       ...EncryptionKeySha256Parameter;
@@ -1238,7 +1265,7 @@ interface Blob {
       ...TimeoutParameter;
       ...MetadataHeaders;
       ...AccessTierHeader;
-      ...RehydratePriorityHeader;
+      ...RehydratePriorityParameter;
       ...SourceIfModifiedSinceParameter;
       ...SourceIfUnmodifiedSinceParameter;
       ...SourceIfMatchParameter;
@@ -1276,7 +1303,6 @@ interface Blob {
   #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
   @put
   @sharedRoute
-  @route("?comp=copy&sync")
   copyFromUrl is StorageOperationNoBody<
     {
       ...TimeoutParameter;
@@ -1366,7 +1392,7 @@ interface Blob {
       @header("x-ms-access-tier")
       tier: AccessTier;
 
-      ...RehydratePriorityHeader;
+      ...RehydratePriorityParameter;
       ...LeaseIdOptionalParameter;
       ...IfTagsParameter;
     },
@@ -1521,11 +1547,7 @@ interface PageBlob {
       ...ContentMd5Parameter;
       ...ContentCrc64Parameter;
       ...TimeoutParameter;
-
-      /** Bytes of data in the specified range. */
-      @header("Range")
-      range: string;
-
+      ...RangeParameterRequired;
       ...LeaseIdOptionalParameter;
       ...EncryptionKeyParameter;
       ...EncryptionKeySha256Parameter;
@@ -1572,11 +1594,7 @@ interface PageBlob {
       contentLength: 0;
 
       ...TimeoutParameter;
-
-      /** Bytes of data in the specified range. */
-      @header("Range")
-      range: string;
-
+      ...RangeParameterRequired;
       ...LeaseIdOptionalParameter;
       ...EncryptionKeyParameter;
       ...EncryptionKeySha256Parameter;
@@ -1612,20 +1630,12 @@ interface PageBlob {
   uploadPagesFromUrl is StorageOperationNoBody<
     {
       ...SourceUrlParameter;
-
-      /** Bytes of source data in the specified range. The length of this range should match the ContentLength header and x-ms-range/Range destination range header. */
-      @header("x-ms-source-range")
-      sourceRange: string;
-
+      ...SourceRangeParameterRequired;
       ...SourceContentMd5Parameter;
       ...SourceContentCrc64Parameter;
       ...ContentLengthParameter;
       ...TimeoutParameter;
-
-      /** Bytes of source data in the specified range. The length of this range should match the ContentLength header and x-ms-range/Range destination range header. */
-      @header("x-ms-range")
-      range: string;
-
+      ...RangeParameterRequired;
       ...EncryptionKeyParameter;
       ...EncryptionKeySha256Parameter;
       ...EncryptionAlgorithmParameter;
@@ -2034,6 +2044,7 @@ interface BlockBlob {
       ...EtagResponseHeader;
       ...LastModifiedResponseHeader;
       ...ContentMd5ResponseHeader;
+      ...ContentCrc64ResponseHeader;
       ...VersionIdResponseHeader;
       ...RequestServerEncryptedResponseHeader;
       ...EncryptionKeySha256ResponseHeader;
