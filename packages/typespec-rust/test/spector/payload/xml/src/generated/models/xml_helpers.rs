@@ -11,24 +11,24 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "AllBooks")]
-pub(crate) struct BooksXmlBook {
+pub(crate) struct BooksBook {
     #[serde(default)]
     XmlBook: Option<Vec<Book>>,
 }
 
-impl BooksXmlBook {
+impl BooksBook {
     pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<Book>>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        Ok(BooksXmlBook::deserialize(deserializer)?.XmlBook)
+        Ok(BooksBook::deserialize(deserializer)?.XmlBook)
     }
 
     pub fn wrap<S>(to_serialize: &Option<Vec<Book>>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        BooksXmlBook {
+        BooksBook {
             XmlBook: to_serialize.to_owned(),
         }
         .serialize(serializer)

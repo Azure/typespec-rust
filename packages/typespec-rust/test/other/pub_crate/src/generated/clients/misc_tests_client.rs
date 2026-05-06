@@ -10,6 +10,7 @@ use azure_core::{
     http::{
         pager::{PagerContinuation, PagerResult, PagerState},
         ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
+        UrlExt,
     },
     json, tracing, Result,
 };
@@ -76,7 +77,12 @@ impl MiscTestsClient {
     ) -> Result<Pager<PagedWidget>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let first_url = self.endpoint.clone();
+        let mut first_url = self.endpoint.clone();
+        let mut query_builder = first_url.query_builder();
+        if let Some(count) = options.count {
+            query_builder.set_pair("count", count.to_string());
+        }
+        query_builder.build();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
                 let url = match next_link {

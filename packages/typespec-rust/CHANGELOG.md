@@ -1,5 +1,12 @@
 # Release History
 
+## 0.40.1 (2026-05-06)
+
+### Bugs Fixed
+
+* Fixed a regression introduced in `7237cce` that caused undesired flipping from `pub(crate)` to `pub` on `pub(crate)` types.
+* Fixed a naming collision that can happen for XML `serde` helpers in certain cases.
+
 ## 0.40.0 (2026-05-05)
 
 ### Breaking Changes

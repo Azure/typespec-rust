@@ -434,6 +434,7 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
   // scalar types use the TypeSpec defined names. so, we need
   // to translate from Rust scalar types back to TypeSpec.
   let unwrappedFieldTypeName: string;
+  let underlyingModelName: string | undefined;
   const wrappedType = helpers.unwrapType(field.type);
   switch (wrappedType.kind) {
     case 'String':
@@ -442,6 +443,10 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
     case 'model':
       if (wrappedType.xmlName) {
         unwrappedFieldTypeName = wrappedType.xmlName;
+        // it's possible for multiple models to use the same XML tag over
+        // the wire. so instead of using the tag name for the helper name, we
+        // use the model name which is guaranteed to be unique.
+        underlyingModelName = wrappedType.name;
       } else {
         unwrappedFieldTypeName = wrappedType.name;
       }
@@ -487,9 +492,14 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
       unwrappedFieldTypeName = helpers.getTypeDeclaration(wrappedType);
   }
 
+  let helperNameSuffx = unwrappedFieldTypeName;
+  if (underlyingModelName) {
+    helperNameSuffx = underlyingModelName;
+  }
+
   // the wrapper type name is a combination of the field name and the
   // unwrapped type name of T. this is to ensure unique type names
-  const wrapperTypeName = `${helpers.capitalize(field.name)}${helpers.capitalize(unwrappedFieldTypeName)}`;
+  const wrapperTypeName = `${helpers.capitalize(field.name)}${helpers.capitalize(helperNameSuffx)}`;
   let xmlListWrapper = xmlListWrappers.get(wrapperTypeName);
   if (!xmlListWrapper) {
     xmlListWrapper = new XMLListWrapper(wrapperTypeName, unwrappedFieldTypeName, field.type);

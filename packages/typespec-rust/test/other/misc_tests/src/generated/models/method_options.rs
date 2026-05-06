@@ -69,6 +69,20 @@ impl MiscTestsClientFindTheWidgetsOptions<'_> {
     }
 }
 
+/// Options to be passed to [`MiscTestsClient::get_array_of_type_one()`](crate::generated::clients::MiscTestsClient::get_array_of_type_one())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientGetArrayOfTypeOneOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::get_array_of_type_two()`](crate::generated::clients::MiscTestsClient::get_array_of_type_two())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientGetArrayOfTypeTwoOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::get_discriminated_no_sub_types()`](crate::generated::clients::MiscTestsClient::get_discriminated_no_sub_types())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientGetDiscriminatedNoSubTypesOptions<'a> {

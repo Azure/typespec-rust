@@ -451,7 +451,12 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
         if (fieldDocs.length > 0) {
           block += `${indent.get()}${fieldDocs}`;
         }
-        block += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        let visibilityToEmit = field.visibility;
+        // if the method has less visibility that the field, prefer that
+        if (method.visibility === 'pubCrate') {
+          visibilityToEmit = method.visibility;
+        }
+        block += `${indent.get()}${helpers.emitVisibility(visibilityToEmit)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         if (i + 1 < optionsStruct.fields.length) {
           block += '\n';
         }

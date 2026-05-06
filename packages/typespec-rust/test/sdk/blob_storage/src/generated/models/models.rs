@@ -6,8 +6,8 @@
 use super::{
     models_serde,
     xml_helpers::{
-        Blob_tag_setTag, BlobsBlob, Committed_blocksBlock, Container_itemsContainer, CorsCorsRule,
-        Uncommitted_blocksBlock,
+        Blob_tag_setBlobTag, BlobsFilterBlobItem, Committed_blocksBlock,
+        Container_itemsContainerItem, CorsCorsRule, Uncommitted_blocksBlock,
     },
     AccessTier, ArchiveStatus, BlobType, CopyStatus, GeoReplicationStatusType,
     ImmutabilityPolicyMode, LeaseDuration, LeaseState, LeaseStatus, PublicAccessType,
@@ -508,9 +508,9 @@ pub struct BlobTags {
     /// Represents the blob tags.
     #[serde(
         default,
-        deserialize_with = "Blob_tag_setTag::unwrap",
+        deserialize_with = "Blob_tag_setBlobTag::unwrap",
         rename = "TagSet",
-        serialize_with = "Blob_tag_setTag::wrap",
+        serialize_with = "Blob_tag_setBlobTag::wrap",
         skip_serializing_if = "Option::is_none"
     )]
     pub blob_tag_set: Option<Vec<BlobTag>>,
@@ -847,9 +847,9 @@ pub struct FilterBlobSegment {
     /// The blob segment.
     #[serde(
         default,
-        deserialize_with = "BlobsBlob::unwrap",
+        deserialize_with = "BlobsFilterBlobItem::unwrap",
         rename = "Blobs",
-        serialize_with = "BlobsBlob::wrap",
+        serialize_with = "BlobsFilterBlobItem::wrap",
         skip_serializing_if = "Option::is_none"
     )]
     pub blobs: Option<Vec<FilterBlobItem>>,
@@ -928,9 +928,9 @@ pub struct ListContainersSegmentResponse {
     /// The container segment.
     #[serde(
         default,
-        deserialize_with = "Container_itemsContainer::unwrap",
+        deserialize_with = "Container_itemsContainerItem::unwrap",
         rename = "Containers",
-        serialize_with = "Container_itemsContainer::wrap"
+        serialize_with = "Container_itemsContainerItem::wrap"
     )]
     pub container_items: Vec<ContainerItem>,
 

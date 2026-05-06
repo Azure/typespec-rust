@@ -5,7 +5,7 @@
 
 use super::{
     models_serde,
-    xml_helpers::{BooksXmlBook, ColorsString, CountsInt32, ItemsSimpleModel, TagsString},
+    xml_helpers::{BooksBook, ColorsString, CountsInt32, ItemsSimpleModel, TagsString},
     Status,
 };
 use azure_core::{fmt::SafeDebug, time::OffsetDateTime};
@@ -225,9 +225,9 @@ pub struct ModelWithRenamedUnwrappedModelArray {
 pub struct ModelWithRenamedWrappedAndItemModelArray {
     #[serde(
         default,
-        deserialize_with = "BooksXmlBook::unwrap",
+        deserialize_with = "BooksBook::unwrap",
         rename = "AllBooks",
-        serialize_with = "BooksXmlBook::wrap",
+        serialize_with = "BooksBook::wrap",
         skip_serializing_if = "Option::is_none"
     )]
     pub books: Option<Vec<Book>>,

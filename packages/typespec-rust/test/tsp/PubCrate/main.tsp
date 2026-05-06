@@ -4,6 +4,7 @@ import "@typespec/http";
 
 using Azure.ClientGenerator.Core;
 using Azure.Core;
+using TypeSpec.Http;
 
 @service(#{
   title: "All contents are pub(crate)",
@@ -24,4 +25,4 @@ model Widget {
 
 @access(Access.internal)
 @list
-op listWidgets(): Page<Widget>;
+op listWidgets(@query count?: int32): Page<Widget>;

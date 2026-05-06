@@ -8,6 +8,8 @@ use azure_core::{fmt::SafeDebug, http::pager::PagerOptions};
 /// Options to be passed to [`MiscTestsClient::list_widgets()`](crate::generated::clients::MiscTestsClient::list_widgets())
 #[derive(Clone, Default, SafeDebug)]
 pub(crate) struct MiscTestsClientListWidgetsOptions<'a> {
+    pub(crate) count: Option<i32>,
+
     /// Allows customization of the method call.
     pub(crate) method_options: PagerOptions<'a>,
 }
@@ -16,6 +18,7 @@ impl MiscTestsClientListWidgetsOptions<'_> {
     /// Transforms this [`MiscTestsClientListWidgetsOptions`] into a new `MiscTestsClientListWidgetsOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> MiscTestsClientListWidgetsOptions<'static> {
         MiscTestsClientListWidgetsOptions {
+            count: self.count,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options

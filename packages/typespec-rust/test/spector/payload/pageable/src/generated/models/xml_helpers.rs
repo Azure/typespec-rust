@@ -11,24 +11,24 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Pets")]
-pub(crate) struct PetsPet {
+pub(crate) struct PetsXmlPet {
     #[serde(default)]
     Pet: Vec<XmlPet>,
 }
 
-impl PetsPet {
+impl PetsXmlPet {
     pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<XmlPet>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        Ok(PetsPet::deserialize(deserializer)?.Pet)
+        Ok(PetsXmlPet::deserialize(deserializer)?.Pet)
     }
 
     pub fn wrap<S>(to_serialize: &Vec<XmlPet>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        PetsPet {
+        PetsXmlPet {
             Pet: to_serialize.to_owned(),
         }
         .serialize(serializer)

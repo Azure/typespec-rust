@@ -1,9 +1,11 @@
 import "@azure-tools/typespec-client-generator-core";
 import "@azure-tools/typespec-azure-core";
 import "@typespec/http";
+import "@typespec/xml";
 
 using Azure.ClientGenerator.Core;
 using TypeSpec.Http;
+using TypeSpec.Xml;
 
 @service(#{
   title: "Various emitter tests",
@@ -253,3 +255,37 @@ model FoundWidgets {
 model Widget {
   name: string;
 }
+
+model ArrayOfTypeOne {
+  @Xml.name("Items")
+  items: TypeOne[];
+}
+
+model ArrayOfTypeTwo {
+  @Xml.name("Items")
+  items: TypeTwo[];
+}
+
+@Xml.name("Widget")
+model TypeOne {
+  name: string;
+}
+
+@Xml.name("Widget")
+model TypeTwo {
+  size: int32;
+}
+
+@get
+@route("/get-array-of-type-one")
+op getArrayOfTypeOne(): {
+  @header contentType: "application/xml";
+  @body body: ArrayOfTypeOne;
+};
+
+@get
+@route("/get-array-of-type-two")
+op getArrayOfTypeTwo(): {
+  @header contentType: "application/xml";
+  @body body: ArrayOfTypeTwo;
+};

@@ -14,6 +14,7 @@ mod models_impl;
 mod models_serde;
 mod unions;
 mod unions_serde;
+mod xml_helpers;
 pub use enums::*;
 pub use header_traits::*;
 pub use method_options::*;
