@@ -16,10 +16,16 @@ async fn get() {
     let value: ModelWithDatetime = resp.into_model().unwrap();
     // rfc3339: "2022-08-26T18:38:00.000Z"
     let rfc3339 = value.rfc3339.unwrap();
-    assert_eq!(rfc3339, OffsetDateTime::from_unix_timestamp(1661539080).unwrap());
+    assert_eq!(
+        rfc3339,
+        OffsetDateTime::from_unix_timestamp(1661539080).unwrap()
+    );
     // rfc7231: "Fri, 26 Aug 2022 14:38:00 GMT"
     let rfc7231 = value.rfc7231.unwrap();
-    assert_eq!(rfc7231, OffsetDateTime::from_unix_timestamp(1661524680).unwrap());
+    assert_eq!(
+        rfc7231,
+        OffsetDateTime::from_unix_timestamp(1661524680).unwrap()
+    );
 }
 
 #[tokio::test]
