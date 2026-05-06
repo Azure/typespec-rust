@@ -492,14 +492,14 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
       unwrappedFieldTypeName = helpers.getTypeDeclaration(wrappedType);
   }
 
-  let helperNameSuffx = unwrappedFieldTypeName;
+  let helperNameSuffix = unwrappedFieldTypeName;
   if (underlyingModelName) {
-    helperNameSuffx = underlyingModelName;
+    helperNameSuffix = underlyingModelName;
   }
 
   // the wrapper type name is a combination of the field name and the
   // unwrapped type name of T. this is to ensure unique type names
-  const wrapperTypeName = `${helpers.capitalize(field.name)}${helpers.capitalize(helperNameSuffx)}`;
+  const wrapperTypeName = `${helpers.capitalize(field.name)}${helpers.capitalize(helperNameSuffix)}`;
   let xmlListWrapper = xmlListWrappers.get(wrapperTypeName);
   if (!xmlListWrapper) {
     xmlListWrapper = new XMLListWrapper(wrapperTypeName, unwrappedFieldTypeName, field.type);
