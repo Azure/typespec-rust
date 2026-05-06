@@ -452,7 +452,7 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
           block += `${indent.get()}${fieldDocs}`;
         }
         let visibilityToEmit = field.visibility;
-        // if the method has less visibility that the field, prefer that
+        // if the method has less visibility than the field, prefer that
         if (method.visibility === 'pubCrate') {
           visibilityToEmit = method.visibility;
         }
