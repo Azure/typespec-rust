@@ -4,8 +4,8 @@
 
 use spector_xml::{models::ModelWithWrappedPrimitiveCustomItemNames, XmlClient};
 
-#[ignore = "https://github.com/Azure/typespec-rust/issues/951"]
 #[tokio::test]
+#[ignore = "https://github.com/Azure/typespec-rust/issues/951"]
 async fn get() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -20,8 +20,8 @@ async fn get() {
     assert_eq!(tags[1], "classic");
 }
 
-#[ignore = "https://github.com/Azure/typespec-rust/issues/951"]
 #[tokio::test]
+#[ignore = "https://github.com/Azure/typespec-rust/issues/951"]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = ModelWithWrappedPrimitiveCustomItemNames {

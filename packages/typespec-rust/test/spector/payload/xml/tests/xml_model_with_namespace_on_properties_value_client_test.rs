@@ -18,8 +18,8 @@ async fn get() {
     assert_eq!(value.author, Some("F. Scott Fitzgerald".to_string()));
 }
 
-#[ignore = "https://github.com/Azure/typespec-rust/issues/950"]
 #[tokio::test]
+#[ignore = "https://github.com/Azure/typespec-rust/issues/950"]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = ModelWithNamespaceOnProperties {
