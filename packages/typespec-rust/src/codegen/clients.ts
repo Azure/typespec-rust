@@ -2144,6 +2144,7 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
 function nonCopyableType(type: rust.Type): boolean {
   const unwrappedType = utils.unwrapOption(type);
   switch (unwrappedType.kind) {
+    case 'Etag':
     case 'String':
     case 'Url':
     case 'external':

@@ -2,6 +2,10 @@
 
 ## 0.41.1 (unreleased)
 
+### Features Added
+
+* Reintroduced emitting some pageable operations as returning a `PageIterator<T>`, specifically for per-page models that contain multiple arrays of items.
+
 ### Other Changes
 
 * Fixed a sorting issue for recursive types.

@@ -1336,6 +1336,7 @@ model PageList {
   /** The page ranges. */
   @Xml.unwrapped
   @Xml.name("PageRange")
+  @pageItems
   pageRange?: PageRange[];
 
   /** The clear ranges. */

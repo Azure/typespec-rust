@@ -99,6 +99,7 @@ function unwrap(type: rust.Type): rust.Type | undefined {
     case 'literal':
       return type.valueKind;
     case 'option':
+    case 'pageIterator':
     case 'pager':
     case 'ref':
       return type.type;

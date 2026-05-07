@@ -129,6 +129,7 @@ export class Use {
       case 'Vec':
         this.addForType(type.type);
         break;
+      case 'pageIterator':
       case 'pager':
         if (type.type.format !== 'JsonFormat') {
           // JsonFormat is the default so no need to bring it into scope
