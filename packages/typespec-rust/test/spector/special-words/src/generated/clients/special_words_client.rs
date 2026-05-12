@@ -8,6 +8,7 @@ use crate::{
     generated::clients::{SpecialWordsOperationsClient, SpecialWordsParametersClient},
     model_properties::clients::SpecialWordsModelPropertiesClient,
     models::clients::SpecialWordsModelsClient,
+    reserved_operation_body_params::clients::SpecialWordsReservedOperationBodyParamsClient,
 };
 use azure_core::{
     fmt::SafeDebug,
@@ -147,6 +148,17 @@ impl SpecialWordsClient {
     #[tracing::subclient]
     pub fn get_special_words_parameters_client(&self) -> SpecialWordsParametersClient {
         SpecialWordsParametersClient {
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of SpecialWordsReservedOperationBodyParamsClient.
+    #[tracing::subclient]
+    pub fn get_special_words_reserved_operation_body_params_client(
+        &self,
+    ) -> SpecialWordsReservedOperationBodyParamsClient {
+        SpecialWordsReservedOperationBodyParamsClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }

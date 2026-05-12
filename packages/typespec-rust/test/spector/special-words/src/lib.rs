@@ -10,3 +10,4 @@ pub use generated::*;
 pub mod extensible_strings;
 pub mod model_properties;
 pub mod models;
+pub mod reserved_operation_body_params;

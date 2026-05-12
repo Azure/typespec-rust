@@ -1,6 +1,6 @@
 {
   "name": "@azure-tools/typespec-rust",
-  "version": "0.40.1",
+  "version": "0.40.2",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
   "packageManager": "pnpm@10.33.2",
@@ -49,11 +49,11 @@
   "homepage": "https://github.com/Azure/typespec-rust#readme",
   "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
-    "@azure-tools/azure-http-specs": "0.1.0-alpha.39",
+    "@azure-tools/azure-http-specs": "0.1.0-alpha.40",
     "@eslint/js": "^10.0.1",
     "@types/node": "^20.19.0",
     "@types/turndown": "^5.0.6",
-    "@typespec/http-specs": "0.1.0-alpha.36",
+    "@typespec/http-specs": "0.1.0-alpha.37",
     "@typespec/spector": "0.1.0-alpha.25",
     "@vitest/coverage-v8": "^4.1.5",
     "@vitest/ui": "^4.1.5",
@@ -63,11 +63,11 @@
     "vitest": "^4.1.5"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-azure-resource-manager": "0.67.1",
-    "@typespec/openapi": "1.11.0",
-    "@typespec/rest": "0.81.0",
-    "@typespec/versioning": "0.81.0",
-    "@typespec/xml": "0.81.0",
+    "@azure-tools/typespec-azure-resource-manager": "0.68.0",
+    "@typespec/openapi": "1.12.0",
+    "@typespec/rest": "0.82.0",
+    "@typespec/versioning": "0.82.0",
+    "@typespec/xml": "0.82.0",
     "fast-xml-parser": ">=5.7.0",
     "flatted": ">=3.4.2",
     "minimatch": ">=10.2.3",
@@ -79,10 +79,10 @@
     "yaml": ">=2.8.3"
   },
   "dependencies": {
-    "@azure-tools/typespec-azure-core": "0.67.1",
-    "@azure-tools/typespec-client-generator-core": "0.67.4",
-    "@typespec/compiler": "1.11.0",
-    "@typespec/http": "1.11.0",
+    "@azure-tools/typespec-azure-core": "0.68.0",
+    "@azure-tools/typespec-client-generator-core": "0.68.0",
+    "@typespec/compiler": "1.12.0",
+    "@typespec/http": "1.12.0",
     "linkifyjs": "^4.3.2",
     "query-string": "9.3.1",
     "source-map-support": "0.5.21",
