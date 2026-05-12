@@ -1,6 +1,10 @@
 # Release History
 
-## 0.40.2 (2026-05-12)
+## 0.41.0 (2026-05-12)
+
+### Breaking Changes
+
+* The minimum Node version has moved from `20.x` to `22.x`.
 
 ### Other Changes
 
