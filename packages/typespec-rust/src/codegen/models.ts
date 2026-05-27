@@ -522,7 +522,7 @@ function emitXMLListWrappers(module: rust.ModuleContainer): helpers.Module | und
   }
 
   const wrapperTypes = Array.from(xmlListWrappers.values());
-  wrapperTypes.sort((a, b) => { return helpers.sortAscending(a.name, b.name); });
+  wrapperTypes.sort((a, b) => { return utils.sortAscending(a.name, b.name); });
 
   const indent = new helpers.indentation();
   const use = new Use(module, 'modelsOther');

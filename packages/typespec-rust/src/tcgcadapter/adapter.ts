@@ -282,7 +282,9 @@ export class Adapter {
       terminalErrorModelNames = getTerminalErrorModelNames(this.ctx.sdkPackage.clients);
     }
 
-    for (const model of this.ctx.sdkPackage.models) {
+    // we sort the models by name to keep output stable for recursive types.
+    // for the fields that require a Box<T>, this ensures we always box the same field.
+    for (const model of this.ctx.sdkPackage.models.sort((a, b) => utils.sortAscending(a.name, b.name))) {
       if ((model.usage & (tcgc.UsageFlags.Input | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread | tcgc.UsageFlags.Exception)) === 0) {
         // skip types without input and output usage. this will include core
         // types unless they're explicitly referenced (e.g. a model property).
