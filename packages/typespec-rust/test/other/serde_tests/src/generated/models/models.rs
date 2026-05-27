@@ -415,14 +415,14 @@ pub struct OuterType {
 #[non_exhaustive]
 pub struct OuterWithNullable {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<OuterWithNullableValue>,
+    pub value: Option<RecursiveNullableType1>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct OuterWithNullableValue {
+pub struct RecursiveNullableType1 {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub inner: Option<Box<OuterWithNullableValue>>,
+    pub inner: Option<Box<RecursiveNullableType1>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
