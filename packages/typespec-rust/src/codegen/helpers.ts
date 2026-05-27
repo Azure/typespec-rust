@@ -359,17 +359,6 @@ export function annotationDerive(serde: boolean, ...extra: Array<string>): strin
 }
 
 /**
- * used to sort strings in ascending order
- * 
- * @param a is the value on the left side
- * @param b is the value on the right side
- * @returns -1 if a < b, 1 if a > b, or 0 if they're equal
- */
-export function sortAscending(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
-
-/**
  * returns the generic lifetime annotation string for lifetime (e.g. <'a>)
  * 
  * @param lifetime contains the Rust lifetime value

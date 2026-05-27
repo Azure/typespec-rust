@@ -195,7 +195,7 @@ export class Use {
         content += '::';
         recursiveText(node.children[0], false);
       } else if (node.children.length > 1) {
-        node.children.sort((a, b) => helpers.sortAscending(a.name, b.name));
+        node.children.sort((a, b) => utils.sortAscending(a.name, b.name));
         content += '::{';
         for (const child of node.children) {
           recursiveText(child, true);
@@ -208,7 +208,7 @@ export class Use {
       }
     };
 
-    this.trees.sort((a, b) => helpers.sortAscending(a.root.name, b.root.name));
+    this.trees.sort((a, b) => utils.sortAscending(a.root.name, b.root.name));
     for (const tree of this.trees) {
       content += `${indent.get()}use `;
       recursiveText(tree.root, false);

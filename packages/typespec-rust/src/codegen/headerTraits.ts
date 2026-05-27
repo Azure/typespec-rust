@@ -89,8 +89,8 @@ export function emitHeaderTraits(module: rust.ModuleContainer): helpers.Module |
     addHeaders(...mergedHeaders);
   }
 
-  headers.sort((a: rust.ResponseHeader, b: rust.ResponseHeader) => helpers.sortAscending(getHeaderConstName(a), getHeaderConstName(b)));
-  traits.sort((a: rust.ResponseHeadersTrait, b: rust.ResponseHeadersTrait) => helpers.sortAscending(a.name, b.name));
+  headers.sort((a: rust.ResponseHeader, b: rust.ResponseHeader) => utils.sortAscending(getHeaderConstName(a), getHeaderConstName(b)));
+  traits.sort((a: rust.ResponseHeadersTrait, b: rust.ResponseHeadersTrait) => utils.sortAscending(a.name, b.name));
 
   // this specializes literals to return the value's underlying type
   const getTypeDeclaration = function (type: rust.Type): string {

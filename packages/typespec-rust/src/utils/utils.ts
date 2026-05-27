@@ -8,6 +8,17 @@
 import * as rust from '../codemodel/index.js';
 
 /**
+ * used to sort strings in ascending order
+ * 
+ * @param a is the value on the left side
+ * @param b is the value on the right side
+ * @returns -1 if a < b, 1 if a > b, or 0 if they're equal
+ */
+export function sortAscending(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/**
  * if type is an Option<T>, returns the T, else returns type
  * 
  * @param type is the type to unwrap

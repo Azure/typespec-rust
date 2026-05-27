@@ -188,7 +188,7 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         // exclude endpoint params as they aren't propagated to clients (they're consumed when creating the complete endpoint)
         const sortedParams = [...constructor.params]
           .filter((each) => each.kind !== 'clientSupplementalEndpoint' && each.kind !== 'clientCredential')
-          .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); });
+          .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return utils.sortAscending(a.name, b.name); });
 
         // for ARM, explicitly add the endpoint field (derived from cloud config, not a ctor param)
         if (crate.type === 'azure-arm') {
@@ -522,7 +522,7 @@ function getMethodOptions(module: rust.ModuleContainer): helpers.Module | undefi
     }
   }
 
-  structBlocks.sort((a, b) => helpers.sortAscending(a.name, b.name));
+  structBlocks.sort((a, b) => utils.sortAscending(a.name, b.name));
   const body = structBlocks.map((b) => b.body).join('\n');
 
   if (body === '') {
@@ -897,9 +897,9 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
     }
   }
 
-  headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
-  pathParams.sort((a: PathParamType, b: PathParamType) => { return helpers.sortAscending(a.segment, b.segment); });
-  queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
+  headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return utils.sortAscending(a.header, b.header); });
+  pathParams.sort((a: PathParamType, b: PathParamType) => { return utils.sortAscending(a.segment, b.segment); });
+  queryParams.sort((a: QueryParamType, b: QueryParamType) => { return utils.sortAscending(a.key, b.key); });
 
   let bodyParam: rust.BodyParameter | undefined;
   for (const param of method.params) {
