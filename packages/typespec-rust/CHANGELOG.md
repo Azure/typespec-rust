@@ -4,7 +4,7 @@
 
 ### Features Added
 
-* Reintroduced emitting some pageable operations as returning a `PageIterator<T>`, specifically for per-page models that contain multiple arrays of items.
+* Added support for `forcePageIterator` `@clientOption` decorator, which can be used to emit paged operations as returning a `PageIterator<T>`.
 
 ### Other Changes
 

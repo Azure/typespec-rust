@@ -2337,10 +2337,13 @@ export class Adapter {
       // default to nextLink. will update it as required when we have that info
       const continuationKind: rust.PagerContinuationKind = 'nextLink';
 
-      // if the per-page model contains more than one Vec<T> then we
-      // will expose this as a PageIterator so all items are accessible.
+      // if the method has the forcePageIterator client option set to true,
+      // expose this as a PageIterator so all items are accessible.
+      const forcePageIterator = method.decorators.find(
+        d => d.name === 'Azure.ClientGenerator.Core.@clientOption' && d.arguments['name'] === 'forcePageIterator'
+      )?.arguments['value'] as boolean | undefined;
       let resultType: rust.PageIterator | rust.Pager;
-      if (synthesizedModel.fields.filter((each) => utils.unwrapOption(each.type).kind === 'Vec').length > 1) {
+      if (forcePageIterator) {
         resultType = new rust.PageIterator(this.crate, pagedResponseType, continuationKind);
       } else {
         this.crate.addDependency(new rust.CrateDependency('async-trait'));
