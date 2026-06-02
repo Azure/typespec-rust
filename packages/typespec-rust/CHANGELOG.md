@@ -2,6 +2,10 @@
 
 ## 0.41.1 (unreleased)
 
+### Features Added
+
+* Added support for `forcePageIterator` `@clientOption` decorator, which can be used to emit paged operations as returning a `PageIterator<T>`.
+
 ### Other Changes
 
 * Fixed a sorting issue for recursive types.
