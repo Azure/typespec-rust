@@ -17,8 +17,8 @@ pipelines:
         credscan:
           lastModifiedDate: 2025-05-27
         eslint:
-          lastModifiedDate: 2025-05-27
+          lastModifiedDate: 2026-06-02
         psscriptanalyzer:
-          lastModifiedDate: 2025-05-27
+          lastModifiedDate: 2026-06-02
         armory:
-          lastModifiedDate: 2025-05-27
+          lastModifiedDate: 2026-06-02
