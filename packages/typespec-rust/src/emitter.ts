@@ -10,7 +10,7 @@ import { CodegenError } from './codegen/errors.js';
 import { generatedCodeKeyPhrase } from './codegen/helpers.js';
 import { Adapter, AdapterError, ExternalError } from './tcgcadapter/adapter.js';
 import { reportDiagnostic, RustEmitterOptions } from './lib.js';
-import { execSync } from 'child_process';
+import { isCargoAvailable, runCargoFmt } from './utils/cargo.js';
 import * as fs from 'fs';
 import { mkdir, readdir, writeFile } from 'fs/promises';
 import * as path from 'path';
@@ -118,9 +118,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   // we do this to avoid having to parse any output from cargo fmt to
   // distinguish between failure due to not on the path vs a legit failure
   // like choking on malformed code.
-  try {
-    execSync('cargo --version', { encoding: 'ascii' });
-  } catch {
+  if (!isCargoAvailable()) {
     context.program.reportDiagnostic({
       code: 'CargoFmt',
       severity: 'warning',
@@ -133,7 +131,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   }
 
   try {
-    execSync('cargo fmt -- --emit files', { cwd: context.emitterOutputDir, encoding: 'ascii' });
+    runCargoFmt(context.emitterOutputDir);
   } catch (err) {
     context.program.reportDiagnostic({
       code: 'CargoFmt',
