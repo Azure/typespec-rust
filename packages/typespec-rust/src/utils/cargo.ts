@@ -5,13 +5,17 @@
 
 import { SpawnSyncReturns, spawnSync } from 'child_process';
 
-type CargoSpawn = (
+type SpawnSyncFunction = (
   command: string,
   args: readonly string[],
   options: { cwd?: string; encoding: 'utf-8' }
 ) => SpawnSyncReturns<string>;
 
-export function createCargoRunner(spawn: CargoSpawn) {
+export function createCargoRunner(spawn: SpawnSyncFunction) {
+  function isNonEmptyString(value: string | null): value is string {
+    return value !== null && value.trim().length > 0;
+  }
+
   function runCargo(args: string[], cwd?: string): SpawnSyncReturns<string> {
     const result = spawn('cargo', args, { cwd, encoding: 'utf-8' });
     if (result.error) {
@@ -19,7 +23,7 @@ export function createCargoRunner(spawn: CargoSpawn) {
     }
     if (result.status !== 0) {
       const output = [result.stdout, result.stderr]
-        .filter((value): value is string => Boolean(value) && value.trim().length > 0)
+        .filter(isNonEmptyString)
         .join('\n')
         .trim();
       const details = output.length > 0 ? `: ${output}` : '';

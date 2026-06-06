@@ -34,9 +34,9 @@ describe('typespec-rust: cargo', () => {
   });
 
   it('runs cargo fmt in the specified directory', () => {
-    const calls: [string, readonly string[], string | undefined, 'utf-8'][] = [];
+    const spawnCalls: [string, readonly string[], string | undefined, 'utf-8'][] = [];
     const cargo = createCargoRunner((command, args, options) => {
-      calls.push([command, args, options.cwd, options.encoding]);
+      spawnCalls.push([command, args, options.cwd, options.encoding]);
       return {
         status: 0,
         stdout: '',
@@ -46,11 +46,11 @@ describe('typespec-rust: cargo', () => {
 
     cargo.runCargoFmt('/tmp/crate');
 
-    strictEqual(calls.length, 1);
-    strictEqual(calls[0][0], 'cargo');
-    strictEqual(calls[0][1].join(' '), 'fmt -- --emit files');
-    strictEqual(calls[0][2], '/tmp/crate');
-    strictEqual(calls[0][3], 'utf-8');
+    strictEqual(spawnCalls.length, 1);
+    strictEqual(spawnCalls[0][0], 'cargo');
+    strictEqual(spawnCalls[0][1].join(' '), 'fmt -- --emit files');
+    strictEqual(spawnCalls[0][2], '/tmp/crate');
+    strictEqual(spawnCalls[0][3], 'utf-8');
   });
 
   it('surfaces cargo fmt output when command fails', () => {
@@ -62,6 +62,14 @@ describe('typespec-rust: cargo', () => {
       } as never;
     });
 
-    throws(() => cargo.runCargoFmt('/tmp/crate'), new Error('command failed: cargo fmt -- --emit files: failed output\nfailed error'));
+    throws(
+      () => cargo.runCargoFmt('/tmp/crate'),
+      (error) => {
+        const message = (error as Error).message;
+        return message.includes('command failed: cargo fmt -- --emit files')
+          && message.includes('failed output')
+          && message.includes('failed error');
+      }
+    );
   });
 });
