@@ -32,16 +32,13 @@ model DeserializeWith {
 
   #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
   times: offsetDateTime[];
-
-  #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
-  serializedTimes: offsetDateTime[];
 }
 
 @@access(DeserializeWith, Access.public);
 @@usage(DeserializeWith, Usage.output);
 
 #suppress "@azure-tools/typespec-client-generator-core/client-option"
-@@clientOption(DeserializeWith.name, "serialize_with", "crate::models::serialize_name", "rust");
+@@clientOption(DeserializeWith.name, "deserialize_with", "crate::models::deserialize_name", "rust");
 
 #suppress "@azure-tools/typespec-client-generator-core/client-option"
 @@clientOption(DeserializeWith.safeInt, "deserialize_with", "crate::models::deserialize_safeint", "rust");
@@ -50,16 +47,42 @@ model DeserializeWith {
 @@clientOption(DeserializeWith.base64, "deserialize_with", "crate::models::deserialize_base64", "rust");
 
 #suppress "@azure-tools/typespec-client-generator-core/client-option"
-@@clientOption(DeserializeWith.base64, "serialize_with", "crate::models::serialize_base64", "rust");
-
-#suppress "@azure-tools/typespec-client-generator-core/client-option"
-@@clientOption(DeserializeWith.time, "serialize_with", "crate::models::serialize_time", "rust");
+@@clientOption(DeserializeWith.time, "deserialize_with", "crate::models::deserialize_time", "rust");
 
 #suppress "@azure-tools/typespec-client-generator-core/client-option"
 @@clientOption(DeserializeWith.times, "deserialize_with", "crate::models::deserialize_times", "rust");
 
+model SerializeWith {
+  #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
+  name: string;
+
+  #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
+  base64: bytes;
+
+  #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
+  time: offsetDateTime;
+
+  #suppress "@azure-tools/typespec-client-generator-core/client-option" "Testing functionality"
+  serializedTimes: offsetDateTime[];
+}
+
+@@access(SerializeWith, Access.public);
+@@usage(SerializeWith, Usage.output);
+
 #suppress "@azure-tools/typespec-client-generator-core/client-option"
-@@clientOption(DeserializeWith.serializedTimes, "serialize_with", "crate::models::serialize_serialized_times", "rust");
+@@clientOption(SerializeWith.name, "serialize_with", "crate::models::serialize_name", "rust");
+
+#suppress "@azure-tools/typespec-client-generator-core/client-option"
+@@clientOption(SerializeWith.base64, "deserialize_with", "crate::models::deserialize_base64", "rust");
+
+#suppress "@azure-tools/typespec-client-generator-core/client-option"
+@@clientOption(SerializeWith.base64, "serialize_with", "crate::models::serialize_base64", "rust");
+
+#suppress "@azure-tools/typespec-client-generator-core/client-option"
+@@clientOption(SerializeWith.time, "serialize_with", "crate::models::serialize_time", "rust");
+
+#suppress "@azure-tools/typespec-client-generator-core/client-option"
+@@clientOption(SerializeWith.serializedTimes, "serialize_with", "crate::models::serialize_serialized_times", "rust");
 
 #suppress "@azure-tools/typespec-client-generator-core/client-option"
 @@clientOption(ClientOption, "omitEndpointMethod", true, "rust");
