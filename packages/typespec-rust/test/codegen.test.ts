@@ -157,4 +157,26 @@ describe('typespec-rust: codegen', () => {
       strictEqual(match, expected);
     });
   });
+
+  it('emits custom serialize_with for offsetDateTime fields', () => {
+    const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
+    const model = new rust.Model('Sample', 'pub', rust.ModelFlags.Output, crate);
+    const field = new rust.ModelField(
+      'time',
+      'time',
+      'pub',
+      new rust.Option(new rust.OffsetDateTime(crate, 'rfc3339', false)),
+      true
+    );
+    field.customizations.push(new rust.SerializeWith('crate::models::serialize_time'));
+    model.fields.push(field);
+    crate.models.push(model);
+
+    const codegen = new CodeGenerator(crate);
+    const models = codegen.emitContent().find((file) => file.name === 'generated/models/models.rs');
+
+    strictEqual(models?.content.includes('deserialize_with = "azure_core::time::rfc3339::option::deserialize"'), true);
+    strictEqual(models?.content.includes('serialize_with = "crate::models::serialize_time"'), true);
+    strictEqual(models?.content.includes('with = "azure_core::time::rfc3339::option"'), false);
+  });
 });

@@ -1030,6 +1030,19 @@ export class Adapter {
           }
           modelField.customizations.push(new rust.DeserializeWith(optionValue));
           break;
+        case 'serialize_with':
+          if (modelField.customizations.find((each) => each.kind === 'serializeWith')) {
+            // ignore any duplicates and warn about it
+            this.ctx.program.reportDiagnostic({
+              code: 'DuplicateClientOption',
+              severity: 'warning',
+              message: `duplicate client option ${optionName} on model field ${property.name} will be ignored`,
+              target: property.__raw?.node ?? tsp.NoTarget,
+            });
+            continue;
+          }
+          modelField.customizations.push(new rust.SerializeWith(optionValue));
+          break;
         default:
           this.ctx.program.reportDiagnostic({
             code: 'InvalidClientOption',
