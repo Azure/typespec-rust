@@ -49,11 +49,11 @@
   "homepage": "https://github.com/Azure/typespec-rust#readme",
   "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
-    "@azure-tools/azure-http-specs": "0.1.0-alpha.40",
+    "@azure-tools/azure-http-specs": "0.1.0-alpha.42",
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.15.0",
     "@types/turndown": "^5.0.6",
-    "@typespec/http-specs": "0.1.0-alpha.37",
+    "@typespec/http-specs": "0.1.0-alpha.38",
     "@typespec/spector": "0.1.0-alpha.25",
     "@vitest/coverage-v8": "^4.1.5",
     "@vitest/ui": "^4.1.5",
@@ -79,10 +79,10 @@
     "yaml": ">=2.8.3"
   },
   "dependencies": {
-    "@azure-tools/typespec-azure-core": "0.68.0",
-    "@azure-tools/typespec-client-generator-core": "0.68.4",
-    "@typespec/compiler": "1.12.0",
-    "@typespec/http": "1.12.0",
+    "@azure-tools/typespec-azure-core": "0.69.0",
+    "@azure-tools/typespec-client-generator-core": "0.69.0",
+    "@typespec/compiler": "1.13.0",
+    "@typespec/http": "1.13.0",
     "linkifyjs": "^4.3.2",
     "query-string": "9.4.0",
     "source-map-support": "0.5.21",
