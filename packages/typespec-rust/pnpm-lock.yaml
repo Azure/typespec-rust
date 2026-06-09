@@ -76,8 +76,8 @@ importers:
         version: 2.9.0
     devDependencies:
       '@azure-tools/azure-http-specs':
-        specifier: 0.1.0-alpha.40
-        version: 0.1.0-alpha.40(4145d5843a78a35aabc0db313c6f0bd3)
+        specifier: 0.1.0-alpha.41
+        version: 0.1.0-alpha.41(4145d5843a78a35aabc0db313c6f0bd3)
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.1)
@@ -114,8 +114,8 @@ importers:
 
 packages:
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.40':
-    resolution: {integrity: sha512-1WhoWwV+SgpzLUHJdRPo+Ph5mQNe0FtDYHb0dVBhIzRMjWzBvYhdj1iK0yAkwYnm04WxLO5izz5sO6/Lq5KhnQ==}
+  '@azure-tools/azure-http-specs@0.1.0-alpha.41':
+    resolution: {integrity: sha512-auySqEnCXfpw+vLuGs++49TXe9X6MR/uXdfH4zyC2kjGfE5a5L6y00Fd8r833Q/veomhUMLZ5jGNw/iUA92nsw==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       '@azure-tools/typespec-azure-core': ^0.68.0
@@ -2448,7 +2448,7 @@ packages:
 
 snapshots:
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.40(4145d5843a78a35aabc0db313c6f0bd3)':
+  '@azure-tools/azure-http-specs@0.1.0-alpha.41(4145d5843a78a35aabc0db313c6f0bd3)':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.68.0(@typespec/compiler@1.12.0(@types/node@22.19.19))(@typespec/http@1.12.0(@typespec/compiler@1.12.0(@types/node@22.19.19))(@typespec/streams@0.81.0(@typespec/compiler@1.12.0(@types/node@22.19.19))))(@typespec/rest@0.82.0(@typespec/compiler@1.12.0(@types/node@22.19.19))(@typespec/http@1.12.0(@typespec/compiler@1.12.0(@types/node@22.19.19))(@typespec/streams@0.81.0(@typespec/compiler@1.12.0(@types/node@22.19.19)))))
       '@typespec/compiler': 1.12.0(@types/node@22.19.19)
