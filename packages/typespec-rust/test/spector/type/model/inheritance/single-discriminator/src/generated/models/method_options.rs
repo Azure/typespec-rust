@@ -26,6 +26,13 @@ pub struct SingleDiscriminatorClientGetModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SingleDiscriminatorClient::get_no_subtypes_model()`](crate::generated::clients::SingleDiscriminatorClient::get_no_subtypes_model())
+#[derive(Clone, Default, SafeDebug)]
+pub struct SingleDiscriminatorClientGetNoSubtypesModelOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`SingleDiscriminatorClient::get_recursive_model()`](crate::generated::clients::SingleDiscriminatorClient::get_recursive_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SingleDiscriminatorClientGetRecursiveModelOptions<'a> {
@@ -43,6 +50,13 @@ pub struct SingleDiscriminatorClientGetWrongDiscriminatorOptions<'a> {
 /// Options to be passed to [`SingleDiscriminatorClient::put_model()`](crate::generated::clients::SingleDiscriminatorClient::put_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SingleDiscriminatorClientPutModelOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`SingleDiscriminatorClient::put_no_subtypes_model()`](crate::generated::clients::SingleDiscriminatorClient::put_no_subtypes_model())
+#[derive(Clone, Default, SafeDebug)]
+pub struct SingleDiscriminatorClientPutNoSubtypesModelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

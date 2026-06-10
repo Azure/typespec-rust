@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_singledisc::{
-    models::{Bird, Dinosaur, Eagle, Goose, SeaGull, Sparrow},
+    models::{Bird, Dinosaur, Eagle, Fish, Goose, SeaGull, Sparrow},
     SingleDiscriminatorClient,
 };
 use std::collections::HashMap;
@@ -145,6 +145,40 @@ async fn put_recursive_model() {
 
     let resp = client
         .put_recursive_model(Bird::from(body).try_into().unwrap(), None)
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 204);
+}
+
+#[tokio::test]
+async fn get_no_subtypes_model() {
+    let client =
+        SingleDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let resp = client.get_no_subtypes_model(None).await.unwrap();
+    assert_eq!(resp.status(), 200);
+
+    match resp.into_model().unwrap() {
+        Fish::UnknownKind { kind, size } => {
+            assert_eq!(kind, Some("salmon".to_string()));
+            assert_eq!(size, Some(10));
+        }
+    }
+}
+
+#[tokio::test]
+async fn put_no_subtypes_model() {
+    let client =
+        SingleDiscriminatorClient::with_no_credential("http://localhost:3000", None).unwrap();
+
+    let body = Fish::UnknownKind {
+        kind: Some("salmon".to_string()),
+        size: Some(10),
+    };
+
+    let resp = client
+        .put_no_subtypes_model(body.try_into().unwrap(), None)
         .await
         .unwrap();
 

@@ -11,3 +11,10 @@ pub struct QueryConstantClientPostOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
+
+/// Options to be passed to [`QuerySpecialCharClient::dollar_sign()`](crate::generated::clients::QuerySpecialCharClient::dollar_sign())
+#[derive(Clone, Default, SafeDebug)]
+pub struct QuerySpecialCharClientDollarSignOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}

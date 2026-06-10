@@ -46,3 +46,15 @@ pub enum Dinosaur {
         size: Option<i32>,
     },
 }
+
+#[doc = r#"A discriminated model with no defined subtypes. The discriminator is declared but no models extend it."#]
+#[derive(Clone, Deserialize, SafeDebug)]
+#[serde(tag = "kind")]
+pub enum Fish {
+    #[serde(untagged)]
+    UnknownKind {
+        kind: Option<String>,
+
+        size: Option<i32>,
+    },
+}

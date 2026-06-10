@@ -40,3 +40,19 @@ pub enum ManagedServiceIdentityType {
     /// Any other value not defined in `ManagedServiceIdentityType`.
     UnknownValue(String),
 }
+
+/// The provisioning state of a resource type.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ResourceProvisioningState {
+    /// Resource creation was canceled.
+    Canceled,
+
+    /// Resource creation failed.
+    Failed,
+
+    /// Resource has been created.
+    Succeeded,
+
+    /// Any other value not defined in `ResourceProvisioningState`.
+    UnknownValue(String),
+}

@@ -5,5 +5,7 @@
 
 mod query_client;
 mod query_constant_client;
+mod query_special_char_client;
 pub use query_client::*;
 pub use query_constant_client::*;
+pub use query_special_char_client::*;

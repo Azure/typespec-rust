@@ -74,3 +74,11 @@ pub(crate) struct UnknownDinosaurKind<'a> {
 
     pub size: &'a Option<i32>,
 }
+
+/// A discriminated model with no defined subtypes. The discriminator is declared but no models extend it.
+#[derive(Serialize)]
+pub(crate) struct UnknownFishKind<'a> {
+    pub kind: &'a Option<String>,
+
+    pub size: &'a Option<i32>,
+}

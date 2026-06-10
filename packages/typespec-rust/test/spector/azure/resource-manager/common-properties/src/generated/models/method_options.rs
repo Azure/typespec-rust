@@ -5,6 +5,20 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
+/// Options to be passed to [`CommonPropertiesArmResourceIdentifiersClient::create_or_replace()`](crate::generated::clients::CommonPropertiesArmResourceIdentifiersClient::create_or_replace())
+#[derive(Clone, Default, SafeDebug)]
+pub struct CommonPropertiesArmResourceIdentifiersClientCreateOrReplaceOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`CommonPropertiesArmResourceIdentifiersClient::get()`](crate::generated::clients::CommonPropertiesArmResourceIdentifiersClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct CommonPropertiesArmResourceIdentifiersClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`CommonPropertiesErrorClient::create_for_user_defined_error()`](crate::generated::clients::CommonPropertiesErrorClient::create_for_user_defined_error())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'a> {
