@@ -1,5 +1,11 @@
 # Release History
 
+## 0.41.2 (Unreleased)
+
+### Features Added
+
+* Added support for `serialize_with` `@clientOption` decorator for model fields, enabling custom serializer injection while preserving built-in serde behavior for the non-overridden direction.
+
 ## 0.41.1 (2026-06-02)
 
 ### Features Added
