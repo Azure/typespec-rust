@@ -695,18 +695,14 @@ function addSerDeHelper(
   const serdeEncodedBytes = function (encoding: rust.BytesEncoding, forOption: boolean): void {
     const format = encoding === 'url' ? '_url_safe' : '';
     const serializer = `serialize${format}`;
+    const deserializer = `deserialize${format}`;
     const optionNamespace = forOption ? '::option' : '';
     serdeParams.add('default');
-    if (deserializeWith || serializeWith) {
-      if (!deserializeWith) {
-        const deserializer = `deserialize${format}`;
-        serdeParams.add(`deserialize_with = "base64${optionNamespace}::${deserializer}"`);
-      }
-      if (!serializeWith) {
-        serdeParams.add(`serialize_with = "base64${optionNamespace}::${serializer}"`);
-      }
-    } else {
-      serdeParams.add(`with = "base64${optionNamespace}"`);
+    if (!deserializeWith) {
+      serdeParams.add(`deserialize_with = "base64${optionNamespace}::${deserializer}"`);
+    }
+    if (!serializeWith) {
+      serdeParams.add(`serialize_with = "base64${optionNamespace}::${serializer}"`);
     }
     if (!deserializeWith || !serializeWith) {
       use.add('azure_core', 'base64');
@@ -768,18 +764,22 @@ function addSerDeHelper(
   };
 
   const addSerDeHelper = function(): void {
-    use.add('super', 'models_serde');
     serdeParams.add('default');
     if (deserializeWith || serializeWith) {
-      const name = buildSerDeModName(field.type);
-      if (!deserializeWith) {
-        serdeParams.add(`deserialize_with = "models_serde::${name}::deserialize"`);
-      }
-      if (!serializeWith) {
-        serdeParams.add(`serialize_with = "models_serde::${name}::serialize"`);
+      if (!deserializeWith || !serializeWith) {
+        const name = buildSerDeModName(field.type);
+        use.add('super', 'models_serde');
+        if (!deserializeWith) {
+          serdeParams.add(`deserialize_with = "models_serde::${name}::deserialize"`);
+        }
+        if (!serializeWith) {
+          serdeParams.add(`serialize_with = "models_serde::${name}::serialize"`);
+        }
       }
     } else {
-      serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
+      const name = buildSerDeModName(field.type);
+      use.add('super', 'models_serde');
+      serdeParams.add(`with = "models_serde::${name}"`);
     }
   };
 
