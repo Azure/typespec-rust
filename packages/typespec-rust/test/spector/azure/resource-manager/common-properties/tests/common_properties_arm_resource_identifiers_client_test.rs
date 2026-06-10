@@ -41,7 +41,10 @@ fn assert_resource_matches_expected(actual: &ArmResourceIdentifierResource) {
     assert_eq!(expected.type_prop, actual.type_prop);
 
     let expected_properties = expected.properties.unwrap();
-    let actual_properties = actual.properties.as_ref().expect("properties should be set");
+    let actual_properties = actual
+        .properties
+        .as_ref()
+        .expect("properties should be set");
     assert_eq!(
         expected_properties.provisioning_state,
         actual_properties.provisioning_state
