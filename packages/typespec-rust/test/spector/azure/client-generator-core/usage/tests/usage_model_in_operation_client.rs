@@ -5,6 +5,7 @@
 use azure_core::http::RequestContent;
 use spector_coreusage::{
     model_in_operation::models::{InputModel, OutputModel, RoundTripModel},
+    models::OrphanModel,
     UsageClient,
 };
 
@@ -36,12 +37,14 @@ async fn model_in_read_only_property() {
 #[tokio::test]
 async fn orphan_model_serializable() {
     let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let body = OrphanModel {
+        description: Some("desc".to_string()),
+        model_name: Some("name".to_string()),
+    };
+    let json = serde_json::to_string(&body).unwrap();
     client
         .get_usage_model_in_operation_client()
-        .orphan_model_serializable(
-            RequestContent::from_str(r#"{"name": "name", "desc": "desc"}"#),
-            None,
-        )
+        .orphan_model_serializable(RequestContent::from_str(&json), None)
         .await
         .unwrap();
 }
