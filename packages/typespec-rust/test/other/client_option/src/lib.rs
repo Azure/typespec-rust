@@ -22,11 +22,35 @@ pub mod models {
         todo!()
     }
 
+    pub fn serialize_base64<S>(
+        to_serialize: &Option<Vec<u8>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let _ = to_serialize;
+        let _ = serializer;
+        todo!()
+    }
+
     pub fn deserialize_name<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         let _ = deserializer;
+        todo!()
+    }
+
+    pub fn serialize_name<S>(
+        to_serialize: &Option<String>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let _ = to_serialize;
+        let _ = serializer;
         todo!()
     }
 
@@ -46,6 +70,18 @@ pub mod models {
         todo!()
     }
 
+    pub fn serialize_time<S>(
+        to_serialize: &Option<OffsetDateTime>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let _ = to_serialize;
+        let _ = serializer;
+        todo!()
+    }
+
     pub fn deserialize_times<'de, D>(
         deserializer: D,
     ) -> Result<Option<Vec<OffsetDateTime>>, D::Error>
@@ -53,6 +89,18 @@ pub mod models {
         D: serde::Deserializer<'de>,
     {
         let _ = deserializer;
+        todo!()
+    }
+
+    pub fn serialize_serialized_times<S>(
+        to_serialize: &Option<Vec<OffsetDateTime>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let _ = to_serialize;
+        let _ = serializer;
         todo!()
     }
 }

@@ -221,6 +221,8 @@ export function getTypeDeclaration(type: rust.Client | rust.ResponseHeadersTrait
       return getTypeDeclaration(type.valueKind);
     case 'option':
       return `Option<${getTypeDeclaration(type.type, withLifetime)}>`;
+    case 'pageIterator':
+      return `PageIterator<${getTypeDeclaration(type.type)}>`;
     case 'pager': {
       let formatParam = '';
       if (type.type.format !== 'JsonFormat') {
@@ -497,6 +499,7 @@ export function unwrapType(type: rust.Type): rust.Type {
     case 'slice':
     case 'Vec':
       return unwrapType(type.type);
+    case 'pageIterator':
     case 'pager':
       return unwrapType(type.type.content);
     case 'poller':

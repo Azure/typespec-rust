@@ -49,3 +49,38 @@ pub struct DeserializeWith {
     )]
     pub times: Option<Vec<OffsetDateTime>>,
 }
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct SerializeWith {
+    #[serde(
+        default,
+        deserialize_with = "crate::models::deserialize_base64",
+        serialize_with = "crate::models::serialize_base64",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub base64: Option<Vec<u8>>,
+
+    #[serde(
+        serialize_with = "crate::models::serialize_name",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub name: Option<String>,
+
+    #[serde(
+        default,
+        deserialize_with = "models_serde::option_vec_offset_date_time_rfc3339::deserialize",
+        rename = "serializedTimes",
+        serialize_with = "crate::models::serialize_serialized_times",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub serialized_times: Option<Vec<OffsetDateTime>>,
+
+    #[serde(
+        default,
+        deserialize_with = "azure_core::time::rfc3339::option::deserialize",
+        serialize_with = "crate::models::serialize_time",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub time: Option<OffsetDateTime>,
+}

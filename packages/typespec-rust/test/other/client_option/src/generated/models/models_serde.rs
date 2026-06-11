@@ -5,9 +5,26 @@
 
 pub mod option_vec_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::time::{to_rfc3339, OffsetDateTime};
-    use serde::{Serialize, Serializer};
+    use azure_core::time::{parse_rfc3339, to_rfc3339, OffsetDateTime};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<OffsetDateTime>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize = <Option<Vec<String>>>::deserialize(deserializer)?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let mut decoded0 = <Vec<OffsetDateTime>>::new();
+                for v in to_deserialize {
+                    decoded0.push(parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
+                }
+                Ok(Some(decoded0))
+            }
+            None => Ok(None),
+        }
+    }
 
     pub fn serialize<S>(
         to_serialize: &Option<Vec<OffsetDateTime>>,

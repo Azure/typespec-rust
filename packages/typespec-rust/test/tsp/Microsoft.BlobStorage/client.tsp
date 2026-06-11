@@ -244,6 +244,9 @@ interface PageBlobClient extends Storage.Blob.PageBlob {}
 @@scope(Storage.Blob.Container.submitBatch, "!rust");
 @@scope(Storage.Blob.Service.submitBatch, "!rust");
 
+#suppress "@azure-tools/typespec-client-generator-core/client-option"
+@@clientOption(PageBlob.getPageRanges, "forcePageIterator", true, "rust");
+
 // GO SPECIFICATION
 /** The type of blob deletions. */
 #suppress "@azure-tools/typespec-azure-core/no-enum" "Existing API"

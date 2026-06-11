@@ -184,24 +184,30 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       const unwrappedType = helpers.unwrapType(field.type);
 
-      // check for custom deserialize_with.  if present, it will override what we'd normally emit
+      // check for custom serde overrides. if present, they replace what we'd normally emit.
       const deserializeWith = field.customizations.find((each) => each.kind === 'deserializeWith');
+      const serializeWith = field.customizations.find((each) => each.kind === 'serializeWith');
 
       if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'enumValue' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
-        addSerDeHelper(module, field, serdeParams, bodyFormat, use, deserializeWith);
+        addSerDeHelper(module, field, serdeParams, bodyFormat, use, deserializeWith, serializeWith);
       } else if (bodyFormat === 'xml' && utils.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
         serdeParams.add('default');
         serdeParams.add(`deserialize_with = ${deserializeWith ? `"${deserializeWith.name}"` : `"${xmlListWrapper.name}::unwrap"`}`);
-        serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
+        serdeParams.add(`serialize_with = ${serializeWith ? `"${serializeWith.name}"` : `"${xmlListWrapper.name}::wrap"`}`);
         use.add('super::xml_helpers', xmlListWrapper.name);
-      } else if (deserializeWith) {
+      } else {
         // this comes before DeserializeEmptyStringAsNone since it just replaces it
-        serdeParams.add(`deserialize_with = "${deserializeWith.name}"`);
-      } else if ((field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) !== 0) {
-        use.add('azure_core::fmt', 'empty_as_null');
-        serdeParams.add(`deserialize_with = "empty_as_null::deserialize"`);
+        if (deserializeWith) {
+          serdeParams.add(`deserialize_with = "${deserializeWith.name}"`);
+        } else if ((field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) !== 0) {
+          use.add('azure_core::fmt', 'empty_as_null');
+          serdeParams.add(`deserialize_with = "empty_as_null::deserialize"`);
+        }
+        if (serializeWith) {
+          serdeParams.add(`serialize_with = "${serializeWith.name}"`);
+        }
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
@@ -593,8 +599,17 @@ const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProp
  * @param format the (de)serialization format of the data
  * @param use the use statement builder currently in scope
  * @param deserializeWith optional custom deserializer to use in lieu of the emitted variant
+ * @param serializeWith optional custom serializer to use in lieu of the emitted variant
  */
-function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, serdeParams: Set<string>, format: helpers.ModelFormat, use: Use, deserializeWith?: rust.DeserializeWith): void {
+function addSerDeHelper(
+  module: rust.ModuleContainer,
+  field: rust.ModelField,
+  serdeParams: Set<string>,
+  format: helpers.ModelFormat,
+  use: Use,
+  deserializeWith?: rust.DeserializeWith,
+  serializeWith?: rust.SerializeWith
+): void {
   const unwrapped = helpers.unwrapType(field.type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
@@ -608,18 +623,26 @@ function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, se
       throw new CodegenError('InternalError', `getSerDeHelper unexpected kind ${unwrapped.kind}`);
   }
 
-  // if there's a custom deserializer then use that.
-  // it also means we need to skip emitting any custom
-  // deserializer, and change and "with" to "serialize_with".
+  // if there are custom serde functions then use them.
+  // it also means we need to skip emitting any matching custom
+  // helper, and change "with" to "(de)serialize_with".
   if (deserializeWith) {
     serdeParams.add(`deserialize_with = "${deserializeWith.name}"`);
+  }
+  if (serializeWith) {
+    serdeParams.add(`serialize_with = "${serializeWith.name}"`);
   }
 
   if (unwrapped.kind === 'safeint' || unwrapped.kind === 'scalar') {
     if (unwrapped.stringEncoding) {
       const fmtAsString = 'azure_core::fmt::as_string';
-      if (deserializeWith) {
-        serdeParams.add(`serialize_with = "${fmtAsString}::serialize"`);
+      if (deserializeWith || serializeWith) {
+        if (!deserializeWith) {
+          serdeParams.add(`deserialize_with = "${fmtAsString}::deserialize"`);
+        }
+        if (!serializeWith) {
+          serdeParams.add(`serialize_with = "${fmtAsString}::serialize"`);
+        }
       } else {
         serdeParams.add(`with = "${fmtAsString}"`);
       }
@@ -657,7 +680,7 @@ function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, se
         const modUse = new Use(module, 'modelsOther');
         let modContent = `pub mod ${name} {\n`;
         modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
-        const deserialize = deserializeWith ? '' : `${buildDeserialize(indent, field.type, modUse)}\n`;
+        const deserialize = `${buildDeserialize(indent, field.type, modUse)}\n`;
         const serialize = buildSerialize(indent, field.type, modUse);
         modContent += modUse.text(indent);
         modContent += `${deserialize}${serialize}`;
@@ -672,22 +695,31 @@ function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, se
   const serdeEncodedBytes = function (encoding: rust.BytesEncoding, forOption: boolean): void {
     const format = encoding === 'url' ? '_url_safe' : '';
     const serializer = `serialize${format}`;
+    const deserializer = `deserialize${format}`;
     const optionNamespace = forOption ? '::option' : '';
     serdeParams.add('default');
     if (!deserializeWith) {
-      const deserializer = `deserialize${format}`;
       serdeParams.add(`deserialize_with = "base64${optionNamespace}::${deserializer}"`);
     }
-    serdeParams.add(`serialize_with = "base64${optionNamespace}::${serializer}"`);
-    use.add('azure_core', 'base64');
+    if (!serializeWith) {
+      serdeParams.add(`serialize_with = "base64${optionNamespace}::${serializer}"`);
+    }
+    if (!deserializeWith || !serializeWith) {
+      use.add('azure_core', 'base64');
+    }
   };
 
   /** non-collection based impl. note that for XML, we don't use the in-box RFC3339 */
   const serdeOffsetDateTime = function (encoding: rust.DateTimeEncoding, optional: boolean): void {
     serdeParams.add('default');
     const coreTime = 'azure_core::time';
-    if (deserializeWith) {
-      serdeParams.add(`serialize_with = "${coreTime}::${encoding}${optional ? '::option' : ''}::serialize"`);
+    if (deserializeWith || serializeWith) {
+      if (!deserializeWith) {
+        serdeParams.add(`deserialize_with = "${coreTime}::${encoding}${optional ? '::option' : ''}::deserialize"`);
+      }
+      if (!serializeWith) {
+        serdeParams.add(`serialize_with = "${coreTime}::${encoding}${optional ? '::option' : ''}::serialize"`);
+      }
     } else {
       serdeParams.add(`with = "${coreTime}::${encoding}${optional ? '::option' : ''}"`);
     }
@@ -732,12 +764,22 @@ function addSerDeHelper(module: rust.ModuleContainer, field: rust.ModelField, se
   };
 
   const addSerDeHelper = function(): void {
-    use.add('super', 'models_serde');
     serdeParams.add('default');
-    if (deserializeWith) {
-      serdeParams.add(`serialize_with = "models_serde::${buildSerDeModName(field.type)}::serialize"`);
+    if (deserializeWith || serializeWith) {
+      if (!deserializeWith || !serializeWith) {
+        const name = buildSerDeModName(field.type);
+        use.add('super', 'models_serde');
+        if (!deserializeWith) {
+          serdeParams.add(`deserialize_with = "models_serde::${name}::deserialize"`);
+        }
+        if (!serializeWith) {
+          serdeParams.add(`serialize_with = "models_serde::${name}::serialize"`);
+        }
+      }
     } else {
-      serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
+      const name = buildSerDeModName(field.type);
+      use.add('super', 'models_serde');
+      serdeParams.add(`with = "models_serde::${name}"`);
     }
   };
 

@@ -1,6 +1,16 @@
 # Release History
 
-## 0.41.1 (unreleased)
+## 0.41.2 (Unreleased)
+
+### Features Added
+
+* Added support for `serialize_with` `@clientOption` decorator for model fields, enabling custom serializer injection while preserving built-in serde behavior for the non-overridden direction.
+
+## 0.41.1 (2026-06-02)
+
+### Features Added
+
+* Added support for `forcePageIterator` `@clientOption` decorator, which can be used to emit paged operations as returning a `PageIterator<T>`.
 
 ### Other Changes
 
