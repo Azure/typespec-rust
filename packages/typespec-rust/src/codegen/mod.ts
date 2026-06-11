@@ -94,10 +94,38 @@ export function emitModelsModRs(modules: Array<string>): string {
 export function emitSubModRs(module: rust.SubModule): string {
   let content = helpers.contentPreamble();
   if (module.clients.length > 0 || module.enums.length > 0 || module.models.length > 0 || module.unions.length > 0) {
-    content += 'mod generated;\npub use generated::*;\n';
+    content += 'mod generated;\n';
+    // a TSP namespace named `Models` at the crate root produces a sub-module whose
+    // name collides with the crate-root `generated::models` brought in by the glob
+    // re-export in lib.rs. in Rust the sub-module declaration shadows that glob, so
+    // any crate-root models (e.g. a root-level orphan model) become unreachable via
+    // `crate::models`. re-export them here so they remain reachable as
+    // `crate::models::OrphanModel`, while this sub-module's own generated types stay
+    // nested below (e.g. `crate::models::models::NamespaceModel` via `generated::*`).
+    //
+    // NOTE: the analogous collision for a crate-root namespace named `Clients` is not
+    // handled here; we can extend this if it surfaces in a real spec.
+    if (module.name === 'models' && module.parent.kind === 'crate' && hasGeneratedModels(module.parent)) {
+      content += 'pub use crate::generated::models::*;\n';
+    }
+    content += 'pub use generated::*;\n';
   }
   for (const subModule of module.subModules) {
     content += `pub mod ${subModule.name};\n`;
   }
   return content;
+}
+
+/**
+ * returns true when the module has generated model content (enums, models,
+ * unions, or clients with non-accessor methods) emitted under `generated::models`.
+ *
+ * @param module the module to inspect
+ * @returns true if the module emits a `generated::models` module
+ */
+function hasGeneratedModels(module: rust.ModuleContainer): boolean {
+  return module.enums.length > 0
+    || module.models.length > 0
+    || module.unions.length > 0
+    || module.clients.some((client) => client.methods.some((method) => method.kind !== 'clientaccessor'));
 }
