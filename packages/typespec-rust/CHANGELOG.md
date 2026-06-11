@@ -6,6 +6,10 @@
 
 * Added support for `serialize_with` `@clientOption` decorator for model fields, enabling custom serializer injection while preserving built-in serde behavior for the non-overridden direction.
 
+### Bugs Fixed
+
+* Fixed incorrect shadowing of `crate::models` when there's a submodule named `models`.
+
 ## 0.41.1 (2026-06-02)
 
 ### Features Added
