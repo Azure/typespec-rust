@@ -18,9 +18,27 @@ export function emitLibRs(crate: rust.Crate): string {
   content += '\n';
   content += 'mod generated;\n';
   content += 'pub use generated::*;\n';
-  // when a sub-module named `models` exists it shadows the `generated::models`
-  // re-export from the glob above; surface the crate-root orphan model items
-  // directly so they remain reachable from the crate root.
+  // a TSP namespace named `Models` produces a user-defined sub-module `pub mod models;`
+  // (emitted further down) which collides with the `models` re-exported by the glob above.
+  // in Rust the sub-module declaration wins, hiding any types in `generated::models` from
+  // the crate root. e.g. given:
+  //
+  //   namespace Foo {
+  //     model FooModel { ... }   // lives in generated::models (crate root)
+  //     namespace Models {
+  //       model NamespaceModel { ... }   // lives in crate::models (sub-module)
+  //     }
+  //   }
+  //
+  // without the explicit re-export below, `crate::FooModel` would be unreachable
+  // because `pub mod models;` shadows the inner `models` brought in by `generated::*`.
+  // re-exporting `generated::models::*` flattens those crate-root types alongside the
+  // sub-module so both `crate::FooModel` and `crate::models::NamespaceModel` work.
+  //
+  // NOTE: a similar collision would occur for a nested namespace named `Clients` (it
+  // would shadow `generated::clients` re-exported via the glob). we don't currently
+  // handle that case; if it surfaces in the wild we can extend this logic to also
+  // re-export `generated::clients::*` when a `clients` sub-module is present.
   const hasModelsSubModule = crate.subModules.some((subModule) => subModule.name === 'models');
   const hasGeneratedModels = crate.enums.length > 0
     || crate.models.length > 0

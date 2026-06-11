@@ -10,6 +10,10 @@
 
 * Fixed incorrect shadowing of `crate::models` when there's a submodule named `models`.
 
+### Other Changes
+
+* Updated to the latest tsp toolset.
+
 ## 0.41.1 (2026-06-02)
 
 ### Features Added
