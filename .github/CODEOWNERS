@@ -5,5 +5,5 @@
 /packages/typespec-rust       @jhendrixMSFT @RickWinter @HeathS @antkmsft
 
 # Git Hub bot rules
-/.github/CODEOWNERS   @jhendrixMSFT @RickWinter @HeathS @jsquire @ronniegeraghty
-/.github/fabricbot.json  @jsquire @ronniegeraghty
+/.github/CODEOWNERS   @jhendrixMSFT @RickWinter @HeathS @jsquire
+/.github/fabricbot.json  @jsquire
