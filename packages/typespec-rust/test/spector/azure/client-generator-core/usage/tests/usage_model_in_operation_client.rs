@@ -5,8 +5,7 @@
 use azure_core::http::RequestContent;
 use spector_coreusage::{
     model_in_operation::models::{InputModel, OutputModel, RoundTripModel},
-    models::OrphanModel,
-    UsageClient,
+    OrphanModel, UsageClient,
 };
 
 #[tokio::test]

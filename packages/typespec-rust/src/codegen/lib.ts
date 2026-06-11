@@ -18,6 +18,17 @@ export function emitLibRs(crate: rust.Crate): string {
   content += '\n';
   content += 'mod generated;\n';
   content += 'pub use generated::*;\n';
+  // when a sub-module named `models` exists it shadows the `generated::models`
+  // re-export from the glob above; surface the crate-root orphan model items
+  // directly so they remain reachable from the crate root.
+  const hasModelsSubModule = crate.subModules.some((subModule) => subModule.name === 'models');
+  const hasGeneratedModels = crate.enums.length > 0
+    || crate.models.length > 0
+    || crate.unions.length > 0
+    || crate.clients.some((client) => client.methods.some((method) => method.kind !== 'clientaccessor'));
+  if (hasModelsSubModule && hasGeneratedModels) {
+    content += 'pub use generated::models::*;\n';
+  }
   for (const subModule of crate.subModules) {
     content += `pub mod ${subModule.name};\n`;
   }

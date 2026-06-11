@@ -6,6 +6,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 mod generated;
+pub use generated::models::*;
 pub use generated::*;
 pub mod extensible_strings;
 pub mod model_properties;

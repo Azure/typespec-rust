@@ -92,36 +92,9 @@ export function emitModelsModRs(modules: Array<string>): string {
  * @returns the contents of the mod.rs file
  */
 export function emitSubModRs(module: rust.SubModule): string {
-  let content = helpers.contentPreamble();// 
+  let content = helpers.contentPreamble();
   if (module.clients.length > 0 || module.enums.length > 0 || module.models.length > 0 || module.unions.length > 0) {
-    content += 'mod generated;\n';
-    // walk up looking for an ancestor `models` module; when this submodule is,
-    // or is contained within, a `models` namespace we flatten the inner
-    // `generated::models` so types appear directly at this level
-    let inModelsNamespace: rust.ModuleContainer | undefined = module;
-    while (inModelsNamespace && inModelsNamespace.kind === 'module') {
-      if (inModelsNamespace.name === 'models') {
-        break;
-      }
-      inModelsNamespace = inModelsNamespace.parent;
-    }
-    if (inModelsNamespace && inModelsNamespace.kind === 'module') {
-      content += 'pub use generated::models::*;\n';
-      // only need `generated::*` when there are clients to expose as a path
-      // (e.g. `crate::models::clients::SomeClient`); otherwise it would only
-      // re-export the inner `models` module as a redundant path
-      if (module.clients.length > 0) {
-        content += 'pub use generated::*;\n';
-      }
-      // when this is the top-level `models` submodule it also shadows the
-      // crate-root `generated::models`; merge those types in too so they
-      // remain reachable as `crate::models::*`
-      if (module.name === 'models' && module.parent.kind === 'crate') {
-        content += 'pub use crate::generated::models::*;\n';
-      }
-    } else {
-      content += 'pub use generated::*;\n';
-    }
+    content += 'mod generated;\npub use generated::*;\n';
   }
   for (const subModule of module.subModules) {
     content += `pub mod ${subModule.name};\n`;

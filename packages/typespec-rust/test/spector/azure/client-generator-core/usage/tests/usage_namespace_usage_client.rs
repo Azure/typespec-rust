@@ -4,7 +4,7 @@
 
 use azure_core::http::RequestContent;
 use spector_coreusage::{
-    models::{nested::NestedNamespaceModel, NamespaceModel},
+    models::{models::NamespaceModel, nested::models::NestedNamespaceModel},
     UsageClient,
 };
 
