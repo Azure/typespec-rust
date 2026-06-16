@@ -1800,6 +1800,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_addlprops"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "serde_json",
+ "time",
+ "tokio",
+]
+
+[[package]]
 name = "spector_alternatetype"
 version = "0.1.0"
 dependencies = [
