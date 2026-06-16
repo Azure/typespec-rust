@@ -2,9 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_naming::{
-    header::models::NamingHeaderClientResponseResultHeaders, NamingClient,
-};
+use spector_naming::{header::models::NamingHeaderClientResponseResultHeaders, NamingClient};
 
 #[tokio::test]
 async fn request() {
