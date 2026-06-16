@@ -58,7 +58,7 @@ members = [
     "spector/azure/special-headers/client-request-id",
     "spector/azure/versioning/previewVersion",
     "spector/client/enum-conflict",
-    #"spector/client/naming",
+    "spector/client/naming",
     "spector/client/overload",
     "spector/client/structure/client-operation-group",
     "spector/client/structure/default",

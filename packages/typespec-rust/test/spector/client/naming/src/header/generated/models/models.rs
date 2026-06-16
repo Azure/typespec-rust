@@ -5,6 +5,6 @@
 
 use azure_core::fmt::SafeDebug;
 
-/// Contains results for [`NamingClient::response()`](crate::generated::clients::NamingClient::response())
+/// Contains results for [`NamingHeaderClient::response()`](crate::generated::clients::NamingHeaderClient::response())
 #[derive(SafeDebug)]
-pub struct NamingClientResponseResult;
+pub struct NamingHeaderClientResponseResult;

@@ -119,7 +119,7 @@ const azureHttpSpecsGroup = {
   'spector_requestidheader': {input: 'azure/special-headers/client-request-id'},
   'spector_azpreviewversion': {input: 'azure/versioning/previewVersion'},
   'spector_azure_client_namespace': {input: 'client/namespace/client.tsp', output: 'azure/client/namespace'},
-  //'spector_naming': {input: 'client/naming'},
+  'spector_naming': {input: 'client/naming'},
   'spector_enumconflict': {input: 'client/naming/enum-conflict', output: 'client/enum-conflict'},
   'spector_overload': {input: 'client/overload/client.tsp'},
   'spector_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},

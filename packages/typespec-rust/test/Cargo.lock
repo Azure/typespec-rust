@@ -2422,6 +2422,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spector_naming"
+version = "0.1.0"
+dependencies = [
+ "azure_core",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "spector_noauth"
 version = "0.1.0"
 dependencies = [
