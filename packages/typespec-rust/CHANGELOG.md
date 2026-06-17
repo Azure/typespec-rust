@@ -1,5 +1,11 @@
 # Release History
 
+## 0.41.3 (2026-06-17)
+
+### Bugs Fixed
+
+* Fixed an issue with `(de)serialize_with` that could cause unused helpers to be emitted, resulting in dead code.
+
 ## 0.41.2 (2026-06-15)
 
 ### Features Added

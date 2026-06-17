@@ -42,6 +42,7 @@ export function emitModels(module: rust.ModuleContainer, context: Context): Mode
 
   serdeHelpers.clear();
   serdeHelpersForXmlAddlProps.clear();
+  serdeModDirections.clear();
   xmlListWrappers.clear();
 
   return {
@@ -589,6 +590,13 @@ function emitXMLListWrappers(module: rust.ModuleContainer): helpers.Module | und
 const serdeHelpers = new Map<string, (indent: helpers.indentation, use: Use) => string>();
 const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProperties>();
 
+// tracks which directions a shared serde helper module must emit.
+// keyed by the same name as serdeHelpers. a direction is required when
+// at least one field uses the emitted (non-custom) helper for it. this
+// lets fields that share a type coalesce onto a single helper module even
+// when some of them supply a custom serialize_with/deserialize_with.
+const serdeModDirections = new Map<string, { deserialize: boolean; serialize: boolean }>();
+
 /**
  * defines serde helpers for encodedBytes and offsetDateTime types.
  * any other type will cause this function to throw.
@@ -633,19 +641,34 @@ function addSerDeHelper(
     serdeParams.add(`serialize_with = "${serializeWith.name}"`);
   }
 
+  if (deserializeWith && serializeWith) {
+    // with both custom helpers there's no need to emit anything
+    return;
+  }
+
+  /**
+   * adds the serde annotation for a helper module/path that exposes `deserialize`
+   * and `serialize` functions under `base`. uses the compact `with` form when
+   * neither direction has a custom helper, otherwise emits only the non-custom
+   * direction(s). assumes at most one custom helper is set, since the case where
+   * both are set returned early above.
+   */
+  const emitSerdeWith = function (base: string): void {
+    if (!deserializeWith && !serializeWith) {
+      serdeParams.add(`with = "${base}"`);
+      return;
+    }
+    if (!deserializeWith) {
+      serdeParams.add(`deserialize_with = "${base}::deserialize"`);
+    }
+    if (!serializeWith) {
+      serdeParams.add(`serialize_with = "${base}::serialize"`);
+    }
+  };
+
   if (unwrapped.kind === 'safeint' || unwrapped.kind === 'scalar') {
     if (unwrapped.stringEncoding) {
-      const fmtAsString = 'azure_core::fmt::as_string';
-      if (deserializeWith || serializeWith) {
-        if (!deserializeWith) {
-          serdeParams.add(`deserialize_with = "${fmtAsString}::deserialize"`);
-        }
-        if (!serializeWith) {
-          serdeParams.add(`serialize_with = "${fmtAsString}::serialize"`);
-        }
-      } else {
-        serdeParams.add(`with = "${fmtAsString}"`);
-      }
+      emitSerdeWith('azure_core::fmt::as_string');
     }
     // no other processing for these types is required
     return;
@@ -674,14 +697,35 @@ function addSerDeHelper(
         throw new CodegenError('InternalError', `unexpected kind ${unwrapped.kind}`);
     }
 
+    // accumulate which directions this shared module must emit. a direction is 
+    // needed when this field uses the emitted helper (i.e. has no custom replacement
+    // for it). fields that share a type but differ in their custom helpers thus
+    // coalesce onto a single module with a stable, type-derived name.
+    //
+    // NOTE: this relies on all fields being processed (registration)
+    // before emitSerDeHelpers renders the bodies.
+    let directions = serdeModDirections.get(name);
+    if (!directions) {
+      directions = { deserialize: false, serialize: false };
+      serdeModDirections.set(name, directions);
+    }
+    if (!deserializeWith) {
+      directions.deserialize = true;
+    }
+    if (!serializeWith) {
+      directions.serialize = true;
+    }
+
     // we can reuse identical helpers across model types
     if (!serdeHelpers.has(name)) {
       serdeHelpers.set(name, (indent: helpers.indentation): string => {
         const modUse = new Use(module, 'modelsOther');
         let modContent = `pub mod ${name} {\n`;
         modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
-        const deserialize = `${buildDeserialize(indent, field.type, modUse)}\n`;
-        const serialize = buildSerialize(indent, field.type, modUse);
+        // only emit the directions some field actually uses; a direction
+        // replaced by a custom helper on every field is omitted.
+        const deserialize = directions.deserialize ? `${buildDeserialize(indent, field.type, modUse)}\n` : '';
+        const serialize = directions.serialize ? buildSerialize(indent, field.type, modUse) : '';
         modContent += modUse.text(indent);
         modContent += `${deserialize}${serialize}`;
         modContent += '}\n\n'; // end pub mod
@@ -712,21 +756,17 @@ function addSerDeHelper(
   /** non-collection based impl. note that for XML, we don't use the in-box RFC3339 */
   const serdeOffsetDateTime = function (encoding: rust.DateTimeEncoding, optional: boolean): void {
     serdeParams.add('default');
-    const coreTime = 'azure_core::time';
-    if (deserializeWith || serializeWith) {
-      if (!deserializeWith) {
-        serdeParams.add(`deserialize_with = "${coreTime}::${encoding}${optional ? '::option' : ''}::deserialize"`);
-      }
-      if (!serializeWith) {
-        serdeParams.add(`serialize_with = "${coreTime}::${encoding}${optional ? '::option' : ''}::serialize"`);
-      }
-    } else {
-      serdeParams.add(`with = "${coreTime}::${encoding}${optional ? '::option' : ''}"`);
-    }
+    emitSerdeWith(`azure_core::time::${encoding}${optional ? '::option' : ''}`);
   };
 
   /** serializing literal values */
   const serdeLiteral = function (literal: rust.EnumValue | rust.Literal): void {
+    // literals are serialize-only. if a custom serializer was specified, the
+    // serialize_with param was already added and no helper needs emitting.
+    if (serializeWith) {
+      return;
+    }
+
     let literalValueName: string;
     let typeName: string;
     switch (literal.kind) {
@@ -765,22 +805,9 @@ function addSerDeHelper(
 
   const addSerDeHelper = function(): void {
     serdeParams.add('default');
-    if (deserializeWith || serializeWith) {
-      if (!deserializeWith || !serializeWith) {
-        const name = buildSerDeModName(field.type);
-        use.add('super', 'models_serde');
-        if (!deserializeWith) {
-          serdeParams.add(`deserialize_with = "models_serde::${name}::deserialize"`);
-        }
-        if (!serializeWith) {
-          serdeParams.add(`serialize_with = "models_serde::${name}::serialize"`);
-        }
-      }
-    } else {
-      const name = buildSerDeModName(field.type);
-      use.add('super', 'models_serde');
-      serdeParams.add(`with = "models_serde::${name}"`);
-    }
+    const name = buildSerDeModName(field.type);
+    use.add('super', 'models_serde');
+    emitSerdeWith(`models_serde::${name}`);
   };
 
   // the first three cases are for spread params where the internal model's field isn't Option<T>

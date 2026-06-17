@@ -103,4 +103,46 @@ pub mod models {
         let _ = serializer;
         todo!()
     }
+
+    pub fn serialize_bytes_list<S>(
+        to_serialize: &Option<Vec<Vec<u8>>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let _ = to_serialize;
+        let _ = serializer;
+        todo!()
+    }
+
+    pub fn deserialize_bytes_list<'de, D>(deserializer: D) -> Result<Option<Vec<Vec<u8>>>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let _ = deserializer;
+        todo!()
+    }
+
+    pub fn serialize_map_bytes<S>(
+        to_serialize: &Option<std::collections::HashMap<String, Vec<u8>>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let _ = to_serialize;
+        let _ = serializer;
+        todo!()
+    }
+
+    pub fn deserialize_map_bytes<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<std::collections::HashMap<String, Vec<u8>>>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let _ = deserializer;
+        todo!()
+    }
 }

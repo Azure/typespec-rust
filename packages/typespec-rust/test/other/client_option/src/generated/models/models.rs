@@ -7,6 +7,19 @@ use super::models_serde;
 use azure_core::{base64, fmt::SafeDebug, time::OffsetDateTime};
 use serde::{Deserialize, Serialize};
 use serde_json::Number;
+use std::collections::HashMap;
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct BothSerde {
+    #[serde(
+        deserialize_with = "crate::models::deserialize_map_bytes",
+        rename = "mapBytes",
+        serialize_with = "crate::models::serialize_map_bytes",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub map_bytes: Option<HashMap<String, Vec<u8>>>,
+}
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
@@ -52,10 +65,32 @@ pub struct DeserializeWith {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+pub struct ListSerde {
+    #[serde(
+        default,
+        deserialize_with = "crate::models::deserialize_bytes_list",
+        rename = "deserializeOnly",
+        serialize_with = "models_serde::option_vec_encoded_bytes_url::serialize",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub deserialize_only: Option<Vec<Vec<u8>>>,
+
+    #[serde(
+        default,
+        deserialize_with = "models_serde::option_vec_encoded_bytes_std::deserialize",
+        rename = "serializeOnly",
+        serialize_with = "crate::models::serialize_bytes_list",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub serialize_only: Option<Vec<Vec<u8>>>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct SerializeWith {
     #[serde(
         default,
-        deserialize_with = "crate::models::deserialize_base64",
+        deserialize_with = "base64::option::deserialize",
         serialize_with = "crate::models::serialize_base64",
         skip_serializing_if = "Option::is_none"
     )]
