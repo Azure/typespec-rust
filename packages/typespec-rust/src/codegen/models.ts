@@ -697,7 +697,7 @@ function addSerDeHelper(
         throw new CodegenError('InternalError', `unexpected kind ${unwrapped.kind}`);
     }
 
-    // accumulate which directions this shared module must emit. a direction is 
+    // accumulate which directions this shared module must emit. a direction is
     // needed when this field uses the emitted helper (i.e. has no custom replacement
     // for it). fields that share a type but differ in their custom helpers thus
     // coalesce onto a single module with a stable, type-derived name.
