@@ -1773,11 +1773,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
       return body;
     },
   }])};\n`;
-  if (fallibleInitialPollerRequest) {
-    body += `${indent.get()}let Ok((mut ${initialRequestResult.requestVarName}, continuation)) = poller_request else {\n`;
-    body += `${indent.push().get()}todo!()\n`;
-    body += `${indent.pop().get()}};\n`;
-  }
   body += `${indent.get()}let ctx = poller_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
 
@@ -1843,6 +1838,10 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     body += 'let original_url = url.clone();\n';
   }
   body += `${indent.get()}Box::pin(async move {\n`
+  if (fallibleInitialPollerRequest) {
+    body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, continuation) = poller_request?;\n`;
+    indent.pop();
+  }
   body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?;\n`
 
   const needsMutBody = isArmPutLro || isArmPatchLro || isArmPostLro || isArmDeleteLro;

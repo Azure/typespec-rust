@@ -101,13 +101,11 @@ impl NIClient {
                         }
                     }
                 };
-                let Ok((mut request, continuation)) = poller_request else {
-                    todo!()
-                };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 let url = url.clone();
                 Box::pin(async move {
+                    let (mut request, continuation) = poller_request?;
                     let rsp = pipeline
                         .send(
                             &ctx,
@@ -421,12 +419,10 @@ impl NIClient {
                         }
                     }
                 };
-                let Ok((mut request, continuation)) = poller_request else {
-                    todo!()
-                };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 Box::pin(async move {
+                    let (mut request, continuation) = poller_request?;
                     let rsp = pipeline
                         .send(
                             &ctx,
@@ -633,12 +629,10 @@ impl NIClient {
                         }
                     }
                 };
-                let Ok((mut request, continuation)) = poller_request else {
-                    todo!()
-                };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 Box::pin(async move {
+                    let (mut request, continuation) = poller_request?;
                     let rsp = pipeline
                         .send(
                             &ctx,
