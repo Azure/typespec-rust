@@ -58,7 +58,7 @@ impl NIClient {
         query_builder.build();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
-                let (mut request, continuation) = match poller_state {
+                let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
                     PollerState::More(continuation) => {
                         let (next_link, final_link) = match continuation {
                             PollerContinuation::Links {
@@ -72,31 +72,37 @@ impl NIClient {
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-                        (
+                        Ok((
                             request,
                             PollerContinuation::Links {
                                 next_link,
                                 final_link,
                             },
-                        )
+                        ))
                     }
                     PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Post);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        let body: Result<RequestContent<CustomLinkRequest>> =
+                        let result: Result<RequestContent<CustomLinkRequest>> =
                             CustomLinkRequest { x: x.clone() }.try_into();
-                        if let Ok(body) = body {
-                            request.set_body(body);
+                        match result {
+                            Ok(body) => {
+                                let mut request = Request::new(url.clone(), Method::Post);
+                                request.insert_header("accept", "application/json");
+                                request.insert_header("content-type", "application/json");
+                                request.set_body(body);
+                                Ok((
+                                    request,
+                                    PollerContinuation::Links {
+                                        next_link: url.clone(),
+                                        final_link: None,
+                                    },
+                                ))
+                            }
+                            Err(e) => Err(e),
                         }
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link: url.clone(),
-                                final_link: None,
-                            },
-                        )
                     }
+                };
+                let Ok((mut request, continuation)) = poller_request else {
+                    todo!()
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
@@ -371,7 +377,7 @@ impl NIClient {
         query_builder.build();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
-                let (mut request, continuation) = match poller_state {
+                let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
                     PollerState::More(continuation) => {
                         let (next_link, final_link) = match continuation {
                             PollerContinuation::Links {
@@ -384,32 +390,39 @@ impl NIClient {
                         };
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("content-type", "application/json");
-                        (
+                        Ok((
                             request,
                             PollerContinuation::Links {
                                 next_link,
                                 final_link,
                             },
-                        )
+                        ))
                     }
                     PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Post);
-                        request.insert_header("content-type", "application/json");
-                        let body: Result<RequestContent<PartialBodyRequest>> = PartialBodyRequest {
-                            b: options.b.clone(),
+                        let result: Result<RequestContent<PartialBodyRequest>> =
+                            PartialBodyRequest {
+                                b: options.b.clone(),
+                            }
+                            .try_into();
+                        match result {
+                            Ok(body) => {
+                                let mut request = Request::new(url.clone(), Method::Post);
+                                request.insert_header("content-type", "application/json");
+                                request.set_body(body);
+                                Ok((
+                                    request,
+                                    PollerContinuation::Links {
+                                        next_link: url.clone(),
+                                        final_link: None,
+                                    },
+                                ))
+                            }
+                            Err(e) => Err(e),
                         }
-                        .try_into();
-                        if let Ok(body) = body {
-                            request.set_body(body);
-                        }
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link: url.clone(),
-                                final_link: None,
-                            },
-                        )
                     }
+                };
+                let Ok((mut request, continuation)) = poller_request else {
+                    todo!()
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
@@ -576,7 +589,7 @@ impl NIClient {
         query_builder.build();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
-                let (mut request, continuation) = match poller_state {
+                let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
                     PollerState::More(continuation) => {
                         let (next_link, final_link) = match continuation {
                             PollerContinuation::Links {
@@ -589,33 +602,39 @@ impl NIClient {
                         };
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("content-type", "application/json");
-                        (
+                        Ok((
                             request,
                             PollerContinuation::Links {
                                 next_link,
                                 final_link,
                             },
-                        )
+                        ))
                     }
                     PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Post);
-                        request.insert_header("content-type", "application/json");
-                        let body: Result<RequestContent<StartPartialBodyRequest>> =
+                        let result: Result<RequestContent<StartPartialBodyRequest>> =
                             StartPartialBodyRequest {
                                 b: options.b.clone(),
                             }
                             .try_into();
-                        if let Ok(body) = body {
-                            request.set_body(body);
+                        match result {
+                            Ok(body) => {
+                                let mut request = Request::new(url.clone(), Method::Post);
+                                request.insert_header("content-type", "application/json");
+                                request.set_body(body);
+                                Ok((
+                                    request,
+                                    PollerContinuation::Links {
+                                        next_link: url.clone(),
+                                        final_link: None,
+                                    },
+                                ))
+                            }
+                            Err(e) => Err(e),
                         }
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link: url.clone(),
-                                final_link: None,
-                            },
-                        )
                     }
+                };
+                let Ok((mut request, continuation)) = poller_request else {
+                    todo!()
                 };
                 let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();

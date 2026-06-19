@@ -1127,11 +1127,11 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         const queryParamRef = qualifiedParamName(queryParam);
         return (queryParam.explode)
           ? `${indent.get()}for (k, v) in ${queryParamRef}.iter() {\n`
-            + `${indent.push().get()}query_builder.append_pair(k.as_str(), v.to_string());\n`
-            + `${indent.pop().get()}}\n`
+          + `${indent.push().get()}query_builder.append_pair(k.as_str(), v.to_string());\n`
+          + `${indent.pop().get()}}\n`
           : `${indent.get()}let mut ${queryParam.name} = ${queryParamRef}.iter().collect::<Vec<_>>();\n`
-            + `${indent.get()}${queryParam.name}.sort_by_key(|p| p.0);\n`
-            + `${indent.get()}query_builder.set_pair("${queryParam.key}", ${queryParam.name}.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(","));\n`;
+          + `${indent.get()}${queryParam.name}.sort_by_key(|p| p.0);\n`
+          + `${indent.get()}query_builder.set_pair("${queryParam.key}", ${queryParam.name}.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(","));\n`;
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
@@ -1211,6 +1211,60 @@ function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam 
   return headerParam.kind === 'headerScalar' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type';
 }
 
+function getOptionalContentTypeParam(paramGroups: MethodParamGroups): rust.HeaderScalarParameter | undefined {
+  for (const headerParam of paramGroups.header) {
+    if (isOptionalContentTypeHeader(headerParam)) {
+      return headerParam;
+    }
+  }
+
+  return undefined;
+}
+
+function constructPartialBodyRequestContent(indent: helpers.indentation, use: Use, paramGroups: MethodParamGroups, inClosure: boolean, bodyVarName: string): string {
+  if (paramGroups.partialBody.length === 0) {
+    throw new CodegenError('InternalError', 'expected partial body params for request content construction');
+  }
+
+  const requestContentType = paramGroups.partialBody[0].type;
+  use.addForType(requestContentType);
+
+  let body = `${indent.get()}let ${bodyVarName}: ${inClosure ? 'Result<' : ''}${helpers.getTypeDeclaration(requestContentType)}${inClosure ? '>' : ''} = ${requestContentType.content.name} {\n`;
+  indent.push();
+  for (const partialBodyParam of paramGroups.partialBody) {
+    if (partialBodyParam.type.content !== requestContentType.content) {
+      throw new CodegenError('InternalError', `spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.name}, expected model type ${requestContentType.content.name}`);
+    }
+
+    if (partialBodyParam.optional) {
+      body += `${indent.get()}${partialBodyParam.name}: options.${partialBodyParam.name}${inClosure ? '.clone()' : ''},\n`;
+      continue;
+    }
+
+    let initializer = partialBodyParam.name;
+    if (inClosure) {
+      initializer += '.clone()';
+    }
+    if (requestContentType.content.visibility === 'pub') {
+      initializer = `Some(${initializer})`;
+    }
+
+    if (initializer !== partialBodyParam.name) {
+      initializer = `${partialBodyParam.name}: ${initializer}`;
+    }
+
+    body += `${indent.get()}${initializer},\n`;
+  }
+
+  body += `${indent.pop().get()}}.try_into()`;
+  if (inClosure) {
+    body += `;\n`;
+  } else {
+    body += `?;\n`;
+  }
+  return body;
+}
+
 /**
  * emits the code for building the HTTP request.
  * assumes that there's a local var 'url' which is the Url.
@@ -1234,13 +1288,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 
   body += applyHeaderParams(indent, use, method, paramGroups, inClosure, requestVarName);
 
-  let optionalContentTypeParam: rust.HeaderScalarParameter | undefined;
-  for (const headerParam of paramGroups.header) {
-    // if the content-type header is optional, we need to emit it inside the "if let Some(body)" clause below.
-    if (isOptionalContentTypeHeader(headerParam)) {
-      optionalContentTypeParam = headerParam;
-    }
-  }
+  const optionalContentTypeParam = getOptionalContentTypeParam(paramGroups);
 
   const bodyParam = paramGroups.body;
   if (bodyParam) {
@@ -1253,54 +1301,40 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       return bodyParamContent;
     });
   } else if (paramGroups.partialBody.length > 0) {
-    // all partial body params should point to the same underlying model type.
-    const requestContentType = paramGroups.partialBody[0].type;
-    use.addForType(requestContentType);
     if (inClosure) {
-      body += `${indent.get()}let body: Result<${helpers.getTypeDeclaration(requestContentType)}> = ${requestContentType.content.name} {\n`;
-    } else {
-      body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.content.name} {\n`;
+      throw new CodegenError('InternalError', 'partial body request construction in closures must use a dedicated fallible path');
     }
-    indent.push();
-    for (const partialBodyParam of paramGroups.partialBody) {
-      if (partialBodyParam.type.content !== requestContentType.content) {
-        throw new CodegenError('InternalError', `spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.name}, expected model type ${requestContentType.content.name}`);
-      }
-
-      if (partialBodyParam.optional) {
-        body += `${indent.get()}${partialBodyParam.name}: options.${partialBodyParam.name}${inClosure ? '.clone()' : ''},\n`;
-        continue;
-      }
-
-      let initializer = partialBodyParam.name;
-      if (inClosure) {
-        initializer = initializer + '.clone()';
-      }
-      if (requestContentType.content.visibility === 'pub') {
-        // spread param maps to a non-internal model, so it must be wrapped in Some()
-        initializer = `Some(${initializer})`;
-      }
-
-      // can't use shorthand init if it's more than just the param name
-      if (initializer !== partialBodyParam.name) {
-        initializer = `${partialBodyParam.name}: ${initializer}`;
-      }
-
-      body += `${indent.get()}${initializer},\n`;
-    }
-    if (inClosure) {
-      body += `${indent.pop().get()}}.try_into();\n`;
-      body += `${indent.get()}if let Ok(body) = body { ${requestVarName}.set_body(body); }\n`;
-    } else {
-      body += `${indent.pop().get()}}.try_into()?;\n`;
-      body += `${indent.get()}${requestVarName}.set_body(body);\n`;
-    }
+    body += constructPartialBodyRequestContent(indent, use, paramGroups, inClosure, 'body');
+    body += `${indent.get()}${requestVarName}.set_body(body);\n`;
   }
 
   return {
     requestVarName: requestVarName,
     content: body
   };
+}
+
+function constructFallibleInitialPollerRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, requestVarName: string): string {
+  if (paramGroups.partialBody.length === 0) {
+    throw new CodegenError('InternalError', 'expected partial body params for fallible poller request construction');
+  }
+
+  const optionalContentTypeParam = getOptionalContentTypeParam(paramGroups);
+
+  let body = constructPartialBodyRequestContent(indent, use, paramGroups, true, 'result');
+  body += `${indent.get()}match result {\n`;
+  body += `${indent.push().get()}Ok(body) => {\n`;
+  body += `${indent.push().get()}let mut ${requestVarName} = Request::new(url.clone(), Method::${utils.capitalize(method.httpMethod)});\n`;
+  body += applyHeaderParams(indent, use, method, paramGroups, true, requestVarName);
+  if (optionalContentTypeParam) {
+    body += `${indent.get()}${requestVarName}.insert_header("${optionalContentTypeParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, optionalContentTypeParam, false, false)});\n`;
+  }
+  body += `${indent.get()}${requestVarName}.set_body(body);\n`;
+  body += `${indent.get()}Ok((${requestVarName}, PollerContinuation::Links { next_link: url.clone(), final_link: None, }))\n`;
+  body += `${indent.pop().get()}}\n`;
+  body += `${indent.get()}Err(e) => Err(e),\n`;
+  body += `${indent.pop().get()}}\n`;
+  return body;
 }
 
 
@@ -1682,7 +1716,9 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   }
 
   // we call this eagerly so that we have access to the request var name
-  const initialRequestResult = constructRequest(indent, use, method, paramGroups, true, urlVar, true, false);
+  const initialRequestResult = paramGroups.partialBody.length > 0
+    ? { requestVarName: helpers.getUniqueVarName(method.params, ['request', 'core_req']), content: '' }
+    : constructRequest(indent, use, method, paramGroups, true, urlVar, true, false);
 
   const declareRequest = function (indent: helpers.indentation, use: Use, method: rust.LroMethod, paramGroups: MethodParamGroups, requestVarName: string, linkExpr: string, forceMut?: boolean, optionsPrefix?: string): string {
     let mutRequest = '';
@@ -1698,7 +1734,10 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   body += `${indent.get()}Ok(${method.returns.type.name}::new(\n`
   body += `${indent.push().get()}move |poller_state: PollerState, poller_options| {\n`;
-  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, continuation) = ${helpers.buildMatch(indent, 'poller_state', [{
+  const fallibleInitialPollerRequest = paramGroups.partialBody.length > 0
+    ? constructFallibleInitialPollerRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName)
+    : undefined;
+  body += `${indent.push().get()}let ${fallibleInitialPollerRequest ? 'poller_request: Result<(Request, PollerContinuation)>' : `(mut ${initialRequestResult.requestVarName}, continuation)`} = ${helpers.buildMatch(indent, 'poller_state', [{
     pattern: `PollerState::More(continuation)`,
     body: (indent) => {
       const mutNextLink = paramGroups.apiVersion?.kind === 'queryScalar' ? 'mut ' : '';
@@ -1719,17 +1758,26 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
       }
 
       body += declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'next_link.clone()');
-      body += `${indent.get()}(${initialRequestResult.requestVarName}, PollerContinuation::Links { next_link, final_link })\n`;
+      body += fallibleInitialPollerRequest
+        ? `${indent.get()}Ok((${initialRequestResult.requestVarName}, PollerContinuation::Links { next_link, final_link }))\n`
+        : `${indent.get()}(${initialRequestResult.requestVarName}, PollerContinuation::Links { next_link, final_link })\n`;
       return body;
     },
   }, {
     pattern: 'PollerState::Initial',
     body: (indent) => {
-      let body = initialRequestResult.content;
-      body += `${indent.get()}(${initialRequestResult.requestVarName}, PollerContinuation::Links { next_link: url.clone(), final_link: None, })\n`;
+      let body = fallibleInitialPollerRequest ?? initialRequestResult.content;
+      if (!fallibleInitialPollerRequest) {
+        body += `${indent.get()}(${initialRequestResult.requestVarName}, PollerContinuation::Links { next_link: url.clone(), final_link: None, })\n`;
+      }
       return body;
     },
   }])};\n`;
+  if (fallibleInitialPollerRequest) {
+    body += `${indent.get()}let Ok((mut ${initialRequestResult.requestVarName}, continuation)) = poller_request else {\n`;
+    body += `${indent.push().get()}todo!()\n`;
+    body += `${indent.pop().get()}};\n`;
+  }
   body += `${indent.get()}let ctx = poller_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
 

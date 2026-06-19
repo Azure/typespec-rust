@@ -1,163 +1,169 @@
 # Release History
 
+## 0.41.4 (Unreleased)
+
+### Other Changes
+
+- Improve request body serialization error handling. ([#766](https://github.com/Azure/typespec-rust/issues/766))
+
 ## 0.41.3 (2026-06-17)
 
 ### Bugs Fixed
 
-* Fixed an issue with `(de)serialize_with` that could cause unused helpers to be emitted, resulting in dead code.
+- Fixed an issue with `(de)serialize_with` that could cause unused helpers to be emitted, resulting in dead code.
 
 ## 0.41.2 (2026-06-15)
 
 ### Features Added
 
-* Added support for `serialize_with` `@clientOption` decorator for model fields, enabling custom serializer injection while preserving built-in serde behavior for the non-overridden direction.
+- Added support for `serialize_with` `@clientOption` decorator for model fields, enabling custom serializer injection while preserving built-in serde behavior for the non-overridden direction.
 
 ### Bugs Fixed
 
-* Fixed incorrect shadowing of `crate::models` when there's a submodule named `models`.
+- Fixed incorrect shadowing of `crate::models` when there's a submodule named `models`.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
+- Updated to the latest tsp toolset.
 
 ## 0.41.1 (2026-06-02)
 
 ### Features Added
 
-* Added support for `forcePageIterator` `@clientOption` decorator, which can be used to emit paged operations as returning a `PageIterator<T>`.
+- Added support for `forcePageIterator` `@clientOption` decorator, which can be used to emit paged operations as returning a `PageIterator<T>`.
 
 ### Other Changes
 
-* Fixed a sorting issue for recursive types.
+- Fixed a sorting issue for recursive types.
 
 ## 0.41.0 (2026-05-12)
 
 ### Breaking Changes
 
-* The minimum Node version has moved from `20.x` to `22.x`.
+- The minimum Node version has moved from `20.x` to `22.x`.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
+- Updated to the latest tsp toolset.
 
 ## 0.40.1 (2026-05-06)
 
 ### Bugs Fixed
 
-* Fixed a regression introduced in `7237cce` that caused undesired flipping from `pub(crate)` to `pub` on `pub(crate)` types.
-* Fixed a naming collision that can happen for XML `serde` helpers in certain cases.
+- Fixed a regression introduced in `7237cce` that caused undesired flipping from `pub(crate)` to `pub` on `pub(crate)` types.
+- Fixed a naming collision that can happen for XML `serde` helpers in certain cases.
 
 ## 0.40.0 (2026-05-05)
 
 ### Breaking Changes
 
-* The constructor signature for ARM clients has changed (it no longer requires the `endpoint` parameter).
-* Pageable operations that specify a `@clientName` decorator will skip altering the name to have the `list` prefix.
-* LRO methods and their associated types now have the prefix `begin_`.
-  * Applying the `@clientName` decorator will skip adding this prefix.
+- The constructor signature for ARM clients has changed (it no longer requires the `endpoint` parameter).
+- Pageable operations that specify a `@clientName` decorator will skip altering the name to have the `list` prefix.
+- LRO methods and their associated types now have the prefix `begin_`.
+  - Applying the `@clientName` decorator will skip adding this prefix.
 
 ### Features Added
 
-* Update ARM codegen to use cloud config.
-* Added support for `omitEndpointMethod` `@clientOption` decorator, which can be used to omit the synthesized `endpoint()` method on clients.
+- Update ARM codegen to use cloud config.
+- Added support for `omitEndpointMethod` `@clientOption` decorator, which can be used to omit the synthesized `endpoint()` method on clients.
 
 ### Bugs Fixed
 
-* Optional method parameters respect the `@access` decorator.
-* Fixed type cache key for external types.
+- Optional method parameters respect the `@access` decorator.
+- Fixed type cache key for external types.
 
 ## 0.39.1 (2026-04-12)
 
 ### Features Added
 
-* Changed the `allowEmpty` `@clientOption` decorator to `minLength`.
+- Changed the `allowEmpty` `@clientOption` decorator to `minLength`.
 
 ### Bugs Fixed
 
-* Fixed handling of alternate types for header/path/query parameters.
+- Fixed handling of alternate types for header/path/query parameters.
 
 ## 0.39.0 (2026-04-10)
 
 ### Features Added
 
-* Updated TypeSpec dependencies to `1.11.0`.
+- Updated TypeSpec dependencies to `1.11.0`.
 
 ## 0.38.1 (2026-04-10)
 
 ### Bugs Fixed
 
-* Fixed incorrect codegen for polymorphic types with no child types.
-* Removed spurious `use` statement in `unions.rs`.
-* Fixed incorrect initialization of `Option<T>` fields in explicit implementations of `Default` for client options types.
-* Removed `self` prefix from optional client parameters within the `if let Some(...)` statement.
-* Fixed some missing derive attributes.
-* Added support for `allowEmpty` `@clientOption` decorator, which can be used to remove empty string check for path parameters.
+- Fixed incorrect codegen for polymorphic types with no child types.
+- Removed spurious `use` statement in `unions.rs`.
+- Fixed incorrect initialization of `Option<T>` fields in explicit implementations of `Default` for client options types.
+- Removed `self` prefix from optional client parameters within the `if let Some(...)` statement.
+- Fixed some missing derive attributes.
+- Added support for `allowEmpty` `@clientOption` decorator, which can be used to remove empty string check for path parameters.
 
 ### Other Changes
 
-* Removed workaround for duplicate model definitions across namespaces as it hides legitimate authoring errors.
-* Set `skip_serializing` for read-only model fields.
+- Removed workaround for duplicate model definitions across namespaces as it hides legitimate authoring errors.
+- Set `skip_serializing` for read-only model fields.
 
 ## 0.38.0 (2026-03-18)
 
 ### Breaking Changes
 
-* The combined `api-version` parameter for multi-service clients has been replaced by per-service `api-version` parameters.
+- The combined `api-version` parameter for multi-service clients has been replaced by per-service `api-version` parameters.
 
 ### Features Added
 
-* Added support for LROs that use a custom custom link for the final result.
+- Added support for LROs that use a custom custom link for the final result.
 
 ### Bugs Fixed
 
-* Fixed an issue with discriminated unions containing other discriminated unions.
-* Fixed missing custom serialization for base polymorphic types.
+- Fixed an issue with discriminated unions containing other discriminated unions.
+- Fixed missing custom serialization for base polymorphic types.
 
 ## 0.37.0 (2026-03-11)
 
 ### Breaking Changes
 
-* TypeSpec namespaces are now honored and emitted as sub-modules.
-  * The root namespace is selected from the first defined client.  All content in the root namespace is exported as `crate_name::clients::*` and `crate_name::models::*`.
-  * If there are no defined clients, then the root namespace is selected from a non-core model type.
-  * See the docs on [client authoring](https://azure.github.io/typespec-azure/docs/howtos/generate-client-libraries/03client/) for further info.
+- TypeSpec namespaces are now honored and emitted as sub-modules.
+  - The root namespace is selected from the first defined client. All content in the root namespace is exported as `crate_name::clients::*` and `crate_name::models::*`.
+  - If there are no defined clients, then the root namespace is selected from a non-core model type.
+  - See the docs on [client authoring](https://azure.github.io/typespec-azure/docs/howtos/generate-client-libraries/03client/) for further info.
 
 ### Features Added
 
-* Define a `pub(crate)` constant for `api-version` to use in hand-authored `Default` implementation on client options.
-* Added support for the following.
-  * TypeSpec `union` types.
-  * Grouped method parameters via the `@override` decorator.
+- Define a `pub(crate)` constant for `api-version` to use in hand-authored `Default` implementation on client options.
+- Added support for the following.
+  - TypeSpec `union` types.
+  - Grouped method parameters via the `@override` decorator.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
-  * This includes the latest `TypeSpec.Http` lib that fixes reporting the `content-type` header for `HEAD` operations.
-* Add doc comments for model properties with defined [visibility](https://typespec.io/docs/language-basics/visibility/).
+- Updated to the latest tsp toolset.
+  - This includes the latest `TypeSpec.Http` lib that fixes reporting the `content-type` header for `HEAD` operations.
+- Add doc comments for model properties with defined [visibility](https://typespec.io/docs/language-basics/visibility/).
 
 ## 0.36.0 (2026-02-26)
 
 ### Breaking Changes
 
-* Fixed some edge cases where a method parameter's optionality wasn't correctly handled.
+- Fixed some edge cases where a method parameter's optionality wasn't correctly handled.
 
 ## 0.35.0 (2026-02-13)
 
 ### Breaking Changes
 
-* Fixed header response type for `etag` headers.
-* Removed `wasm32`-conditional `async_trait` attribute macro ([Azure/azure-sdk-for-rust#3377](https://github.com/Azure/azure-sdk-for-rust/issues/3377)).
+- Fixed header response type for `etag` headers.
+- Removed `wasm32`-conditional `async_trait` attribute macro ([Azure/azure-sdk-for-rust#3377](https://github.com/Azure/azure-sdk-for-rust/issues/3377)).
 
 ### Features Added
 
-* Added support for `@clientOption` decorator on model fields to specify custom deserializers.
-  * The format is `@@clientOption(ModelName.field, "deserialize_with", "path::to::deserializer_fn", "rust")`.
-* Added support for omitting client constructors via the `InitializedBy.customizeCode` setting.
+- Added support for `@clientOption` decorator on model fields to specify custom deserializers.
+  - The format is `@@clientOption(ModelName.field, "deserialize_with", "path::to::deserializer_fn", "rust")`.
+- Added support for omitting client constructors via the `InitializedBy.customizeCode` setting.
 
 ### Other Changes
 
-* Cleaned up MIT license header code comment text.
-* Updated to the latest tsp toolset.
+- Cleaned up MIT license header code comment text.
+- Updated to the latest tsp toolset.
 
 ## 0.34.0 (2026-02-06)
 
@@ -165,42 +171,42 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Updated to new usage of `Pager` and `Poller` types.
+- Updated to new usage of `Pager` and `Poller` types.
 
 ### Features Added
 
-* Added support for polymorphic discriminated unions.
+- Added support for polymorphic discriminated unions.
 
 ### Bugs Fixed
 
-* Using `Azure.Core.eTag` as a header parameter no longer causes an internal error.
-* Fixed bad codegen for remaining cases when an operation is annotated with `Access.internal` (the original fix for this was incomplete).
-* Fixed incorrect handling of `@alternateType` decorator when replacing scalar types.
-* Don't derive `Default` on internal structs used for spread params.
+- Using `Azure.Core.eTag` as a header parameter no longer causes an internal error.
+- Fixed bad codegen for remaining cases when an operation is annotated with `Access.internal` (the original fix for this was incomplete).
+- Fixed incorrect handling of `@alternateType` decorator when replacing scalar types.
+- Don't derive `Default` on internal structs used for spread params.
 
 ### Other Changes
 
-* Consolidated `pub` and `pub(crate)` structs into `models.rs` file.
-* Removed `#[non_exhaustive]` from enum definitions.
-* Added missing `serde` helper for literal enum values.
+- Consolidated `pub` and `pub(crate)` structs into `models.rs` file.
+- Removed `#[non_exhaustive]` from enum definitions.
+- Added missing `serde` helper for literal enum values.
 
 ## 0.33.0 (2026-01-16)
 
 ### Features Added
 
-* Added support for `text/plain` request and response bodies.
+- Added support for `text/plain` request and response bodies.
 
 ### Bugs Fixed
 
-* Omit a `Default` implementation for omitted client options types.
-* Fixed another case of colliding locals.
-* Only emit one constructor for `oauth2` when multiple flows are described.
-* Fixed bad codegen for some cases when an operation is annotated with `Access.internal`.
+- Omit a `Default` implementation for omitted client options types.
+- Fixed another case of colliding locals.
+- Only emit one constructor for `oauth2` when multiple flows are described.
+- Fixed bad codegen for some cases when an operation is annotated with `Access.internal`.
 
 ### Other Changes
 
-* Enum values that coalesce into the same name no longer cause an error. The names will be flagged for improvement and diagnostics emitted.
-* Updated to the latest tsp toolset.
+- Enum values that coalesce into the same name no longer cause an error. The names will be flagged for improvement and diagnostics emitted.
+- Updated to the latest tsp toolset.
 
 ## 0.32.0 (2025-12-11)
 
@@ -208,12 +214,12 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Replaced `Pager::from_callback` with `Pager::new`.
-* Updated generic type parameters to `Pager<>` and `PagerOptions<>` type as required by the paging strategy.
+- Replaced `Pager::from_callback` with `Pager::new`.
+- Updated generic type parameters to `Pager<>` and `PagerOptions<>` type as required by the paging strategy.
 
 ### Features Added
 
-* Added support for the `@alternateType` decorator.
+- Added support for the `@alternateType` decorator.
 
 ## 0.31.0 (2025-12-09)
 
@@ -221,7 +227,7 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Fixed import path to `BearerTokenAuthorizationPolicy`.
+- Fixed import path to `BearerTokenAuthorizationPolicy`.
 
 ## 0.30.0 (2025-12-08)
 
@@ -229,48 +235,48 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Use `QueryBuilder` when adding/setting query parameters on the request's URL.
-* Optional client parameters without a default value are now emitted as `Option<T>`.
+- Use `QueryBuilder` when adding/setting query parameters on the request's URL.
+- Optional client parameters without a default value are now emitted as `Option<T>`.
 
 ### Bugs Fixed
 
-* Remove non-word characters from model names.
-* Fixed various cases of bad codegen.
-  * Referencing optional client parameters.
-  * Query parameters that are exploded arrays.
-  * Deduplicate parameter name that collides with the `options` parameter.
-  * Remove duplicate header constant definitions.
+- Remove non-word characters from model names.
+- Fixed various cases of bad codegen.
+  - Referencing optional client parameters.
+  - Query parameters that are exploded arrays.
+  - Deduplicate parameter name that collides with the `options` parameter.
+  - Remove duplicate header constant definitions.
 
 ### Features Added
 
-* Added support for ARM LRO patterns.
-* Updated LROs that return result via original URL to GET the result after LRO has succeeded, instead of initial response.
-* Added emitter switch `omit-constructors` which will skip emitting client constructors and their associated options type (default is `false`).
+- Added support for ARM LRO patterns.
+- Updated LROs that return result via original URL to GET the result after LRO has succeeded, instead of initial response.
+- Added emitter switch `omit-constructors` which will skip emitting client constructors and their associated options type (default is `false`).
 
 ### Other Changes
 
-* Moved `TryFrom` impls for union types into their own file.
-* Call `.as_ref()` when consuming optional parameter values that are non-copyable types.
+- Moved `TryFrom` impls for union types into their own file.
+- Call `.as_ref()` when consuming optional parameter values that are non-copyable types.
 
 ## 0.29.0 (2025-11-20)
 
 ### Breaking Changes
 
-* Changed pager 2nd parameter from `Context<'static>` to `PagerOptions<'static>`
+- Changed pager 2nd parameter from `Context<'static>` to `PagerOptions<'static>`
 
 ### Features Added
 
-* Added support for custom date-time encoding `rfc3339-fixed-width`.
+- Added support for custom date-time encoding `rfc3339-fixed-width`.
 
 ### Bugs Fixed
 
-* Fixed invalid function name for literal value `serde` helpers.
+- Fixed invalid function name for literal value `serde` helpers.
 
 ### Other Changes
 
-* Use FRU (field record update) to make sure `ClientMethodOptions`, `PagerOptions`, and `PollerOptions` fields besides `Context` are all copied.
-* Reduced calls to `into_owned` for pollers
-* Updated to the latest tsp toolset.
+- Use FRU (field record update) to make sure `ClientMethodOptions`, `PagerOptions`, and `PollerOptions` fields besides `Context` are all copied.
+- Reduced calls to `into_owned` for pollers
+- Updated to the latest tsp toolset.
 
 ## 0.28.0 (2025-11-06)
 
@@ -278,12 +284,12 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Uses `azure_core::Value` instead of `serde_json::Value`.
-* Updated `Poller` callback to accept a `poller_options` second parameter and use that 'poller_options' for the `ctx` and `get_retry_after` functionality.
+- Uses `azure_core::Value` instead of `serde_json::Value`.
+- Updated `Poller` callback to accept a `poller_options` second parameter and use that 'poller_options' for the `ctx` and `get_retry_after` functionality.
 
 ### Bugs Fixed
 
-* Fixed `serde` implementations for `OffsetDateTime` in XML payloads when the format is `RFC3339`.
+- Fixed `serde` implementations for `OffsetDateTime` in XML payloads when the format is `RFC3339`.
 
 ## 0.27.0 (2025-11-05)
 
@@ -291,12 +297,12 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Pageable methods now use `PagerOptions` as the `method_options` type.
-* Updated pageable and long-running operation method bodies to handle new arguments to `from_callback()`.
+- Pageable methods now use `PagerOptions` as the `method_options` type.
+- Updated pageable and long-running operation method bodies to handle new arguments to `from_callback()`.
 
 ### Features Added
 
-* Added support for more LRO patterns.
+- Added support for more LRO patterns.
 
 ## 0.26.0 (2025-11-04)
 
@@ -304,21 +310,21 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* An explicit parameter for header `x-ms-client-request-id` is no longer emitted.
-* Updated renamed bearer token authorization policy.
+- An explicit parameter for header `x-ms-client-request-id` is no longer emitted.
+- Updated renamed bearer token authorization policy.
 
 ### Features Added
 
-* Added support for decorator `@deserializeEmptyStringAsNull`.
+- Added support for decorator `@deserializeEmptyStringAsNull`.
 
 ### Bugs Fixed
 
-* Fixed incorrect code for enums that use numeric values instead of strings.
-* Fixed missed `XmlFormat` specifier on some `Pager` definitions.
+- Fixed incorrect code for enums that use numeric values instead of strings.
+- Fixed missed `XmlFormat` specifier on some `Pager` definitions.
 
 ### Other Changes
 
-* Replace dependency on `typespec_client_core` with `azure_core`.
+- Replace dependency on `typespec_client_core` with `azure_core`.
 
 ## 0.25.0 (2025-10-29)
 
@@ -326,37 +332,37 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* The `serde` helpers for base64 data wrapped in an `Option<T>` are now in `azure_core::base64::option`.
-* The core XML helper `read_xml` has been renamed to `from_xml`.
-* The algorithm for renaming of pageable methods has changed which can cause some method names to change.
-* Some method parameters are now borrowed instead of owned.
-* Use helper `UrlExt::append_path()` from `azure_core` when constructing the request's `Url`.
-* Pageable methods always return a `Pager<T>` instead of sometimes returning a `PageIterator<T>`.
-* Define `Format` for types that implement traits for long-running operations.
+- The `serde` helpers for base64 data wrapped in an `Option<T>` are now in `azure_core::base64::option`.
+- The core XML helper `read_xml` has been renamed to `from_xml`.
+- The algorithm for renaming of pageable methods has changed which can cause some method names to change.
+- Some method parameters are now borrowed instead of owned.
+- Use helper `UrlExt::append_path()` from `azure_core` when constructing the request's `Url`.
+- Pageable methods always return a `Pager<T>` instead of sometimes returning a `PageIterator<T>`.
+- Define `Format` for types that implement traits for long-running operations.
 
 ### Bugs Fixed
 
-* Fixed an issue that could cause types to have duplicate names.
-* Fixed an issue that could cause enum types to have invalid names.
-* Ensure that the local variable name for the `http::Request` doesn't collide with an existing parameter name.
-* Added missing reinjectable query parameters when creating the `Url` for a pageable's `next_link`.
+- Fixed an issue that could cause types to have duplicate names.
+- Fixed an issue that could cause enum types to have invalid names.
+- Ensure that the local variable name for the `http::Request` doesn't collide with an existing parameter name.
+- Added missing reinjectable query parameters when creating the `Url` for a pageable's `next_link`.
 
 ### Other Changes
 
-* Emit `#[allow(clippy::too_many_arguments)]` on methods that contain seven or more arguments.
-* Emit doc comments for synthesized nullable types.
-* Unsupported authentication schemes will no longer prevent code generation. However, no constructors for unsupported authentication schemes will be emitted.
+- Emit `#[allow(clippy::too_many_arguments)]` on methods that contain seven or more arguments.
+- Emit doc comments for synthesized nullable types.
+- Unsupported authentication schemes will no longer prevent code generation. However, no constructors for unsupported authentication schemes will be emitted.
 
 ## 0.24.1 (2025-10-15)
 
 ### Bugs Fixed
 
-* Changed `doc_auto_cfg` to `doc_cfg` ([Azure/azure-sdk-for-rust#3118](https://github.com/Azure/azure-sdk-for-rust/issues/3118))
-* Fixed incorrect header trait doc comment.
+- Changed `doc_auto_cfg` to `doc_cfg` ([Azure/azure-sdk-for-rust#3118](https://github.com/Azure/azure-sdk-for-rust/issues/3118))
+- Fixed incorrect header trait doc comment.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
+- Updated to the latest tsp toolset.
 
 ## 0.24.0 (2025-10-02)
 
@@ -364,24 +370,24 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Methods that return streaming bytes now return an `AsyncResponse<T>`.
+- Methods that return streaming bytes now return an `AsyncResponse<T>`.
 
 ## 0.23.2 (2025-09-25)
 
 ### Features Added
 
-* Removed support for create_extensible_enum and create_enum macros and manually expanded their implementation.
-  * Refactored `enums.rs` into `enums.rs`, `enums_impl.rs`, and `enums_serde.rs` to follow the models types.
+- Removed support for create_extensible_enum and create_enum macros and manually expanded their implementation.
+  - Refactored `enums.rs` into `enums.rs`, `enums_impl.rs`, and `enums_serde.rs` to follow the models types.
 
 ## 0.23.1 (2025-09-24)
 
 ### Features Added
 
-* Added support for discriminated unions.
+- Added support for discriminated unions.
 
 ### Bugs Fixed
 
-* Fix document examples for header trait methods that return `HashMap` or `Vec` (not optional).
+- Fix document examples for header trait methods that return `HashMap` or `Vec` (not optional).
 
 ## 0.23.0 (2025-09-19)
 
@@ -389,23 +395,23 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* The naming algorithm for enum values has changed, which can result in name changes in some cases.
-  * The most common change is words being Pascal cased (e.g. `AES256` is now `Aes256`).
-  * Identifiers that contain a decimal value will now use an underscore to separate the whole number from the fraction (e.g. `Version7.1` is now `Version7_1`).
-  * For enum values that begin with a number, the prefix `INVLD_IDENTIFIER_` will be added as a flag indicating the name must be fixed in the TypeSpec.
-* Calls `Error::with_message()` instead of `Error::message()` after [Azure/azure-sdk-for-rust#3024](https://github.com/Azure/azure-sdk-for-rust/pull/3024) was merged.
-* Calls `pipeline.send` with the set of expected status codes for each operation.
+- The naming algorithm for enum values has changed, which can result in name changes in some cases.
+  - The most common change is words being Pascal cased (e.g. `AES256` is now `Aes256`).
+  - Identifiers that contain a decimal value will now use an underscore to separate the whole number from the fraction (e.g. `Version7.1` is now `Version7_1`).
+  - For enum values that begin with a number, the prefix `INVLD_IDENTIFIER_` will be added as a flag indicating the name must be fixed in the TypeSpec.
+- Calls `Error::with_message()` instead of `Error::message()` after [Azure/azure-sdk-for-rust#3024](https://github.com/Azure/azure-sdk-for-rust/pull/3024) was merged.
+- Calls `pipeline.send` with the set of expected status codes for each operation.
 
 ### Bugs Fixed
 
-* TypeSpec enum values that coalesce into the same enum value name will report a diagnostic error, requiring a rename in the TypeSpec.
-  * Previously, the duplicate names would be emitted, resulting in a compile-time error.
+- TypeSpec enum values that coalesce into the same enum value name will report a diagnostic error, requiring a rename in the TypeSpec.
+  - Previously, the duplicate names would be emitted, resulting in a compile-time error.
 
 ### Other Changes
 
-* Removed `futures` from crate dependencies for pageable methods as it's not required.
-* Added doc comments for public modules.
-* Added doc comment for `into_owned()` implementations.
+- Removed `futures` from crate dependencies for pageable methods as it's not required.
+- Added doc comments for public modules.
+- Added doc comment for `into_owned()` implementations.
 
 ## 0.22.0 (2025-09-10)
 
@@ -413,19 +419,19 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Client methods call `check_success()` to handle service errors.
-* Client methods return a `BufResponse` rather than a `RawResponse`.
+- Client methods call `check_success()` to handle service errors.
+- Client methods return a `BufResponse` rather than a `RawResponse`.
 
 ### Bugs Fixed
 
-* Omit the `Content-Type` header for optional body parameters that are `None`.
+- Omit the `Content-Type` header for optional body parameters that are `None`.
 
 ### Other Changes
 
-* Exit early when there are existing diagnostic errors.
-* For client constructors, the server URL parameter name will be honored IFF the `@clientName` decorator is applied.
-* Client constructors no longer remove all query parameters from the provided endpoint.
-* Updated to the latest tsp toolset.
+- Exit early when there are existing diagnostic errors.
+- For client constructors, the server URL parameter name will be honored IFF the `@clientName` decorator is applied.
+- Client constructors no longer remove all query parameters from the provided endpoint.
+- Updated to the latest tsp toolset.
 
 ## 0.21.0 (2025-09-03)
 
@@ -433,20 +439,20 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Calls `Context::to_borrowed` instead of `Context::with_context`.
-* Imports types moved from `azure_core::http` to `azure_core::http::{pager, poller}` modules.
-* Support new API signatures in `Pipeline::new()` and `get_retry_after()`.
+- Calls `Context::to_borrowed` instead of `Context::with_context`.
+- Imports types moved from `azure_core::http` to `azure_core::http::{pager, poller}` modules.
+- Support new API signatures in `Pipeline::new()` and `get_retry_after()`.
 
 ### Features Added
 
-* Added `#![cfg_attr(docsrs, feature(doc_auto_cfg))]` to every generated `src/lib.rs` to automatically document feature conditions.
-* Added support for optional path parameters.
-* Added support for TypeSpec models that extend a `Record<T>` (the "additional properties" pattern).
+- Added `#![cfg_attr(docsrs, feature(doc_auto_cfg))]` to every generated `src/lib.rs` to automatically document feature conditions.
+- Added support for optional path parameters.
+- Added support for TypeSpec models that extend a `Record<T>` (the "additional properties" pattern).
 
 ### Other Changes
 
-* Required path parameters that are empty will return an error.
-* Added improved doc comments for accessing header traits (includes examples).
+- Required path parameters that are empty will return an error.
+- Added improved doc comments for accessing header traits (includes examples).
 
 ## 0.20.0 (2025-08-01)
 
@@ -454,8 +460,8 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Adds `PagerState` support to pagers.
-* Adds a `Format` to `RequestContent<T, F>` when the request body is not JSON.
+- Adds `PagerState` support to pagers.
+- Adds a `Format` to `RequestContent<T, F>` when the request body is not JSON.
 
 ## 0.19.0 (2025-07-23)
 
@@ -463,12 +469,12 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* SDK clients are now generated with distributed tracing support using the `#[tracing::function]` and related attribute macros.
+- SDK clients are now generated with distributed tracing support using the `#[tracing::function]` and related attribute macros.
 
 ### Other Changes
 
-* Client methods return an error on non-2xx response codes.
-* Added support for the `decimal` type.
+- Client methods return an error on non-2xx response codes.
+- Added support for the `decimal` type.
 
 ## 0.18.0 (2025-07-09)
 
@@ -476,12 +482,12 @@
 
 **NOTE: this version is incompatible with earlier versions of `azure_core`**
 
-* Renamed `PagerResult::More { next, .. }` to `PagerResult::More { continuation, .. }`.
+- Renamed `PagerResult::More { next, .. }` to `PagerResult::More { continuation, .. }`.
 
 ### Other Changes
 
-* Fixed malformed doc comments for enums and their values.
-* Retooled some usage of `format!` macros.
+- Fixed malformed doc comments for enums and their values.
+- Retooled some usage of `format!` macros.
 
 ## 0.17.0 (2025-06-19)
 
@@ -489,11 +495,11 @@
 
 **NOTE: this version is incompatible with earlier versions of `azure_core`**
 
-* Switch to using `OffsetDateTime` from `azure_core::time` instead of the `time` crate.
+- Switch to using `OffsetDateTime` from `azure_core::time` instead of the `time` crate.
 
 ### Features Added
 
-* Added support for stylized path collection parameters.
+- Added support for stylized path collection parameters.
 
 ## 0.16.0 (2025-06-12)
 
@@ -501,13 +507,13 @@
 
 **NOTE: this version is incompatible with earlier versions of `azure_core`**
 
-* Methods that return a raw response with a marker type or no response have a return type of `Response<T, NoFormat>`.
+- Methods that return a raw response with a marker type or no response have a return type of `Response<T, NoFormat>`.
 
 ### Other Changes
 
-* Small refactoring to pageable method bodies.
-* Updated to the latest tsp toolset.
-* Response headers decorated with `Access.internal` are omitted from the response headers trait.
+- Small refactoring to pageable method bodies.
+- Updated to the latest tsp toolset.
+- Response headers decorated with `Access.internal` are omitted from the response headers trait.
 
 ## 0.15.0 (2025-06-05)
 
@@ -515,98 +521,98 @@
 
 **NOTE: this version is incompatible with earlier versions of `azure_core`**
 
-* Updated method bodies to use the new `azure_core::http::Format` in the pipeline.
-* Methods that return a streaming response now return a `Result<RawResponse>` type.
-* Updated implementations of paged methods per changes in `azure_core`.
-  * Paged operations that return a collection and "next link" now return a per-item iterator of type `Pager<T>`.
-  * If a paged operation returns more than the above, it returns a `PageIterator<T>` which behaves like previous versions of `Pager<T>`.
+- Updated method bodies to use the new `azure_core::http::Format` in the pipeline.
+- Methods that return a streaming response now return a `Result<RawResponse>` type.
+- Updated implementations of paged methods per changes in `azure_core`.
+  - Paged operations that return a collection and "next link" now return a per-item iterator of type `Pager<T>`.
+  - If a paged operation returns more than the above, it returns a `PageIterator<T>` which behaves like previous versions of `Pager<T>`.
 
 ### Bugs Fixed
 
-* Fixed handling for required API version client parameter.
-* Don't propagate parent client fields to child clients that aren't used by the child.
-* Fixed incorrect `content-type` header parameter when the request body is optional.
-* Fixed some rare cases where a field name could start with an underscore character.
+- Fixed handling for required API version client parameter.
+- Don't propagate parent client fields to child clients that aren't used by the child.
+- Fixed incorrect `content-type` header parameter when the request body is optional.
+- Fixed some rare cases where a field name could start with an underscore character.
 
 ## 0.14.2 (2025-05-27)
 
 ### Features Added
 
-* Added support for `plainDate` and `plainTime` types. They're emitted as `String` types.
-* Added support for the `safeint` type. It's emitted as a `serde_json::Number` type.
+- Added support for `plainDate` and `plainTime` types. They're emitted as `String` types.
+- Added support for the `safeint` type. It's emitted as a `serde_json::Number` type.
 
 ### Bugs Fixed
 
-* Fixed bad codegen when path parameters are aliased as client initializers.
-* Fixed bad codegen for model with literal values.
-* Fixed incorrect behavior for numeric types that use string encoding.
-* Fixed decimal types to properly handle string/float encodings.
+- Fixed bad codegen when path parameters are aliased as client initializers.
+- Fixed bad codegen for model with literal values.
+- Fixed incorrect behavior for numeric types that use string encoding.
+- Fixed decimal types to properly handle string/float encodings.
 
 ## 0.14.1 (2025-05-07)
 
 ### Bugs Fixed
 
-* Fixed infinite loop for certain paged operations.
-* Fixed missing borrow for required header parameters that are used in a closure (e.g. pageable operations).
-* Fixed missing header constant when header traits are merged.
-* Don't skip core types when they're explicitly referenced.
-* Fixed missing content type for operations that have multiple responses and one of them doesn't include a response body (e.g. 200 and 204).
-* Fixed more cases of enum names with symbols that can't be in an identifier.
+- Fixed infinite loop for certain paged operations.
+- Fixed missing borrow for required header parameters that are used in a closure (e.g. pageable operations).
+- Fixed missing header constant when header traits are merged.
+- Don't skip core types when they're explicitly referenced.
+- Fixed missing content type for operations that have multiple responses and one of them doesn't include a response body (e.g. 200 and 204).
+- Fixed more cases of enum names with symbols that can't be in an identifier.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
-  * This includes the GA version of the compiler and supporting libraries.
+- Updated to the latest tsp toolset.
+  - This includes the GA version of the compiler and supporting libraries.
 
 ## 0.14.0 (2025-05-01)
 
 ### Breaking Changes
 
-* Model fields of type `HashMap` and `Vec` are now wrapped in an `Option<T>`.
-  * The only exception is for the `Vec<T>` in paged responses.
-* Parameters emitted as `&str` but required ownership are now emitted as `String`.
-* Parameters of type `Vec<T>` that don't require ownership are now `&[T]`.
+- Model fields of type `HashMap` and `Vec` are now wrapped in an `Option<T>`.
+  - The only exception is for the `Vec<T>` in paged responses.
+- Parameters emitted as `&str` but required ownership are now emitted as `String`.
+- Parameters of type `Vec<T>` that don't require ownership are now `&[T]`.
 
 ### Features Added
 
-* Added support for pageable methods that use a continuation token when fetching pages.
-* Added support for TypeSpec `decimal` and `decimal128` types.
+- Added support for pageable methods that use a continuation token when fetching pages.
+- Added support for TypeSpec `decimal` and `decimal128` types.
 
 ### Bugs Fixed
 
-* Fixed XML helpers for certain cases of wrapped arrays.
-* Avoid infinite recursion in emitted types by using `Box<T>` to break the cycle.
+- Fixed XML helpers for certain cases of wrapped arrays.
+- Avoid infinite recursion in emitted types by using `Box<T>` to break the cycle.
 
 ### Other Changes
 
-* Errors in the emitter are no longer surfaced as a crash.
-* Skip `cargo fmt` if the emitter fails.
+- Errors in the emitter are no longer surfaced as a crash.
+- Skip `cargo fmt` if the emitter fails.
 
 ## 0.13.3 (2025-04-04)
 
 ### Other Changes
 
-* Nullable types are treated as their underlying type (temporary until `Nullable<T>` arrives in core).
+- Nullable types are treated as their underlying type (temporary until `Nullable<T>` arrives in core).
 
 ## 0.13.2 (2025-04-03)
 
 ### Other Changes
 
-* Add doc comments for fields in client options types.
-* Add missing doc comment(s) for multiple response header traits that get merged into a single trait.
-* Added switch `temp-omit-doc-links` to omit links to types in doc comments.
-  * NOTE: this switch is _temporary_ and will be removed in a future release.
-* Updated to the latest tsp toolset.
-  * This prompted updating the minimum node engine to `v20.x.y`.
+- Add doc comments for fields in client options types.
+- Add missing doc comment(s) for multiple response header traits that get merged into a single trait.
+- Added switch `temp-omit-doc-links` to omit links to types in doc comments.
+  - NOTE: this switch is _temporary_ and will be removed in a future release.
+- Updated to the latest tsp toolset.
+  - This prompted updating the minimum node engine to `v20.x.y`.
 
 ## 0.13.1 (2025-04-01)
 
 ### Other Changes
 
-* Recursively delete the contents of `src/generated` before writing the content to disk.
-* Consolidate `use` statements.
-* Omit `DO NOT EDIT` phrase from `src/lib.rs`.
-* Skip LRO methods instead of erroring out.
+- Recursively delete the contents of `src/generated` before writing the content to disk.
+- Consolidate `use` statements.
+- Omit `DO NOT EDIT` phrase from `src/lib.rs`.
+- Skip LRO methods instead of erroring out.
 
 ## 0.13.0 (2025-03-24)
 
@@ -614,269 +620,269 @@
 
 **NOTE: this version is incompatible with earlier versions of `azure_core`**
 
-* Updated references to types in `azure_core` based on its refactoring.
-* Replaced references to `typespec_client_core` with the matching references in `azure_core`.
+- Updated references to types in `azure_core` based on its refactoring.
+- Replaced references to `typespec_client_core` with the matching references in `azure_core`.
 
 ### Other Changes
 
-* Use `crate::generated::` paths to types in doc links.
+- Use `crate::generated::` paths to types in doc links.
 
 ## 0.12.0 (2025-03-20)
 
 ### Breaking Changes
 
-* The word `Etag` is no longer snake-cased to `e_tag`.
+- The word `Etag` is no longer snake-cased to `e_tag`.
 
 ### Bugs Fixed
 
-* Fixed serde for models containing hash maps/vectors of base64 encoded bytes and hash maps/vectors of `OffsetDateTime` types.
-* Fixed an issue that could cause emitted code to use incorrect base64 encoding/decoding.
-* Fixed serde annotations to omit empty `Vec<T>` for XML unwrapped arrays.
-* Remove erroneous `url = url.join("")?;` that can happen in some cases.
+- Fixed serde for models containing hash maps/vectors of base64 encoded bytes and hash maps/vectors of `OffsetDateTime` types.
+- Fixed an issue that could cause emitted code to use incorrect base64 encoding/decoding.
+- Fixed serde annotations to omit empty `Vec<T>` for XML unwrapped arrays.
+- Remove erroneous `url = url.join("")?;` that can happen in some cases.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
-* Client struct fields are now always `pub(crate)`. In addition, internal and helper types are now `pub(crate)` instead of `pub` to help prevent inadvertent exposure.
-* Report diagnostics from `@azure-tools/typespec-client-generator-core`.
-* Refactor on-disk layout of generated code (simplifies re-exporting of types).
-* The `lib.rs` file is no longer merged and will be ignored when it exists (a warning diagnostic is displayed).
-  * Set `overwrite-lib-rs: true` to force overwriting the `lib.rs` file.
+- Updated to the latest tsp toolset.
+- Client struct fields are now always `pub(crate)`. In addition, internal and helper types are now `pub(crate)` instead of `pub` to help prevent inadvertent exposure.
+- Report diagnostics from `@azure-tools/typespec-client-generator-core`.
+- Refactor on-disk layout of generated code (simplifies re-exporting of types).
+- The `lib.rs` file is no longer merged and will be ignored when it exists (a warning diagnostic is displayed).
+  - Set `overwrite-lib-rs: true` to force overwriting the `lib.rs` file.
 
 ## 0.11.0 (2025-03-04)
 
 ### Breaking Changes
 
-* Pageable methods will be renamed to start with `list` (e.g. `get_versions` becomes `list_versions`). A warning diagnostic is displayed when such a rename occurs.
-* Sub-clients that specify a `@clientName` decorator will use that client name verbatim instead of having the parent client name as a prefix.
+- Pageable methods will be renamed to start with `list` (e.g. `get_versions` becomes `list_versions`). A warning diagnostic is displayed when such a rename occurs.
+- Sub-clients that specify a `@clientName` decorator will use that client name verbatim instead of having the parent client name as a prefix.
 
 ### Bug Fixes
 
-* Client constructors will now return an error if the endpoint parameter doesn't start with `http[s]`.
-* Added support for unsigned integer types.
-* Preserve `pub(crate)` on sub-client fields that can also be individually initialized.
-* Removed redundant client accessor parameters that can be inherited from the parent client.
+- Client constructors will now return an error if the endpoint parameter doesn't start with `http[s]`.
+- Added support for unsigned integer types.
+- Preserve `pub(crate)` on sub-client fields that can also be individually initialized.
+- Removed redundant client accessor parameters that can be inherited from the parent client.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
-* Set minimum node engine to `v18.x`.
+- Updated to the latest tsp toolset.
+- Set minimum node engine to `v18.x`.
 
 ## 0.10.0 (2025-02-25)
 
 ### Breaking Changes
 
-* Model fields of type `HashMap` or `Vec` are no longer wrapped in an `Option<T>`.
+- Model fields of type `HashMap` or `Vec` are no longer wrapped in an `Option<T>`.
 
 ### Features Added
 
-* Added response types/traits for methods that return typed headers.
+- Added response types/traits for methods that return typed headers.
 
 ### Other Changes
 
-* Updated to the latest tsp toolset.
+- Updated to the latest tsp toolset.
 
 ## 0.9.1 (2025-02-12)
 
 ### Bugs Fixed
 
-* Added support for `enumvalue` types in method parameters.
+- Added support for `enumvalue` types in method parameters.
 
 ## 0.9.0 (2025-02-10)
 
 ### Breaking Changes
 
-* All client method option types are now exported from the `models` module (they are no longer in the root).
+- All client method option types are now exported from the `models` module (they are no longer in the root).
 
 ### Features Added
 
-* Merge preexisting `lib.rs` content with generated content.
+- Merge preexisting `lib.rs` content with generated content.
 
 ### Other Changes
 
-* Fixed formatting of some doc comments.
-  * HTML elements are converted to markdown equivalents.
-  * Bare URLs are converted to Rust docs hyperlinks.
-* The emitter will attempt to execute `cargo fmt` after files are written.
-* Add `derive` feature for `typespec_client_core` dependency.
+- Fixed formatting of some doc comments.
+  - HTML elements are converted to markdown equivalents.
+  - Bare URLs are converted to Rust docs hyperlinks.
+- The emitter will attempt to execute `cargo fmt` after files are written.
+- Add `derive` feature for `typespec_client_core` dependency.
 
 ## 0.8.2 (2025-02-04)
 
 ### Other Changes
 
-* Added various missing doc comments.
+- Added various missing doc comments.
 
 ## 0.8.1 (2025-02-03)
 
 ### Bug Fixes
 
-* Fixed bad codegen for certain cases of enum names.
+- Fixed bad codegen for certain cases of enum names.
 
 ## 0.8.0 (2025-02-03)
 
 ### Breaking Changes
 
-* Required `String` parameters are now emitted as `&str`.
-* Sub-client modules are no longer publicly exported.
-  * All clients and their option types (client and/or method) are now exported in the `clients` module.
-  * Instantiable clients and their client options types along with all client method options will be re-exported in the crate's root.
+- Required `String` parameters are now emitted as `&str`.
+- Sub-client modules are no longer publicly exported.
+  - All clients and their option types (client and/or method) are now exported in the `clients` module.
+  - Instantiable clients and their client options types along with all client method options will be re-exported in the crate's root.
 
 ### Bugs Fixed
 
-* Ensure that the API version query parameter in a pager's next link is set to the version on the client.
+- Ensure that the API version query parameter in a pager's next link is set to the version on the client.
 
 ### Other Changes
 
-* Input models are no longer `non_exhaustive`.
-* Models and options types derive `SafeDebug` instead of `Debug`.
+- Input models are no longer `non_exhaustive`.
+- Models and options types derive `SafeDebug` instead of `Debug`.
 
 ## 0.7.0 (2025-01-17)
 
 ### Breaking Changes
 
-* Methods that take a binary body now take a `RequestContent<Bytes>` instead of `RequestContent<Vec<u8>>`.
-* Methods that return a binary body now return a `Response` instead of `Response<()>`.
-* Client accessor methods now include any modeled parameters.
+- Methods that take a binary body now take a `RequestContent<Bytes>` instead of `RequestContent<Vec<u8>>`.
+- Methods that return a binary body now return a `Response` instead of `Response<()>`.
+- Client accessor methods now include any modeled parameters.
 
 ### Bugs Fixed
 
-* Use `serde` helpers to encode/decode time types in the specified wire format.
+- Use `serde` helpers to encode/decode time types in the specified wire format.
 
 ### Other Changes
 
-* Various codegen changes to clean up Clippy issues.
-* Updated to the latest tsp toolset.
+- Various codegen changes to clean up Clippy issues.
+- Updated to the latest tsp toolset.
 
 ## 0.6.0 (2025-01-08)
 
 ### Breaking Changes
 
-* Models and enums used as output types no longer implement `TryFrom`. Use `into_body()` instead of `try_into()` when deserializing a modeled response.
+- Models and enums used as output types no longer implement `TryFrom`. Use `into_body()` instead of `try_into()` when deserializing a modeled response.
 
 ### Bugs Fixed
 
-* Add `derive` and `xml` features in `Cargo.toml` files as required.
-* Borrow client fields used in method header parameters if their type is non-copyable.
+- Add `derive` and `xml` features in `Cargo.toml` files as required.
+- Borrow client fields used in method header parameters if their type is non-copyable.
 
 ### Features Added
 
-* Added support for TypeSpec `duration` types. Numeric durations are emitted as their respective types. For ISO8601 they're emitted as `String` types.
+- Added support for TypeSpec `duration` types. Numeric durations are emitted as their respective types. For ISO8601 they're emitted as `String` types.
 
 ### Other Changes
 
-* Removed dependency on crate `async-std`.
+- Removed dependency on crate `async-std`.
 
 ## 0.5.1 (2024-12-19)
 
 ### Bugs Fixed
 
-* Fixed bad codegen for enum values that contain a comma character.
+- Fixed bad codegen for enum values that contain a comma character.
 
 ### Features Added
 
-* Added support for model properties of type `path`.
-* Aggregate inherited model properties so they're all in the super-type.
+- Added support for model properties of type `path`.
+- Aggregate inherited model properties so they're all in the super-type.
 
 ### Other Fixes
 
-* Various codegen changes to clean up Clippy issues.
+- Various codegen changes to clean up Clippy issues.
 
 ## 0.5.0 (2024-12-19)
 
 ### Breaking Changes
 
-* Updated serde helpers to use renamed methods from core. This requires core versions from commit `65917ad` or later.
+- Updated serde helpers to use renamed methods from core. This requires core versions from commit `65917ad` or later.
 
 ## 0.4.1 (2024-12-19)
 
 ### Bugs Fixed
 
-* Fixed an issue that could cause incorrect usage of client parameters in method bodies.
+- Fixed an issue that could cause incorrect usage of client parameters in method bodies.
 
 ### Features Added
 
-* Added support for endpoints with supplemental paths.
-* Added support for `OAuth2` credentials when part of a union authentication scheme. Unsupported schemes are omitted.
+- Added support for endpoints with supplemental paths.
+- Added support for `OAuth2` credentials when part of a union authentication scheme. Unsupported schemes are omitted.
 
 ### Other Changes
 
-* Use `Url::join` for constructing the complete endpoint.
-* Updated to the latest tsp toolset.
+- Use `Url::join` for constructing the complete endpoint.
+- Updated to the latest tsp toolset.
 
 ## 0.4.0 (2024-12-10)
 
 ### Breaking Changes
 
-* `Azure.Core.eTag` types are now emitted as `azure_core::Etag` types.
+- `Azure.Core.eTag` types are now emitted as `azure_core::Etag` types.
 
 ### Bugs Fixed
 
-* Pager callbacks will properly clone method options when it contains non-copyable types.
+- Pager callbacks will properly clone method options when it contains non-copyable types.
 
 ### Features Added
 
-* Added support for required client parameters.
+- Added support for required client parameters.
 
 ### Other Changes
 
-* Methods create their own `Context` using the caller's as the parent.
-* Updated to the latest version of `azure_core` which removed `AsClientMethodOptions` and it associated methods.
+- Methods create their own `Context` using the caller's as the parent.
+- Updated to the latest version of `azure_core` which removed `AsClientMethodOptions` and it associated methods.
 
 ## 0.3.0 (2024-12-06)
 
 ### Breaking Changes
 
-* Model fields of type `url` are now emitted as `String` types.
+- Model fields of type `url` are now emitted as `String` types.
 
 ### Bugs Fixed
 
-* Fixed an issue that could cause a crash with error `Error: didn't find body format for model Error`.
+- Fixed an issue that could cause a crash with error `Error: didn't find body format for model Error`.
 
 ### Other Changes
 
-* Don't overwrite an existing `Cargo.toml` file by default.
-  * Specify `overwrite-cargo-toml=true` to force overwriting the file.
-* Emitter args `crate-name` and `crate-version` have been marked as required.
-* Updated minimum tcgc to `v0.48.4`.
+- Don't overwrite an existing `Cargo.toml` file by default.
+  - Specify `overwrite-cargo-toml=true` to force overwriting the file.
+- Emitter args `crate-name` and `crate-version` have been marked as required.
+- Updated minimum tcgc to `v0.48.4`.
 
 ### Features Added
 
-* Clients have an `endpoint()` method that returns its `azure_core::Url`.
+- Clients have an `endpoint()` method that returns its `azure_core::Url`.
 
 ## 0.2.0 (2024-12-03)
 
 ### Breaking Changes
 
-* Optional client method parameters are now in the method's options type.
-* Sub-clients now have the suffix `Client` on their type names.
-* Methods parameters of type `impl Into<String>` have been changed to `String`.
-* Client and method options builders have been removed. The options are now POD types.
+- Optional client method parameters are now in the method's options type.
+- Sub-clients now have the suffix `Client` on their type names.
+- Methods parameters of type `impl Into<String>` have been changed to `String`.
+- Client and method options builders have been removed. The options are now POD types.
 
 ### Bugs Fixed
 
-* Add necessary calls to `to_string()` for header/path/query params.
-* Fixed improperly clearing an endpoint's query parameters during client construction.
-* Fixed constructing URLs from routes that contain query parameters.
-* Fixed handling of spread parameters when the param and serde names are different.
+- Add necessary calls to `to_string()` for header/path/query params.
+- Fixed improperly clearing an endpoint's query parameters during client construction.
+- Fixed constructing URLs from routes that contain query parameters.
+- Fixed handling of spread parameters when the param and serde names are different.
 
 ### Features Added
 
-* Models now derive `typespec_client_core::Model`.
-* Added support for binary responses.
-* Added support for TypeSpec spread parameters.
-* Added support for pageable methods.
-* Added support for XML payloads.
-* Added partial support for base64 encoded values.
-  * Headers, query parameters, and struct fields work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
-  * Requests and responses of base64 encoded values do not work due to the orphan problem.
-* Added support for `x-ms-meta-*` headers in blob storage.
+- Models now derive `typespec_client_core::Model`.
+- Added support for binary responses.
+- Added support for TypeSpec spread parameters.
+- Added support for pageable methods.
+- Added support for XML payloads.
+- Added partial support for base64 encoded values.
+  - Headers, query parameters, and struct fields work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
+  - Requests and responses of base64 encoded values do not work due to the orphan problem.
+- Added support for `x-ms-meta-*` headers in blob storage.
 
 ### Other Changes
 
-* Use macros from `typespec_client_core` for creating enums.
-* `TryFrom` implementations return an `azure_core::Result` instead of `std::result::Result`.
-* Client parameters of type `impl AsRef<str>` have been changed to `&str`.
+- Use macros from `typespec_client_core` for creating enums.
+- `TryFrom` implementations return an `azure_core::Result` instead of `std::result::Result`.
+- Client parameters of type `impl AsRef<str>` have been changed to `&str`.
 
 ## 0.1.0 (2024-10-10)
 
-* Initial release
+- Initial release
