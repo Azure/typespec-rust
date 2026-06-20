@@ -4,6 +4,8 @@ parameters:
   pnpmStorePath: $(Pipeline.Workspace)/.pnpm-store
 
 steps:
+  - template: /eng/common/pipelines/templates/steps/create-authenticated-npmrc.yml
+
   - task: NodeTool@0
     displayName: Install Node ${{ parameters.nodeVersion }}
     inputs:
@@ -15,9 +17,9 @@ steps:
       path: ${{ parameters.pnpmStorePath }}
     displayName: Cache pnpm store
 
-  - script:  npm install -g cspell
+  - script: npm install -g cspell
     displayName: Install cspell
-  
+
   - script: |
       npm i -g corepack@latest
       corepack enable
