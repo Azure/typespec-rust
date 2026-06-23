@@ -34,8 +34,8 @@ steps:
     displayName: "Publish GitHub Release ${{ parameters.PackagePath }}"
 
   - ${{ if ne(parameters.PublishDevVersion, true) }}:
-    - script: |
-        cd packages/${{ parameters.PackagePath }}
-        echo "//registry.npmjs.org/:_authToken=$(azure-sdk-npm-token)" > ./.npmrc
-        npm publish --access public
-      displayName: "Publish to npm ${{ parameters.PackagePath }}"
+      - script: |
+          cd packages/${{ parameters.PackagePath }}
+          echo "//registry.npmjs.org/:_authToken=$(azure-sdk-npm-token)" > ./.npmrc
+          npm publish --access public --registry=https://registry.npmjs.org/
+        displayName: "Publish to npm ${{ parameters.PackagePath }}"
