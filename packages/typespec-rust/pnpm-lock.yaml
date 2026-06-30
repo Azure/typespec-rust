@@ -15,8 +15,8 @@ importers:
         specifier: 0.69.0
         version: 0.69.0(ada5dd29450223b6f817bda180e18b14)
       '@azure-tools/typespec-client-generator-core':
-        specifier: 0.69.0
-        version: 0.69.0(549d226bc4ad5813218e1222d9f15686)
+        specifier: 0.69.1
+        version: 0.69.1(549d226bc4ad5813218e1222d9f15686)
       '@typespec/compiler':
         specifier: 1.13.0
         version: 1.13.0(@types/node@22.19.19)
@@ -144,8 +144,8 @@ packages:
       '@typespec/rest': ^0.83.0
       '@typespec/versioning': ^0.83.0
 
-  '@azure-tools/typespec-client-generator-core@0.69.0':
-    resolution: {integrity: sha512-ro8zzOeiN/74r0wM19R77gzLtbfjIFgKgr1Rusii/vhCfJIoVC7IcqLxhbJl0RVkjyhRFKt4GCRAw4iurnrDnw==}
+  '@azure-tools/typespec-client-generator-core@0.69.1':
+    resolution: {integrity: sha512-v84ZTh9lffTyjUSfMzZMDPv+fHjXJO/LpYT+V73Zco9YL8fC6o7ou2hvSlWTnMW2KIIrymdM3AyXONxSIZUEBw==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       '@azure-tools/typespec-azure-core': ^0.69.0
@@ -2474,7 +2474,7 @@ snapshots:
       change-case: 5.4.4
       pluralize: 8.0.0
 
-  '@azure-tools/typespec-client-generator-core@0.69.0(549d226bc4ad5813218e1222d9f15686)':
+  '@azure-tools/typespec-client-generator-core@0.69.1(549d226bc4ad5813218e1222d9f15686)':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.69.0(@typespec/compiler@1.13.0(@types/node@22.19.19))(@typespec/http@1.13.0(@typespec/compiler@1.13.0(@types/node@22.19.19))(@typespec/streams@0.81.0(@typespec/compiler@1.13.0(@types/node@22.19.19))))(@typespec/rest@0.83.0(@typespec/compiler@1.13.0(@types/node@22.19.19))(@typespec/http@1.13.0(@typespec/compiler@1.13.0(@types/node@22.19.19))(@typespec/streams@0.81.0(@typespec/compiler@1.13.0(@types/node@22.19.19)))))
       '@typespec/compiler': 1.13.0(@types/node@22.19.19)
