@@ -752,6 +752,12 @@ impl ResourcesTopLevelClient {
         let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct ResourcesTopLevelClientListByResourceGroupPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -784,7 +790,8 @@ impl ResourcesTopLevelClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: TopLevelTrackedResourceListResult = json::from_json(&body)?;
+                        let res: ResourcesTopLevelClientListByResourceGroupPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
@@ -821,6 +828,12 @@ impl ResourcesTopLevelClient {
         let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct ResourcesTopLevelClientListBySubscriptionPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -853,7 +866,8 @@ impl ResourcesTopLevelClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: TopLevelTrackedResourceListResult = json::from_json(&body)?;
+                        let res: ResourcesTopLevelClientListBySubscriptionPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {

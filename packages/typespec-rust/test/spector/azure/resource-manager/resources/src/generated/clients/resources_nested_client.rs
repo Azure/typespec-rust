@@ -719,6 +719,12 @@ impl ResourcesNestedClient {
         let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct ResourcesNestedClientListByTopLevelTrackedResourcePage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -751,7 +757,8 @@ impl ResourcesNestedClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: NestedProxyResourceListResult = json::from_json(&body)?;
+                        let res: ResourcesNestedClientListByTopLevelTrackedResourcePage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {

@@ -1443,6 +1443,105 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   return body;
 }
 
+interface HelperStructField {
+  name: string;
+  serdeName?: string;
+  type: string;
+}
+
+interface HelperStructDefinition {
+  name: string;
+  fields: Array<HelperStructField>;
+}
+
+function getMethodHelperTypeName(client: rust.Client, method: rust.PageableMethod | rust.LroMethod, suffix: 'Page' | 'Monitor'): string {
+  return `${client.name}${utils.pascalCase(method.name, false)}${suffix}`;
+}
+
+function emitHelperStruct(indent: helpers.indentation, helperStruct: HelperStructDefinition): string {
+  let body = `${indent.get()}#[derive(serde::Deserialize)]\n`;
+  body += `${indent.get()}struct ${helperStruct.name} {\n`;
+  indent.push();
+  for (const field of helperStruct.fields) {
+    if (field.serdeName && field.serdeName !== field.name) {
+      body += `${indent.get()}#[serde(rename = "${field.serdeName}")]\n`;
+    }
+    body += `${indent.get()}${field.name}: ${field.type},\n`;
+  }
+  body += `${indent.pop().get()}}\n`;
+  return body;
+}
+
+function getPageableResponseHelperStruct(indent: helpers.indentation, client: rust.Client, method: rust.PageableMethod): { content: string; typeName: string } | undefined {
+  let nextLinkPath: Array<rust.ModelField> | undefined;
+  if (method.strategy?.kind === 'nextLink') {
+    nextLinkPath = method.strategy.nextLinkPath;
+  } else if (method.strategy?.kind === 'continuationToken' && method.strategy.responseToken.kind === 'nextLink') {
+    nextLinkPath = method.strategy.responseToken.nextLinkPath;
+  }
+
+  if (!nextLinkPath) {
+    return undefined;
+  }
+
+  const typeName = getMethodHelperTypeName(client, method, 'Page');
+  const helperStructNames = nextLinkPath.map((_, i) => i === 0 ? typeName : `${typeName}${i + 1}`);
+  const helperStructs = new Array<HelperStructDefinition>();
+
+  for (let i = nextLinkPath.length - 1; i >= 0; --i) {
+    const field = nextLinkPath[i];
+    helperStructs.unshift({
+      name: helperStructNames[i],
+      fields: [{
+        name: field.name,
+        serdeName: field.serde,
+        type: i === nextLinkPath.length - 1 ? 'Option<String>' : `Option<${helperStructNames[i + 1]}>`,
+      }],
+    });
+  }
+
+  let content = '';
+  for (const helperStruct of helperStructs) {
+    content += emitHelperStruct(indent, helperStruct);
+    content += '\n';
+  }
+
+  return {
+    content,
+    typeName,
+  };
+}
+
+// To add Monitor helpers for pollers, uncomment this helper and wire it into
+// getLroMethodBody.
+/*
+function getLroMonitorHelperStruct(indent: helpers.indentation, client: rust.Client, method: rust.LroMethod): { content: string; typeName: string; statusField: rust.ModelField } | undefined {
+  const statusModel = helpers.unwrapType(method.returns.type);
+  if (statusModel.kind !== 'model') {
+    return undefined;
+  }
+
+  const statusField = helpers.getStatusField(statusModel);
+  if (!statusField) {
+    return undefined;
+  }
+
+  const typeName = getMethodHelperTypeName(client, method, 'Monitor');
+  return {
+    content: `${emitHelperStruct(indent, {
+      name: typeName,
+      fields: [{
+        name: statusField.name,
+        serdeName: statusField.serde,
+        type: helpers.getTypeDeclaration(statusField.type),
+      }],
+    })}\n`,
+    typeName,
+    statusField,
+  };
+}
+*/
+
 /**
  * constructs the body for a pageable client method
  * 
@@ -1461,12 +1560,16 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   const paramGroups = getMethodParamGroup(method);
   const urlVar = method.strategy ? 'first_url' : helpers.getUniqueVarName(method.params, ['url', 'url_var']);
+  const pageableResponseHelperStruct = getPageableResponseHelperStruct(indent, client, method);
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
+  if (pageableResponseHelperStruct) {
+    body += pageableResponseHelperStruct.content;
+  }
 
   // passed to constructRequest. we only need to
   // clone it for the non-continuation case.
@@ -1591,7 +1694,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     use.add('azure_core', bodyFormat, 'http::RawResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     const deserialize = `${bodyFormat}::from_${bodyFormat}`;
-    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+    body += `${indent.get()}let res: ${pageableResponseHelperStruct?.typeName ?? helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
     body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`;
   }
 
@@ -1923,7 +2026,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
   use.add('azure_core', bodyFormat);
-
   body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
 
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {

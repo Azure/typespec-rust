@@ -49,6 +49,12 @@ impl PageableXmlPaginationClient {
             query_builder.set_pair("marker", marker);
         }
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageableXmlPaginationClientListWithContinuationPage {
+            #[serde(rename = "NextMarker")]
+            next_marker: Option<String>,
+        }
+
         Ok(Pager::new(
             move |marker: PagerState, pager_options| {
                 let mut url = first_url.clone();
@@ -74,7 +80,8 @@ impl PageableXmlPaginationClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let res: XmlPetListResult = xml::from_xml(&body)?;
+                    let res: PageableXmlPaginationClientListWithContinuationPage =
+                        xml::from_xml(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_marker {
                         Some(next_marker) if !next_marker.is_empty() => PagerResult::More {
@@ -102,6 +109,12 @@ impl PageableXmlPaginationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/xml/list-with-next-link");
+        #[derive(serde::Deserialize)]
+        struct PageableXmlPaginationClientListWithNextLinkPage {
+            #[serde(rename = "NextLink")]
+            next_link: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
                 let url = match next_link {
@@ -127,7 +140,8 @@ impl PageableXmlPaginationClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: XmlPetListResultWithNextLink = xml::from_xml(&body)?;
+                        let res: PageableXmlPaginationClientListWithNextLinkPage =
+                            xml::from_xml(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {

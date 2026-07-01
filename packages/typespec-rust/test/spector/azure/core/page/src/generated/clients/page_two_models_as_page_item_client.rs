@@ -46,6 +46,12 @@ impl PageTwoModelsAsPageItemClient {
         let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageTwoModelsAsPageItemClientListFirstItemPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -78,7 +84,8 @@ impl PageTwoModelsAsPageItemClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: PagedFirstItem = json::from_json(&body)?;
+                        let res: PageTwoModelsAsPageItemClientListFirstItemPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
@@ -113,6 +120,12 @@ impl PageTwoModelsAsPageItemClient {
         let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageTwoModelsAsPageItemClientListSecondItemPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -145,7 +158,8 @@ impl PageTwoModelsAsPageItemClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: PagedSecondItem = json::from_json(&body)?;
+                        let res: PageTwoModelsAsPageItemClientListSecondItemPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {

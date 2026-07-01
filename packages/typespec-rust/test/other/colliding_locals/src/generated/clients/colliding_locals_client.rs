@@ -433,6 +433,12 @@ impl CollidingLocalsClient {
         path_var = path_var.replace("{request}", request);
         path_var = path_var.replace("{url}", url);
         first_url.append_path(&path_var);
+        #[derive(serde::Deserialize)]
+        struct CollidingLocalsClientListWithCollisionsPagesPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
                 let url = match next_link {
@@ -458,7 +464,8 @@ impl CollidingLocalsClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: WidgetPages = json::from_json(&body)?;
+                        let res: CollidingLocalsClientListWithCollisionsPagesPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {

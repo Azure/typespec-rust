@@ -295,16 +295,8 @@ export class Context {
     content += `${indent.get()}type Format = ${formatType};\n`;
     content += `${indent.get()}fn status(&self) -> PollerStatus {\n`;
 
-    const statusField = model.fields.find(f => f.name.toLowerCase() === 'status');
-    if (statusField) {
-      if (statusField.type.kind === 'option') {
-        content += `${indent.push().get()}match &self.status { Some(v) => PollerStatus::from(v.as_ref()), None => PollerStatus::InProgress }\n`;
-      } else {
-        content += `${indent.push().get()}self.status.as_deref().map(Into::into).unwrap_or(PollerStatus::InProgress)\n`;
-      }
-    } else {
-      content += `${indent.push().get()}PollerStatus::Succeeded\n`;
-    }
+    const statusField = helpers.getStatusField(model);
+    content += `${indent.push().get()}${helpers.getPollerStatusExpression('self', statusField)}\n`;
 
     content += `${indent.pop().get()}}\n`; // end fn
     content += '}\n\n'; // end impl
