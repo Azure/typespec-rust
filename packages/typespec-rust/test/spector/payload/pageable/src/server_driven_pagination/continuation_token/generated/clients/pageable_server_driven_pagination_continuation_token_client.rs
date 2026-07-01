@@ -58,6 +58,19 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("bar", bar);
         }
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyPage {
+            #[serde(rename = "nestedNext")]
+            nested_next: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyPage2>,
+        }
+
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyPage2
+        {
+            #[serde(rename = "nextToken")]
+            next_token: Option<String>,
+        }
+
         Ok(Pager::new(
             move |token: PagerState, pager_options| {
                 let url = first_url.clone();
@@ -88,7 +101,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let res: RequestHeaderNestedResponseBodyResponse = json::from_json(&body)?;
+                    let res: PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyPage = json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(
                         match res
@@ -128,6 +141,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("bar", bar);
         }
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyPage {
+            #[serde(rename = "nextToken")]
+            next_token: Option<String>,
+        }
+
         Ok(Pager::new(
             move |token: PagerState, pager_options| {
                 let url = first_url.clone();
@@ -158,7 +177,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let res: RequestHeaderResponseBodyResponse = json::from_json(&body)?;
+                    let res: PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyPage = json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_token {
                         Some(next_token) if !next_token.is_empty() => PagerResult::More {
@@ -283,6 +302,19 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("token", token);
         }
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyPage {
+            #[serde(rename = "nestedNext")]
+            nested_next: Option<PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyPage2>,
+        }
+
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyPage2
+        {
+            #[serde(rename = "nextToken")]
+            next_token: Option<String>,
+        }
+
         Ok(Pager::new(
             move |token: PagerState, pager_options| {
                 let mut url = first_url.clone();
@@ -311,7 +343,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let res: RequestQueryNestedResponseBodyResponse = json::from_json(&body)?;
+                    let res: PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyPage = json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(
                         match res
@@ -354,6 +386,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             query_builder.set_pair("token", token);
         }
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyPage {
+            #[serde(rename = "nextToken")]
+            next_token: Option<String>,
+        }
+
         Ok(Pager::new(
             move |token: PagerState, pager_options| {
                 let mut url = first_url.clone();
@@ -382,7 +420,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let res: RequestQueryResponseBodyResponse = json::from_json(&body)?;
+                    let res: PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyPage = json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_token {
                         Some(next_token) if !next_token.is_empty() => PagerResult::More {

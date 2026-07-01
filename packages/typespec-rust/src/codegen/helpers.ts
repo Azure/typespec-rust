@@ -509,6 +509,20 @@ export function unwrapType(type: rust.Type): rust.Type {
   }
 }
 
+export function getStatusField(model: rust.Model): rust.ModelField | undefined {
+  return model.fields.find((field): field is rust.ModelField => field.kind === 'modelField' && field.name.toLowerCase() === 'status');
+}
+
+export function getPollerStatusExpression(receiver: string, statusField?: rust.ModelField): string {
+  if (statusField) {
+    if (statusField.type.kind === 'option') {
+      return `match &${receiver}.${statusField.name} { Some(v) => PollerStatus::from(v.as_ref()), None => PollerStatus::InProgress }`;
+    }
+    return `${receiver}.${statusField.name}.as_deref().map(Into::into).unwrap_or(PollerStatus::InProgress)`;
+  }
+  return 'PollerStatus::Succeeded';
+}
+
 /** the wire format used */
 export type ModelFormat = 'json' | 'xml';
 

@@ -80,6 +80,12 @@ impl NextLinkVerbClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/client-generator-core/next-link-verb/items");
+        #[derive(serde::Deserialize)]
+        struct NextLinkVerbClientListItemsPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
                 let url = match next_link {
@@ -105,7 +111,7 @@ impl NextLinkVerbClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: ListTestResult = json::from_json(&body)?;
+                        let res: NextLinkVerbClientListItemsPage = json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {

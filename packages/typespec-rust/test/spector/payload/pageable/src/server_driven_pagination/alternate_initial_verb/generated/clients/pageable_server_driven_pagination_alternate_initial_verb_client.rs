@@ -45,6 +45,11 @@ impl PageableServerDrivenPaginationAlternateInitialVerbClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link/initial-post");
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationAlternateInitialVerbClientListPostPage {
+            next: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next: PagerState, pager_options| {
                 let url = match next {
@@ -72,7 +77,7 @@ impl PageableServerDrivenPaginationAlternateInitialVerbClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: PostResponse = json::from_json(&body)?;
+                        let res: PageableServerDrivenPaginationAlternateInitialVerbClientListPostPage = json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next {
                             Some(next) if !next.is_empty() => PagerResult::More {

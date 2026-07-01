@@ -11,6 +11,33 @@ import * as helpers from '../src/codegen/helpers.js';
 import { strictEqual } from 'assert';
 import { describe, it } from 'vitest';
 
+function createClient(crate: rust.Crate, name: string): rust.Client {
+  const client = new rust.Client(name, crate);
+  client.languageIndependentName = name;
+  client.endpoint = new rust.StructField('endpoint', 'pubCrate', new rust.Url(crate));
+  client.fields.push(client.endpoint);
+  client.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(crate, 'Pipeline', 'azure_core::http')));
+  crate.clients.push(client);
+  return client;
+}
+
+function createMethodOptionsStruct(crate: rust.Crate, name: string, methodOptionsType: rust.ClientMethodOptions | rust.PagerOptions | rust.PollerOptions): rust.ParameterGroup<rust.Option<rust.Struct>> {
+  const optionsStruct = new rust.Struct(name, 'pub');
+  optionsStruct.lifetime = methodOptionsType.lifetime;
+  const methodOptionsField = new rust.StructField('method_options', 'pub', methodOptionsType);
+  optionsStruct.fields.push(methodOptionsField);
+  return new rust.ParameterGroup('options', new rust.Option(optionsStruct));
+}
+
+function getClientContent(crate: rust.Crate, fileName: string): string {
+  const codegen = new CodeGenerator(crate);
+  const clientFile = codegen.emitContent().find((file) => file.name.endsWith(fileName));
+  if (!clientFile) {
+    throw new Error(`missing generated client file ${fileName}`);
+  }
+  return clientFile.content;
+}
+
 describe('typespec-rust: codegen', () => {
   describe('generateCargoTomlFile', () => {
     it('default Cargo.toml file', () => {
@@ -178,5 +205,111 @@ describe('typespec-rust: codegen', () => {
     strictEqual(models?.content.includes('deserialize_with = "azure_core::time::rfc3339::option::deserialize"'), true);
     strictEqual(models?.content.includes('serialize_with = "crate::models::serialize_time"'), true);
     strictEqual(models?.content.includes('with = "azure_core::time::rfc3339::option"'), false);
+  });
+
+  it('emits a Page helper struct for nextLink pagers', () => {
+    const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
+    const client = createClient(crate, 'WidgetClient');
+    const lifetime = new rust.Lifetime('a');
+    const options = createMethodOptionsStruct(
+      crate,
+      'WidgetClientListWidgetsOptions',
+      new rust.PagerOptions(crate, lifetime, 'nextLink')
+    );
+    const responseModel = new rust.Model('WidgetPage', 'pub', rust.ModelFlags.Output, crate);
+    const itemsField = new rust.ModelField('items', 'items', 'pub', new rust.Vector(new rust.StringType()), false);
+    itemsField.flags = rust.ModelFieldFlags.PageItems;
+    const nextLinkField = new rust.ModelField('next_link', '@nextLink', 'pub', new rust.Option(new rust.StringType()), true);
+    responseModel.fields.push(itemsField, nextLinkField);
+    crate.models.push(responseModel);
+
+    const method = new rust.PageableMethod('list_widgets', 'WidgetClient.listWidgets', client, 'pub', options, 'get', '/widgets');
+    method.returns = new rust.Result(
+      crate,
+      new rust.Pager(crate, new rust.Response(crate, responseModel, 'JsonFormat'), 'nextLink')
+    );
+    method.strategy = new rust.PageableStrategyNextLink([nextLinkField]);
+    method.statusCodes = [];
+    client.methods.push(method);
+
+    const clientContent = getClientContent(crate, 'generated/clients/widget_client.rs');
+
+    strictEqual(clientContent.includes('struct WidgetClientListWidgetsPage {'), true);
+    strictEqual(clientContent.includes('#[serde(rename = "@nextLink")]'), true);
+    strictEqual(clientContent.includes('let res: WidgetClientListWidgetsPage = json::from_json(&body)?;'), true);
+  });
+
+  it('emits a Monitor helper struct for pollers with status fields', () => {
+    const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
+    const client = createClient(crate, 'WidgetClient');
+    const lifetime = new rust.Lifetime('a');
+    const options = createMethodOptionsStruct(
+      crate,
+      'WidgetClientBeginCreateOptions',
+      new rust.PollerOptions(crate, lifetime)
+    );
+    const statusModel = new rust.Model('CreateStatus', 'pub', rust.ModelFlags.Output, crate);
+    statusModel.fields.push(new rust.ModelField('status', 'status', 'pub', new rust.Option(new rust.StringType()), true));
+    crate.models.push(statusModel);
+
+    const method = new rust.LroMethod(
+      'begin_create',
+      'WidgetClient.beginCreate',
+      client,
+      'pub',
+      options,
+      'post',
+      '/widgets',
+      new rust.LroFinalResultStrategyOriginalUri()
+    );
+    method.returns = new rust.Result(
+      crate,
+      new rust.Poller(crate, new rust.Response(crate, statusModel, 'JsonFormat'))
+    );
+    method.statusCodes = [];
+    client.methods.push(method);
+
+    const clientContent = getClientContent(crate, 'generated/clients/widget_client.rs');
+
+    strictEqual(clientContent.includes('struct WidgetClientBeginCreateMonitor {'), true);
+    strictEqual(clientContent.includes('let res: WidgetClientBeginCreateMonitor = json::from_json(&body)?;'), true);
+    strictEqual(clientContent.includes('let poller_status: PollerStatus = match &res.status {'), true);
+  });
+
+  it('uses PollerStatus::Succeeded directly when the poller status model has no status field', () => {
+    const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
+    const client = createClient(crate, 'WidgetClient');
+    const lifetime = new rust.Lifetime('a');
+    const options = createMethodOptionsStruct(
+      crate,
+      'WidgetClientBeginDeleteOptions',
+      new rust.PollerOptions(crate, lifetime)
+    );
+    const statusModel = new rust.Model('DeleteStatus', 'pub', rust.ModelFlags.Output, crate);
+    statusModel.fields.push(new rust.ModelField('operation_id', 'operationId', 'pub', new rust.StringType(), false));
+    crate.models.push(statusModel);
+
+    const method = new rust.LroMethod(
+      'begin_delete',
+      'WidgetClient.beginDelete',
+      client,
+      'pub',
+      options,
+      'delete',
+      '/widgets',
+      new rust.LroFinalResultStrategyOriginalUri()
+    );
+    method.returns = new rust.Result(
+      crate,
+      new rust.Poller(crate, new rust.Response(crate, statusModel, 'JsonFormat'))
+    );
+    method.statusCodes = [];
+    client.methods.push(method);
+
+    const clientContent = getClientContent(crate, 'generated/clients/widget_client.rs');
+
+    strictEqual(clientContent.includes('struct WidgetClientBeginDeleteMonitor {'), false);
+    strictEqual(clientContent.includes('let poller_status: PollerStatus = PollerStatus::Succeeded;'), true);
+    strictEqual(clientContent.includes('let res: WidgetClientBeginDeleteMonitor = json::from_json(&body)?;'), false);
   });
 });

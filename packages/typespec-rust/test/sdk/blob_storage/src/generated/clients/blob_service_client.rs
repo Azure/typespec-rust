@@ -290,6 +290,12 @@ impl BlobServiceClient {
             query_builder.set_pair("timeout", timeout.to_string());
         }
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct BlobServiceClientListContainersPage {
+            #[serde(rename = "NextMarker")]
+            next_marker: Option<String>,
+        }
+
         let version = self.version.clone();
         Ok(Pager::new(
             move |marker: PagerState, pager_options| {
@@ -317,7 +323,7 @@ impl BlobServiceClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let res: ListContainersSegmentResponse = xml::from_xml(&body)?;
+                    let res: BlobServiceClientListContainersPage = xml::from_xml(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_marker {
                         Some(next_marker) if !next_marker.is_empty() => PagerResult::More {

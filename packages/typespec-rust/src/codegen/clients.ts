@@ -1443,6 +1443,101 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   return body;
 }
 
+interface HelperStructField {
+  name: string;
+  serdeName?: string;
+  type: string;
+}
+
+interface HelperStructDefinition {
+  name: string;
+  fields: Array<HelperStructField>;
+}
+
+function getMethodHelperTypeName(client: rust.Client, method: rust.PageableMethod | rust.LroMethod, suffix: 'Page' | 'Monitor'): string {
+  return `${client.name}${utils.pascalCase(method.name, false)}${suffix}`;
+}
+
+function emitHelperStruct(indent: helpers.indentation, helperStruct: HelperStructDefinition): string {
+  let body = `${indent.get()}#[derive(serde::Deserialize)]\n`;
+  body += `${indent.get()}struct ${helperStruct.name} {\n`;
+  indent.push();
+  for (const field of helperStruct.fields) {
+    if (field.serdeName && field.serdeName !== field.name) {
+      body += `${indent.get()}#[serde(rename = "${field.serdeName}")]\n`;
+    }
+    body += `${indent.get()}${field.name}: ${field.type},\n`;
+  }
+  body += `${indent.pop().get()}}\n`;
+  return body;
+}
+
+function getPageableResponseHelperStruct(indent: helpers.indentation, client: rust.Client, method: rust.PageableMethod): { content: string; typeName: string } | undefined {
+  let nextLinkPath: Array<rust.ModelField> | undefined;
+  if (method.strategy?.kind === 'nextLink') {
+    nextLinkPath = method.strategy.nextLinkPath;
+  } else if (method.strategy?.kind === 'continuationToken' && method.strategy.responseToken.kind === 'nextLink') {
+    nextLinkPath = method.strategy.responseToken.nextLinkPath;
+  }
+
+  if (!nextLinkPath) {
+    return undefined;
+  }
+
+  const typeName = getMethodHelperTypeName(client, method, 'Page');
+  const helperStructNames = nextLinkPath.map((_, i) => i === 0 ? typeName : `${typeName}${i + 1}`);
+  const helperStructs = new Array<HelperStructDefinition>();
+
+  for (let i = nextLinkPath.length - 1; i >= 0; --i) {
+    const field = nextLinkPath[i];
+    helperStructs.unshift({
+      name: helperStructNames[i],
+      fields: [{
+        name: field.name,
+        serdeName: field.serde,
+        type: i === nextLinkPath.length - 1 ? 'Option<String>' : `Option<${helperStructNames[i + 1]}>`,
+      }],
+    });
+  }
+
+  let content = '';
+  for (const helperStruct of helperStructs) {
+    content += emitHelperStruct(indent, helperStruct);
+    content += '\n';
+  }
+
+  return {
+    content,
+    typeName,
+  };
+}
+
+function getLroMonitorHelperStruct(indent: helpers.indentation, client: rust.Client, method: rust.LroMethod): { content: string; typeName: string; statusField: rust.ModelField } | undefined {
+  const statusModel = helpers.unwrapType(method.returns.type);
+  if (statusModel.kind !== 'model') {
+    return undefined;
+  }
+
+  const statusField = helpers.getStatusField(statusModel);
+  if (!statusField) {
+    return undefined;
+  }
+
+  const typeName = getMethodHelperTypeName(client, method, 'Monitor');
+  return {
+    content: `${emitHelperStruct(indent, {
+      name: typeName,
+      fields: [{
+        name: statusField.name,
+        serdeName: statusField.serde,
+        type: helpers.getTypeDeclaration(statusField.type),
+      }],
+    })}\n`,
+    typeName,
+    statusField,
+  };
+}
+
 /**
  * constructs the body for a pageable client method
  * 
@@ -1461,12 +1556,16 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   const paramGroups = getMethodParamGroup(method);
   const urlVar = method.strategy ? 'first_url' : helpers.getUniqueVarName(method.params, ['url', 'url_var']);
+  const pageableResponseHelperStruct = getPageableResponseHelperStruct(indent, client, method);
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
+  if (pageableResponseHelperStruct) {
+    body += pageableResponseHelperStruct.content;
+  }
 
   // passed to constructRequest. we only need to
   // clone it for the non-continuation case.
@@ -1591,7 +1690,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     use.add('azure_core', bodyFormat, 'http::RawResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     const deserialize = `${bodyFormat}::from_${bodyFormat}`;
-    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+    body += `${indent.get()}let res: ${pageableResponseHelperStruct?.typeName ?? helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
     body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`;
   }
 
@@ -1696,13 +1795,17 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
-  use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor');
+  use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus');
   if (pollingStepHeaderName !== undefined || method.finalResultStrategy.kind !== 'originalUri') {
     use.add('azure_core::http::headers', 'HeaderName');
   }
 
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
+  const monitorHelperStruct = getLroMonitorHelperStruct(indent, client, method);
+  if (monitorHelperStruct) {
+    use.addForType(monitorHelperStruct.statusField.type);
+  }
 
   const paramGroups = getMethodParamGroup(method);
   const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
@@ -1713,6 +1816,9 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
     body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true, true)}.clone();\n`;
+  }
+  if (monitorHelperStruct) {
+    body += monitorHelperStruct.content;
   }
 
   // we call this eagerly so that we have access to the request var name
@@ -1923,12 +2029,16 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
   use.add('azure_core', bodyFormat);
+  indent.push();
 
-  body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+  if (monitorHelperStruct) {
+    body += `${indent.get()}let res: ${monitorHelperStruct.typeName} = ${deserialize}(&body)?;\n`;
+  }
+  body += `${indent.get()}let poller_status: PollerStatus = ${helpers.getPollerStatusExpression('res', monitorHelperStruct?.statusField)};\n`;
 
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
     body += `${indent.get()}let mut final_rsp: Option<RawResponse> = None;\n`
-    body += `if res.status() == PollerStatus::Succeeded {\n`
+    body += `if poller_status == PollerStatus::Succeeded {\n`
     let responseBodyExpr = 'body.clone()';
     if (isArmPutLro || isArmPatchLro) {
       responseBodyExpr = 'if let Some(final_body) = final_body { final_body } else { body.clone() }';
@@ -1987,7 +2097,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     returns: 'PollerResult::Done'
   });
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'poller_status', arms)})\n`;
   body += `${indent.pop().get()}})\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::new

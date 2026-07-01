@@ -276,6 +276,11 @@ impl MiscTestsClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/find-the-widgets");
+        #[derive(serde::Deserialize)]
+        struct MiscTestsClientFindTheWidgetsPage {
+            next: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next: PagerState, pager_options| {
                 let url = match next {
@@ -301,7 +306,7 @@ impl MiscTestsClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: FoundWidgets = json::from_json(&body)?;
+                        let res: MiscTestsClientFindTheWidgetsPage = json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next {
                             Some(next) if !next.is_empty() => PagerResult::More {

@@ -69,6 +69,11 @@ impl PageableServerDrivenPaginationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link");
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationClientListLinkPage {
+            next: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next: PagerState, pager_options| {
                 let url = match next {
@@ -94,7 +99,8 @@ impl PageableServerDrivenPaginationClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: LinkResponse = json::from_json(&body)?;
+                        let res: PageableServerDrivenPaginationClientListLinkPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next {
                             Some(next) if !next.is_empty() => PagerResult::More {
@@ -125,6 +131,11 @@ impl PageableServerDrivenPaginationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link-string");
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationClientListLinkStringPage {
+            next: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next: PagerState, pager_options| {
                 let url = match next {
@@ -150,7 +161,8 @@ impl PageableServerDrivenPaginationClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: LinkStringResponse = json::from_json(&body)?;
+                        let res: PageableServerDrivenPaginationClientListLinkStringPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next {
                             Some(next) if !next.is_empty() => PagerResult::More {
@@ -181,6 +193,17 @@ impl PageableServerDrivenPaginationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/nested-link");
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationClientListNestedLinkPage {
+            #[serde(rename = "nestedNext")]
+            nested_next: Option<PageableServerDrivenPaginationClientListNestedLinkPage2>,
+        }
+
+        #[derive(serde::Deserialize)]
+        struct PageableServerDrivenPaginationClientListNestedLinkPage2 {
+            next: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next: PagerState, pager_options| {
                 let url = match next {
@@ -206,7 +229,8 @@ impl PageableServerDrivenPaginationClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: NestedLinkResponse = json::from_json(&body)?;
+                        let res: PageableServerDrivenPaginationClientListNestedLinkPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(
                             match res.nested_next.and_then(|nested_next| nested_next.next) {

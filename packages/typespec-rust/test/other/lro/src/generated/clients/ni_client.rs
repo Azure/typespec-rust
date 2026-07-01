@@ -8,16 +8,14 @@ use crate::generated::models::{
     NIClientBeginIncorrectCustomOpRefOperationStatus, NIClientBeginIncorrectCustomOpRefOptions,
     NIClientBeginPartialBodyOperationStatus, NIClientBeginPartialBodyOptions,
     NIClientGetStatusOptions, NIClientStartPartialBodyOperationStatus,
-    NIClientStartPartialBodyOptions, PartialBodyRequest, StartPartialBodyRequest, X,
+    NIClientStartPartialBodyOptions, OperationState, PartialBodyRequest, StartPartialBodyRequest,
+    S, X,
 };
 use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{
-            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
-            StatusMonitor,
-        },
+        poller::{get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus},
         Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
         Response, Url, UrlExt,
     },
@@ -56,6 +54,11 @@ impl NIClient {
         let mut query_builder = url.query_builder();
         query_builder.set_pair("api-version", api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct NIClientBeginCustomLinkMonitor {
+            status: Option<OperationState>,
+        }
+
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
@@ -150,9 +153,13 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientBeginCustomLinkOperationStatus = json::from_json(&body)?;
+                    let res: NIClientBeginCustomLinkMonitor = json::from_json(&body)?;
+                    let poller_status: PollerStatus = match &res.status {
+                        Some(v) => PollerStatus::from(v.as_ref()),
+                        None => PollerStatus::InProgress,
+                    };
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
+                    Ok(match poller_status {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
@@ -222,6 +229,11 @@ impl NIClient {
         let mut query_builder = url.query_builder();
         query_builder.set_pair("api-version", api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct NIClientBeginIncorrectCustomOpRefMonitor {
+            status: Option<S>,
+        }
+
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let (mut request, continuation) = match poller_state {
@@ -294,10 +306,13 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientBeginIncorrectCustomOpRefOperationStatus =
-                        json::from_json(&body)?;
+                    let res: NIClientBeginIncorrectCustomOpRefMonitor = json::from_json(&body)?;
+                    let poller_status: PollerStatus = match &res.status {
+                        Some(v) => PollerStatus::from(v.as_ref()),
+                        None => PollerStatus::InProgress,
+                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
+                    if poller_status == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -305,7 +320,7 @@ impl NIClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
+                    Ok(match poller_status {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
@@ -373,6 +388,11 @@ impl NIClient {
         let mut query_builder = url.query_builder();
         query_builder.set_pair("api-version", api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct NIClientBeginPartialBodyMonitor {
+            status: Option<S>,
+        }
+
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
@@ -459,9 +479,13 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientBeginPartialBodyOperationStatus = json::from_json(&body)?;
+                    let res: NIClientBeginPartialBodyMonitor = json::from_json(&body)?;
+                    let poller_status: PollerStatus = match &res.status {
+                        Some(v) => PollerStatus::from(v.as_ref()),
+                        None => PollerStatus::InProgress,
+                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
+                    if poller_status == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -469,7 +493,7 @@ impl NIClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
+                    Ok(match poller_status {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
@@ -583,6 +607,11 @@ impl NIClient {
         let mut query_builder = url.query_builder();
         query_builder.set_pair("api-version", api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct NIClientStartPartialBodyMonitor {
+            status: Option<S>,
+        }
+
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
@@ -669,9 +698,13 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientStartPartialBodyOperationStatus = json::from_json(&body)?;
+                    let res: NIClientStartPartialBodyMonitor = json::from_json(&body)?;
+                    let poller_status: PollerStatus = match &res.status {
+                        Some(v) => PollerStatus::from(v.as_ref()),
+                        None => PollerStatus::InProgress,
+                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
+                    if poller_status == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -679,7 +712,7 @@ impl NIClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
+                    Ok(match poller_status {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,

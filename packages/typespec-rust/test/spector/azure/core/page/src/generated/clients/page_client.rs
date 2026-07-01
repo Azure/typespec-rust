@@ -103,6 +103,12 @@ impl PageClient {
         let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageClientListWithCustomPageModelPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -135,7 +141,7 @@ impl PageClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: UserListResults = json::from_json(&body)?;
+                        let res: PageClientListWithCustomPageModelPage = json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
@@ -170,6 +176,12 @@ impl PageClient {
         let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageClientListWithPagePage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -202,7 +214,7 @@ impl PageClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: PagedUser = json::from_json(&body)?;
+                        let res: PageClientListWithPagePage = json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
@@ -241,6 +253,12 @@ impl PageClient {
         }
         query_builder.set_pair("select", select);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageClientListWithParameterizedNextLinkPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
                 let url = match next_link {
@@ -274,7 +292,8 @@ impl PageClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: ParameterizedNextLinkPagingResult = json::from_json(&body)?;
+                        let res: PageClientListWithParameterizedNextLinkPage =
+                            json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
@@ -314,6 +333,12 @@ impl PageClient {
         }
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct PageClientListWithParametersPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         let api_version = self.api_version.clone();
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
@@ -348,7 +373,7 @@ impl PageClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: PagedUser = json::from_json(&body)?;
+                        let res: PageClientListWithParametersPage = json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {
@@ -380,6 +405,12 @@ impl PageClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/azure/core/page/with-relative-next-link");
+        #[derive(serde::Deserialize)]
+        struct PageClientListWithRelativeNextLinkPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
         Ok(Pager::new(
             move |next_link: PagerState, pager_options| {
                 let url = match next_link {
@@ -405,7 +436,7 @@ impl PageClient {
                             )
                             .await?;
                         let (status, headers, body) = rsp.deconstruct();
-                        let res: PagedUser = json::from_json(&body)?;
+                        let res: PageClientListWithRelativeNextLinkPage = json::from_json(&body)?;
                         let rsp = RawResponse::from_bytes(status, headers, body).into();
                         Ok(match res.next_link {
                             Some(next_link) if !next_link.is_empty() => PagerResult::More {

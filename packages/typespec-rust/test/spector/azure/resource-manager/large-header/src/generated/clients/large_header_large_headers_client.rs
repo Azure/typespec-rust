@@ -5,16 +5,13 @@
 
 use crate::generated::models::{
     LargeHeaderLargeHeadersClientBeginTwo6KOperationStatus,
-    LargeHeaderLargeHeadersClientBeginTwo6KOptions,
+    LargeHeaderLargeHeadersClientBeginTwo6KOptions, ResourceProvisioningState,
 };
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{
-            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
-            StatusMonitor,
-        },
+        poller::{get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus},
         Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, Url, UrlExt,
     },
     json, tracing, Result,
@@ -91,6 +88,11 @@ impl LargeHeaderLargeHeadersClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
+        #[derive(serde::Deserialize)]
+        struct LargeHeaderLargeHeadersClientBeginTwo6KMonitor {
+            status: Option<ResourceProvisioningState>,
+        }
+
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let (mut request, continuation) = match poller_state {
@@ -198,10 +200,14 @@ impl LargeHeaderLargeHeadersClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: LargeHeaderLargeHeadersClientBeginTwo6KOperationStatus =
+                    let res: LargeHeaderLargeHeadersClientBeginTwo6KMonitor =
                         json::from_json(&body)?;
+                    let poller_status: PollerStatus = match &res.status {
+                        Some(v) => PollerStatus::from(v.as_ref()),
+                        None => PollerStatus::InProgress,
+                    };
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
+                    Ok(match poller_status {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
