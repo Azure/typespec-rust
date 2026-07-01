@@ -11,13 +11,16 @@ use crate::generated::models::{
     OperationTemplatesLroClientBeginExportArrayOperationStatus,
     OperationTemplatesLroClientBeginExportArrayOptions,
     OperationTemplatesLroClientBeginExportOperationStatus,
-    OperationTemplatesLroClientBeginExportOptions, Order, ResourceProvisioningState,
+    OperationTemplatesLroClientBeginExportOptions, Order,
 };
 use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus},
+        poller::{
+            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
+            StatusMonitor,
+        },
         Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
         StatusCode, Url, UrlExt,
     },
@@ -93,11 +96,6 @@ impl OperationTemplatesLroClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        #[derive(serde::Deserialize)]
-        struct OperationTemplatesLroClientBeginCreateOrReplaceMonitor {
-            status: Option<ResourceProvisioningState>,
-        }
-
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let (mut request, continuation) = match poller_state {
@@ -192,14 +190,10 @@ impl OperationTemplatesLroClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: OperationTemplatesLroClientBeginCreateOrReplaceMonitor =
+                    let res: OperationTemplatesLroClientBeginCreateOrReplaceOperationStatus =
                         json::from_json(&body)?;
-                    let poller_status: PollerStatus = match &res.status {
-                        Some(v) => PollerStatus::from(v.as_ref()),
-                        None => PollerStatus::InProgress,
-                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if poller_status == PollerStatus::Succeeded {
+                    if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -211,7 +205,7 @@ impl OperationTemplatesLroClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match poller_status {
+                    Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
@@ -290,11 +284,6 @@ impl OperationTemplatesLroClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        #[derive(serde::Deserialize)]
-        struct OperationTemplatesLroClientBeginDeleteMonitor {
-            status: Option<ResourceProvisioningState>,
-        }
-
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let (mut request, continuation) = match poller_state {
@@ -379,14 +368,10 @@ impl OperationTemplatesLroClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: OperationTemplatesLroClientBeginDeleteMonitor =
+                    let res: OperationTemplatesLroClientBeginDeleteOperationStatus =
                         json::from_json(&body)?;
-                    let poller_status: PollerStatus = match &res.status {
-                        Some(v) => PollerStatus::from(v.as_ref()),
-                        None => PollerStatus::InProgress,
-                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if poller_status == PollerStatus::Succeeded {
+                    if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -394,7 +379,7 @@ impl OperationTemplatesLroClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match poller_status {
+                    Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
@@ -479,11 +464,6 @@ impl OperationTemplatesLroClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        #[derive(serde::Deserialize)]
-        struct OperationTemplatesLroClientBeginExportMonitor {
-            status: Option<ResourceProvisioningState>,
-        }
-
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let (mut request, continuation) = match poller_state {
@@ -594,14 +574,10 @@ impl OperationTemplatesLroClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: OperationTemplatesLroClientBeginExportMonitor =
+                    let res: OperationTemplatesLroClientBeginExportOperationStatus =
                         json::from_json(&body)?;
-                    let poller_status: PollerStatus = match &res.status {
-                        Some(v) => PollerStatus::from(v.as_ref()),
-                        None => PollerStatus::InProgress,
-                    };
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match poller_status {
+                    Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
@@ -678,11 +654,6 @@ impl OperationTemplatesLroClient {
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
         let api_version = self.api_version.clone();
-        #[derive(serde::Deserialize)]
-        struct OperationTemplatesLroClientBeginExportArrayMonitor {
-            status: Option<ResourceProvisioningState>,
-        }
-
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
                 let (mut request, continuation) = match poller_state {
@@ -793,14 +764,10 @@ impl OperationTemplatesLroClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: OperationTemplatesLroClientBeginExportArrayMonitor =
+                    let res: OperationTemplatesLroClientBeginExportArrayOperationStatus =
                         json::from_json(&body)?;
-                    let poller_status: PollerStatus = match &res.status {
-                        Some(v) => PollerStatus::from(v.as_ref()),
-                        None => PollerStatus::InProgress,
-                    };
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match poller_status {
+                    Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,

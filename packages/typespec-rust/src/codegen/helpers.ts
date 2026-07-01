@@ -513,6 +513,8 @@ export function getStatusField(model: rust.Model): rust.ModelField | undefined {
   return model.fields.find((field): field is rust.ModelField => field.kind === 'modelField' && field.name.toLowerCase() === 'status');
 }
 
+// Shared by StatusMonitor impl generation today. Use this for inline poller
+// status evaluation if that path is added again.
 export function getPollerStatusExpression(receiver: string, statusField?: rust.ModelField): string {
   if (statusField) {
     if (statusField.type.kind === 'option') {

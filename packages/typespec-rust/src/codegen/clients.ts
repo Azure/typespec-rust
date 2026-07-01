@@ -1512,6 +1512,9 @@ function getPageableResponseHelperStruct(indent: helpers.indentation, client: ru
   };
 }
 
+// To add Monitor helpers for pollers, uncomment this helper and wire it into
+// getLroMethodBody.
+/*
 function getLroMonitorHelperStruct(indent: helpers.indentation, client: rust.Client, method: rust.LroMethod): { content: string; typeName: string; statusField: rust.ModelField } | undefined {
   const statusModel = helpers.unwrapType(method.returns.type);
   if (statusModel.kind !== 'model') {
@@ -1537,6 +1540,7 @@ function getLroMonitorHelperStruct(indent: helpers.indentation, client: rust.Cli
     statusField,
   };
 }
+*/
 
 /**
  * constructs the body for a pageable client method
@@ -1795,17 +1799,13 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
-  use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus');
+  use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor');
   if (pollingStepHeaderName !== undefined || method.finalResultStrategy.kind !== 'originalUri') {
     use.add('azure_core::http::headers', 'HeaderName');
   }
 
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
-  const monitorHelperStruct = getLroMonitorHelperStruct(indent, client, method);
-  if (monitorHelperStruct) {
-    use.addForType(monitorHelperStruct.statusField.type);
-  }
 
   const paramGroups = getMethodParamGroup(method);
   const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
@@ -1816,9 +1816,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
     body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true, true)}.clone();\n`;
-  }
-  if (monitorHelperStruct) {
-    body += monitorHelperStruct.content;
   }
 
   // we call this eagerly so that we have access to the request var name
@@ -2029,16 +2026,11 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
   use.add('azure_core', bodyFormat);
-  indent.push();
-
-  if (monitorHelperStruct) {
-    body += `${indent.get()}let res: ${monitorHelperStruct.typeName} = ${deserialize}(&body)?;\n`;
-  }
-  body += `${indent.get()}let poller_status: PollerStatus = ${helpers.getPollerStatusExpression('res', monitorHelperStruct?.statusField)};\n`;
+  body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
 
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
     body += `${indent.get()}let mut final_rsp: Option<RawResponse> = None;\n`
-    body += `if poller_status == PollerStatus::Succeeded {\n`
+    body += `if res.status() == PollerStatus::Succeeded {\n`
     let responseBodyExpr = 'body.clone()';
     if (isArmPutLro || isArmPatchLro) {
       responseBodyExpr = 'if let Some(final_body) = final_body { final_body } else { body.clone() }';
@@ -2097,7 +2089,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     returns: 'PollerResult::Done'
   });
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'poller_status', arms)})\n`;
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
   body += `${indent.pop().get()}})\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::new

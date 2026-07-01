@@ -21,7 +21,13 @@ function createClient(crate: rust.Crate, name: string): rust.Client {
   return client;
 }
 
-function createMethodOptionsStruct(crate: rust.Crate, name: string, methodOptionsType: rust.ClientMethodOptions | rust.PagerOptions | rust.PollerOptions): rust.ParameterGroup<rust.Option<rust.Struct>> {
+// Kept generic instead of enumerating a poller-specific union member. Add that
+// explicit branch here if poller helper generation needs it.
+function createMethodOptionsStruct<T extends rust.Type & { lifetime: rust.Lifetime }>(
+  crate: rust.Crate,
+  name: string,
+  methodOptionsType: T
+): rust.ParameterGroup<rust.Option<rust.Struct>> {
   const optionsStruct = new rust.Struct(name, 'pub');
   optionsStruct.lifetime = methodOptionsType.lifetime;
   const methodOptionsField = new rust.StructField('method_options', 'pub', methodOptionsType);
@@ -239,7 +245,7 @@ describe('typespec-rust: codegen', () => {
     strictEqual(clientContent.includes('let res: WidgetClientListWidgetsPage = json::from_json(&body)?;'), true);
   });
 
-  it('emits a Monitor helper struct for pollers with status fields', () => {
+  it('pollers still deserialize the full status model when status is present', () => {
     const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
     const client = createClient(crate, 'WidgetClient');
     const lifetime = new rust.Lifetime('a');
@@ -271,12 +277,13 @@ describe('typespec-rust: codegen', () => {
 
     const clientContent = getClientContent(crate, 'generated/clients/widget_client.rs');
 
-    strictEqual(clientContent.includes('struct WidgetClientBeginCreateMonitor {'), true);
-    strictEqual(clientContent.includes('let res: WidgetClientBeginCreateMonitor = json::from_json(&body)?;'), true);
-    strictEqual(clientContent.includes('let poller_status: PollerStatus = match &res.status {'), true);
+    strictEqual(clientContent.includes('struct WidgetClientBeginCreateMonitor {'), false);
+    strictEqual(clientContent.includes('let res: CreateStatus = json::from_json(&body)?;'), true);
+    strictEqual(clientContent.includes('let poller_status:'), false);
+    strictEqual(clientContent.includes('Ok(match res.status() {'), true);
   });
 
-  it('uses PollerStatus::Succeeded directly when the poller status model has no status field', () => {
+  it('pollers still deserialize the full status model when no status field is present', () => {
     const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
     const client = createClient(crate, 'WidgetClient');
     const lifetime = new rust.Lifetime('a');
@@ -309,7 +316,8 @@ describe('typespec-rust: codegen', () => {
     const clientContent = getClientContent(crate, 'generated/clients/widget_client.rs');
 
     strictEqual(clientContent.includes('struct WidgetClientBeginDeleteMonitor {'), false);
-    strictEqual(clientContent.includes('let poller_status: PollerStatus = PollerStatus::Succeeded;'), true);
-    strictEqual(clientContent.includes('let res: WidgetClientBeginDeleteMonitor = json::from_json(&body)?;'), false);
+    strictEqual(clientContent.includes('let poller_status:'), false);
+    strictEqual(clientContent.includes('let res: DeleteStatus = json::from_json(&body)?;'), true);
+    strictEqual(clientContent.includes('Ok(match res.status() {'), true);
   });
 });
