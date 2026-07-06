@@ -1443,21 +1443,38 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   return body;
 }
 
+/** describes a field emitted in a local helper struct. */
 interface HelperStructField {
   name: string;
   serdeName?: string;
   type: string;
 }
 
+/** describes a local helper struct emitted inside a generated method. */
 interface HelperStructDefinition {
   name: string;
   fields: Array<HelperStructField>;
 }
 
+/**
+ * returns the generated helper type name for a pageable or LRO method.
+ *
+ * @param client the client that owns the method
+ * @param method the method that owns the helper type
+ * @param suffix the helper type suffix
+ * @returns the generated helper type name
+ */
 function getMethodHelperTypeName(client: rust.Client, method: rust.PageableMethod | rust.LroMethod, suffix: 'Page' | 'Monitor'): string {
   return `${client.name}${utils.pascalCase(method.name, false)}${suffix}`;
 }
 
+/**
+ * emits a local helper struct used for minimal response deserialization.
+ *
+ * @param indent the indentation helper currently in scope
+ * @param helperStruct the helper struct to emit
+ * @returns the helper struct source
+ */
 function emitHelperStruct(indent: helpers.indentation, helperStruct: HelperStructDefinition): string {
   let body = `${indent.get()}#[derive(serde::Deserialize)]\n`;
   body += `${indent.get()}struct ${helperStruct.name} {\n`;
@@ -1472,6 +1489,14 @@ function emitHelperStruct(indent: helpers.indentation, helperStruct: HelperStruc
   return body;
 }
 
+/**
+ * returns the helper struct(s) needed to deserialize only pageable continuation fields.
+ *
+ * @param indent the indentation helper currently in scope
+ * @param client the client that owns the method
+ * @param method the pageable method to inspect
+ * @returns the helper struct source and root type name, or undefined if not needed
+ */
 function getPageableResponseHelperStruct(indent: helpers.indentation, client: rust.Client, method: rust.PageableMethod): { content: string; typeName: string } | undefined {
   let nextLinkPath: Array<rust.ModelField> | undefined;
   if (method.strategy?.kind === 'nextLink') {

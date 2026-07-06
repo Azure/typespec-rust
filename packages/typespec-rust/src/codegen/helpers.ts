@@ -509,12 +509,23 @@ export function unwrapType(type: rust.Type): rust.Type {
   }
 }
 
+/**
+ * returns the status field from a poller status model if present.
+ *
+ * @param model the model to inspect
+ * @returns the status field or undefined when absent
+ */
 export function getStatusField(model: rust.Model): rust.ModelField | undefined {
   return model.fields.find((field): field is rust.ModelField => field.kind === 'modelField' && field.name.toLowerCase() === 'status');
 }
 
-// Shared by StatusMonitor impl generation today. Use this for inline poller
-// status evaluation if that path is added again.
+/**
+ * returns the Rust expression used to compute a PollerStatus for a receiver.
+ *
+ * @param receiver the variable name to read the status field from
+ * @param statusField the status field if the model defines one
+ * @returns a Rust expression that evaluates to PollerStatus
+ */
 export function getPollerStatusExpression(receiver: string, statusField?: rust.ModelField): string {
   if (statusField) {
     if (statusField.type.kind === 'option') {
