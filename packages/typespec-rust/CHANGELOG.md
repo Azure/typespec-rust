@@ -1,6 +1,6 @@
 # Release History
 
-## 0.41.4 (Unreleased)
+## 0.41.4 (2026-07-06)
 
 ### Other Changes
 
