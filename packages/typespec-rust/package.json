@@ -80,7 +80,7 @@
   },
   "dependencies": {
     "@azure-tools/typespec-azure-core": "0.69.0",
-    "@azure-tools/typespec-client-generator-core": "0.69.1",
+    "@azure-tools/typespec-client-generator-core": "0.69.2",
     "@typespec/compiler": "1.13.0",
     "@typespec/http": "1.13.0",
     "linkifyjs": "^4.3.2",
