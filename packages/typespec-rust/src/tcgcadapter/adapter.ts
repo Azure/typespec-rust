@@ -131,7 +131,7 @@ export class Adapter {
       serviceType = 'azure-arm';
     }
 
-    this.crate = new rust.Crate(this.options['crate-name'], this.options['crate-version'], serviceType);
+    this.crate = new rust.Crate(this.options['crate-name'], this.options['crate-version'] ?? '0.1.0', serviceType);
   }
 
   /** performs all the steps to convert tcgc to a crate */

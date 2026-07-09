@@ -1,5 +1,11 @@
 # Release History
 
+## 0.41.5 (unreleased)
+
+### Other Changes
+
+* The `crate-version` switch is now optional with a default value of `0.1.0`.
+
 ## 0.41.4 (2026-07-06)
 
 ### Other Changes

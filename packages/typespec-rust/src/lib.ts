@@ -35,7 +35,8 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
     'crate-version': { 
       type: 'string', 
       nullable: false,
-      description: 'The version of the generated Rust crate'
+      default: '0.1.0',
+      description: 'The version of the generated Rust crate. Defaults to 0.1.0'
     },
     'omit-constructors': {
       type: 'boolean',
@@ -70,7 +71,6 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
   },
   required: [
     'crate-name',
-    'crate-version',
   ],
 };
 
