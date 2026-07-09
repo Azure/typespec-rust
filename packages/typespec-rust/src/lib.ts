@@ -9,8 +9,8 @@ import { createTypeSpecLibrary, JSONSchemaType, paramMessage } from '@typespec/c
 export interface RustEmitterOptions {
   /** The name of the generated Rust crate */
   'crate-name': string;
-  /** The version of the generated Rust crate */
-  'crate-version': string;
+  /** The version of the generated Rust crate. Defaults to 0.1.0 */
+  'crate-version'?: string;
   /** Whether to skip emitting client constructors and their options type. Defaults to false */
   'omit-constructors': boolean;
   /** Whether to overwrite an existing Cargo.toml file. Defaults to false */
@@ -34,7 +34,7 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
     },
     'crate-version': { 
       type: 'string', 
-      nullable: false,
+      nullable: true,
       default: '0.1.0',
       description: 'The version of the generated Rust crate. Defaults to 0.1.0'
     },
