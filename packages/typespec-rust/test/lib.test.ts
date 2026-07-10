@@ -79,7 +79,6 @@ describe('typespec-rust: lib', () => {
     }
 
     expect(schema.required).toContain('crate-name');
-    expect(schema.required).toContain('crate-version');
   });
 
   it('should have appropriate default values for optional options', () => {

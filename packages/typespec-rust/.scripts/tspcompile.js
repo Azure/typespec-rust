@@ -193,7 +193,7 @@ const lro = pkgRoot + 'test/tsp/lro';
 generate('lro', lro, 'test/other/lro');
 
 const misc_tests = pkgRoot + 'test/tsp/MiscTests';
-generate('misc_tests', misc_tests, 'test/other/misc_tests');
+generate('misc_tests', misc_tests, 'test/other/misc_tests', ['crate-version=0.2.0']);
 
 const pub_crate = pkgRoot + 'test/tsp/PubCrate';
 generate('pub_crate', pub_crate, 'test/other/pub_crate');
@@ -253,7 +253,6 @@ function generate(crate, input, outputDir, additionalArgs) {
     try {
       const options = [];
       options.push(`--option="@azure-tools/typespec-rust.crate-name=${crate}"`);
-      options.push(`--option="@azure-tools/typespec-rust.crate-version=0.1.0"`);
       options.push(`--option="@azure-tools/typespec-rust.emitter-output-dir=${fullOutputDir}"`);
       //options.push(`--option="@azure-tools/typespec-rust.overwrite-lib-rs=true"`);
       const command = `node ${compiler} compile ${input} --emit=${pkgRoot} ${options.join(' ')} ${additionalArgs.join(' ')}`;
