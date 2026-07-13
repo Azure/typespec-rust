@@ -1,10 +1,11 @@
 # Release History
 
-## 0.41.5 (unreleased)
+## 0.41.5 (2026-07-14)
 
 ### Other Changes
 
 * The `crate-version` switch is now optional with a default value of `0.1.0`.
+* Fixed `peerDependencies` to include the full set of tsp dependencies and not pin any versions.
 
 ## 0.41.4 (2026-07-06)
 

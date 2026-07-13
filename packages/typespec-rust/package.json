@@ -50,6 +50,9 @@
   "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
     "@azure-tools/azure-http-specs": "0.1.0-alpha.42",
+    "@azure-tools/typespec-azure-core": "~0.69.0",
+    "@azure-tools/typespec-azure-resource-manager": "~0.69.0",
+    "@azure-tools/typespec-azure-rulesets": "~0.69.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.15.0",
     "@types/turndown": "^5.0.6",
@@ -63,40 +66,28 @@
     "vitest": "^4.1.5"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-azure-resource-manager": "0.69.0",
-    "@typespec/openapi": "1.13.0",
-    "@typespec/rest": "0.83.0",
-    "@typespec/versioning": "0.83.0",
-    "@typespec/xml": "0.83.0",
-    "fast-xml-parser": ">=5.7.0",
-    "flatted": ">=3.4.2",
-    "minimatch": ">=10.2.3",
-    "picomatch": ">=4.0.4",
-    "postcss": ">=8.5.10",
-    "rollup": ">=4.59.0",
-    "uuid": ">=14.0.0",
-    "vite": ">=7.3.2",
-    "yaml": ">=2.8.3"
+    "@azure-tools/typespec-autorest": "~0.69.0",
+    "@azure-tools/typespec-azure-core": "~0.69.0",
+    "@azure-tools/typespec-azure-resource-manager": "~0.69.0",
+    "@azure-tools/typespec-azure-rulesets": "~0.69.0",
+    "@azure-tools/typespec-client-generator-core": "~0.69.0",
+    "@typespec/compiler": "~1.13.0",
+    "@typespec/events": "~0.83.0",
+    "@typespec/http": "~1.13.0",
+    "@typespec/openapi": "~1.13.0",
+    "@typespec/rest": "~0.83.0",
+    "@typespec/sse": "~0.83.0",
+    "@typespec/streams": "~0.83.0",
+    "@typespec/versioning": "~0.83.0",
+    "@typespec/xml": "~0.83.0"
   },
   "dependencies": {
-    "@azure-tools/typespec-azure-core": "0.69.0",
-    "@azure-tools/typespec-client-generator-core": "0.69.2",
-    "@typespec/compiler": "1.13.0",
-    "@typespec/http": "1.13.0",
+    "@azure-tools/typespec-client-generator-core": "~0.69.2",
+    "@typespec/compiler": "~1.13.0",
+    "@typespec/http": "~1.13.0",
     "linkifyjs": "^4.3.2",
-    "query-string": "9.4.1",
-    "source-map-support": "0.5.21",
+    "query-string": "^9.4.1",
+    "source-map-support": "^0.5.21",
     "turndown": "^7.2.4"
-  },
-  "azure-sdk/emitter-package-json-pinning": [
-    "@azure-tools/typespec-azure-core",
-    "@azure-tools/typespec-azure-resource-manager",
-    "@azure-tools/typespec-client-generator-core",
-    "@typespec/compiler",
-    "@typespec/http",
-    "@typespec/openapi",
-    "@typespec/rest",
-    "@typespec/versioning",
-    "@typespec/xml"
-  ]
+  }
 }
