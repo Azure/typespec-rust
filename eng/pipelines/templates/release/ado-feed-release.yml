@@ -1,0 +1,43 @@
+parameters:
+  - name: tag
+    type: string
+    default: latest
+  - name: path
+    type: string
+  - name: registryUrl
+    type: string
+    default: https://pkgs.dev.azure.com/azure-sdk/public/_packaging/azure-sdk-for-js/npm/registry/
+
+steps:
+  # Publishing the package directly to the Azure DevOps `azure-sdk-for-js` feed bypasses the
+  # upstream npmjs.org quarantine (which blocks newly released packages for 7 days) so CI can
+  # consume freshly released packages immediately.
+  - template: /eng/common/pipelines/templates/steps/create-authenticated-npmrc.yml
+    parameters:
+      npmrcPath: ${{ parameters.path }}/.npmrc
+      registryUrl: ${{ parameters.registryUrl }}
+
+  # Publish every *.tgz in the release folder, treating a "version already exists" response (ADO feed
+  # immutability or an existing upstream copy) as a skippable no-op while failing on any genuine error.
+  - pwsh: |
+      $ErrorActionPreference = 'Stop'
+      $packages = Get-ChildItem -Path '${{ parameters.path }}' -Filter *.tgz
+      if (-not $packages) {
+        Write-Error "No .tgz packages found in '${{ parameters.path }}'"
+        exit 1
+      }
+      foreach ($package in $packages) {
+        Write-Host "Publishing $($package.Name) to Azure DevOps feed with tag '${{ parameters.tag }}'"
+        npm publish $package.FullName --tag ${{ parameters.tag }} --registry ${{ parameters.registryUrl }} 2>&1 | Tee-Object -Variable output
+        if ($LASTEXITCODE -ne 0) {
+          if ($output -match 'already exists|cannot publish over') {
+            Write-Host "Package version already exists on the feed; skipping."
+          } else {
+            Write-Error "npm publish failed for $($package.Name)"
+            exit 1
+          }
+        }
+      }
+    displayName: Publish to DevOps feed (${{ parameters.tag }})
+    workingDirectory: ${{ parameters.path }}
+    condition: and(succeeded(), ne(variables['SkipPublishing'], 'true'))

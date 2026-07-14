@@ -1,0 +1,22 @@
+parameters:
+  PackagePath: "not-specified"
+  PublishDevVersion: true
+
+steps:
+  - pwsh: |
+      $currentVersion = node -p -e "require('./packages/${{ parameters.PackagePath }}/package.json').version"
+      if ('${{ parameters.PublishDevVersion }}' -eq 'true') {
+        $currentVersion="$currentVersion-$(Build.BuildNumber)"
+      }
+
+      # Pack into a clean folder so the release job's publishing templates only see the package .tgz.
+      $releaseDir = "$(Build.ArtifactStagingDirectory)/release"
+      New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
+
+      cd packages/${{ parameters.PackagePath }}
+      npm version --no-git-tag-version $currentVersion
+      npm pack --pack-destination $releaseDir
+      if ($LASTEXITCODE) {
+        exit $LASTEXITCODE
+      }
+    displayName: "Pack ${{ parameters.PackagePath }}"

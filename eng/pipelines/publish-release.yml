@@ -11,7 +11,7 @@ extends:
   template: /eng/pipelines/templates/stages/1es-redirect.yml
   parameters:
     stages:
-    - stage: Release
+    - stage: Build
 
       variables: 
         - template: /eng/pipelines/templates/variables/image.yml
@@ -19,7 +19,7 @@ extends:
           value: $(System.DefaultWorkingDirectory)/packages/typespec-rust
 
       jobs:
-        - job: Release 
+        - job: Build
           pool:
             name: $(LINUXPOOL)
             image: $(LINUXVMIMAGE)
@@ -28,10 +28,52 @@ extends:
           steps:
             - template: /eng/pipelines/templates/steps/set-env.yaml
             - template: /eng/pipelines/templates/steps/build-test.yaml
-            - template: /eng/pipelines/templates/steps/publish-release.yaml
+            - template: /eng/pipelines/templates/steps/pack.yaml
               parameters:
                 PackagePath: "typespec-rust"
-                PackageFileName: "azure-tools-typespec-rust"
-                ReleaseName: "TypeSpec emitter for Rust v$currentVersion"
-                ReleaseNotes: "TypeSpec emitter for Rust"
                 PublishDevVersion: ${{ parameters.publish_dev }}
+
+          templateContext:
+            outputs:
+              - output: pipelineArtifact
+                path: $(Build.ArtifactStagingDirectory)/release
+                artifact: release
+
+    - stage: Release
+      dependsOn: Build
+
+      variables:
+        - template: /eng/pipelines/templates/variables/image.yml
+
+      jobs:
+        # ESRP publishing must run inside a 1ES release (deployment) job. Deployment jobs are
+        # checkout-less, so the package .tgz is consumed from the `release` pipeline artifact
+        # produced by the Build stage rather than re-packed from source.
+        - deployment: Publish
+          displayName: Publish Release
+          environment: none
+          pool: # hardcoded because deployment jobs do not support variable expansion in pool names
+            name: azsdk-pool
+            image: ubuntu-24.04
+            os: linux
+          templateContext:
+            type: releaseJob
+            isProduction: true
+            inputs:
+              - input: pipelineArtifact
+                artifactName: release
+                # Download the whole artifact (the packed .tgz) into the checkout-less release job.
+                itemPattern: "**"
+                targetPath: $(Pipeline.Workspace)/release/
+
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                  - script: ls $(Pipeline.Workspace)/release
+                    displayName: List files in artifact
+
+                  - template: /eng/pipelines/templates/steps/publish-release.yaml
+                    parameters:
+                      Path: $(Pipeline.Workspace)/release
+                      PublishDevVersion: ${{ parameters.publish_dev }}
