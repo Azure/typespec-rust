@@ -1,5 +1,7 @@
 parameters:
-  - name: tag
+  # ESRP release state for the package (e.g. `latest` or `next`). This is NOT the npm
+  # dist-tag — the dist-tag is set separately by the ADO feed publish step.
+  - name: productState
     type: string
     default: stable
   - name: path
@@ -24,4 +26,4 @@ steps:
       ServiceEndpointUrl: "https://api.esrp.microsoft.com"
       # cspell:ignore ESRPRELPACMANTEST
       MainPublisher: "ESRPRELPACMANTEST"
-      productstate: ${{ parameters.tag }}
+      productstate: ${{ parameters.productState }}

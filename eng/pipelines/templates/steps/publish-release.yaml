@@ -4,18 +4,23 @@ parameters:
 
 # Publishing steps that run inside the 1ES release (deployment) job. The package .tgz is
 # produced by steps/pack.yaml in the Build stage and handed to this job as a pipeline artifact.
-# Preview/dev builds publish with the `dev` dist-tag; stable builds publish as `latest`.
 # Each variant publishes to the Azure DevOps feed first (bypasses the 7-day npmjs.org
 # quarantine), then publishes to npmjs.org via ESRP.
+#
+# Two independent identifiers are set per variant:
+#   - the npm dist-tag (`tag`) used by the ADO feed publish, and
+#   - the ESRP release state (`productState`) used by the ESRP publish.
+# Matching typespec-azure, both use the same value per channel: preview builds use `next`
+# and stable builds use `latest`.
 steps:
   - ${{ if eq(parameters.PublishDevVersion, true) }}:
       - template: /eng/pipelines/templates/release/ado-feed-release.yml
         parameters:
-          tag: dev
+          tag: next
           path: ${{ parameters.Path }}
       - template: /eng/pipelines/templates/release/esrp-release.yml
         parameters:
-          tag: dev
+          productState: next
           path: ${{ parameters.Path }}
   - ${{ else }}:
       - template: /eng/pipelines/templates/release/ado-feed-release.yml
@@ -24,5 +29,5 @@ steps:
           path: ${{ parameters.Path }}
       - template: /eng/pipelines/templates/release/esrp-release.yml
         parameters:
-          tag: stable
+          productState: latest
           path: ${{ parameters.Path }}
