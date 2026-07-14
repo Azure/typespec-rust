@@ -1,41 +1,28 @@
 parameters:
-  PackagePath: "not-specified"
-  PackageFileName: "not-specfied"
-  ReleaseName: "not-specified"
-  ReleaseNotes: "not-specfied"
+  Path: "not-specified"
   PublishDevVersion: true
 
+# Publishing steps that run inside the 1ES release (deployment) job. The package .tgz is
+# produced by steps/pack.yaml in the Build stage and handed to this job as a pipeline artifact.
+# Preview/dev builds publish with the `dev` dist-tag; stable builds publish as `latest`.
+# Each variant publishes to the Azure DevOps feed first (bypasses the 7-day npmjs.org
+# quarantine), then publishes to npmjs.org via ESRP.
 steps:
-  - pwsh: |
-      $currentVersion = node -p -e "require('./packages/${{ parameters.PackagePath }}/package.json').version"
-      $releaseNotes = "${{ parameters.ReleaseNotes }}"
-      if ('${{ parameters.PublishDevVersion }}' -eq 'true') {
-        $currentVersion="$currentVersion-$(Build.BuildNumber)"
-        $releaseNotes = "Preview version of ${{ parameters.ReleaseNotes }}"
-      }
-      cd packages/${{ parameters.PackagePath }}
-      npm version --no-git-tag-version $currentVersion
-      npm pack
-      npm install -g ${{ parameters.PackageFileName }}-$currentVersion.tgz
-      if ($LASTEXITCODE) {
-        exit $LASTEXITCODE
-      }
-      npx publish-release `
-        --token $(azuresdk-github-pat) `
-        --repo typespec-rust `
-        --owner azure `
-        --name "${{ parameters.ReleaseName }}" `
-        --tag v$currentVersion `
-        --notes="$releaseNotes" `
-        --prerelease `
-        --editRelease false `
-        --assets ${{ parameters.PackageFileName }}-$currentVersion.tgz `
-        --target_commitish $(Build.SourceBranchName);
-    displayName: "Publish GitHub Release ${{ parameters.PackagePath }}"
-
-  - ${{ if ne(parameters.PublishDevVersion, true) }}:
-      - script: |
-          cd packages/${{ parameters.PackagePath }}
-          echo "//registry.npmjs.org/:_authToken=$(azure-sdk-npm-token)" > ./.npmrc
-          npm publish --access public --registry=https://registry.npmjs.org/
-        displayName: "Publish to npm ${{ parameters.PackagePath }}"
+  - ${{ if eq(parameters.PublishDevVersion, true) }}:
+      - template: /eng/pipelines/templates/release/ado-feed-release.yml
+        parameters:
+          tag: dev
+          path: ${{ parameters.Path }}
+      - template: /eng/pipelines/templates/release/esrp-release.yml
+        parameters:
+          tag: dev
+          path: ${{ parameters.Path }}
+  - ${{ else }}:
+      - template: /eng/pipelines/templates/release/ado-feed-release.yml
+        parameters:
+          tag: latest
+          path: ${{ parameters.Path }}
+      - template: /eng/pipelines/templates/release/esrp-release.yml
+        parameters:
+          tag: stable
+          path: ${{ parameters.Path }}
