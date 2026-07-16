@@ -22,3 +22,8 @@ pipelines:
           lastModifiedDate: 2026-06-02
         armory:
           lastModifiedDate: 2026-06-02
+      binary:
+        binskim:
+          lastModifiedDate: 2026-07-16
+        spotbugs:
+          lastModifiedDate: 2026-07-16
