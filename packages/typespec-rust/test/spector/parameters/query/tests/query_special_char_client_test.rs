@@ -11,12 +11,6 @@ async fn special_char_subclient_inherits_endpoint() {
     assert_eq!(subclient.endpoint().as_str(), "http://localhost:3000/");
 }
 
-// The upstream http-specs `mockapi.ts` registers the route as
-// `/parameters/query/special-char/dollar-sign` (kebab-case) while the tsp
-// (and therefore the generated client) uses `@route("/dollarSign")`
-// (camelCase). The spector mock server returns 404 until that mismatch is
-// fixed upstream, so this live test is ignored for now.
-#[ignore = "upstream http-specs path mismatch: dollarSign vs dollar-sign"]
 #[tokio::test]
 async fn dollar_sign_returns_204() {
     let client = QueryClient::with_no_credential("http://localhost:3000", None).unwrap();

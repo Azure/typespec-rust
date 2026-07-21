@@ -405,7 +405,6 @@ impl OperationTemplatesLroClient {
         ))
     }
 
-    /// A long-running resource action.
     ///
     /// # Arguments
     ///
