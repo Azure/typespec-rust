@@ -66,20 +66,20 @@
     "vitest": "^4.1.5"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-autorest": "~0.69.0",
+    "@azure-tools/typespec-autorest": "~0.70.0",
     "@azure-tools/typespec-azure-core": "~0.70.0",
-    "@azure-tools/typespec-azure-resource-manager": "~0.69.2",
-    "@azure-tools/typespec-azure-rulesets": "~0.69.2",
+    "@azure-tools/typespec-azure-resource-manager": "~0.70.0",
+    "@azure-tools/typespec-azure-rulesets": "~0.70.0",
     "@azure-tools/typespec-client-generator-core": "~0.70.0",
     "@typespec/compiler": "~1.14.0",
-    "@typespec/events": "~0.83.0",
+    "@typespec/events": "~0.84.0",
     "@typespec/http": "~1.14.0",
-    "@typespec/openapi": "~1.13.0",
-    "@typespec/rest": "~0.83.0",
-    "@typespec/sse": "~0.83.0",
-    "@typespec/streams": "~0.83.0",
-    "@typespec/versioning": "~0.83.0",
-    "@typespec/xml": "~0.83.0"
+    "@typespec/openapi": "~1.14.0",
+    "@typespec/rest": "~0.84.0",
+    "@typespec/sse": "~0.84.0",
+    "@typespec/streams": "~0.84.0",
+    "@typespec/versioning": "~0.84.0",
+    "@typespec/xml": "~0.84.0"
   },
   "dependencies": {
     "@azure-tools/typespec-client-generator-core": "~0.70.0",
@@ -89,5 +89,10 @@
     "query-string": "^9.4.1",
     "source-map-support": "^0.5.21",
     "turndown": "^7.2.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "prettier": "3.9.5"
+    }
   }
 }

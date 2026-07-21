@@ -34,7 +34,6 @@ impl LargeHeaderLargeHeadersClient {
         &self.endpoint
     }
 
-    /// A long-running resource action.
     ///
     /// # Arguments
     ///
