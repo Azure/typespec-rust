@@ -36,7 +36,7 @@ impl QuerySpecialCharClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("/parameters/query/special-char/dollarSign");
+        url.append_path("/parameters/query/special-char/dollar-sign");
         let mut query_builder = url.query_builder();
         query_builder.set_pair("$filter", filter);
         query_builder.build();
