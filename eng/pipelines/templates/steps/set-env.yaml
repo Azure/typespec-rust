@@ -20,10 +20,9 @@ steps:
   - script: npm install -g cspell
     displayName: Install cspell
 
-  - script: |
-      npm i -g corepack@latest
-      corepack enable
-      corepack prepare pnpm@latest-10 --activate
+  - pwsh: |
+      $packageJson = Get-Content -Raw "$(TypeSpecRustPkgDir)/package.json" | ConvertFrom-Json
+      npm install -g $packageJson.packageManager
     displayName: Install pnpm
 
   - script: pnpm config set store-dir ${{ parameters.pnpmStorePath }}
