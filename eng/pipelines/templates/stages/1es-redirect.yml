@@ -21,6 +21,7 @@ extends:
   parameters:
     settings:
       skipBuildTagsForGitHubPullRequests: true
+      networkIsolationPolicy: Permissive, CFSClean
     sdl:
       # Uncomment when needed
       # credscan:
