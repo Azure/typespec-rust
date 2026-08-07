@@ -40,3 +40,5 @@ steps:
       rustup default ${{ parameters.rustVersion }}
       rustup show
     displayName: Install Rust
+
+  - template: /eng/pipelines/templates/steps/config-cargo.yml
