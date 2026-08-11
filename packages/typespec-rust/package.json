@@ -56,7 +56,7 @@
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.15.0",
     "@types/turndown": "^5.0.6",
-    "@typespec/http-specs": "0.1.0-alpha.39",
+    "@typespec/http-specs": "0.1.0-alpha.40",
     "@typespec/spector": "0.1.0-alpha.27",
     "@vitest/coverage-v8": "^4.1.5",
     "@vitest/ui": "^4.1.5",
