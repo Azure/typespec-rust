@@ -5,6 +5,11 @@ updates:
       - "/packages/typespec-rust"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "@azure-tools/*"
+        - "@typespec/*"
     ignore:
       # Updated manually to align with minimum supported Node version
       - dependency-name: "@types/node"
