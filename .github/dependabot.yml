@@ -9,11 +9,7 @@ updates:
       default-days: 7
       exclude:
         - "@azure-tools/*"
-        - "@autorest/*"
-        - "@azure/*"
-        - "@microsoft.azure/*"
         - "@typespec/*"
-        - "oav"
     ignore:
       # Updated manually to align with minimum supported Node version
       - dependency-name: "@types/node"
