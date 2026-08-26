@@ -8,6 +8,7 @@ use super::{
     OperationTemplatesLroClientBeginDeleteOperationStatus,
     OperationTemplatesLroClientBeginExportArrayOperationStatus,
     OperationTemplatesLroClientBeginExportOperationStatus,
+    OperationTemplatesLroClientBeginGetLroOperationStatus,
 };
 use azure_core::{
     http::{
@@ -195,12 +196,42 @@ impl OperationTemplatesLroClientBeginExportOperationStatusHeaders
     }
 }
 
+/// Provides access to typed response headers for [`OperationTemplatesLroClient::begin_get_lro()`](crate::generated::clients::OperationTemplatesLroClient::begin_get_lro())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_armoptemplates::models::{OperationTemplatesLroClientBeginGetLroOperationStatus, OperationTemplatesLroClientBeginGetLroOperationStatusHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<OperationTemplatesLroClientBeginGetLroOperationStatus> = unimplemented!();
+///     // Access response headers
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("retry-after: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
+pub trait OperationTemplatesLroClientBeginGetLroOperationStatusHeaders: private::Sealed {
+    fn retry_after(&self) -> Result<Option<i32>>;
+}
+
+impl OperationTemplatesLroClientBeginGetLroOperationStatusHeaders
+    for Response<OperationTemplatesLroClientBeginGetLroOperationStatus>
+{
+    /// The Retry-After header can indicate how long the client should wait before polling the operation status.
+    fn retry_after(&self) -> Result<Option<i32>> {
+        Headers::get_optional_as(self.headers(), &RETRY_AFTER)
+    }
+}
+
 mod private {
     use super::{
         OperationTemplatesLroClientBeginCreateOrReplaceOperationStatus,
         OperationTemplatesLroClientBeginDeleteOperationStatus,
         OperationTemplatesLroClientBeginExportArrayOperationStatus,
         OperationTemplatesLroClientBeginExportOperationStatus,
+        OperationTemplatesLroClientBeginGetLroOperationStatus,
     };
     use azure_core::http::Response;
 
@@ -210,4 +241,5 @@ mod private {
     impl Sealed for Response<OperationTemplatesLroClientBeginDeleteOperationStatus> {}
     impl Sealed for Response<OperationTemplatesLroClientBeginExportArrayOperationStatus> {}
     impl Sealed for Response<OperationTemplatesLroClientBeginExportOperationStatus> {}
+    impl Sealed for Response<OperationTemplatesLroClientBeginGetLroOperationStatus> {}
 }
