@@ -11,7 +11,9 @@ use crate::generated::models::{
     OperationTemplatesLroClientBeginExportArrayOperationStatus,
     OperationTemplatesLroClientBeginExportArrayOptions,
     OperationTemplatesLroClientBeginExportOperationStatus,
-    OperationTemplatesLroClientBeginExportOptions, Order,
+    OperationTemplatesLroClientBeginExportOptions,
+    OperationTemplatesLroClientBeginGetLroOperationStatus,
+    OperationTemplatesLroClientBeginGetLroOptions, Order,
 };
 use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
@@ -779,6 +781,169 @@ impl OperationTemplatesLroClient {
                                     let mut request = Request::new(final_link, Method::Get);
                                     request.insert_header("accept", "application/json");
                                     request.insert_header("content-type", "application/json");
+                                    Ok(pipeline.send(&ctx, &mut request, None).await?.into())
+                                })
+                            }),
+                        },
+                        _ => PollerResult::Done { response: rsp },
+                    })
+                })
+            },
+            Some(options.method_options),
+        ))
+    }
+
+    /// Get a CostReport
+    ///
+    /// # Arguments
+    ///
+    /// * `scope` - The fully qualified Azure Resource manager identifier of the resource.
+    /// * `operation_id` - The name of the CostReport
+    /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`OperationTemplatesLroClientBeginGetLroOperationStatusHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{OperationTemplatesLroClientBeginGetLroOperationStatus, OperationTemplatesLroClientBeginGetLroOperationStatusHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<OperationTemplatesLroClientBeginGetLroOperationStatus> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("retry-after: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`retry_after`()](crate::generated::models::OperationTemplatesLroClientBeginGetLroOperationStatusHeaders::retry_after) - retry-after
+    ///
+    /// [`OperationTemplatesLroClientBeginGetLroOperationStatusHeaders`]: crate::generated::models::OperationTemplatesLroClientBeginGetLroOperationStatusHeaders
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.getLro")]
+    pub fn begin_get_lro(
+        &self,
+        scope: &str,
+        operation_id: &str,
+        options: Option<OperationTemplatesLroClientBeginGetLroOptions<'_>>,
+    ) -> Result<Poller<OperationTemplatesLroClientBeginGetLroOperationStatus>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from(
+            "/{scope}/providers/Azure.ResourceManager.OperationTemplates/costReports/{operationId}",
+        );
+        path = path.replace("{operationId}", operation_id);
+        path = path.replace("{scope}", scope);
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
+        let api_version = self.api_version.clone();
+        Ok(Poller::new(
+            move |poller_state: PollerState, poller_options| {
+                let (mut request, continuation) = match poller_state {
+                    PollerState::More(continuation) => {
+                        let (mut next_link, final_link) = match continuation.clone() {
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            } => (next_link, final_link),
+                            _ => {
+                                unreachable!()
+                            }
+                        };
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
+                        let mut request = Request::new(next_link.clone(), Method::Get);
+                        request.insert_header("accept", "application/json");
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link,
+                                final_link,
+                            },
+                        )
+                    }
+                    PollerState::Initial => {
+                        let mut request = Request::new(url.clone(), Method::Get);
+                        request.insert_header("accept", "application/json");
+                        (
+                            request,
+                            PollerContinuation::Links {
+                                next_link: url.clone(),
+                                final_link: None,
+                            },
+                        )
+                    }
+                };
+                let ctx = poller_options.context.clone();
+                let pipeline = pipeline.clone();
+                let url = url.clone();
+                Box::pin(async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, body) = rsp.deconstruct();
+                    let continuation = if let Some(final_link) =
+                        headers.get_optional_string(&HeaderName::from_static("location"))
+                    {
+                        let final_link = Url::parse(&final_link)?;
+                        match continuation {
+                            PollerContinuation::Links { next_link, .. } => {
+                                PollerContinuation::Links {
+                                    next_link,
+                                    final_link: Some(final_link),
+                                }
+                            }
+                            _ => {
+                                unreachable!()
+                            }
+                        }
+                    } else {
+                        continuation
+                    };
+                    let final_link = match &continuation {
+                        PollerContinuation::Links { final_link, .. } => {
+                            final_link.clone().unwrap_or_else(|| url.clone())
+                        }
+                        _ => {
+                            unreachable!()
+                        }
+                    };
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &poller_options,
+                    );
+                    let res: OperationTemplatesLroClientBeginGetLroOperationStatus =
+                        json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(match res.status() {
+                        PollerStatus::InProgress => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
+                        PollerStatus::Succeeded => PollerResult::Succeeded {
+                            response: rsp,
+                            target: Box::new(move || {
+                                Box::pin(async move {
+                                    let mut request = Request::new(final_link, Method::Get);
+                                    request.insert_header("accept", "application/json");
                                     Ok(pipeline.send(&ctx, &mut request, None).await?.into())
                                 })
                             }),

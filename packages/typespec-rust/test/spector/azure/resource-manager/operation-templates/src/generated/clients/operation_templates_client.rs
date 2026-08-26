@@ -5,9 +5,10 @@
 
 use crate::{
     generated::clients::{
-        OperationTemplatesCheckNameAvailabilityClient, OperationTemplatesLroClient,
-        OperationTemplatesLroPagingClient, OperationTemplatesOperationsClient,
-        OperationTemplatesOptionalBodyClient,
+        OperationTemplatesCheckNameAvailabilityClient, OperationTemplatesLegacyClient,
+        OperationTemplatesLroClient, OperationTemplatesLroPagingClient,
+        OperationTemplatesOperationsClient, OperationTemplatesOptionalBodyClient,
+        OperationTemplatesPagingClient,
     },
     Audience,
 };
@@ -120,6 +121,17 @@ impl OperationTemplatesClient {
         }
     }
 
+    /// Returns a new instance of OperationTemplatesLegacyClient.
+    #[tracing::subclient]
+    pub fn get_operation_templates_legacy_client(&self) -> OperationTemplatesLegacyClient {
+        OperationTemplatesLegacyClient {
+            api_version: self.api_version.clone(),
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+            subscription_id: self.subscription_id.clone(),
+        }
+    }
+
     /// Returns a new instance of OperationTemplatesLroClient.
     #[tracing::subclient]
     pub fn get_operation_templates_lro_client(&self) -> OperationTemplatesLroClient {
@@ -158,6 +170,17 @@ impl OperationTemplatesClient {
         &self,
     ) -> OperationTemplatesOptionalBodyClient {
         OperationTemplatesOptionalBodyClient {
+            api_version: self.api_version.clone(),
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+            subscription_id: self.subscription_id.clone(),
+        }
+    }
+
+    /// Returns a new instance of OperationTemplatesPagingClient.
+    #[tracing::subclient]
+    pub fn get_operation_templates_paging_client(&self) -> OperationTemplatesPagingClient {
+        OperationTemplatesPagingClient {
             api_version: self.api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),

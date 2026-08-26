@@ -81,6 +81,169 @@ pub struct CheckNameAvailabilityResponse {
     pub reason: Option<CheckNameAvailabilityReason>,
 }
 
+/// Concrete proxy resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct Collection {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub id: Option<String>,
+
+    /// The name of the Collection
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<CollectionProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "systemData", skip_serializing)]
+    pub system_data: Option<SystemData>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "type", skip_serializing)]
+    pub type_prop: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct CollectionProperties {
+    /// The display name of the collection.
+    #[serde(rename = "displayName", skip_serializing_if = "Option::is_none")]
+    pub display_name: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct CollectionsList {
+    /// The list of collections.
+    #[serde(default)]
+    pub value: Vec<Collection>,
+}
+
+/// Concrete tracked resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct Configuration {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub id: Option<String>,
+
+    /// The geo-location where the resource lives
+    ///
+    /// Operational visibility: Create, Read
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+
+    /// The name of the Configuration
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<ConfigurationProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "systemData", skip_serializing)]
+    pub system_data: Option<SystemData>,
+
+    /// Resource tags.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "type", skip_serializing)]
+    pub type_prop: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ConfigurationProperties {
+    /// The configuration value.
+    #[serde(rename = "configValue", skip_serializing_if = "Option::is_none")]
+    pub config_value: Option<String>,
+
+    /// The provisioning state.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "provisioningState", skip_serializing)]
+    pub provisioning_state: Option<String>,
+}
+
+/// Concrete extension resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct CostReport {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub id: Option<String>,
+
+    /// The name of the CostReport
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<CostReportProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "systemData", skip_serializing)]
+    pub system_data: Option<SystemData>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "type", skip_serializing)]
+    pub type_prop: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct CostReportProperties {
+    /// The download URL for the cost report.
+    #[serde(rename = "downloadUrl", skip_serializing_if = "Option::is_none")]
+    pub download_url: Option<String>,
+
+    /// The provisioning state of the cost report.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "provisioningState", skip_serializing)]
+    pub provisioning_state: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct DiagnosticInfo {
+    /// The diagnostic name.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The diagnostic status.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<String>,
+}
+
 /// The resource management error additional info.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
@@ -156,6 +319,94 @@ pub struct ExportResult {
     /// Content of the exported order.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub content: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct LogStatusRequest {
+    /// Filter for the monitored resources.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub filter: Option<String>,
+}
+
+/// Concrete tracked resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct Monitor {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub id: Option<String>,
+
+    /// The geo-location where the resource lives
+    ///
+    /// Operational visibility: Create, Read
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+
+    /// The name of the Monitor
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<MonitorProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "systemData", skip_serializing)]
+    pub system_data: Option<SystemData>,
+
+    /// Resource tags.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "type", skip_serializing)]
+    pub type_prop: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct MonitorProperties {
+    /// The provisioning state.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "provisioningState", skip_serializing)]
+    pub provisioning_state: Option<String>,
+
+    /// The status of the monitor.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct MonitoredResource {
+    /// The resource ID.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// Whether metrics are being sent.
+    #[serde(rename = "sendingMetrics", skip_serializing_if = "Option::is_none")]
+    pub sending_metrics: Option<bool>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct MonitoredResourceListResponse {
+    /// The link to the next page of results.
+    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
+
+    /// The list of monitored resources.
+    #[serde(default)]
+    pub value: Vec<MonitoredResource>,
 }
 
 /// REST API Operation
@@ -456,6 +707,39 @@ pub struct OperationTemplatesLroClientBeginExportOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
+/// Concrete extension resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct OperationTemplatesLroClientBeginGetLroOperationStatus {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub id: Option<String>,
+
+    /// The name of the CostReport
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<CostReportProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "systemData", skip_serializing)]
+    pub system_data: Option<SystemData>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "type", skip_serializing)]
+    pub type_prop: Option<String>,
+}
+
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Order {
@@ -622,6 +906,13 @@ pub struct SystemData {
     /// The type of identity that last modified the resource.
     #[serde(rename = "lastModifiedByType", skip_serializing_if = "Option::is_none")]
     pub last_modified_by_type: Option<CreatedByType>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct VnetProfile {
+    /// The virtual network ID.
+    #[serde(rename = "vnetId", skip_serializing_if = "Option::is_none")]
+    pub vnet_id: Option<String>,
 }
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.

@@ -21,7 +21,8 @@ use spector_armoptemplates::models::{
     OperationTemplatesLroClientBeginCreateOrReplaceOptions,
     OperationTemplatesLroClientBeginDeleteOptions,
     OperationTemplatesLroClientBeginExportArrayOptions,
-    OperationTemplatesLroClientBeginExportOptions, Order, OrderProperties,
+    OperationTemplatesLroClientBeginExportOptions, OperationTemplatesLroClientBeginGetLroOptions,
+    Order, OrderProperties,
 };
 
 #[tokio::test]
@@ -301,4 +302,39 @@ async fn lro_client_export_array() {
         final_result[1].content,
         Some("order2,product2,2".to_string())
     );
+}
+
+// TODO: the generated `begin_get_lro` poller parses the response body on every
+// poll, but the first poll returns a 202 with an empty body (EOF while parsing).
+// https://github.com/Azure/typespec-rust/issues/1028
+#[ignore = "generated getLro poller cannot handle empty 202 poll body"]
+#[tokio::test]
+async fn lro_client_get_lro() {
+    let client = common::create_client().get_operation_templates_lro_client();
+
+    let scope = "subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg";
+
+    let options = Some(OperationTemplatesLroClientBeginGetLroOptions {
+        method_options: PollerOptions {
+            frequency: Duration::seconds(1),
+            ..Default::default()
+        },
+    });
+
+    let poller = client.begin_get_lro(scope, "report1", options).unwrap();
+    let final_result = poller.await.unwrap().into_model().unwrap();
+
+    assert_eq!(final_result.id, Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.OperationTemplates/costReports/report1".to_string()));
+    assert_eq!(final_result.name, Some("report1".to_string()));
+    assert_eq!(
+        final_result.type_prop,
+        Some("Azure.ResourceManager.OperationTemplates/costReports".to_string())
+    );
+
+    let properties = final_result.properties.unwrap();
+    assert_eq!(
+        properties.download_url,
+        Some("https://storage.blob.core.windows.net/reports/report1.csv".to_string())
+    );
+    assert_eq!(properties.provisioning_state, Some("Succeeded".to_string()));
 }

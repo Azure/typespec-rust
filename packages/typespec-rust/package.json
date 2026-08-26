@@ -3,7 +3,7 @@
   "version": "0.41.5",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@11.10.0",
   "main": "dist/src/index.js",
   "exports": {
     ".": "./dist/src/index.js"
@@ -49,15 +49,15 @@
   "homepage": "https://github.com/Azure/typespec-rust#readme",
   "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
-    "@azure-tools/azure-http-specs": "0.1.0-alpha.43",
-    "@azure-tools/typespec-azure-core": "~0.70.0",
-    "@azure-tools/typespec-azure-resource-manager": "~0.70.0",
-    "@azure-tools/typespec-azure-rulesets": "~0.70.0",
+    "@azure-tools/azure-http-specs": "0.1.0-alpha.44",
+    "@azure-tools/typespec-azure-core": "~0.71.0",
+    "@azure-tools/typespec-azure-resource-manager": "~0.71.0",
+    "@azure-tools/typespec-azure-rulesets": "~0.71.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.15.0",
     "@types/turndown": "^5.0.6",
-    "@typespec/http-specs": "0.1.0-alpha.39",
-    "@typespec/spector": "0.1.0-alpha.27",
+    "@typespec/http-specs": "0.1.0-alpha.41",
+    "@typespec/spector": "0.1.0-alpha.28",
     "@vitest/coverage-v8": "^4.1.5",
     "@vitest/ui": "^4.1.5",
     "eslint": "^10.2.1",
@@ -66,33 +66,28 @@
     "vitest": "^4.1.5"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-autorest": "~0.70.0",
-    "@azure-tools/typespec-azure-core": "~0.70.0",
-    "@azure-tools/typespec-azure-resource-manager": "~0.70.0",
-    "@azure-tools/typespec-azure-rulesets": "~0.70.0",
-    "@azure-tools/typespec-client-generator-core": "~0.70.0",
-    "@typespec/compiler": "~1.14.0",
-    "@typespec/events": "~0.84.0",
-    "@typespec/http": "~1.14.0",
-    "@typespec/openapi": "~1.14.0",
-    "@typespec/rest": "~0.84.0",
-    "@typespec/sse": "~0.84.0",
-    "@typespec/streams": "~0.84.0",
-    "@typespec/versioning": "~0.84.0",
-    "@typespec/xml": "~0.84.0"
+    "@azure-tools/typespec-autorest": "~0.71.0",
+    "@azure-tools/typespec-azure-core": "~0.71.0",
+    "@azure-tools/typespec-azure-resource-manager": "~0.71.0",
+    "@azure-tools/typespec-azure-rulesets": "~0.71.0",
+    "@azure-tools/typespec-client-generator-core": "~0.71.2",
+    "@typespec/compiler": "~1.15.0",
+    "@typespec/events": "~0.85.0",
+    "@typespec/http": "~1.15.0",
+    "@typespec/openapi": "~1.15.0",
+    "@typespec/rest": "~0.85.0",
+    "@typespec/sse": "~0.85.0",
+    "@typespec/streams": "~0.85.0",
+    "@typespec/versioning": "~0.85.0",
+    "@typespec/xml": "~0.85.0"
   },
   "dependencies": {
-    "@azure-tools/typespec-client-generator-core": "~0.70.0",
-    "@typespec/compiler": "~1.14.0",
-    "@typespec/http": "~1.14.0",
+    "@azure-tools/typespec-client-generator-core": "~0.71.2",
+    "@typespec/compiler": "~1.15.0",
+    "@typespec/http": "~1.15.0",
     "linkifyjs": "^4.3.2",
     "query-string": "^9.4.1",
     "source-map-support": "^0.5.21",
     "turndown": "^7.2.4"
-  },
-  "pnpm": {
-    "overrides": {
-      "prettier": "3.9.5"
-    }
   }
 }

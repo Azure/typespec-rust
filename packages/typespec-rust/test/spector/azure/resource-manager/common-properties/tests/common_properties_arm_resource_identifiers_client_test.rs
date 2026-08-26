@@ -13,6 +13,7 @@ const ARM_ID_SIMPLE: &str = "/subscriptions/00000000-0000-0000-0000-000000000000
 const ARM_ID_WITH_TYPE: &str = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Network/virtualNetworks/myVnet";
 const ARM_ID_WITH_TYPE_AND_SCOPE: &str = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Network/virtualNetworks/myVnet";
 const ARM_ID_WITH_ALL_SCOPES: &str = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Compute/virtualMachines/myVm";
+const ARM_ID_WITH_GROUP_SCOPE: &str = "/providers/Microsoft.Management/serviceGroups/test-sg/providers/Microsoft.Authorization/roleDefinitions/00000000-0000-0000-0000-000000000000";
 
 fn get_valid_arm_resource_identifier_resource() -> ArmResourceIdentifierResource {
     ArmResourceIdentifierResource {
@@ -28,6 +29,7 @@ fn get_valid_arm_resource_identifier_resource() -> ArmResourceIdentifierResource
             arm_id_with_type: Some(ARM_ID_WITH_TYPE.to_string()),
             arm_id_with_type_and_scope: Some(ARM_ID_WITH_TYPE_AND_SCOPE.to_string()),
             arm_id_with_all_scopes: Some(ARM_ID_WITH_ALL_SCOPES.to_string()),
+            arm_id_with_group_scope: Some(ARM_ID_WITH_GROUP_SCOPE.to_string()),
         }),
         ..Default::default()
     }
@@ -89,6 +91,7 @@ async fn create_or_replace() {
             arm_id_with_type: Some(ARM_ID_WITH_TYPE.to_string()),
             arm_id_with_type_and_scope: Some(ARM_ID_WITH_TYPE_AND_SCOPE.to_string()),
             arm_id_with_all_scopes: Some(ARM_ID_WITH_ALL_SCOPES.to_string()),
+            arm_id_with_group_scope: Some(ARM_ID_WITH_GROUP_SCOPE.to_string()),
             ..Default::default()
         }),
         ..Default::default()

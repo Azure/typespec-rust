@@ -97,6 +97,13 @@ pub struct ArmResourceIdentifierResourceProperties {
     #[serde(rename = "armIdWithAllScopes", skip_serializing_if = "Option::is_none")]
     pub arm_id_with_all_scopes: Option<String>,
 
+    /// An ARM resource identifier with group scopes.
+    #[serde(
+        rename = "armIdWithGroupScope",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub arm_id_with_group_scope: Option<String>,
+
     /// An ARM resource identifier with type only.
     #[serde(rename = "armIdWithType", skip_serializing_if = "Option::is_none")]
     pub arm_id_with_type: Option<String>,
