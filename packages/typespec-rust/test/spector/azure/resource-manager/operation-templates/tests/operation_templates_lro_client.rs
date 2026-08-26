@@ -338,4 +338,3 @@ async fn lro_client_get_lro() {
     );
     assert_eq!(properties.provisioning_state, Some("Succeeded".to_string()));
 }
-

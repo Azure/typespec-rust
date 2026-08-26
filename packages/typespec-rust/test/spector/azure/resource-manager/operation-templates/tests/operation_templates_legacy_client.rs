@@ -54,21 +54,23 @@ async fn create_or_replace_optional_body_with_body() {
         .create_or_replace_optional_body(
             "test-rg",
             "default",
-            Some(OperationTemplatesLegacyClientCreateOrReplaceOptionalBodyOptions {
-                resource: Some(
-                    Configuration {
-                        location: Some("eastus".to_string()),
-                        properties: Some(ConfigurationProperties {
-                            config_value: Some("custom-value".to_string()),
+            Some(
+                OperationTemplatesLegacyClientCreateOrReplaceOptionalBodyOptions {
+                    resource: Some(
+                        Configuration {
+                            location: Some("eastus".to_string()),
+                            properties: Some(ConfigurationProperties {
+                                config_value: Some("custom-value".to_string()),
+                                ..Default::default()
+                            }),
                             ..Default::default()
-                        }),
-                        ..Default::default()
-                    }
-                    .try_into()
-                    .unwrap(),
-                ),
-                ..Default::default()
-            }),
+                        }
+                        .try_into()
+                        .unwrap(),
+                    ),
+                    ..Default::default()
+                },
+            ),
         )
         .await
         .unwrap()
