@@ -12,10 +12,10 @@ use crate::generated::models::{
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
-        pager::{PagerResult, PagerState},
-        Method, Pager, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt,
+        pager::{PagerContinuation, PagerResult, PagerState},
+        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Response, Url, UrlExt,
     },
-    tracing, Result,
+    json, tracing, Result,
 };
 
 #[tracing::client]
@@ -179,40 +179,70 @@ impl OperationTemplatesPagingClient {
         }
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
+        let mut first_url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/monitors/{monitorName}/postActionPaging");
         path = path.replace("{monitorName}", monitor_name);
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        url.append_path(&path);
-        let mut query_builder = url.query_builder();
+        first_url.append_path(&path);
+        let mut query_builder = first_url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct OperationTemplatesPagingClientListPostActionPagingPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
+        let api_version = self.api_version.clone();
         Ok(Pager::new(
-            move |_: PagerState, pager_options| {
-                let mut request = Request::new(url.clone(), Method::Post);
+            move |next_link: PagerState, pager_options| {
+                let url = match next_link {
+                    PagerState::More(next_link) => {
+                        let mut next_link: Url = next_link.try_into().expect("expected Url");
+                        let mut query_builder = next_link.query_builder();
+                        query_builder.set_pair("api-version", &api_version);
+                        query_builder.build();
+                        next_link
+                    }
+                    PagerState::Initial => first_url.clone(),
+                };
+                let mut request = Request::new(url, Method::Post);
                 request.insert_header("accept", "application/json");
                 if let Some(body) = options.body.clone() {
                     request.insert_header("content-type", "application/json");
                     request.set_body(body.clone());
                 }
                 let pipeline = pipeline.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &pager_options.context,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    Ok(PagerResult::Done {
-                        response: rsp.into(),
-                    })
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: OperationTemplatesPagingClientListPostActionPagingPage =
+                            json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next_link {
+                            Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    first_url.join(next_link.as_ref())?,
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
                 })
             },
             Some(options.method_options),
