@@ -191,6 +191,38 @@ describe('typespec-rust: codegen', () => {
     });
   });
 
+  describe('serde defaults', () => {
+    for (const visibility of ['pub', 'pubCrate'] as const) {
+      for (const flags of [rust.ModelFlags.Input, rust.ModelFlags.Output, rust.ModelFlags.Input | rust.ModelFlags.Output]) {
+        it(`defaults non-optional fields for ${visibility} models with usage ${flags}`, () => {
+          const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
+          const ranges = new rust.Model('Ranges', visibility, flags, crate);
+          ranges.fields.push(new rust.ModelField('range', 'Range', visibility, new rust.Vector(new rust.StringType()), false));
+          const layout = new rust.Model('Layout', visibility, flags, crate);
+          layout.fields.push(new rust.ModelField('ranges', 'Ranges', visibility, ranges, false));
+          layout.fields.push(new rust.ModelField('name', 'Name', visibility, new rust.Option(new rust.StringType()), true));
+          crate.models.push(layout, ranges);
+
+          const models = new CodeGenerator(crate).emitContent().find((file) => file.name === 'generated/models/models.rs');
+          strictEqual(models?.content.includes('#[serde(default, rename = "Ranges")]'), true);
+          strictEqual(models?.content.includes('#[serde(default, rename = "Range")]'), true);
+          strictEqual(models?.content.includes('#[serde(rename = "Name", skip_serializing_if = "Option::is_none")]'), true);
+        });
+      }
+    }
+
+    it('does not default required fields in spread parameter helpers', () => {
+      const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
+      const model = new rust.Model('SpreadParams', 'pubCrate', rust.ModelFlags.Unspecified, crate);
+      model.fields.push(new rust.ModelField('name', 'name', 'pubCrate', new rust.StringType(), false));
+      crate.models.push(model);
+
+      const models = new CodeGenerator(crate).emitContent().find((file) => file.name === 'generated/models/models.rs');
+      strictEqual(models?.content.includes('pub(crate) name: String,'), true);
+      strictEqual(models?.content.includes('#[serde(default'), false);
+    });
+  });
+
   it('emits custom serialize_with for offsetDateTime fields', () => {
     const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
     const model = new rust.Model('Sample', 'pub', rust.ModelFlags.Output, crate);

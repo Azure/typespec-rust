@@ -97,6 +97,25 @@ pub struct MiscTestsClientGetUnionsWithCyclesOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::list_blob_layout()`](crate::generated::clients::MiscTestsClient::list_blob_layout())
+#[derive(Clone, Default, SafeDebug)]
+pub(crate) struct MiscTestsClientListBlobLayoutOptions<'a> {
+    /// Allows customization of the method call.
+    pub(crate) method_options: PagerOptions<'a>,
+}
+
+impl MiscTestsClientListBlobLayoutOptions<'_> {
+    /// Transforms this [`MiscTestsClientListBlobLayoutOptions`] into a new `MiscTestsClientListBlobLayoutOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> MiscTestsClientListBlobLayoutOptions<'static> {
+        MiscTestsClientListBlobLayoutOptions {
+            method_options: PagerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
 /// Options to be passed to [`MiscTestsClient::literal_with_invalid_char()`](crate::generated::clients::MiscTestsClient::literal_with_invalid_char())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {
