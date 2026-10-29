@@ -12,6 +12,9 @@ use spector_armmethodsub::{
 };
 use std::sync::Arc;
 
+#[path = "../../../spector_policy.rs"]
+mod spector_policy;
+
 #[derive(Debug)]
 pub struct FakeTokenCredential {
     pub token: String,
@@ -48,6 +51,7 @@ pub fn create_client() -> MethodSubscriptionIdClient {
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         Some(MethodSubscriptionIdClientOptions {
             client_options: ClientOptions {
+                per_call_policies: vec![Arc::new(spector_policy::SpectorPolicy::default())],
                 cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
                 ..Default::default()
             },

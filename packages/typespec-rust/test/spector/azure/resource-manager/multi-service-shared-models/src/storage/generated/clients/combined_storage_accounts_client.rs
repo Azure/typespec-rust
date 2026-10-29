@@ -9,17 +9,13 @@ use crate::storage::generated::models::{
     CombinedStorageAccountsClientGetOptions, StorageAccount,
 };
 use azure_core::{
-    error::{CheckSuccessOptions, Error, ErrorKind},
+    error::CheckSuccessOptions,
     http::{
-        headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{
-            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
-            StatusMonitor,
-        },
-        Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
-        Response, StatusCode, Url, UrlExt,
+        poller::resource_manager::{new_poller, FinalStateVia},
+        Method, Pipeline, PipelineSendOptions, Poller, Request, RequestContent, Response, Url,
+        UrlExt,
     },
-    json, tracing, Result,
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -92,138 +88,14 @@ impl CombinedStorageAccountsClient {
         let mut query_builder = url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
-        let api_version = self.api_version.clone();
-        Ok(Poller::new(
-            move |poller_state: PollerState, poller_options| {
-                let (mut request, continuation) = match poller_state {
-                    PollerState::More(continuation) => {
-                        let (mut next_link, final_link) = match continuation {
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            } => (next_link, final_link),
-                            _ => {
-                                unreachable!()
-                            }
-                        };
-                        let mut query_builder = next_link.query_builder();
-                        query_builder.set_pair("api-version", &api_version);
-                        query_builder.build();
-                        let mut request = Request::new(next_link.clone(), Method::Get);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            },
-                        )
-                    }
-                    PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Put);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        request.set_body(resource.clone());
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link: url.clone(),
-                                final_link: None,
-                            },
-                        )
-                    }
-                };
-                let ctx = poller_options.context.clone();
-                let pipeline = pipeline.clone();
-                let original_url = url.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &ctx,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200, 201],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, mut body) = rsp.deconstruct();
-                    let continuation = if let Some(operation_location) = headers
-                        .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
-                    {
-                        let next_link = Url::parse(&operation_location)?;
-                        match continuation {
-                            PollerContinuation::Links { final_link, .. } => {
-                                PollerContinuation::Links {
-                                    next_link,
-                                    final_link,
-                                }
-                            }
-                            _ => {
-                                unreachable!()
-                            }
-                        }
-                    } else {
-                        continuation
-                    };
-                    let next_link = match &continuation {
-                        PollerContinuation::Links { next_link, .. } => next_link,
-                        _ => {
-                            unreachable!()
-                        }
-                    };
-                    let mut final_body = None;
-                    if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {
-                        final_body = Some(body);
-                        body = azure_core::http::response::ResponseBody::from_bytes(
-                            "{\"status\":\"Succeeded\"}",
-                        );
-                    }
-                    let retry_after = get_retry_after(
-                        &headers,
-                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &poller_options,
-                    );
-                    let res: CombinedStorageAccountsClientBeginCreateOrUpdateOperationStatus =
-                        json::from_json(&body)?;
-                    let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
-                        final_rsp = Some(RawResponse::from_bytes(
-                            status,
-                            headers.clone(),
-                            if let Some(final_body) = final_body {
-                                final_body
-                            } else {
-                                body.clone()
-                            },
-                        ));
-                    }
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
-                        PollerStatus::Succeeded => PollerResult::Succeeded {
-                            response: rsp,
-                            target: Box::new(move || {
-                                Box::pin(async move {
-                                    Ok(final_rsp
-                                        .ok_or_else(|| {
-                                            Error::new(ErrorKind::Other, "missing final response")
-                                        })?
-                                        .into())
-                                })
-                            }),
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                })
-            },
+        let mut request = Request::new(url, Method::Put);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(resource);
+        Ok(new_poller(
+            pipeline,
+            request,
+            Some(FinalStateVia::AzureAsyncOperation),
             Some(options.method_options),
         ))
     }

@@ -3,10 +3,14 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
+use azure_core::http::{ClientOptions, StatusCode};
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_oauth2::OAuth2Client;
+use spector_oauth2::{OAuth2Client, OAuth2ClientOptions};
 use std::sync::Arc;
+
+#[path = "../../../azure/resource-manager/spector_policy.rs"]
+mod spector_policy;
 
 #[derive(Debug)]
 struct FakeTokenCredential {
@@ -33,27 +37,32 @@ impl TokenCredential for FakeTokenCredential {
     }
 }
 
+fn create_client(token: &str) -> OAuth2Client {
+    let credential = Arc::new(FakeTokenCredential::new(token.to_string()));
+    OAuth2Client::new(
+        "http://localhost:3000",
+        credential.clone(),
+        Some(OAuth2ClientOptions {
+            client_options: ClientOptions {
+                per_call_policies: vec![Arc::new(spector_policy::SpectorPolicy::with_credential(
+                    credential,
+                ))],
+                ..Default::default()
+            },
+        }),
+    )
+    .unwrap()
+}
+
 #[tokio::test]
 async fn invalid() {
-    let client = OAuth2Client::new(
-        "http://localhost:3000",
-        Arc::new(FakeTokenCredential::new("invalid_token".to_string())),
-        None,
-    )
-    .unwrap();
-    let resp = client.invalid(None).await;
-    resp.expect_err("server returned error status which will not be retried: 403");
+    let client = create_client("invalid_token");
+    let err = client.invalid(None).await.expect_err("expected a 403");
+    assert_eq!(err.http_status(), Some(StatusCode::Forbidden));
 }
 
 #[tokio::test]
 async fn valid() {
-    let client = OAuth2Client::new(
-        "http://localhost:3000",
-        Arc::new(FakeTokenCredential::new(
-            "https://security.microsoft.com/.default".to_string(),
-        )),
-        None,
-    )
-    .unwrap();
+    let client = create_client("https://security.microsoft.com/.default");
     client.valid(None).await.unwrap();
 }

@@ -5,7 +5,7 @@
 
 use azure_core::{
     fmt::SafeDebug,
-    http::{poller::PollerOptions, ClientMethodOptions},
+    http::{poller::resource_manager::PollerOptions, ClientMethodOptions},
 };
 
 /// Options to be passed to [`CombinedDisksClient::begin_create_or_update()`](crate::compute_disk::generated::clients::CombinedDisksClient::begin_create_or_update())

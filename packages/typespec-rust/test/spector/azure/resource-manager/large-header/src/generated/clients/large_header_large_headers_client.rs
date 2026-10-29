@@ -8,16 +8,11 @@ use crate::generated::models::{
     LargeHeaderLargeHeadersClientBeginTwo6KOptions,
 };
 use azure_core::{
-    error::CheckSuccessOptions,
     http::{
-        headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{
-            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
-            StatusMonitor,
-        },
-        Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, Url, UrlExt,
+        poller::resource_manager::{new_poller, FinalStateVia},
+        Method, Pipeline, Poller, Request, Url, UrlExt,
     },
-    json, tracing, Result,
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -89,137 +84,12 @@ impl LargeHeaderLargeHeadersClient {
         let mut query_builder = url.query_builder();
         query_builder.set_pair("api-version", &self.api_version);
         query_builder.build();
-        let api_version = self.api_version.clone();
-        Ok(Poller::new(
-            move |poller_state: PollerState, poller_options| {
-                let (mut request, continuation) = match poller_state {
-                    PollerState::More(continuation) => {
-                        let (mut next_link, final_link) = match continuation.clone() {
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            } => (next_link, final_link),
-                            _ => {
-                                unreachable!()
-                            }
-                        };
-                        let mut query_builder = next_link.query_builder();
-                        query_builder.set_pair("api-version", &api_version);
-                        query_builder.build();
-                        let mut request = Request::new(next_link.clone(), Method::Get);
-                        request.insert_header("accept", "application/json");
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link,
-                                final_link,
-                            },
-                        )
-                    }
-                    PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Post);
-                        request.insert_header("accept", "application/json");
-                        (
-                            request,
-                            PollerContinuation::Links {
-                                next_link: url.clone(),
-                                final_link: None,
-                            },
-                        )
-                    }
-                };
-                let ctx = poller_options.context.clone();
-                let pipeline = pipeline.clone();
-                let url = url.clone();
-                Box::pin(async move {
-                    let rsp = pipeline
-                        .send(
-                            &ctx,
-                            &mut request,
-                            Some(PipelineSendOptions {
-                                check_success: CheckSuccessOptions {
-                                    success_codes: &[200, 202],
-                                },
-                                ..Default::default()
-                            }),
-                        )
-                        .await?;
-                    let (status, headers, mut body) = rsp.deconstruct();
-                    if body.is_empty() {
-                        body = azure_core::http::response::ResponseBody::from_bytes("{}");
-                    }
-                    let continuation = if let Some(operation_location) = headers
-                        .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
-                    {
-                        let next_link = Url::parse(&operation_location)?;
-                        match continuation {
-                            PollerContinuation::Links { final_link, .. } => {
-                                PollerContinuation::Links {
-                                    next_link,
-                                    final_link,
-                                }
-                            }
-                            _ => {
-                                unreachable!()
-                            }
-                        }
-                    } else {
-                        continuation
-                    };
-                    let continuation = if let Some(final_link) =
-                        headers.get_optional_string(&HeaderName::from_static("location"))
-                    {
-                        let final_link = Url::parse(&final_link)?;
-                        match continuation {
-                            PollerContinuation::Links { next_link, .. } => {
-                                PollerContinuation::Links {
-                                    next_link,
-                                    final_link: Some(final_link),
-                                }
-                            }
-                            _ => {
-                                unreachable!()
-                            }
-                        }
-                    } else {
-                        continuation
-                    };
-                    let final_link = match &continuation {
-                        PollerContinuation::Links { final_link, .. } => {
-                            final_link.clone().unwrap_or_else(|| url.clone())
-                        }
-                        _ => {
-                            unreachable!()
-                        }
-                    };
-                    let retry_after = get_retry_after(
-                        &headers,
-                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &poller_options,
-                    );
-                    let res: LargeHeaderLargeHeadersClientBeginTwo6KOperationStatus =
-                        json::from_json(&body)?;
-                    let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
-                        PollerStatus::Succeeded => PollerResult::Succeeded {
-                            response: rsp,
-                            target: Box::new(move || {
-                                Box::pin(async move {
-                                    let mut request = Request::new(final_link, Method::Get);
-                                    request.insert_header("accept", "application/json");
-                                    Ok(pipeline.send(&ctx, &mut request, None).await?.into())
-                                })
-                            }),
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                })
-            },
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        Ok(new_poller(
+            pipeline,
+            request,
+            Some(FinalStateVia::Location),
             Some(options.method_options),
         ))
     }

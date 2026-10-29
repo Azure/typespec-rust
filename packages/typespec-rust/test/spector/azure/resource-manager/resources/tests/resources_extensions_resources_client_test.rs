@@ -5,10 +5,7 @@
 mod common;
 
 use azure_core::{
-    http::{
-        poller::{PollerOptions, PollerStatus, StatusMonitor},
-        RequestContent, StatusCode,
-    },
+    http::{poller::resource_manager::PollerOptions, RequestContent, StatusCode},
     time::{Duration, OffsetDateTime},
 };
 use futures::StreamExt;
@@ -832,12 +829,15 @@ async fn create_or_update() {
             poll_count += 1;
             let response = result.unwrap();
             let http_status = response.status();
-            let status_monitor = response.into_model().unwrap();
-            let poller_status = status_monitor.status();
+            let resource: ExtensionsResource =
+                azure_core::json::from_json(response.into_body()).unwrap();
+            assert_eq!(
+                resource.properties.unwrap().provisioning_state,
+                Some(ProvisioningState::Succeeded)
+            );
             match poll_count {
                 1 => {
                     assert_eq!(http_status, StatusCode::Ok);
-                    assert_eq!(poller_status, PollerStatus::Succeeded);
                 }
                 _ => {
                     panic!("unexpected poll count");

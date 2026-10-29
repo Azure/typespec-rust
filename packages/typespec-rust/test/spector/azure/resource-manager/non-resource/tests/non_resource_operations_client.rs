@@ -14,6 +14,9 @@ use spector_armnonresource::{
 };
 use std::sync::Arc;
 
+#[path = "../../spector_policy.rs"]
+mod spector_policy;
+
 #[derive(Debug)]
 struct FakeTokenCredential {
     pub token: String,
@@ -50,6 +53,7 @@ fn create_client() -> NonResourceClient {
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         Some(NonResourceClientOptions {
             client_options: ClientOptions {
+                per_call_policies: vec![Arc::new(spector_policy::SpectorPolicy::default())],
                 cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
                 ..Default::default()
             },

@@ -10,6 +10,9 @@ use azure_core::Result;
 use spector_armcommon::{Audience, CommonPropertiesClient, CommonPropertiesClientOptions};
 use std::sync::Arc;
 
+#[path = "../../../spector_policy.rs"]
+mod spector_policy;
+
 #[derive(Debug)]
 struct FakeTokenCredential {
     pub token: String,
@@ -46,6 +49,7 @@ pub fn create_client() -> CommonPropertiesClient {
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         Some(CommonPropertiesClientOptions {
             client_options: ClientOptions {
+                per_call_policies: vec![Arc::new(spector_policy::SpectorPolicy::default())],
                 cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
                 ..Default::default()
             },

@@ -17,6 +17,9 @@ use spector_arm_multi_service_shared_models::{
 use std::collections::HashMap;
 use std::sync::Arc;
 
+#[path = "../../spector_policy.rs"]
+mod spector_policy;
+
 #[derive(Debug)]
 struct FakeTokenCredential {
     pub token: String,
@@ -53,6 +56,7 @@ fn create_client() -> CombinedClient {
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         Some(CombinedClientOptions {
             client_options: ClientOptions {
+                per_call_policies: vec![Arc::new(spector_policy::SpectorPolicy::default())],
                 cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
                 ..Default::default()
             },

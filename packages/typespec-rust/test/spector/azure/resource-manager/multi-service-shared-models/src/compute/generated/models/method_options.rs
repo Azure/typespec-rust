@@ -5,7 +5,7 @@
 
 use azure_core::{
     fmt::SafeDebug,
-    http::{poller::PollerOptions, ClientMethodOptions},
+    http::{poller::resource_manager::PollerOptions, ClientMethodOptions},
 };
 
 /// Options to be passed to [`CombinedVirtualMachinesClient::begin_create_or_update()`](crate::compute::generated::clients::CombinedVirtualMachinesClient::begin_create_or_update())

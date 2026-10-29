@@ -6,7 +6,10 @@
 use super::{ActionRequest, ChangeAllowanceRequest, Configuration, LogStatusRequest, Widget};
 use azure_core::{
     fmt::SafeDebug,
-    http::{pager::PagerOptions, poller::PollerOptions, ClientMethodOptions, RequestContent},
+    http::{
+        pager::PagerOptions, poller::resource_manager::PollerOptions, ClientMethodOptions,
+        RequestContent,
+    },
 };
 
 /// Options to be passed to [`OperationTemplatesCheckNameAvailabilityClient::check_global()`](crate::generated::clients::OperationTemplatesCheckNameAvailabilityClient::check_global())

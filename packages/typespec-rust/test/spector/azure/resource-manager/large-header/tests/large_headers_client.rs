@@ -4,7 +4,7 @@
 
 use azure_core::{
     http::{
-        poller::{PollerOptions, PollerStatus, StatusMonitor},
+        poller::{resource_manager::PollerOptions, PollerStatus, StatusMonitor},
         StatusCode,
     },
     time::Duration,
@@ -37,20 +37,24 @@ async fn two6_k() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
+        let poller_status = if http_status == StatusCode::Accepted {
+            assert!(response.into_body().is_empty());
+            None
+        } else {
+            Some(response.into_model().unwrap().status())
+        };
         match poll_count {
             1 => {
                 assert_eq!(http_status, StatusCode::Accepted);
-                assert_eq!(poller_status, PollerStatus::InProgress);
+                assert_eq!(poller_status, None);
             }
             2 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::InProgress);
+                assert_eq!(poller_status, Some(PollerStatus::InProgress));
             }
             3 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
+                assert_eq!(poller_status, Some(PollerStatus::Succeeded));
             }
             _ => {
                 panic!("unexpected poll count");
