@@ -75,5 +75,7 @@ The following skills are available under `.github/skills/` and should be used fo
 
 - Run all linting, build, and test steps before submitting (use the **validate** skill).
 - Keep PRs focused on a single change or feature.
+- For every change, update `/packages/typespec-rust/CHANGELOG.md` in the latest `## <version> (Unreleased)` section at the top, following existing categories and formatting.
+- If no `(Unreleased)` section exists, bump the version in `/packages/typespec-rust/package.json` and prepend a matching `## <version> (Unreleased)` section to the changelog. Otherwise, reuse the existing unreleased version.
 - Regenerate test crates and commit the updated generated code if the emitter output changes (use the **regenerate** skill).
 
