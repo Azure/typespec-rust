@@ -39,6 +39,30 @@ pub struct ArrayOfTypeTwo {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+pub(crate) struct BlobLayout {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(crate) next: Option<String>,
+
+    #[serde(default, rename = "Ranges")]
+    pub(crate) ranges: BlobLayoutRanges,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub(crate) struct BlobLayoutRange {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(crate) offset: Option<i32>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub(crate) struct BlobLayoutRanges {
+    #[serde(default, rename = "Range")]
+    pub(crate) range: Vec<BlobLayoutRange>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 #[serde(rename = "text", tag = "type")]
 pub struct ChatMessageTextContentItem {
     #[serde(skip_serializing_if = "Option::is_none")]

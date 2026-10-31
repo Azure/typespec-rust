@@ -222,11 +222,9 @@ function emitModelDefinitions(module: rust.ModuleContainer, context: Context): h
         }
       }
 
-      // TODO: this no longer seems to be required?
-      if (model.visibility === 'pub' && field.type.kind !== 'option') {
-        // for public models, non-optional fields (e.g. Vec<T> in pageable responses) requires default.
-        // crate models don't need this as those are used for spread params and the required params map
-        // to the required fields in the struct.
+      if ((model.flags & (rust.ModelFlags.Input | rust.ModelFlags.Output)) !== 0 && field.type.kind !== 'option') {
+        // Non-optional fields in input/output models need defaults regardless of visibility.
+        // Spread parameter helpers have no input/output usage and may contain types without Default.
         serdeParams.add('default');
       }
 
