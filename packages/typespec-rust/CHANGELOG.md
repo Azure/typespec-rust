@@ -1,5 +1,11 @@
 # Release History
 
+## 0.41.6 (Unreleased)
+
+### Bugs Fixed
+
+- Fixed deserialization of non-optional fields in input and output models.
+
 ## 0.41.5 (2026-07-14)
 
 ### Other Changes

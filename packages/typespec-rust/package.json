@@ -1,6 +1,6 @@
 {
   "name": "@azure-tools/typespec-rust",
-  "version": "0.41.5",
+  "version": "0.41.6",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
   "packageManager": "pnpm@11.10.0",

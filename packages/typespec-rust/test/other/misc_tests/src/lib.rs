@@ -7,3 +7,37 @@
 #[allow(non_camel_case_types)]
 mod generated;
 pub use generated::*;
+
+// Touch the fields so `dead_code` stays enabled elsewhere without modifying generated files.
+#[allow(dead_code)]
+const _: () = {
+    fn _touch_misc_tests_client_list_blob_layout_options(client: &MiscTestsClient) {
+        let _ = client.list_blob_layout(None);
+    }
+};
+
+#[cfg(test)]
+mod tests {
+    use super::models::BlobLayout;
+    use azure_core::xml;
+
+    #[test]
+    fn internal_xml_models_default_missing_ranges() {
+        for body in [
+            "<BlobLayout><Ranges /></BlobLayout>",
+            "<BlobLayout><Ranges></Ranges></BlobLayout>",
+            "<BlobLayout />",
+        ] {
+            let layout: BlobLayout = xml::from_xml(body.as_bytes()).unwrap();
+            assert!(layout.ranges.range.is_empty());
+        }
+    }
+
+    #[test]
+    fn internal_xml_models_deserialize_populated_ranges() {
+        let body = b"<BlobLayout><Ranges><Range><offset>42</offset></Range></Ranges></BlobLayout>";
+        let layout: BlobLayout = xml::from_xml(body).unwrap();
+        assert_eq!(layout.ranges.range.len(), 1);
+        assert_eq!(layout.ranges.range[0].offset, Some(42));
+    }
+}

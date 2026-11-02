@@ -289,3 +289,35 @@ op getArrayOfTypeTwo(): {
   @header contentType: "application/xml";
   @body body: ArrayOfTypeTwo;
 };
+
+model BlobLayout {
+  @Xml.name("Ranges")
+  ranges: BlobLayoutRanges;
+
+  @nextLink
+  next?: url;
+}
+
+model BlobLayoutRanges {
+  @pageItems
+  @Xml.name("Range")
+  @Xml.unwrapped
+  range: BlobLayoutRange[];
+}
+
+model BlobLayoutRange {
+  offset: int32;
+}
+
+@access(Access.internal)
+@list
+@get
+@route("/blob-layout")
+op listBlobLayout(): {
+  @header contentType: "application/xml";
+  @body body: BlobLayout;
+};
+
+@@access(BlobLayout, Access.internal);
+@@access(BlobLayoutRanges, Access.internal);
+@@access(BlobLayoutRange, Access.internal);

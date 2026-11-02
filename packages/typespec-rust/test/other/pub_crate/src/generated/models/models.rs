@@ -16,6 +16,7 @@ pub(crate) struct PagedWidget {
     pub(crate) next_link: Option<String>,
 
     /// The Widget items on this page
+    #[serde(default)]
     pub(crate) value: Vec<Widget>,
 }
 
