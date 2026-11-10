@@ -16,8 +16,8 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{
-        poller::resource_manager::{new_poller, FinalStateVia},
-        Method, Pipeline, Poller, Request, RequestContent, Url, UrlExt,
+        poller::resource_manager::new_poller, Method, Pipeline, Poller, Request, RequestContent,
+        Url, UrlExt,
     },
     tracing, Result,
 };
@@ -96,7 +96,7 @@ impl ResourceManagerManagedHsmsClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::Location),
+            None,
             Some(options.method_options),
         ))
     }
@@ -156,7 +156,7 @@ impl ResourceManagerManagedHsmsClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::Location),
+            None,
             Some(options.method_options),
         ))
     }
@@ -213,7 +213,7 @@ impl ResourceManagerManagedHsmsClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::Location),
+            None,
             Some(options.method_options),
         ))
     }
@@ -278,7 +278,7 @@ impl ResourceManagerManagedHsmsClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::Location),
+            None,
             Some(options.method_options),
         ))
     }

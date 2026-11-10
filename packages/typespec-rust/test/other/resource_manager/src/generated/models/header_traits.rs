@@ -17,6 +17,7 @@ use super::{
     ResourceManagerManagedHsmsClientBeginUpdateOperationStatus,
     ResourceManagerVaultConnectionsClientBeginDeleteOperationStatus,
     ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus,
+    ResourceManagerVaultsClientBeginGetLroOperationStatus,
     ResourceManagerVaultsClientBeginPurgeOperationStatus,
 };
 use azure_core::{
@@ -494,6 +495,35 @@ impl ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatusHeaders
     }
 }
 
+/// Provides access to typed response headers for [`ResourceManagerVaultsClient::begin_get_lro()`](crate::generated::clients::ResourceManagerVaultsClient::begin_get_lro())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use azure_resourcemanager_test::models::{ResourceManagerVaultsClientBeginGetLroOperationStatus, ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<ResourceManagerVaultsClientBeginGetLroOperationStatus> = unimplemented!();
+///     // Access response headers
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("retry-after: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
+pub trait ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders: private::Sealed {
+    fn retry_after(&self) -> Result<Option<i32>>;
+}
+
+impl ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders
+    for Response<ResourceManagerVaultsClientBeginGetLroOperationStatus>
+{
+    /// The Retry-After header can indicate how long the client should wait before polling the operation status.
+    fn retry_after(&self) -> Result<Option<i32>> {
+        Headers::get_optional_as(self.headers(), &RETRY_AFTER)
+    }
+}
+
 /// Provides access to typed response headers for [`ResourceManagerVaultsClient::begin_purge()`](crate::generated::clients::ResourceManagerVaultsClient::begin_purge())
 ///
 /// # Examples
@@ -547,6 +577,7 @@ mod private {
         ResourceManagerManagedHsmsClientBeginUpdateOperationStatus,
         ResourceManagerVaultConnectionsClientBeginDeleteOperationStatus,
         ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus,
+        ResourceManagerVaultsClientBeginGetLroOperationStatus,
         ResourceManagerVaultsClientBeginPurgeOperationStatus,
     };
     use azure_core::http::Response;
@@ -566,5 +597,6 @@ mod private {
     impl Sealed for Response<ResourceManagerManagedHsmsClientBeginUpdateOperationStatus> {}
     impl Sealed for Response<ResourceManagerVaultConnectionsClientBeginDeleteOperationStatus> {}
     impl Sealed for Response<ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus> {}
+    impl Sealed for Response<ResourceManagerVaultsClientBeginGetLroOperationStatus> {}
     impl Sealed for Response<ResourceManagerVaultsClientBeginPurgeOperationStatus> {}
 }

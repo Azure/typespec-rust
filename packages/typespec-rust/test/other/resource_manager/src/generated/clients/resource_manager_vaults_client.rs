@@ -6,6 +6,8 @@
 use crate::generated::models::{
     PurgeRequest, ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus,
     ResourceManagerVaultsClientBeginCreateOrUpdateOptions,
+    ResourceManagerVaultsClientBeginGetLroOperationStatus,
+    ResourceManagerVaultsClientBeginGetLroOptions,
     ResourceManagerVaultsClientBeginPurgeOperationStatus,
     ResourceManagerVaultsClientBeginPurgeOptions, Vault,
 };
@@ -91,7 +93,64 @@ impl ResourceManagerVaultsClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::Location),
+            None,
+            Some(options.method_options),
+        ))
+    }
+
+    /// Get a Vault
+    ///
+    /// # Arguments
+    ///
+    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
+    /// * `vault_name` - The name of the Vault
+    /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use azure_resourcemanager_test::models::{ResourceManagerVaultsClientBeginGetLroOperationStatus, ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ResourceManagerVaultsClientBeginGetLroOperationStatus> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("retry-after: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`retry_after`()](crate::generated::models::ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders::retry_after) - retry-after
+    ///
+    /// [`ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders`]: crate::generated::models::ResourceManagerVaultsClientBeginGetLroOperationStatusHeaders
+    #[tracing::function("ResourceManager.Vaults.getLro")]
+    pub fn begin_get_lro(
+        &self,
+        resource_group_name: &str,
+        vault_name: &str,
+        options: Option<ResourceManagerVaultsClientBeginGetLroOptions<'_>>,
+    ) -> Result<Poller<ResourceManagerVaultsClientBeginGetLroOperationStatus>> {
+        let options = options.unwrap_or_default().into_owned();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/vaults/{vaultName}");
+        path = path.replace("{resourceGroupName}", resource_group_name);
+        path = path.replace("{subscriptionId}", &self.subscription_id);
+        path = path.replace("{vaultName}", vault_name);
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("api-version", &self.api_version);
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("accept", "application/json");
+        Ok(new_poller(
+            self.pipeline.clone(),
+            request,
+            None,
             Some(options.method_options),
         ))
     }

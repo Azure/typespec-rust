@@ -11,7 +11,7 @@ import { CodeGenerator } from '../src/codegen/codeGenerator.js';
 import * as rust from '../src/codemodel/index.js';
 import { RustEmitterOptions } from '../src/lib.js';
 
-async function compileFixture(version: string, transform?: (source: string) => string): Promise<rust.Crate> {
+async function compileFixture(version?: string, transform?: (source: string) => string): Promise<rust.Crate> {
   const main = resolve('test/tsp/ResourceManager/main.tsp');
   const program = await compile({
     ...NodeHost,
@@ -23,14 +23,14 @@ async function compileFixture(version: string, transform?: (source: string) => s
   expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
   const options: RustEmitterOptions = {
     'crate-name': 'azure_resourcemanager_test',
-    'api-version': version,
     'omit-constructors': false,
     'overwrite-cargo-toml': false,
     'overwrite-lib-rs': false,
     'temp-omit-doc-links': false,
     'emit-error-traits': false,
   };
-  const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+  const commonOptions = { ...options, 'api-version': version };
+  const adapter = await Adapter.create({ program, options: commonOptions, emitterOutputDir: '', perf: createPerfReporter() });
   return adapter.tcgcToCrate();
 }
 
@@ -56,7 +56,7 @@ describe('Resource Manager generation', () => {
 
   it('distinguishes omitted and explicit final-state selectors on empty outputs', () => {
     expect(method('begin_empty_result').resourceManagerFinalState).toBeUndefined();
-    expect(method('begin_explicit_empty_result').resourceManagerFinalState?.selector).toBe('AzureAsyncOperation');
+    expect(method('begin_explicit_empty_result').resourceManagerFinalState).toEqual({ selector: 'AzureAsyncOperation', resultPath: [] });
     expect(method('begin_empty_result').returns.type.resultType).toBeUndefined();
     expect(method('begin_explicit_empty_result').returns.type.resultType).toBeUndefined();
   });
@@ -66,8 +66,19 @@ describe('Resource Manager generation', () => {
     expect(method('begin_original_result').resourceManagerFinalState?.selector).toBe('OriginalUrl');
     expect(method('begin_async_result').resourceManagerFinalState?.selector).toBe('AzureAsyncOperation');
     const vaults = crate.clients.find(client => client.name === 'ResourceManagerVaultsClient')!;
-    expect((vaults.methods[0] as rust.LroMethod).resourceManagerFinalState?.selector).toBe('Location');
+    expect((vaults.methods.find(method => method.name === 'begin_create_or_update') as rust.LroMethod).resourceManagerFinalState).toBeUndefined();
+    expect((vaults.methods.find(method => method.name === 'begin_purge') as rust.LroMethod).resourceManagerFinalState).toEqual({ selector: 'Location', resultPath: [] });
   });
+
+  it('adapts selectors inherited through public decorator metadata', async () => {
+    const inherited = await compileFixture('2026-05-15', source => source.replace(
+      'op originalResult is LongRunningRpcOperation<{}, InlineMonitor, InlineResult>;',
+      'op OriginalResultTemplate<Parameters extends {}> is LongRunningRpcOperation<Parameters, InlineMonitor, InlineResult>;\n'
+      + 'op originalResult is OriginalResultTemplate<{}>;',
+    ));
+    const original = inherited.clients.flatMap(client => client.methods).find(method => method.name === 'begin_original_result') as rust.LroMethod;
+    expect(original.resourceManagerFinalState).toEqual({ selector: 'OriginalUrl', resultPath: [] });
+  }, 30000);
 
   it('borrows the default cloud and delegates endpoint and scope resolution', () => {
     const client = content('clients/resource_manager_client.rs');
@@ -116,6 +127,35 @@ describe('Resource Manager generation', () => {
     }
   });
 
+  it('adapts serialized inline result names through TypeSpec metadata', async () => {
+    const serialized = await compileFixture('2026-05-15', source => source
+      .replace(
+        'op inlineResult is LongRunningRpcOperation<{}, InlineMonitor, InlineResult>;',
+        '@post\nop inlineResult(): AcceptedResponse & {\n'
+        + '  @header("operation-location")\n'
+        + '  @pollingLocation(StatusMonitorPollingOptions<InlineMonitor>)\n'
+        + '  monitor: string;\n};',
+      )
+      + '\n@@encodedName(InlineMonitor.result, "application/json", "@result");\n');
+    const inline = serialized.clients.flatMap(client => client.methods).find(method => method.name === 'begin_inline_result') as rust.LroMethod;
+    expect(inline.resourceManagerFinalState).toEqual({ selector: 'OperationLocation', resultPath: ['@result'] });
+    const generated = new CodeGenerator(serialized).emitContent().find(file => file.name.endsWith('clients/resource_manager_client.rs'))!.content;
+    expect(generated).toContain('rename = "@result"');
+  }, 30000);
+
+  it('preserves the whole response for an empty extraction path', () => {
+    const inline = method('begin_inline_result');
+    const original = inline.resourceManagerFinalState;
+    try {
+      inline.resourceManagerFinalState = { selector: 'OperationLocation', resultPath: [] };
+      const generated = new CodeGenerator(crate).emitContent().find(file => file.name.endsWith('clients/resource_manager_client.rs'))!.content;
+      expect(generated).toContain('Ok(response.to_raw_response().into())');
+      expect(generated).not.toContain('ResultEnvelope');
+    } finally {
+      inline.resourceManagerFinalState = original;
+    }
+  });
+
   it('rejects custom polling headers that the ARM helper cannot follow', async () => {
     await expect(compileFixture('2026-05-15', source => source
       .replace('@header("azure-asyncoperation")', '@header("custom-status")')
@@ -136,5 +176,7 @@ describe('Resource Manager generation', () => {
     expect(content('clients/resource_manager_client.rs')).toContain('"2026-05-15"');
     const newer = new CodeGenerator(await compileFixture('2026-06-01')).emitContent();
     expect(newer.find(file => file.name.endsWith('clients/resource_manager_client.rs'))?.content).toContain('"2026-06-01"');
+    const latest = new CodeGenerator(await compileFixture()).emitContent();
+    expect(latest.find(file => file.name.endsWith('clients/resource_manager_client.rs'))?.content).toContain('"2026-06-01"');
   }, 30000);
 });

@@ -18,6 +18,7 @@ use super::{
     ResourceManagerManagedHsmsClientBeginUpdateOperationStatus,
     ResourceManagerVaultConnectionsClientBeginDeleteOperationStatus,
     ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus,
+    ResourceManagerVaultsClientBeginGetLroOperationStatus,
     ResourceManagerVaultsClientBeginPurgeOperationStatus, SecretPatch, SpreadRequest, Vault,
 };
 use azure_core::{
@@ -169,6 +170,14 @@ impl StatusMonitor for ResourceManagerVaultsClientBeginCreateOrUpdateOperationSt
             Some(v) => PollerStatus::from(v.as_ref()),
             None => PollerStatus::InProgress,
         }
+    }
+}
+
+impl StatusMonitor for ResourceManagerVaultsClientBeginGetLroOperationStatus {
+    type Output = Vault;
+    type Format = JsonFormat;
+    fn status(&self) -> PollerStatus {
+        PollerStatus::Succeeded
     }
 }
 

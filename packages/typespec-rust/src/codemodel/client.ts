@@ -216,11 +216,13 @@ export interface LroFinalResultStrategyHeader {
 /** A type that describes how the final result from an LRO is available. */
 export type LroFinalResultStrategyKind = LroFinalResultStrategyOriginalUri | LroFinalResultStrategyHeader;
 
-/** An explicit Resource Manager final response selection. */
+/** A Resource Manager final response selection or inline result extraction. */
 export interface ResourceManagerFinalState {
   selector: 'AzureAsyncOperation' | 'Location' | 'OriginalUrl' | 'OperationLocation';
-  /** Serialized property names leading to an inline result. */
-  resultPath?: Array<string>;
+  /** Ordered JSON property names from the terminal status monitor to its inline result.
+   * An empty array means no extraction path.
+   */
+  resultPath: Array<string>;
 }
 
 /** LroMethod is a method that returns a long-running operation. */

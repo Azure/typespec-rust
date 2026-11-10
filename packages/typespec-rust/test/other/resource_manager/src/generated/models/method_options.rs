@@ -272,6 +272,25 @@ impl ResourceManagerVaultsClientBeginCreateOrUpdateOptions<'_> {
     }
 }
 
+/// Options to be passed to [`ResourceManagerVaultsClient::begin_get_lro()`](crate::generated::clients::ResourceManagerVaultsClient::begin_get_lro())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ResourceManagerVaultsClientBeginGetLroOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl ResourceManagerVaultsClientBeginGetLroOptions<'_> {
+    /// Transforms this [`ResourceManagerVaultsClientBeginGetLroOptions`] into a new `ResourceManagerVaultsClientBeginGetLroOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> ResourceManagerVaultsClientBeginGetLroOptions<'static> {
+        ResourceManagerVaultsClientBeginGetLroOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
 /// Options to be passed to [`ResourceManagerVaultsClient::begin_purge()`](crate::generated::clients::ResourceManagerVaultsClient::begin_purge())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourceManagerVaultsClientBeginPurgeOptions<'a> {

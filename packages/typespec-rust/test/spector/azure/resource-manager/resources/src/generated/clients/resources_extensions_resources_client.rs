@@ -15,7 +15,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerContinuation, PagerResult, PagerState},
-        poller::resource_manager::{new_poller, FinalStateVia},
+        poller::resource_manager::new_poller,
         Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
         RequestContent, Response, Url, UrlExt,
     },
@@ -96,7 +96,7 @@ impl ResourcesExtensionsResourcesClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::AzureAsyncOperation),
+            None,
             Some(options.method_options),
         ))
     }

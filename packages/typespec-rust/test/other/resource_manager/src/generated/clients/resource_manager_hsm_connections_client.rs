@@ -8,10 +8,7 @@ use crate::generated::models::{
     ResourceManagerHsmConnectionsClientBeginDeleteOptions,
 };
 use azure_core::{
-    http::{
-        poller::resource_manager::{new_poller, FinalStateVia},
-        Method, Pipeline, Poller, Request, Url, UrlExt,
-    },
+    http::{poller::resource_manager::new_poller, Method, Pipeline, Poller, Request, Url, UrlExt},
     tracing, Result,
 };
 
@@ -84,7 +81,7 @@ impl ResourceManagerHsmConnectionsClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::Location),
+            None,
             Some(options.method_options),
         ))
     }

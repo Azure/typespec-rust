@@ -60,6 +60,8 @@ model ManagedHsm is TrackedResource<VaultProperties> {
 @armResourceOperations
 interface Vaults {
   createOrUpdate is ArmResourceCreateOrReplaceAsync<Vault, Response = LocationResourceResponse<Vault>, Error = ServiceError>;
+  @Azure.ClientGenerator.Core.Legacy.markAsLro
+  getLro is ArmResourceRead<Vault, Response = ArmResponse<Vault> | ArmAcceptedResponse, Error = ServiceError>;
   @route("/purge")
   @useFinalStateVia("location")
   purge is ArmResourceActionAsync<Vault, {}, void, Error = ServiceError>;

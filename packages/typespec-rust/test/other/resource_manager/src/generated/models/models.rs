@@ -756,6 +756,48 @@ pub struct ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus {
     pub status: Option<ResourceProvisioningState>,
 }
 
+/// Concrete tracked resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ResourceManagerVaultsClientBeginGetLroOperationStatus {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub id: Option<String>,
+
+    /// The geo-location where the resource lives
+    ///
+    /// Operational visibility: Create, Read
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+
+    /// The name of the Vault
+    ///
+    /// Operational visibility: Read
+    #[serde(skip_serializing)]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<VaultProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "systemData", skip_serializing)]
+    pub system_data: Option<SystemData>,
+
+    /// Resource tags.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    ///
+    /// Operational visibility: Read
+    #[serde(rename = "type", skip_serializing)]
+    pub type_prop: Option<String>,
+}
+
 /// Standard Azure Resource Manager operation status response, used as the response
 /// body for `GetResourceOperationStatus`.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]

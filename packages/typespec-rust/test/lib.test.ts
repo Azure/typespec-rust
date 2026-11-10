@@ -50,7 +50,7 @@ describe('typespec-rust: lib', () => {
     // Verify we have the expected options
     expect(optionNames).toContain('crate-name');
     expect(optionNames).toContain('crate-version');
-    expect(optionNames).toContain('api-version');
+    expect(optionNames).not.toContain('api-version');
     expect(optionNames).toContain('overwrite-cargo-toml');
     expect(optionNames).toContain('overwrite-lib-rs');
     expect(optionNames).toContain('temp-omit-doc-links');

@@ -11,9 +11,8 @@ use crate::compute::generated::models::{
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
-        poller::resource_manager::{new_poller, FinalStateVia},
-        Method, Pipeline, PipelineSendOptions, Poller, Request, RequestContent, Response, Url,
-        UrlExt,
+        poller::resource_manager::new_poller, Method, Pipeline, PipelineSendOptions, Poller,
+        Request, RequestContent, Response, Url, UrlExt,
     },
     tracing, Result,
 };
@@ -95,7 +94,7 @@ impl CombinedVirtualMachinesClient {
         Ok(new_poller(
             self.pipeline.clone(),
             request,
-            Some(FinalStateVia::AzureAsyncOperation),
+            None,
             Some(options.method_options),
         ))
     }

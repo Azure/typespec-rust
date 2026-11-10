@@ -11,8 +11,6 @@ export interface RustEmitterOptions {
   'crate-name': string;
   /** The version of the generated Rust crate. Defaults to 0.1.0 */
   'crate-version'?: string;
-  /** The API version to generate. Passed to the common client generator. */
-  'api-version'?: string;
   /** Whether to skip emitting client constructors and their options type. Defaults to false */
   'omit-constructors': boolean;
   /** Whether to overwrite an existing Cargo.toml file. Defaults to false */
@@ -45,11 +43,6 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
       nullable: false,
       default: false,
       description: 'Whether to skip emitting client constructors and their options type. Defaults to false'
-    },
-    'api-version': {
-      type: 'string',
-      nullable: true,
-      description: 'The API version to generate. Defaults to the latest supported service version.'
     },
     'overwrite-cargo-toml': { 
       type: 'boolean', 

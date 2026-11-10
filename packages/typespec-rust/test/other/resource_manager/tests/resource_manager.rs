@@ -337,6 +337,41 @@ async fn resource_methods_return_resources_and_delay_the_initial_send() -> Resul
 }
 
 #[tokio::test]
+#[ignore = "Blocked by azure_core headerless GET/202 polling; see ../../../TODO.md"]
+async fn get_lro_without_polling_headers_retries_original_url() -> Result<()> {
+    let mut headers = Headers::new();
+    headers.insert("retry-after", "0");
+    let initial = Step {
+        response: Ok(AsyncRawResponse::from_bytes(
+            StatusCode::Accepted,
+            headers,
+            b"".as_slice(),
+        )),
+        ..step(Method::Get, VAULT, StatusCode::Accepted, b"")
+    };
+    let (client, script) = client(
+        vec![
+            initial,
+            step(Method::Get, VAULT, StatusCode::Ok, br#"{"name":"vault"}"#),
+        ],
+        None,
+        None,
+    )?;
+    assert_eq!(
+        client
+            .get_resource_manager_vaults_client()
+            .begin_get_lro("group", "vault", None)?
+            .await?
+            .into_model()?
+            .name
+            .as_deref(),
+        Some("vault")
+    );
+    assert!(script.steps.lock().unwrap().is_empty());
+    Ok(())
+}
+
+#[tokio::test]
 async fn deletes_and_purges_accept_empty_final_results() -> Result<()> {
     for (index, method, path) in [
         (0, Method::Delete, HSM.to_string()),
@@ -550,11 +585,10 @@ async fn omitted_and_explicit_empty_selectors_and_spread_bodies_work() -> Result
     Ok(())
 }
 
-#[tokio::test]
-async fn original_url_and_async_selectors_fetch_the_original_resource() -> Result<()> {
+async fn original_url_fetches_resource(header: &'static str) -> Result<()> {
     let (client, script) = client(
         vec![
-            accepted(Method::Post, "/original", "azure-asyncoperation"),
+            accepted(Method::Post, "/original", header),
             step(
                 Method::Get,
                 "/operations/1",
@@ -581,6 +615,22 @@ async fn original_url_and_async_selectors_fetch_the_original_resource() -> Resul
         Some("final")
     );
     assert!(script.steps.lock().unwrap().is_empty());
+    Ok(())
+}
+
+#[tokio::test]
+async fn original_url_with_async_operation_fetches_the_original_resource() -> Result<()> {
+    original_url_fetches_resource("azure-asyncoperation").await
+}
+
+#[tokio::test]
+#[ignore = "Blocked by azure_core OriginalUrl with operation-location; see ../../../TODO.md"]
+async fn original_url_with_operation_location_fetches_the_original_resource() -> Result<()> {
+    original_url_fetches_resource("operation-location").await
+}
+
+#[tokio::test]
+async fn async_selector_fetches_the_original_resource() -> Result<()> {
     let path = format!("/async{VAULT}");
     let (client, script) = self::client(
         vec![

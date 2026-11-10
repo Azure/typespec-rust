@@ -2488,6 +2488,13 @@ export class Adapter {
     }
   }
 
+  /**
+   * Adapts an explicit final-response selector or inline result extraction for an ARM LRO.
+   * Without either, the Resource Manager runtime selects the final response.
+   *
+   * @param method the LRO method to adapt
+   * @returns the selector and serialized result path, or undefined for runtime defaults
+   */
   private adaptResourceManagerFinalState(method: tcgc.SdkLroServiceMethod<tcgc.SdkHttpOperation>): rust.ResourceManagerFinalState | undefined {
     const metadata = method.lroMetadata;
     const selectors = new Map<string, rust.ResourceManagerFinalState['selector']>([
@@ -2496,35 +2503,28 @@ export class Adapter {
       [FinalStateValue.originalUri, 'OriginalUrl'],
       [FinalStateValue.operationLocation, 'OperationLocation'],
     ]);
-    const operation = metadata.__raw.operation;
-    const selector = selectors.get(metadata.finalStateVia);
-    if (!selector) {
-      throw new AdapterError('UnsupportedTsp', `unsupported Resource Manager final-state selector ${metadata.finalStateVia}`, operation);
+    if (!selectors.has(metadata.finalStateVia)) {
+      throw new AdapterError('UnsupportedTsp', `unsupported Resource Manager final-state selector ${metadata.finalStateVia}`);
     }
-    // Computed finalStateVia includes inferred protocol defaults. Only decorators
-    // selecting a final response (including ARM templates) override runtime fallback.
-    const selected = (metadata.finalStep !== undefined && metadata.finalStep.kind !== 'noPollingResult')
-      || operation.decorators.some(application => {
-        const name = application.definition?.name;
-        const namespace = application.definition?.namespace
-          ? tsp.getNamespaceFullName(application.definition.namespace) : undefined;
-        if (name === '@useFinalStateVia' && namespace === 'Azure.Core') {
-          return true;
-        }
-        if (name === '@defaultFinalStateVia' && namespace === 'Azure.Core.Foundations.Private') {
-          const states = application.args[0]?.jsValue;
-          return Array.isArray(states) && states.includes(metadata.finalStateVia);
-        }
-        return false;
-      });
-    const segments = metadata.finalResponse?.resultSegments;
-    if (!selected) {
+    const explicit = method.decorators.find(decorator => decorator.name === 'Azure.Core.@useFinalStateVia');
+    const explicitFinalState: unknown = explicit?.arguments.finalState;
+    if (explicitFinalState !== undefined && typeof explicitFinalState !== 'string') {
+      throw new AdapterError('UnsupportedTsp', 'Resource Manager final-state selector must be a string');
+    }
+    // Inline results need an extraction callback even without an explicit selector.
+    const finalState = explicitFinalState
+      ?? (metadata.finalStep?.kind === 'pollingSuccessProperty' ? metadata.finalStateVia : undefined);
+    if (finalState === undefined) {
       return undefined;
+    }
+    const selector = selectors.get(finalState);
+    if (!selector) {
+      throw new AdapterError('UnsupportedTsp', `unsupported Resource Manager final-state selector ${finalState}`);
     }
     return {
       selector,
       resultPath: selector === 'OperationLocation'
-        ? segments?.map(segment => this.getSerializedPropertyName(segment) ?? segment.name) : undefined,
+        ? metadata.finalResponse?.resultSegments?.map(segment => this.getSerializedPropertyName(segment) ?? segment.name) ?? [] : [],
     };
   }
 

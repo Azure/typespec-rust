@@ -1797,7 +1797,7 @@ function getResourceManagerLroMethodBody(crate: rust.Crate, indent: helpers.inde
     use.add('azure_core::http::poller::resource_manager', 'FinalStateVia');
     let callback = '';
     if (selection.selector === 'OperationLocation') {
-      const path = selection.resultPath ?? [];
+      const path = selection.resultPath;
       callback = '( |response| {\n';
       if (path.length > 0) {
         crate.addDependency(new rust.CrateDependency('serde_json', ['raw_value']));
