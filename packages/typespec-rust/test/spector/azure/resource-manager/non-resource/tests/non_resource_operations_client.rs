@@ -2,6 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::cloud::resource_manager::Audience;
 use azure_core::cloud::{Audiences, CloudConfiguration, CustomConfiguration};
 use azure_core::http::ClientOptions;
 use azure_core::{
@@ -9,9 +10,7 @@ use azure_core::{
     time::OffsetDateTime,
     Result,
 };
-use spector_armnonresource::{
-    models::NonResource, Audience, NonResourceClient, NonResourceClientOptions,
-};
+use spector_armnonresource::{models::NonResource, NonResourceClient, NonResourceClientOptions};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -42,6 +41,7 @@ impl TokenCredential for FakeTokenCredential {
 fn create_client() -> NonResourceClient {
     let mut custom_cloud_config = CustomConfiguration::default();
     custom_cloud_config.authority_host = "http://localhost:3000".to_string();
+    custom_cloud_config.endpoint = Some("http://localhost:3000".to_string());
     custom_cloud_config.audiences =
         Audiences::new().with::<Audience>("http://localhost:3000".to_string());
 
@@ -50,6 +50,7 @@ fn create_client() -> NonResourceClient {
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         Some(NonResourceClientOptions {
             client_options: ClientOptions {
+                allow_insecure_connections: true,
                 cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
                 ..Default::default()
             },

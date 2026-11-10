@@ -55,6 +55,7 @@ describe('typespec-rust: codegen', () => {
         'license.workspace = true\n' +
         'repository.workspace = true\n' +
         'rust-version.workspace = true\n' +
+        'exclude.workspace = true\n' +
         '\n' +
         '[features]\n' +
         'default = ["azure_core/default"]\n';
@@ -73,12 +74,13 @@ describe('typespec-rust: codegen', () => {
         'license.workspace = true\n' +
         'repository.workspace = true\n' +
         'rust-version.workspace = true\n' +
+        'exclude.workspace = true\n' +
         '\n' +
         '[features]\n' +
         'default = ["azure_core/default"]\n' +
         '\n' +
         '[dependencies]\n' +
-        'azure_core = { workspace = true }\n';
+        'azure_core = { workspace = true, default-features = false }\n';
 
       const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
       crate.dependencies.push(new rust.CrateDependency('azure_core'));

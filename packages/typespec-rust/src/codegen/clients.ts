@@ -107,46 +107,13 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
         if (crate.type === 'azure-arm') {
           use.add('azure_core', 'Error');
           use.add('azure_core::error', 'ErrorKind');
-          use.add('crate', 'Audience');
-          // for ARM, derive endpoint and scope from cloud config
-          use.add('azure_core::cloud', 'CloudConfiguration');
+          use.add('azure_core::cloud::resource_manager', 'CloudConfigurationExt as _');
           use.add('azure_core::http::policies', 'auth::BearerTokenAuthorizationPolicy', 'Policy');
-          body += `${indent.push().get()}let (endpoint, scope) = ${helpers.buildMatch(indent, 'options.client_options.cloud.as_deref()', [
-            {
-              pattern: 'Some(CloudConfiguration::AzurePublic)',
-              body: (indent) => `${indent.get()}(\n`
-                + `${indent.push().get()}"https://management.azure.com".to_string(),`
-                + `\n${indent.get()}"https://management.azure.com/.default".to_string(),`
-                + `\n${indent.pop().get()})\n`
-            },
-            {
-              pattern: 'Some(CloudConfiguration::AzureGovernment)',
-              body: (indent) => `${indent.get()}`
-                + `(\n${indent.push().get()}"https://management.usgovcloudapi.net".to_string(),`
-                + `\n${indent.get()}"https://management.usgovcloudapi.net/.default".to_string(),`
-                + `\n${indent.pop().get()})\n`
-            },
-            {
-              pattern: 'Some(CloudConfiguration::AzureChina)',
-              body: (indent) => `${indent.get()}`
-                + `(\n${indent.push().get()}"https://management.chinacloudapi.cn".to_string(),`
-                + `\n${indent.get()}"https://management.chinacloudapi.cn/.default".to_string(),`
-                + `\n${indent.pop().get()})\n`
-            },
-            {
-              pattern: 'Some(CloudConfiguration::Custom(custom))',
-              body: (indent) => `${indent.get()}{\n`
-                + `${indent.push().get()}let audience = custom.audiences.get::<Audience>().ok_or_else(|| { Error::new(ErrorKind::Credential, "missing custom cloud configuration audience")})?;\n`
-                + `${indent.get()}(audience.to_string(), format!("{}/.default", audience))\n`
-                + `${indent.pop().get()}}\n`
-            },
-            {
-              pattern: '_',
-              body: (indent) => `${indent.get()}unreachable!()\n`
-            },
-          ])};\n`;
-          body += `${indent.get()}let endpoint = Url::parse(&endpoint)?;\n`;
-          body += `${indent.get()}let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));\n`;
+          body += `${indent.push().get()}let cloud = options.client_options.cloud.as_deref().unwrap_or_default();\n`;
+          body += `${indent.get()}let endpoint = cloud.endpoint().ok_or_else(|| Error::new(ErrorKind::Other, "missing Resource Manager endpoint"))?;\n`;
+          body += `${indent.get()}let endpoint = Url::parse(endpoint)?;\n`;
+          body += `${indent.get()}let scope = cloud.default_scope()?.into_owned();\n`;
+          body += `${indent.get()}let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]).with_options((&options.client_options).into()));\n`;
           hasAuthPolicy = true;
         } else {
           // by convention, the endpoint param is always the first ctor param
@@ -750,7 +717,7 @@ function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
       for (const scope of arcTokenCred.scopes) {
         scopes.push(`"${scope}"`);
       }
-      return `let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![${scopes.join(', ')}]));`;
+      return `let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![${scopes.join(', ')}]).with_options((&options.client_options).into()));`;
     }
   }
   return undefined;
@@ -1811,7 +1778,60 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
  * @param method the method for the body to build
  * @returns the contents of the method body
  */
+function getResourceManagerLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
+  use.add('azure_core::http', 'Method', 'Request');
+  use.addForType(helpers.unwrapType(method.returns.type));
+  use.add('azure_core::http::poller::resource_manager', 'new_poller');
+  const params = getMethodParamGroup(method);
+  const url = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
+  let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  body += `${indent.get()}let ${urlVarNeedsMut(params, method)}${url} = self.${client.endpoint.name}.clone();\n`;
+  body += constructUrl(indent, use, method, params, url);
+  const request = constructRequest(indent, use, method, params, false, url, false,
+    params.body !== undefined || params.partialBody.length > 0);
+  body += request.content;
+
+  let finalState = 'None';
+  const selection = method.resourceManagerFinalState;
+  if (selection) {
+    use.add('azure_core::http::poller::resource_manager', 'FinalStateVia');
+    let callback = '';
+    if (selection.selector === 'OperationLocation') {
+      const path = selection.resultPath ?? [];
+      callback = '( |response| {\n';
+      if (path.length > 0) {
+        crate.addDependency(new rust.CrateDependency('serde_json', ['raw_value']));
+        use.add('azure_core', 'Bytes');
+        use.add('azure_core::http', 'RawResponse');
+        indent.push();
+        for (let i = 0; i < path.length; ++i) {
+          callback += `${indent.get()}#[derive(serde::Deserialize)]\n`;
+          callback += `${indent.get()}struct ResultEnvelope${i}<'a> {\n`;
+          callback += `${indent.push().get()}#[serde(borrow, rename = ${JSON.stringify(path[i])})]\n`;
+          callback += `${indent.get()}value: ${i === path.length - 1 ? "&'a serde_json::value::RawValue" : `ResultEnvelope${i + 1}<'a>`},\n`;
+          callback += `${indent.pop().get()}}\n`;
+        }
+        callback += `${indent.get()}let (status, headers, body) = response.deconstruct();\n`;
+        callback += `${indent.get()}let bytes = Bytes::from(body);\n`;
+        callback += `${indent.get()}let envelope: ResultEnvelope0<'_> = serde_json::from_slice(&bytes)?;\n`;
+        callback += `${indent.get()}let result = bytes.slice_ref(envelope${'.value'.repeat(path.length)}.get().as_bytes());\n`;
+        callback += `${indent.get()}Ok(RawResponse::from_bytes(status, headers, result).into())\n`;
+        indent.pop();
+      } else {
+        callback += `${indent.get()}Ok(response.to_raw_response().into())\n`;
+      }
+      callback += `${indent.get()}})`;
+    }
+    finalState = `Some(FinalStateVia::${selection.selector}${callback})`;
+  }
+  body += `${indent.get()}Ok(new_poller(self.pipeline.clone(), ${request.requestVarName}, ${finalState}, Some(options.method_options)))\n`;
+  return body;
+}
+
 function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
+  if (crate.type === 'azure-arm') {
+    return getResourceManagerLroMethodBody(crate, indent, use, client, method);
+  }
   let pollingStepHeaderName = undefined;
   for (const header of ['operation-location', 'azure-asyncoperation', 'location']) {
     if (method.responseHeaders?.headers.some(h => h.header.toLowerCase() === header)) {

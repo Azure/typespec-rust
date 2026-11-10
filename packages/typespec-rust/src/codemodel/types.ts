@@ -1027,7 +1027,7 @@ export class Poller extends External implements Poller {
 
 export class PollerOptions extends External implements PollerOptions {
   constructor(crate: Crate, lifetime: Lifetime) {
-    super(crate, 'PollerOptions', 'azure_core::http::poller');
+    super(crate, 'PollerOptions', crate.type === 'azure-arm' ? 'azure_core::http::poller::resource_manager' : 'azure_core::http::poller');
     this.kind = 'pollerOptions';
     this.lifetime = lifetime;
   }

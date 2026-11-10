@@ -18,7 +18,7 @@ use azure_core::{
     http::{
         pager::Page,
         poller::{PollerStatus, StatusMonitor},
-        JsonFormat, RequestContent,
+        JsonFormat, NoFormat, RequestContent,
     },
     json::to_json,
     Result,
@@ -64,7 +64,7 @@ impl StatusMonitor for OperationTemplatesLroClientBeginCreateOrReplaceOperationS
 
 impl StatusMonitor for OperationTemplatesLroClientBeginDeleteOperationStatus {
     type Output = ();
-    type Format = JsonFormat;
+    type Format = NoFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {
             Some(v) => PollerStatus::from(v.as_ref()),

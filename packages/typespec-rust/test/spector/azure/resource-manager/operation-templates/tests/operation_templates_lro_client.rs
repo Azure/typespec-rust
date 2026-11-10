@@ -6,7 +6,7 @@ mod common;
 
 use azure_core::{
     http::{
-        poller::{PollerOptions, PollerStatus, StatusMonitor},
+        poller::{resource_manager::PollerOptions, PollerStatus, StatusMonitor},
         RequestContent, StatusCode,
     },
     time::{Duration, OffsetDateTime},
@@ -165,20 +165,16 @@ async fn lro_client_delete() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
+        assert!(response.body().is_empty());
         match poll_count {
             1 => {
                 assert_eq!(http_status, StatusCode::Accepted);
-                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             2 => {
                 assert_eq!(http_status, StatusCode::Accepted);
-                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             3 => {
                 assert_eq!(http_status, StatusCode::NoContent);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
             }
             _ => {
                 panic!("unexpected poll count");
@@ -214,20 +210,22 @@ async fn lro_client_export() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
+        let poller_status = if poll_count == 1 {
+            assert!(response.body().is_empty());
+            None
+        } else {
+            Some(response.into_model().unwrap().status())
+        };
         match poll_count {
             1 => {
                 assert_eq!(http_status, StatusCode::Accepted);
-                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             2 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             3 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
+                assert_eq!(poller_status, Some(PollerStatus::Succeeded));
             }
             _ => {
                 panic!("unexpected poll count");
@@ -269,20 +267,22 @@ async fn lro_client_export_array() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
+        let poller_status = if poll_count == 1 {
+            assert!(response.body().is_empty());
+            None
+        } else {
+            Some(response.into_model().unwrap().status())
+        };
         match poll_count {
             1 => {
                 assert_eq!(http_status, StatusCode::Accepted);
-                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             2 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             3 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
+                assert_eq!(poller_status, Some(PollerStatus::Succeeded));
             }
             _ => {
                 panic!("unexpected poll count");
@@ -304,10 +304,6 @@ async fn lro_client_export_array() {
     );
 }
 
-// TODO: the generated `begin_get_lro` poller parses the response body on every
-// poll, but the first poll returns a 202 with an empty body (EOF while parsing).
-// https://github.com/Azure/typespec-rust/issues/1028
-#[ignore = "generated getLro poller cannot handle empty 202 poll body"]
 #[tokio::test]
 async fn lro_client_get_lro() {
     let client = common::create_client().get_operation_templates_lro_client();

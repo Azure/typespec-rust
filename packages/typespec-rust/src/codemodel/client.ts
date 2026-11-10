@@ -216,6 +216,13 @@ export interface LroFinalResultStrategyHeader {
 /** A type that describes how the final result from an LRO is available. */
 export type LroFinalResultStrategyKind = LroFinalResultStrategyOriginalUri | LroFinalResultStrategyHeader;
 
+/** An explicit Resource Manager final response selection. */
+export interface ResourceManagerFinalState {
+  selector: 'AzureAsyncOperation' | 'Location' | 'OriginalUrl' | 'OperationLocation';
+  /** Serialized property names leading to an inline result. */
+  resultPath?: Array<string>;
+}
+
 /** LroMethod is a method that returns a long-running operation. */
 export interface LroMethod extends HTTPMethodBase {
   kind: 'lro';
@@ -228,6 +235,9 @@ export interface LroMethod extends HTTPMethodBase {
 
   /** A description of how the final result from the LRO is available. */
   finalResultStrategy: LroFinalResultStrategyKind;
+
+  /** Omission delegates final response selection to the Resource Manager runtime. */
+  resourceManagerFinalState?: ResourceManagerFinalState;
 }
 
 /** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */

@@ -7,11 +7,12 @@ license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
 
+exclude.workspace = true
 [features]
 default = ["azure_core/default"]
 
 [dependencies]
-azure_core = { workspace = true }
+azure_core = { workspace = true, default-features = false, features = ["unstable_resource_manager"] }
 serde = { workspace = true }
 
 [dev-dependencies]

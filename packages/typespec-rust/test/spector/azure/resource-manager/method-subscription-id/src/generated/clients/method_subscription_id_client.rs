@@ -7,10 +7,9 @@ use crate::{
     generated::clients::MethodSubscriptionIdOperationsClient,
     mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementClient,
     two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelClient,
-    Audience,
 };
 use azure_core::{
-    cloud::CloudConfiguration,
+    cloud::resource_manager::CloudConfigurationExt as _,
     credentials::TokenCredential,
     error::ErrorKind,
     fmt::SafeDebug,
@@ -43,6 +42,17 @@ pub struct MethodSubscriptionIdClientOptions {
 impl MethodSubscriptionIdClient {
     /// Creates a new MethodSubscriptionIdClient, using Entra ID authentication.
     ///
+    /// Public cloud is used when no cloud configuration is supplied. For a custom cloud,
+    /// set [`CustomConfiguration::endpoint`](azure_core::cloud::CustomConfiguration::endpoint)
+    /// and register its authentication audience using the shared
+    /// [`Audience`](azure_core::cloud::resource_manager::Audience) marker.
+    /// Configure the credential's cloud separately to use its identity authority.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if a custom cloud has no endpoint or Resource Manager audience,
+    /// or if its endpoint URL is invalid.
+    ///
     /// # Arguments
     ///
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
@@ -56,35 +66,16 @@ impl MethodSubscriptionIdClient {
         options: Option<MethodSubscriptionIdClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let (endpoint, scope) = match options.client_options.cloud.as_deref() {
-            Some(CloudConfiguration::AzurePublic) => (
-                "https://management.azure.com".to_string(),
-                "https://management.azure.com/.default".to_string(),
-            ),
-            Some(CloudConfiguration::AzureGovernment) => (
-                "https://management.usgovcloudapi.net".to_string(),
-                "https://management.usgovcloudapi.net/.default".to_string(),
-            ),
-            Some(CloudConfiguration::AzureChina) => (
-                "https://management.chinacloudapi.cn".to_string(),
-                "https://management.chinacloudapi.cn/.default".to_string(),
-            ),
-            Some(CloudConfiguration::Custom(custom)) => {
-                let audience = custom.audiences.get::<Audience>().ok_or_else(|| {
-                    Error::new(
-                        ErrorKind::Credential,
-                        "missing custom cloud configuration audience",
-                    )
-                })?;
-                (audience.to_string(), format!("{}/.default", audience))
-            }
-            _ => {
-                unreachable!()
-            }
-        };
-        let endpoint = Url::parse(&endpoint)?;
-        let auth_policy: Arc<dyn Policy> =
-            Arc::new(BearerTokenAuthorizationPolicy::new(credential, vec![scope]));
+        let cloud = options.client_options.cloud.as_deref().unwrap_or_default();
+        let endpoint = cloud
+            .endpoint()
+            .ok_or_else(|| Error::new(ErrorKind::Other, "missing Resource Manager endpoint"))?;
+        let endpoint = Url::parse(endpoint)?;
+        let scope = cloud.default_scope()?.into_owned();
+        let auth_policy: Arc<dyn Policy> = Arc::new(
+            BearerTokenAuthorizationPolicy::new(credential, vec![scope])
+                .with_options((&options.client_options).into()),
+        );
         Ok(Self {
             endpoint,
             subscription_id,

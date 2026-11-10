@@ -1804,6 +1804,16 @@ export class Adapter {
     tokenCredParam.docs.summary = `An implementation of [\`TokenCredential\`](azure_core::credentials::TokenCredential) that can provide an Entra ID token to use when authenticating.`;
     ctorTokenCredential.params.push(tokenCredParam);
     ctorTokenCredential.docs.summary = `Creates a new ${rustClient.name}, using Entra ID authentication.`;
+    if (this.crate.type === 'azure-arm') {
+      ctorTokenCredential.docs.description = 'Public cloud is used when no cloud configuration is supplied. For a custom cloud,\n'
+        + 'set [`CustomConfiguration::endpoint`](azure_core::cloud::CustomConfiguration::endpoint)\n'
+        + 'and register its authentication audience using the shared\n'
+        + '[`Audience`](azure_core::cloud::resource_manager::Audience) marker.\n'
+        + "Configure the credential's cloud separately to use its identity authority.\n\n"
+        + '# Errors\n\n'
+        + 'Returns an error if a custom cloud has no endpoint or Resource Manager audience,\n'
+        + 'or if its endpoint URL is invalid.';
+    }
     return ctorTokenCredential;
   }
 
@@ -2004,6 +2014,9 @@ export class Adapter {
           lroFinalResultStrategy.propertyName = method.lroMetadata.finalResultPath;
         }
         rustMethod = new rust.LroMethod( methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path, lroFinalResultStrategy);
+        if (this.crate.type === 'azure-arm') {
+          rustMethod.resourceManagerFinalState = this.adaptResourceManagerFinalState(method);
+        }
       }
         break;
       default:
@@ -2473,6 +2486,46 @@ export class Adapter {
         }
       }
     }
+  }
+
+  private adaptResourceManagerFinalState(method: tcgc.SdkLroServiceMethod<tcgc.SdkHttpOperation>): rust.ResourceManagerFinalState | undefined {
+    const metadata = method.lroMetadata;
+    const selectors = new Map<string, rust.ResourceManagerFinalState['selector']>([
+      [FinalStateValue.azureAsyncOperation, 'AzureAsyncOperation'],
+      [FinalStateValue.location, 'Location'],
+      [FinalStateValue.originalUri, 'OriginalUrl'],
+      [FinalStateValue.operationLocation, 'OperationLocation'],
+    ]);
+    const operation = metadata.__raw.operation;
+    const selector = selectors.get(metadata.finalStateVia);
+    if (!selector) {
+      throw new AdapterError('UnsupportedTsp', `unsupported Resource Manager final-state selector ${metadata.finalStateVia}`, operation);
+    }
+    // Computed finalStateVia includes inferred protocol defaults. Only decorators
+    // selecting a final response (including ARM templates) override runtime fallback.
+    const selected = (metadata.finalStep !== undefined && metadata.finalStep.kind !== 'noPollingResult')
+      || operation.decorators.some(application => {
+        const name = application.definition?.name;
+        const namespace = application.definition?.namespace
+          ? tsp.getNamespaceFullName(application.definition.namespace) : undefined;
+        if (name === '@useFinalStateVia' && namespace === 'Azure.Core') {
+          return true;
+        }
+        if (name === '@defaultFinalStateVia' && namespace === 'Azure.Core.Foundations.Private') {
+          const states = application.args[0]?.jsValue;
+          return Array.isArray(states) && states.includes(metadata.finalStateVia);
+        }
+        return false;
+      });
+    const segments = metadata.finalResponse?.resultSegments;
+    if (!selected) {
+      return undefined;
+    }
+    return {
+      selector,
+      resultPath: selector === 'OperationLocation'
+        ? segments?.map(segment => this.getSerializedPropertyName(segment) ?? segment.name) : undefined,
+    };
   }
 
   /**

@@ -2,12 +2,13 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::cloud::resource_manager::Audience;
 use azure_core::cloud::{Audiences, CloudConfiguration, CustomConfiguration};
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::http::ClientOptions;
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_armresources::{Audience, ResourcesClient, ResourcesClientOptions};
+use spector_armresources::{ResourcesClient, ResourcesClientOptions};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -38,6 +39,7 @@ impl TokenCredential for FakeTokenCredential {
 pub fn create_client() -> ResourcesClient {
     let mut custom_cloud_config = CustomConfiguration::default();
     custom_cloud_config.authority_host = "http://localhost:3000".to_string();
+    custom_cloud_config.endpoint = Some("http://localhost:3000".to_string());
     custom_cloud_config.audiences =
         Audiences::new().with::<Audience>("http://localhost:3000".to_string());
 
@@ -46,6 +48,7 @@ pub fn create_client() -> ResourcesClient {
         Arc::new(FakeTokenCredential::new("fake_token".to_string())),
         Some(ResourcesClientOptions {
             client_options: ClientOptions {
+                allow_insecure_connections: true,
                 cloud: Some(Arc::new(CloudConfiguration::Custom(custom_cloud_config))),
                 ..Default::default()
             },

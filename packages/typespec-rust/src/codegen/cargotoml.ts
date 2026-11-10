@@ -17,15 +17,21 @@ export function emitCargoToml(crate: rust.Crate): string {
   content += 'edition.workspace = true\n';
   content += 'license.workspace = true\n';
   content += 'repository.workspace = true\n';
-  content += 'rust-version.workspace = true\n\n';
+  content += 'rust-version.workspace = true\n';
+  content += 'exclude.workspace = true\n\n';
   content += '[features]\n';
   content += 'default = ["azure_core/default"]\n';
   if (crate.dependencies.length > 0) {
     content += '\n[dependencies]\n';
     for (const dependency of crate.dependencies) {
       // dependency versions are managed by the workspace's Cargo.toml file
-      const features = dependency.features.length > 0 ? `, features = [${dependency.features.sort().map(f => `"${f}"`).join(', ')}]` : '';
-      content += `${dependency.name} = { workspace = true${features} }\n`;
+      const featureNames = new Set(dependency.features);
+      if (dependency.name === 'azure_core' && crate.type === 'azure-arm') {
+        featureNames.add('unstable_resource_manager');
+      }
+      const features = featureNames.size > 0 ? `, features = [${[...featureNames].sort().map(f => `"${f}"`).join(', ')}]` : '';
+      const defaults = dependency.name === 'azure_core' ? ', default-features = false' : '';
+      content += `${dependency.name} = { workspace = true${defaults}${features} }\n`;
     }
   }
   return content;
