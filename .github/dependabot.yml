@@ -22,18 +22,12 @@ updates:
         patterns:
           - "*azure-tools/azure-http-specs"
           - "*typespec*"
-      eslint:
-        patterns:
-          - "*eslint*"
-      vitest:
-        patterns:
-          - "*vitest*"
-      codegen:
+      pnpm:
         patterns:
           - "*azure-tools/codegen"
           - "*azure-tools/linq"
-      turndown:
-        patterns:
+          - "*eslint*"
           - "*turndown"
+          - "*vitest*"
     # Leave the constraint if the original constraint allows the new version, otherwise, bump the constraint.
     versioning-strategy: increase-if-necessary
