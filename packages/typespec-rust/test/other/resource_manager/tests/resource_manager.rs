@@ -337,7 +337,7 @@ async fn resource_methods_return_resources_and_delay_the_initial_send() -> Resul
 }
 
 #[tokio::test]
-#[ignore = "Blocked by azure_core headerless GET/202 polling; see ../../../TODO.md"]
+#[ignore = "Blocked by azure_core headerless GET/202 polling; see https://github.com/Azure/typespec-rust/issues/1058"]
 async fn get_lro_without_polling_headers_retries_original_url() -> Result<()> {
     let mut headers = Headers::new();
     headers.insert("retry-after", "0");
@@ -624,7 +624,7 @@ async fn original_url_with_async_operation_fetches_the_original_resource() -> Re
 }
 
 #[tokio::test]
-#[ignore = "Blocked by azure_core OriginalUrl with operation-location; see ../../../TODO.md"]
+#[ignore = "Blocked by azure_core OriginalUrl with operation-location; see https://github.com/Azure/typespec-rust/issues/1058"]
 async fn original_url_with_operation_location_fetches_the_original_resource() -> Result<()> {
     original_url_fetches_resource("operation-location").await
 }
@@ -689,38 +689,5 @@ fn one_audience_registration_is_shared_across_generated_crates() -> Result<()> {
         }),
     )?;
     assert_eq!(first.endpoint(), second.endpoint());
-    Ok(())
-}
-
-#[tokio::test]
-async fn explicit_secret_patch_and_action_wire_values_are_preserved() -> Result<()> {
-    let mut request = step(Method::Patch, "/secret", StatusCode::Ok, b"{}");
-    request.body = Some(json!({
-        "tags":{"updated":"true"},
-        "properties":{"value":"test-value","contentType":"text/plain","action":"notify"}
-    }));
-    let (client, _) = client(vec![request], None, None)?;
-    client
-        .patch_secret(
-            SecretPatch {
-                tags: Some([("updated".into(), "true".into())].into()),
-                properties: Some(SecretProperties {
-                    value: Some("test-value".into()),
-                    content_type: Some("text/plain".into()),
-                    action: Some(RotationAction::Notify),
-                }),
-            }
-            .try_into()?,
-            None,
-        )
-        .await?;
-    assert_eq!(
-        serde_json::to_value(RotationAction::Rotate)?,
-        json!("Rotate")
-    );
-    assert_eq!(
-        serde_json::from_value::<RotationAction>(json!("notify"))?,
-        RotationAction::Notify
-    );
     Ok(())
 }

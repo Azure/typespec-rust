@@ -19,7 +19,6 @@ export class Context {
   private readonly pagedResponseTypes = new Set<rust.Model>();
   private readonly lroStatusTypes = new Set<rust.Model>();
   private readonly lroResultTypes = new Map<rust.Model, rust.WireType>();
-  private readonly emptyResourceManagerResults = new Set<rust.Model>();
 
   /**
    * instantiates a new Context for the provided crate
@@ -66,8 +65,6 @@ export class Context {
 
           if (method.returns.type.resultType !== undefined) {
             this.lroResultTypes.set(method.returns.type.type.content, method.returns.type.resultType.content);
-          } else if (helpers.getCrate(module).type === 'azure-arm') {
-            this.emptyResourceManagerResults.add(method.returns.type.type.content);
           }
         }
 
@@ -280,12 +277,12 @@ export class Context {
       return undefined;
     }
 
-    const formatType = this.emptyResourceManagerResults.has(model) ? 'NoFormat'
+    const resultType = this.lroResultTypes.get(model);
+    const formatType = resultType === undefined && helpers.getCrate(model.module).type === 'azure-arm' ? 'NoFormat'
       : this.getModelBodyFormat(model) === 'json' ? 'JsonFormat' : 'XmlFormat';
     use.add('azure_core::http', formatType);
 
     use.addForType(model);
-    const resultType = this.lroResultTypes.get(model);
     if (resultType !== undefined) {
       use.addForType(resultType);
     }

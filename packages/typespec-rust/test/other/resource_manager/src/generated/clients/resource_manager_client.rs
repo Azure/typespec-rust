@@ -20,8 +20,7 @@ use crate::generated::{
         ResourceManagerClientBeginOriginalResultOperationStatus,
         ResourceManagerClientBeginOriginalResultOptions,
         ResourceManagerClientBeginSpreadOperationStatus, ResourceManagerClientBeginSpreadOptions,
-        ResourceManagerClientGetOriginalOptions, ResourceManagerClientPatchSecretOptions,
-        SecretPatch, SpreadRequest, Vault,
+        ResourceManagerClientGetOriginalOptions, SpreadRequest, Vault,
     },
 };
 use azure_core::{
@@ -504,40 +503,6 @@ impl ResourceManagerClient {
             pipeline: self.pipeline.clone(),
             subscription_id: self.subscription_id.clone(),
         }
-    }
-
-    ///
-    /// # Arguments
-    ///
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourceManager.patchSecret")]
-    pub async fn patch_secret(
-        &self,
-        body: RequestContent<SecretPatch>,
-        options: Option<ResourceManagerClientPatchSecretOptions<'_>>,
-    ) -> Result<Response<SecretPatch>> {
-        let options = options.unwrap_or_default();
-        let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
-        url.append_path("/secret");
-        let mut request = Request::new(url, Method::Patch);
-        request.insert_header("accept", "application/json");
-        request.insert_header("content-type", "application/json");
-        request.set_body(body);
-        let rsp = self
-            .pipeline
-            .send(
-                &ctx,
-                &mut request,
-                Some(PipelineSendOptions {
-                    check_success: CheckSuccessOptions {
-                        success_codes: &[200],
-                    },
-                    ..Default::default()
-                }),
-            )
-            .await?;
-        Ok(rsp.into())
     }
 }
 

@@ -59,10 +59,3 @@ pub enum ResourceProvisioningState {
     /// Any other value not defined in `ResourceProvisioningState`.
     UnknownValue(String),
 }
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum RotationAction {
-    Notify,
-
-    Rotate,
-}

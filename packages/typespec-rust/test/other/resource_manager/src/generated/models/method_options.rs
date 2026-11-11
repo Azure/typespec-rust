@@ -132,13 +132,6 @@ pub struct ResourceManagerClientGetOriginalOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ResourceManagerClient::patch_secret()`](crate::generated::clients::ResourceManagerClient::patch_secret())
-#[derive(Clone, Default, SafeDebug)]
-pub struct ResourceManagerClientPatchSecretOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
 /// Options to be passed to [`ResourceManagerHsmConnectionsClient::begin_delete()`](crate::generated::clients::ResourceManagerHsmConnectionsClient::begin_delete())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourceManagerHsmConnectionsClientBeginDeleteOptions<'a> {

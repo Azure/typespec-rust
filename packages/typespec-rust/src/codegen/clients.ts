@@ -1941,50 +1941,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     }
   }
 
-  // Match an ARM PUT operation ("create or update"), which may have immediate 200 OK response with no headers and no poller status
-  const isArmPutLro = bodyFormat === 'json'
-    && method.httpMethod === 'put'
-    && method.returns.type.resultType !== undefined
-    && method.finalResultStrategy.kind === 'header'
-    && method.finalResultStrategy.headerName === 'azure-asyncoperation'
-    && pollingStepHeaderName === 'azure-asyncoperation'
-    && method.statusCodes.some(sc => sc == 200)
-    && method.statusCodes.some(sc => sc == 201);
-
-  // Match an ARM PATCH operation ("update"), which may have immediate 200 OK response with no headers and no poller status
-  const isArmPatchLro = bodyFormat === 'json'
-    && method.httpMethod === 'patch'
-    && method.returns.type.resultType !== undefined
-    && method.finalResultStrategy.kind === 'header'
-    && method.finalResultStrategy.headerName === 'location'
-    && pollingStepHeaderName === 'location'
-    && method.statusCodes.some(sc => sc == 200)
-    && method.statusCodes.some(sc => sc == 202);
-
-  // Match an ARM POST operation ("export"), which may have empty initial response
-  const isArmPostLro = bodyFormat === 'json'
-    && method.httpMethod === 'post'
-    && method.returns.type.resultType !== undefined
-    && method.finalResultStrategy.kind === 'header'
-    && method.finalResultStrategy.headerName === 'location'
-    && pollingStepHeaderName === 'azure-asyncoperation'
-    && method.statusCodes.some(sc => sc == 200)
-    && method.statusCodes.some(sc => sc == 202);
-
-  // Match an ARM DELETE operation, which may have empty responses and only communicate via status codes
-  const isArmDeleteLro = bodyFormat === 'json'
-    && method.httpMethod === 'delete'
-    && method.returns.type.resultType === undefined
-    && method.finalResultStrategy.kind === 'header'
-    && method.finalResultStrategy.headerName === 'location'
-    && pollingStepHeaderName === 'location'
-    && method.statusCodes.some(sc => sc == 200)
-    && method.statusCodes.some(sc => sc == 202)
-    && method.statusCodes.some(sc => sc == 204);
-
-  if (isArmPutLro || isArmPatchLro) {
-    body += 'let original_url = url.clone();\n';
-  }
   body += `${indent.get()}Box::pin(async move {\n`
   if (fallibleInitialPollerRequest) {
     body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, continuation) = poller_request?;\n`;
@@ -1992,19 +1948,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   }
   body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?;\n`
 
-  const needsMutBody = isArmPutLro || isArmPatchLro || isArmPostLro || isArmDeleteLro;
-  body += `${indent.get()}let (status, headers, ${needsMutBody ? 'mut' : ''} body) = rsp.deconstruct();\n`
-
-  if (isArmPostLro || isArmDeleteLro) {
-    body += `${indent.get()}if body.is_empty() {\n`
-    let emptyBodyExpr = '"{}"'
-    if (isArmDeleteLro) {
-      use.add('azure_core::http', 'StatusCode');
-      emptyBodyExpr = `if status == StatusCode::NoContent { "{\\"status\\":\\"Succeeded\\"}" } else { "{}" }`
-    }
-    body += `${indent.push().get()}body = azure_core::http::response::ResponseBody::from_bytes(${emptyBodyExpr});\n`;
-    body += `${indent.pop().get()}}\n`;
-  }
+  body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
 
   if (pollingStepHeaderName !== undefined) {
     body += `${indent.get()}let continuation = ${helpers.buildIfBlock(indent, {
@@ -2023,22 +1967,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     }, {
       body: (indent) => `${indent.get()}continuation\n`
     })};\n`;
-  }
-
-  if (isArmPutLro || isArmPatchLro) {
-    use.add('azure_core::http', 'StatusCode');
-    body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, '&continuation', [{
-      pattern: 'PollerContinuation::Links { next_link, .. }',
-      body: (indent) => `${indent.get()}next_link\n`,
-    }, {
-      pattern: '_',
-      body: (indent) => `${indent.get()}unreachable!()\n`,
-    }])};\n`;
-    body += `${indent.get()}let mut final_body = None;\n`;
-    body += `${indent.get()}if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {\n`;
-    body += `${indent.push().get()}final_body = Some(body);\n`;
-    body += `${indent.get()}body = azure_core::http::response::ResponseBody::from_bytes("{\\"status\\":\\"Succeeded\\"}");\n`;
-    body += `${indent.pop().get()}}\n`;
   }
 
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) { // separate link for picking up the result
@@ -2077,9 +2005,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     body += `${indent.get()}let mut final_rsp: Option<RawResponse> = None;\n`
     body += `if res.status() == PollerStatus::Succeeded {\n`
     let responseBodyExpr = 'body.clone()';
-    if (isArmPutLro || isArmPatchLro) {
-      responseBodyExpr = 'if let Some(final_body) = final_body { final_body } else { body.clone() }';
-    } else if (method.finalResultStrategy.propertyName !== undefined) {
+    if (method.finalResultStrategy.propertyName !== undefined) {
       responseBodyExpr = 'body';
       if (bodyFormat === 'json') {
         crate.addDependency(new rust.CrateDependency('serde_json'));

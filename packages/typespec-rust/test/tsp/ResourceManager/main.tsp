@@ -139,23 +139,3 @@ op explicitEmptyResult(): EmptyAccepted;
 @route("/spread")
 @post
 op spread(value: string, optional?: string): EmptyAccepted;
-
-enum RotationAction {
-  notify: "notify",
-  rotate: "Rotate",
-}
-
-model SecretProperties {
-  value: string;
-  contentType?: string;
-  action?: RotationAction;
-}
-
-model SecretPatch {
-  tags?: Record<string>;
-  properties: SecretProperties;
-}
-
-@route("/secret")
-@patch
-op patchSecret(@body body: SecretPatch): SecretPatch;

@@ -19,7 +19,7 @@ use super::{
     ResourceManagerVaultConnectionsClientBeginDeleteOperationStatus,
     ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus,
     ResourceManagerVaultsClientBeginGetLroOperationStatus,
-    ResourceManagerVaultsClientBeginPurgeOperationStatus, SecretPatch, SpreadRequest, Vault,
+    ResourceManagerVaultsClientBeginPurgeOperationStatus, SpreadRequest, Vault,
 };
 use azure_core::{
     http::{
@@ -209,13 +209,6 @@ impl TryFrom<ManagedHsmTagsUpdate> for RequestContent<ManagedHsmTagsUpdate> {
 impl TryFrom<PurgeRequest> for RequestContent<PurgeRequest> {
     type Error = azure_core::Error;
     fn try_from(value: PurgeRequest) -> Result<Self> {
-        Ok(to_json(&value)?.into())
-    }
-}
-
-impl TryFrom<SecretPatch> for RequestContent<SecretPatch> {
-    type Error = azure_core::Error;
-    fn try_from(value: SecretPatch) -> Result<Self> {
         Ok(to_json(&value)?.into())
     }
 }

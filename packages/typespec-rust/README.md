@@ -22,13 +22,11 @@ options:
 ```
 
 Generated manifests inherit workspace package metadata, including `exclude`,
-and workspace dependencies. Configure the workspace's `azure_core` dependency
-with `default-features = false` and a revision or version supporting
-`unstable_resource_manager`, including the polling helper and cloud extension
-trait. Generated Resource Manager crates enable that feature and forward their
-default transport feature to core. No local SDK paths are generated.
+and workspace dependencies. Use a version of `azure_core` that supports
+`unstable_resource_manager`; generated Resource Manager crates enable this
+feature.
 
-Generated clients use Public cloud when cloud configuration is omitted. Start
+Clients use Azure Public cloud when cloud configuration is omitted. Start
 with the [default-cloud construction example][default-cloud], which uses
 `DeveloperToolsCredential` and the signed-in developer tool's configuration.
 
@@ -37,15 +35,10 @@ It passes the same configuration to `ClientSecretCredential` and the service
 client. Configure the identity authority, management endpoint, and authentication
 audience separately; the endpoint and audience need not be the same URL. Register
 the audience with `azure_core::cloud::resource_manager::Audience`, shared across
-Resource Manager crates. Missing endpoints, missing audiences, and invalid URLs
-produce errors. Credential secrets are read from the environment, not embedded
-in generated examples. Both examples are compiled against a generated ARM client.
+Resource Manager crates.
 
-Long-running methods return the existing `Poller<OperationStatus>`. Their initial
-request is lazy: await the poller for its final response, or stream monitor
-responses before awaiting that same poller. Streamed responses preserve the
-service's status, headers, and body; resource and empty responses are not
-synthesized operation-status documents. Polling behavior is delegated to core.
+Await a long-running operation's poller for its final response, or stream its
+polling responses before awaiting the result.
 
 [default-cloud]: test/other/resource_manager/examples/default_cloud.rs
 [custom-cloud]: test/other/resource_manager/examples/custom_cloud.rs
