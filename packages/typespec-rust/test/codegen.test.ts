@@ -55,6 +55,7 @@ describe('typespec-rust: codegen', () => {
         'license.workspace = true\n' +
         'repository.workspace = true\n' +
         'rust-version.workspace = true\n' +
+        'exclude.workspace = true\n' +
         '\n' +
         '[features]\n' +
         'default = ["azure_core/default"]\n';
@@ -73,12 +74,13 @@ describe('typespec-rust: codegen', () => {
         'license.workspace = true\n' +
         'repository.workspace = true\n' +
         'rust-version.workspace = true\n' +
+        'exclude.workspace = true\n' +
         '\n' +
         '[features]\n' +
         'default = ["azure_core/default"]\n' +
         '\n' +
         '[dependencies]\n' +
-        'azure_core = { workspace = true }\n';
+        'azure_core = { workspace = true, default-features = false }\n';
 
       const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
       crate.dependencies.push(new rust.CrateDependency('azure_core'));
@@ -275,6 +277,44 @@ describe('typespec-rust: codegen', () => {
     strictEqual(clientContent.includes('struct WidgetClientListWidgetsPage {'), true);
     strictEqual(clientContent.includes('#[serde(rename = "@nextLink")]'), true);
     strictEqual(clientContent.includes('let res: WidgetClientListWidgetsPage = json::from_json(&body)?;'), true);
+  });
+
+  describe('LRO output formats', () => {
+    for (const [crateType, hasResult, format] of [
+      ['azure-arm', false, 'NoFormat'],
+      ['data-plane', false, 'JsonFormat'],
+      ['azure-arm', true, 'JsonFormat'],
+    ] as const) {
+      it(`uses ${format} for ${crateType} ${hasResult ? 'resource' : 'empty'} results`, () => {
+        const crate = new rust.Crate('test_crate', '1.2.3', crateType);
+        const client = createClient(crate, 'WidgetClient');
+        const options = createMethodOptionsStruct(
+          crate,
+          'WidgetClientBeginCreateOptions',
+          new rust.PollerOptions(crate, new rust.Lifetime('a'))
+        );
+        const status = new rust.Model('CreateStatus', 'pub', rust.ModelFlags.Output, crate);
+        status.fields.push(new rust.ModelField('status', 'status', 'pub', new rust.Option(new rust.StringType()), true));
+        crate.models.push(status);
+        const poller = new rust.Poller(crate, new rust.Response(crate, status, 'JsonFormat'));
+        if (hasResult) {
+          const resource = new rust.Model('Widget', 'pub', rust.ModelFlags.Output, crate);
+          crate.models.push(resource);
+          poller.resultType = new rust.Response(crate, resource, 'JsonFormat');
+        }
+        const method = new rust.LroMethod(
+          'begin_create', 'WidgetClient.beginCreate', client, 'pub', options, 'post', '/widgets',
+          new rust.LroFinalResultStrategyOriginalUri()
+        );
+        method.returns = new rust.Result(crate, poller);
+        method.statusCodes = [];
+        client.methods.push(method);
+
+        const implementations = new CodeGenerator(crate).emitContent().find(file => file.name.endsWith('models/models_impl.rs'))?.content;
+        strictEqual(implementations?.includes(`type Format = ${format};`), true);
+        strictEqual(implementations?.includes(`type Output = ${hasResult ? 'Widget' : '()'};`), true);
+      });
+    }
   });
 
   it('pollers still deserialize the full status model when status is present', () => {

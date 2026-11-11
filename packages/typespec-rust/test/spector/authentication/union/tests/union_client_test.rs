@@ -5,7 +5,7 @@
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_unionauth::{KeyCredential, UnionClient};
+use spector_unionauth::{KeyCredential, UnionClient, UnionClientOptions};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -51,7 +51,12 @@ async fn valid_token() {
         Arc::new(FakeTokenCredential::new(
             "https://security.microsoft.com/.default".to_string(),
         )),
-        None,
+        Some(UnionClientOptions {
+            client_options: azure_core::http::ClientOptions {
+                allow_insecure_connections: true,
+                ..Default::default()
+            },
+        }),
     )
     .unwrap();
     client.valid_token(None).await.unwrap();

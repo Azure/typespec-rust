@@ -8,6 +8,7 @@ members = [
     "other/lro",
     "other/misc_tests",
     "other/pub_crate",
+    "other/resource_manager",
     "other/serde_tests",
     #"sdk/appconfiguration",
     "sdk/blob_storage",
@@ -121,13 +122,16 @@ edition = "2021"
 license = "MIT"
 repository = "https://github.com/azure/typespec-rust"
 rust-version = "1.88"
+exclude = ["api.md", "TODO.md"]
 
 [workspace.dependencies]
 # Third-party dependencies should be kept up to date with https://github.com/Azure/azure-sdk-for-rust/blob/main/Cargo.lock
 async-trait = "0.1.89"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "378c2ed4d341c53bdb03897f9932fc423a5e1b64", features = [
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "02db90bf72e046b27a6ee01f3040bda2d5791c07", default-features = false, features = [
     "decimal",
     "reqwest",
+    "test",
+    "unstable_resource_manager",
 ] }
 bytes = "1.11.1"
 futures = "0.3.31"

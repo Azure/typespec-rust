@@ -192,6 +192,8 @@ generate('colliding_locals', colliding_locals, 'test/other/colliding_locals');
 const lro = pkgRoot + 'test/tsp/lro';
 generate('lro', lro, 'test/other/lro');
 
+generate('azure_resourcemanager_test', pkgRoot + 'test/tsp/ResourceManager', 'test/other/resource_manager', ['api-version=2026-05-15']);
+
 const misc_tests = pkgRoot + 'test/tsp/MiscTests';
 generate('misc_tests', misc_tests, 'test/other/misc_tests', ['crate-version=0.2.0']);
 

@@ -8,5 +8,3 @@ pub mod clients;
 /// Contains all the data structures and types used by the client library.
 pub mod models;
 pub use clients::{ResourcesClient, ResourcesClientOptions};
-/// Marker type for Azure Resource Manager audience configuration.
-pub struct Audience;

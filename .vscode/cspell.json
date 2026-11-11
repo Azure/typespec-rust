@@ -54,6 +54,7 @@
         "reinjected",
         "reinjection",
         "reqwest",
+        "resourcemanager",
         "safeint",
         "serde",
         "spector",

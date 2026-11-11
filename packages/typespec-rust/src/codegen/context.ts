@@ -277,11 +277,12 @@ export class Context {
       return undefined;
     }
 
-    const formatType: rust.ModelPayloadFormatType = this.getModelBodyFormat(model) === 'json' ? 'JsonFormat' : 'XmlFormat';
+    const resultType = this.lroResultTypes.get(model);
+    const formatType = resultType === undefined && helpers.getCrate(model.module).type === 'azure-arm' ? 'NoFormat'
+      : this.getModelBodyFormat(model) === 'json' ? 'JsonFormat' : 'XmlFormat';
     use.add('azure_core::http', formatType);
 
     use.addForType(model);
-    const resultType = this.lroResultTypes.get(model);
     if (resultType !== undefined) {
       use.addForType(resultType);
     }

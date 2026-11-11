@@ -1804,6 +1804,16 @@ export class Adapter {
     tokenCredParam.docs.summary = `An implementation of [\`TokenCredential\`](azure_core::credentials::TokenCredential) that can provide an Entra ID token to use when authenticating.`;
     ctorTokenCredential.params.push(tokenCredParam);
     ctorTokenCredential.docs.summary = `Creates a new ${rustClient.name}, using Entra ID authentication.`;
+    if (this.crate.type === 'azure-arm') {
+      ctorTokenCredential.docs.description = 'Public cloud is used when no cloud configuration is supplied. For a custom cloud,\n'
+        + 'set [`CustomConfiguration::endpoint`](azure_core::cloud::CustomConfiguration::endpoint)\n'
+        + 'and register its authentication audience using the shared\n'
+        + '[`Audience`](azure_core::cloud::resource_manager::Audience) marker.\n'
+        + "Configure the credential's cloud separately to use its identity authority.\n\n"
+        + '# Errors\n\n'
+        + 'Returns an error if a custom cloud has no endpoint or Resource Manager audience,\n'
+        + 'or if its endpoint URL is invalid.';
+    }
     return ctorTokenCredential;
   }
 
@@ -2004,6 +2014,9 @@ export class Adapter {
           lroFinalResultStrategy.propertyName = method.lroMetadata.finalResultPath;
         }
         rustMethod = new rust.LroMethod( methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path, lroFinalResultStrategy);
+        if (this.crate.type === 'azure-arm') {
+          rustMethod.resourceManagerFinalState = this.adaptResourceManagerFinalState(method);
+        }
       }
         break;
       default:
@@ -2473,6 +2486,46 @@ export class Adapter {
         }
       }
     }
+  }
+
+  /**
+   * Adapts an explicit final-response selector or inline result extraction for an ARM LRO.
+   * Without either, the Resource Manager runtime selects the final response.
+   *
+   * @param method the LRO method to adapt
+   * @returns the selector and serialized result path, or undefined for runtime defaults
+   */
+  private adaptResourceManagerFinalState(method: tcgc.SdkLroServiceMethod<tcgc.SdkHttpOperation>): rust.ResourceManagerFinalState | undefined {
+    const metadata = method.lroMetadata;
+    const selectors = new Map<string, rust.ResourceManagerFinalState['selector']>([
+      [FinalStateValue.azureAsyncOperation, 'AzureAsyncOperation'],
+      [FinalStateValue.location, 'Location'],
+      [FinalStateValue.originalUri, 'OriginalUrl'],
+      [FinalStateValue.operationLocation, 'OperationLocation'],
+    ]);
+    if (!selectors.has(metadata.finalStateVia)) {
+      throw new AdapterError('UnsupportedTsp', `unsupported Resource Manager final-state selector ${metadata.finalStateVia}`);
+    }
+    const explicit = method.decorators.find(decorator => decorator.name === 'Azure.Core.@useFinalStateVia');
+    const explicitFinalState: unknown = explicit?.arguments.finalState;
+    if (explicitFinalState !== undefined && typeof explicitFinalState !== 'string') {
+      throw new AdapterError('UnsupportedTsp', 'Resource Manager final-state selector must be a string');
+    }
+    // Inline results need an extraction callback even without an explicit selector.
+    const finalState = explicitFinalState
+      ?? (metadata.finalStep?.kind === 'pollingSuccessProperty' ? metadata.finalStateVia : undefined);
+    if (finalState === undefined) {
+      return undefined;
+    }
+    const selector = selectors.get(finalState);
+    if (!selector) {
+      throw new AdapterError('UnsupportedTsp', `unsupported Resource Manager final-state selector ${finalState}`);
+    }
+    return {
+      selector,
+      resultPath: selector === 'OperationLocation'
+        ? metadata.finalResponse?.resultSegments?.map(segment => this.getSerializedPropertyName(segment) ?? segment.name) ?? [] : [],
+    };
   }
 
   /**

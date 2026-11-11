@@ -2,9 +2,19 @@
 
 ## 0.41.6 (Unreleased)
 
+### Features Added
+
+- Added Resource Manager cloud configuration and long-running operation support
+  using the shared Azure Core helpers.
+
 ### Bugs Fixed
 
 - Fixed deserialization of non-optional fields in input and output models.
+
+### Other Changes
+
+- Documented default HTTP transport feature forwarding and dependency settings
+  for generated crates.
 
 ## 0.41.5 (2026-07-14)
 

@@ -62,10 +62,10 @@ impl CollidingLocalsClient {
                 format!("{bogus_url} must use http(s)"),
             ));
         }
-        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(
-            credential,
-            vec!["https://contoso.com/.default"],
-        ));
+        let auth_policy: Arc<dyn Policy> = Arc::new(
+            BearerTokenAuthorizationPolicy::new(credential, vec!["https://contoso.com/.default"])
+                .with_options((&options.client_options).into()),
+        );
         Ok(Self {
             bogus_url,
             pipeline: Pipeline::new(

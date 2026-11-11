@@ -54,10 +54,13 @@ impl UnionClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenAuthorizationPolicy::new(
-            credential,
-            vec!["https://security.microsoft.com/.default"],
-        ));
+        let auth_policy: Arc<dyn Policy> = Arc::new(
+            BearerTokenAuthorizationPolicy::new(
+                credential,
+                vec!["https://security.microsoft.com/.default"],
+            )
+            .with_options((&options.client_options).into()),
+        );
         Ok(Self {
             endpoint,
             pipeline: Pipeline::new(

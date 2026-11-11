@@ -1,0 +1,24 @@
+[package]
+name = "azure_resourcemanager_test"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+exclude.workspace = true
+
+[features]
+default = ["azure_core/default"]
+
+[dependencies]
+azure_core = { workspace = true, default-features = false, features = ["unstable_resource_manager"] }
+serde = { workspace = true }
+serde_json = { workspace = true, features = ["raw_value"] }
+
+[dev-dependencies]
+async-trait.workspace = true
+azure_identity = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "02db90bf72e046b27a6ee01f3040bda2d5791c07", default-features = false }
+futures.workspace = true
+spector_armresources = { path = "../../spector/azure/resource-manager/resources" } # cspell:ignore armresources
+tokio.workspace = true

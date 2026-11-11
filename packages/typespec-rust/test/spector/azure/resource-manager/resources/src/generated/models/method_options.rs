@@ -5,7 +5,7 @@
 
 use azure_core::{
     fmt::SafeDebug,
-    http::{pager::PagerOptions, poller::PollerOptions, ClientMethodOptions},
+    http::{pager::PagerOptions, poller::resource_manager::PollerOptions, ClientMethodOptions},
 };
 
 /// Options to be passed to [`ResourcesExtensionsResourcesClient::begin_create_or_update()`](crate::generated::clients::ResourcesExtensionsResourcesClient::begin_create_or_update())

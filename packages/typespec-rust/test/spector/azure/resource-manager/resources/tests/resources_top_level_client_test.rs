@@ -5,10 +5,7 @@
 mod common;
 
 use azure_core::{
-    http::{
-        poller::{PollerOptions, PollerStatus, StatusMonitor},
-        RequestContent, StatusCode,
-    },
+    http::{poller::resource_manager::PollerOptions, RequestContent, StatusCode},
     time::{Duration, OffsetDateTime},
 };
 use futures::StreamExt;
@@ -362,12 +359,11 @@ async fn create_or_replace() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
+        let resource: serde_json::Value = azure_core::json::from_json(response.body()).unwrap();
+        assert_eq!(resource["properties"]["provisioningState"], "Succeeded");
         match poll_count {
             1 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
             }
             _ => {
                 panic!("unexpected poll count");
@@ -453,12 +449,15 @@ async fn delete() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
+        if http_status == StatusCode::NoContent {
+            assert!(response.body().is_empty());
+        } else {
+            let resource: serde_json::Value = azure_core::json::from_json(response.body()).unwrap();
+            assert_eq!(resource["properties"]["provisioningState"], "Succeeded");
+        }
         match poll_count {
             1 => {
                 assert_eq!(http_status, StatusCode::NoContent);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
             }
             _ => {
                 panic!("unexpected poll count");
@@ -498,12 +497,15 @@ async fn update() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_model().unwrap();
-        let poller_status = status_monitor.status();
+        if http_status == StatusCode::NoContent {
+            assert!(response.body().is_empty());
+        } else {
+            let resource: serde_json::Value = azure_core::json::from_json(response.body()).unwrap();
+            assert_eq!(resource["properties"]["provisioningState"], "Succeeded");
+        }
         match poll_count {
             1 => {
                 assert_eq!(http_status, StatusCode::Ok);
-                assert_eq!(poller_status, PollerStatus::Succeeded);
             }
             _ => {
                 panic!("unexpected poll count");

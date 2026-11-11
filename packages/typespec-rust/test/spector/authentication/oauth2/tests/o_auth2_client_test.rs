@@ -5,7 +5,7 @@
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_oauth2::OAuth2Client;
+use spector_oauth2::{OAuth2Client, OAuth2ClientOptions};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -38,7 +38,12 @@ async fn invalid() {
     let client = OAuth2Client::new(
         "http://localhost:3000",
         Arc::new(FakeTokenCredential::new("invalid_token".to_string())),
-        None,
+        Some(OAuth2ClientOptions {
+            client_options: azure_core::http::ClientOptions {
+                allow_insecure_connections: true,
+                ..Default::default()
+            },
+        }),
     )
     .unwrap();
     let resp = client.invalid(None).await;
@@ -52,7 +57,12 @@ async fn valid() {
         Arc::new(FakeTokenCredential::new(
             "https://security.microsoft.com/.default".to_string(),
         )),
-        None,
+        Some(OAuth2ClientOptions {
+            client_options: azure_core::http::ClientOptions {
+                allow_insecure_connections: true,
+                ..Default::default()
+            },
+        }),
     )
     .unwrap();
     client.valid(None).await.unwrap();
