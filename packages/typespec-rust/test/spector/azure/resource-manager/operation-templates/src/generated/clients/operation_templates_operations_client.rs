@@ -39,6 +39,15 @@ impl OperationTemplatesOperationsClient {
         options: Option<OperationTemplatesOperationsClientListOptions<'_>>,
     ) -> Result<Pager<OperationListResult>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_operations_client_list(
+                &mut options.method_options.context,
+                (self.api_version).clone(),
+            );
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/providers/Azure.ResourceManager.OperationTemplates/operations");

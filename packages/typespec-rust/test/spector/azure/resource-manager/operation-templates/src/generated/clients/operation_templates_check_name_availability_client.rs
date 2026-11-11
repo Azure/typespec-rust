@@ -43,6 +43,12 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         options: Option<OperationTemplatesCheckNameAvailabilityClientCheckGlobalOptions<'_>>,
     ) -> Result<Response<CheckNameAvailabilityResponse>> {
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_check_name_availability_client_check_global(&mut options.method_options.context, (self.api_version).clone(), (self.subscription_id).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/checkNameAvailability");
@@ -94,6 +100,12 @@ impl OperationTemplatesCheckNameAvailabilityClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_check_name_availability_client_check_local(&mut options.method_options.context, (*(location)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/locations/{location}/checkNameAvailability");

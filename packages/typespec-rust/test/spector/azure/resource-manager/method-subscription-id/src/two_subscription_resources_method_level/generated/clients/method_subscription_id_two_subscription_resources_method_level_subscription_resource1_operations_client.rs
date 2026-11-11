@@ -59,6 +59,12 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_delete(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned(), (self.api_version).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource1s/{subscriptionResource1Name}");
@@ -112,6 +118,12 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_get(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned(), (self.api_version).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource1s/{subscriptionResource1Name}");
@@ -168,6 +180,12 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_put(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned(), (self.api_version).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource1s/{subscriptionResource1Name}");

@@ -81,6 +81,19 @@ impl OperationTemplatesLroClient {
         options: Option<OperationTemplatesLroClientBeginCreateOrReplaceOptions<'_>>,
     ) -> Result<Poller<OperationTemplatesLroClientBeginCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_lro_client_begin_create_or_replace(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(order_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
         path = path.replace("{orderName}", order_name);
@@ -144,6 +157,19 @@ impl OperationTemplatesLroClient {
         options: Option<OperationTemplatesLroClientBeginDeleteOptions<'_>>,
     ) -> Result<Poller<OperationTemplatesLroClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_lro_client_begin_delete(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(order_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
         path = path.replace("{orderName}", order_name);
@@ -209,6 +235,19 @@ impl OperationTemplatesLroClient {
         options: Option<OperationTemplatesLroClientBeginExportOptions<'_>>,
     ) -> Result<Poller<OperationTemplatesLroClientBeginExportOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_lro_client_begin_export(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(order_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}/export");
         path = path.replace("{orderName}", order_name);
@@ -273,6 +312,17 @@ impl OperationTemplatesLroClient {
         options: Option<OperationTemplatesLroClientBeginExportArrayOptions<'_>>,
     ) -> Result<Poller<OperationTemplatesLroClientBeginExportArrayOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_lro_client_begin_export_array(
+                &mut options.method_options.context,
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/exportArray");
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -330,6 +380,18 @@ impl OperationTemplatesLroClient {
         options: Option<OperationTemplatesLroClientBeginGetLroOptions<'_>>,
     ) -> Result<Poller<OperationTemplatesLroClientBeginGetLroOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_lro_client_begin_get_lro(
+                &mut options.method_options.context,
+                (*(scope)).to_owned(),
+                (*(operation_id)).to_owned(),
+                (self.api_version).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from(
             "/{scope}/providers/Azure.ResourceManager.OperationTemplates/costReports/{operationId}",

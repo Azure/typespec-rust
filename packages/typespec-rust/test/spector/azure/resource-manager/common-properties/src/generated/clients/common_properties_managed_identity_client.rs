@@ -60,6 +60,12 @@ impl CommonPropertiesManagedIdentityClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_common_properties_managed_identity_client_create_with_system_assigned(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_identity_tracked_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
@@ -120,6 +126,18 @@ impl CommonPropertiesManagedIdentityClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_common_properties_managed_identity_client_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(managed_identity_tracked_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
@@ -182,6 +200,12 @@ impl CommonPropertiesManagedIdentityClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_common_properties_managed_identity_client_update_with_user_assigned_and_system_assigned(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_identity_tracked_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");

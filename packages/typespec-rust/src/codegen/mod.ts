@@ -5,6 +5,7 @@
 
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
+import { fakeGate } from './fakes.js';
 
 /**
  * emits the contents of the clients/mod.rs file
@@ -12,8 +13,12 @@ import * as rust from '../codemodel/index.js';
  * @param modules the modules to include
  * @returns the contents of the mod.rs file
  */
-export function emitClientsModRs(modules: Array<string>): string {
+export function emitClientsModRs(modules: Array<string>, generateFakes: boolean): string {
   const body = new Array<string>();
+  if (generateFakes) {
+    body.push('/// Fake service implementations for testing.');
+    body.push(`${fakeGate}\npub mod fake;`);
+  }
 
   // first add the modules for each client
   for (const module of modules) {
@@ -26,6 +31,12 @@ export function emitClientsModRs(modules: Array<string>): string {
   }
 
   return helpers.contentPreamble() + body.join('\n');
+}
+
+/** Emits fake server modules and their public traits. */
+export function emitFakesModRs(modules: Array<string>): string {
+  return helpers.contentPreamble()
+    + modules.map(module => `pub(crate) mod ${module};\npub use ${module}::*;`).join('\n') + '\n';
 }
 
 /**

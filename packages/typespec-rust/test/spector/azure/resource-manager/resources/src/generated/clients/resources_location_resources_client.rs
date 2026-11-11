@@ -63,6 +63,18 @@ impl ResourcesLocationResourcesClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_location_resources_client_create_or_update(
+                &mut options.method_options.context,
+                (*(location)).to_owned(),
+                (*(location_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
@@ -120,6 +132,18 @@ impl ResourcesLocationResourcesClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_location_resources_client_delete(
+                &mut options.method_options.context,
+                (*(location)).to_owned(),
+                (*(location_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
@@ -174,6 +198,18 @@ impl ResourcesLocationResourcesClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_location_resources_client_get(
+                &mut options.method_options.context,
+                (*(location)).to_owned(),
+                (*(location_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
@@ -221,6 +257,17 @@ impl ResourcesLocationResourcesClient {
             ));
         }
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_location_resources_client_list_by_location(
+                &mut options.method_options.context,
+                (*(location)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources");
@@ -316,6 +363,18 @@ impl ResourcesLocationResourcesClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_location_resources_client_update(
+                &mut options.method_options.context,
+                (*(location)).to_owned(),
+                (*(location_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");

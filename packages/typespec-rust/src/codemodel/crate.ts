@@ -22,6 +22,9 @@ export interface Crate extends ModuleBase {
   /** the target service type */
   type: ServiceType;
 
+  /** Whether to generate fake servers */
+  generateFakes: boolean;
+
   /** the Crates on which this Crate depends */
   dependencies: Array<CrateDependency>;
 
@@ -107,6 +110,7 @@ export class Crate extends ModuleBase implements Crate {
     this.name = name;
     this.version = version;
     this.type = type;
+    this.generateFakes = false;
     this.dependencies = new Array<CrateDependency>();
     this.subModules = new Array<SubModule>();
   }

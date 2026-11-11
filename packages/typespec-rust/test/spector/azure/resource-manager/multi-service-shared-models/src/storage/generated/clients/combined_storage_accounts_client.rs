@@ -77,6 +77,12 @@ impl CombinedStorageAccountsClient {
         options: Option<CombinedStorageAccountsClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<Poller<CombinedStorageAccountsClientBeginCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::storage::clients::fake::capture_combined_storage_accounts_client_begin_create_or_update(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(account_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone(), options.method_options.frequency);
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{accountName}");
         path = path.replace("{accountName}", account_name);
@@ -127,6 +133,18 @@ impl CombinedStorageAccountsClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::storage::clients::fake::capture_combined_storage_accounts_client_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(account_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{accountName}");

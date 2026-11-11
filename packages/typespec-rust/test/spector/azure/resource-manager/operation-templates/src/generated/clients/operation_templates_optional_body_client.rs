@@ -56,6 +56,18 @@ impl OperationTemplatesOptionalBodyClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_optional_body_client_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(widget_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
@@ -111,6 +123,18 @@ impl OperationTemplatesOptionalBodyClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_optional_body_client_patch(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(widget_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
@@ -170,6 +194,18 @@ impl OperationTemplatesOptionalBodyClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_optional_body_client_post(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(widget_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}/post");
@@ -212,6 +248,16 @@ impl OperationTemplatesOptionalBodyClient {
         options: Option<OperationTemplatesOptionalBodyClientProviderPostOptions<'_>>,
     ) -> Result<Response<ChangeAllowanceResult>> {
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_optional_body_client_provider_post(
+                &mut options.method_options.context,
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/providerPost");

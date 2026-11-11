@@ -21,6 +21,10 @@ export function emitCargoToml(crate: rust.Crate): string {
   content += 'exclude.workspace = true\n\n';
   content += '[features]\n';
   content += 'default = ["azure_core/default"]\n';
+  if (crate.generateFakes) {
+    content += 'test = ["azure_core/test"]\n';
+    content += 'unstable_fake = ["test", "azure_core/unstable_fake"]\n';
+  }
   if (crate.dependencies.length > 0) {
     content += '\n[dependencies]\n';
     for (const dependency of crate.dependencies) {

@@ -57,6 +57,12 @@ impl OperationTemplatesLegacyClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_legacy_client_create_or_replace_optional_body(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(configuration_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/configurations/{configurationName}");
@@ -121,6 +127,19 @@ impl OperationTemplatesLegacyClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_legacy_client_routed_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(name)).to_owned(),
+                (*(diagnostic_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/configurations/{name}/diagnostics/{diagnosticName}");

@@ -9,8 +9,18 @@ rust-version.workspace = true
 
 [features]
 default = ["azure_core/default"]
+test = ["azure_core/test"]
+unstable_fake = ["test", "azure_core/unstable_fake"]
 
 [dependencies]
 async-trait = { workspace = true }
 azure_core = { workspace = true }
 serde = { workspace = true }
+
+[dev-dependencies]
+futures.workspace = true
+tokio.workspace = true
+
+[[example]]
+name = "secret_client_fake"
+required-features = ["test", "unstable_fake"]

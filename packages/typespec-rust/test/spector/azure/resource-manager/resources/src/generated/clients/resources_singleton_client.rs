@@ -77,6 +77,18 @@ impl ResourcesSingletonClient {
         options: Option<ResourcesSingletonClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<Poller<ResourcesSingletonClientBeginCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_singleton_client_begin_create_or_update(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/singletonTrackedResources/default");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -116,6 +128,17 @@ impl ResourcesSingletonClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_singleton_client_get_by_resource_group(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/singletonTrackedResources/default");
@@ -162,6 +185,17 @@ impl ResourcesSingletonClient {
             ));
         }
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_singleton_client_list_by_resource_group(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/singletonTrackedResources");
@@ -249,6 +283,17 @@ impl ResourcesSingletonClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_singleton_client_update(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/singletonTrackedResources/default");

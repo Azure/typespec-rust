@@ -80,6 +80,12 @@ impl ResourceManagerManagedHsmsClient {
         options: Option<ResourceManagerManagedHsmsClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<Poller<ResourceManagerManagedHsmsClientBeginCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_managed_hsms_client_begin_create_or_update(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_hsm_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone(), options.method_options.frequency);
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/managedHsms/{managedHsmName}");
         path = path.replace("{managedHsmName}", managed_hsm_name);
@@ -143,6 +149,19 @@ impl ResourceManagerManagedHsmsClient {
         options: Option<ResourceManagerManagedHsmsClientBeginDeleteOptions<'_>>,
     ) -> Result<Poller<ResourceManagerManagedHsmsClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_managed_hsms_client_begin_delete(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(managed_hsm_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/managedHsms/{managedHsmName}");
         path = path.replace("{managedHsmName}", managed_hsm_name);
@@ -201,6 +220,18 @@ impl ResourceManagerManagedHsmsClient {
         options: Option<ResourceManagerManagedHsmsClientBeginPurgeOptions<'_>>,
     ) -> Result<Poller<ResourceManagerManagedHsmsClientBeginPurgeOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_managed_hsms_client_begin_purge(
+                &mut options.method_options.context,
+                (*(managed_hsm_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/purge/subscriptions/{subscriptionId}/providers/ResourceManager/managedHsms/{managedHsmName}/purge");
         path = path.replace("{managedHsmName}", managed_hsm_name);
@@ -262,6 +293,19 @@ impl ResourceManagerManagedHsmsClient {
         options: Option<ResourceManagerManagedHsmsClientBeginUpdateOptions<'_>>,
     ) -> Result<Poller<ResourceManagerManagedHsmsClientBeginUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_managed_hsms_client_begin_update(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(managed_hsm_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/managedHsms/{managedHsmName}");
         path = path.replace("{managedHsmName}", managed_hsm_name);

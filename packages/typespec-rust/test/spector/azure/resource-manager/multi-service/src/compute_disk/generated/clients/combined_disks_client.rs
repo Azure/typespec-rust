@@ -74,6 +74,12 @@ impl CombinedDisksClient {
         options: Option<CombinedDisksClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<Poller<CombinedDisksClientBeginCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::compute_disk::clients::fake::capture_combined_disks_client_begin_create_or_update(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(disk_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone(), options.method_options.frequency);
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/disks/{diskName}");
         path = path.replace("{diskName}", disk_name);
@@ -122,6 +128,18 @@ impl CombinedDisksClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::compute_disk::clients::fake::capture_combined_disks_client_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(disk_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/disks/{diskName}");

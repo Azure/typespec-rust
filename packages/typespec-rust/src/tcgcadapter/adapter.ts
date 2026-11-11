@@ -132,6 +132,7 @@ export class Adapter {
     }
 
     this.crate = new rust.Crate(this.options['crate-name'], this.options['crate-version'] ?? '0.1.0', serviceType);
+    this.crate.generateFakes = this.options['generate-fakes'] === true;
   }
 
   /** performs all the steps to convert tcgc to a crate */

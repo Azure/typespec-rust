@@ -156,6 +156,19 @@ impl ResourceManagerClient {
         options: Option<ResourceManagerClientBeginAsyncResultOptions<'_>>,
     ) -> Result<Poller<ResourceManagerClientBeginAsyncResultOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_client_begin_async_result(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(vault_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/async/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/vaults/{vaultName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -210,6 +223,15 @@ impl ResourceManagerClient {
         options: Option<ResourceManagerClientBeginEmptyResultOptions<'_>>,
     ) -> Result<Poller<ResourceManagerClientBeginEmptyResultOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_client_begin_empty_result(
+                &mut options.method_options.context,
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         url.append_path("/empty");
         let request = Request::new(url, Method::Post);
@@ -254,6 +276,15 @@ impl ResourceManagerClient {
         options: Option<ResourceManagerClientBeginExplicitEmptyResultOptions<'_>>,
     ) -> Result<Poller<ResourceManagerClientBeginExplicitEmptyResultOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_client_begin_explicit_empty_result(
+                &mut options.method_options.context,
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         url.append_path("/explicit-empty");
         let request = Request::new(url, Method::Post);
@@ -299,6 +330,16 @@ impl ResourceManagerClient {
         options: Option<ResourceManagerClientBeginInlineResultOptions<'_>>,
     ) -> Result<Poller<ResourceManagerClientBeginInlineResultOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_client_begin_inline_result(
+                &mut options.method_options.context,
+                (self.api_version).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         url.append_path("/inline");
         let mut query_builder = url.query_builder();
@@ -359,6 +400,16 @@ impl ResourceManagerClient {
         options: Option<ResourceManagerClientBeginOriginalResultOptions<'_>>,
     ) -> Result<Poller<ResourceManagerClientBeginOriginalResultOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_client_begin_original_result(
+                &mut options.method_options.context,
+                (self.api_version).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         url.append_path("/original");
         let mut query_builder = url.query_builder();
@@ -408,6 +459,15 @@ impl ResourceManagerClient {
         options: Option<ResourceManagerClientBeginSpreadOptions<'_>>,
     ) -> Result<Poller<ResourceManagerClientBeginSpreadOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_client_begin_spread(
+                &mut options.method_options.context,
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         url.append_path("/spread");
         let mut request = Request::new(url, Method::Post);

@@ -11,8 +11,9 @@ import { emitUnions } from './unions.js';
 import { Module } from './helpers.js';
 import { emitLibRs } from './lib.js';
 import { emitHeaderTraits } from './headerTraits.js';
-import { emitClientsModRs, emitGeneratedModRs, emitModelsModRs, emitSubModRs } from './mod.js';
+import { emitClientsModRs, emitFakesModRs, emitGeneratedModRs, emitModelsModRs, emitSubModRs } from './mod.js';
 import { emitModels } from './models.js';
+import { emitFakes } from './fakes.js';
 
 import * as rust from '../codemodel/index.js';
 
@@ -86,7 +87,12 @@ export class CodeGenerator {
       const clientModules = emitClients(module);
       if (clientModules) {
         files.push(...clientModules.modules.map((module) => { return { name: `${dir}${clientsSubDir}/${module.name}.rs`, content: module.content }; }));
-        files.push({ name: `${dir}${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name)) });
+        files.push({ name: `${dir}${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name), this.crate.generateFakes) });
+        if (this.crate.generateFakes) {
+          const fakes = emitFakes(module);
+          files.push(...fakes.map(fake => ({ name: `${dir}${clientsSubDir}/fake/${fake.name}.rs`, content: fake.content })));
+          files.push({ name: `${dir}${clientsSubDir}/fake/mod.rs`, content: emitFakesModRs(fakes.map(fake => fake.name)) });
+        }
         addModelsFile(dir, files, modelsModRS, clientModules.options);
       }
 

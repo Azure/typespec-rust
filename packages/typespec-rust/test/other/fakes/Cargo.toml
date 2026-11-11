@@ -1,0 +1,24 @@
+[package]
+name = "fake_tests"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+exclude.workspace = true
+
+[features]
+default = ["azure_core/default"]
+test = ["azure_core/test"]
+unstable_fake = ["test", "azure_core/unstable_fake"]
+
+[dependencies]
+async-trait = { workspace = true }
+azure_core = { workspace = true, default-features = false }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+futures.workspace = true
+tokio.workspace = true

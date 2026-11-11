@@ -56,6 +56,12 @@ impl CommonPropertiesErrorClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_common_properties_error_client_create_for_user_defined_error(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(confidential_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");
@@ -113,6 +119,18 @@ impl CommonPropertiesErrorClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_common_properties_error_client_get_for_predefined_error(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(confidential_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");

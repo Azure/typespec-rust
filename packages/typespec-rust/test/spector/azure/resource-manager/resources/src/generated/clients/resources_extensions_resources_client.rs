@@ -81,6 +81,12 @@ impl ResourcesExtensionsResourcesClient {
         options: Option<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<Poller<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_extensions_resources_client_begin_create_or_update(&mut options.method_options.context, (*(resource_uri)).to_owned(), (*(extensions_resource_name)).to_owned(), (self.api_version).clone(), options.method_options.frequency);
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
@@ -128,6 +134,17 @@ impl ResourcesExtensionsResourcesClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_extensions_resources_client_delete(
+                &mut options.method_options.context,
+                (*(resource_uri)).to_owned(),
+                (*(extensions_resource_name)).to_owned(),
+                (self.api_version).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
@@ -181,6 +198,17 @@ impl ResourcesExtensionsResourcesClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_extensions_resources_client_get(
+                &mut options.method_options.context,
+                (*(resource_uri)).to_owned(),
+                (*(extensions_resource_name)).to_owned(),
+                (self.api_version).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
@@ -227,6 +255,16 @@ impl ResourcesExtensionsResourcesClient {
             ));
         }
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_extensions_resources_client_list_by_scope(
+                &mut options.method_options.context,
+                (*(resource_uri)).to_owned(),
+                (self.api_version).clone(),
+            );
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from(
@@ -323,6 +361,17 @@ impl ResourcesExtensionsResourcesClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_extensions_resources_client_update(
+                &mut options.method_options.context,
+                (*(resource_uri)).to_owned(),
+                (*(extensions_resource_name)).to_owned(),
+                (self.api_version).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");

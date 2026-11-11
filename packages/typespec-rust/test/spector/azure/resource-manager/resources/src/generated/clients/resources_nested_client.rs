@@ -82,6 +82,20 @@ impl ResourcesNestedClient {
         options: Option<ResourcesNestedClientBeginCreateOrReplaceOptions<'_>>,
     ) -> Result<Poller<ResourcesNestedClientBeginCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_nested_client_begin_create_or_replace(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+                (*(nexted_proxy_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -151,6 +165,20 @@ impl ResourcesNestedClient {
         options: Option<ResourcesNestedClientBeginDeleteOptions<'_>>,
     ) -> Result<Poller<ResourcesNestedClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_nested_client_begin_delete(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+                (*(nexted_proxy_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -219,6 +247,20 @@ impl ResourcesNestedClient {
         options: Option<ResourcesNestedClientBeginUpdateOptions<'_>>,
     ) -> Result<Poller<ResourcesNestedClientBeginUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_nested_client_begin_update(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+                (*(nexted_proxy_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -279,6 +321,19 @@ impl ResourcesNestedClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_nested_client_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+                (*(nexted_proxy_resource_name)).to_owned(),
+                (self.api_version).clone(),
+                (self.subscription_id).clone(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
@@ -338,6 +393,12 @@ impl ResourcesNestedClient {
             ));
         }
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_nested_client_list_by_top_level_tracked_resource(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(top_level_tracked_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources");

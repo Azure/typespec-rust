@@ -7,6 +7,9 @@ mod common_properties_arm_resource_identifiers_client;
 mod common_properties_client;
 mod common_properties_error_client;
 mod common_properties_managed_identity_client;
+/// Fake service implementations for testing.
+#[cfg(all(feature = "test", feature = "unstable_fake"))]
+pub mod fake;
 pub use common_properties_arm_resource_identifiers_client::*;
 pub use common_properties_client::*;
 pub use common_properties_error_client::*;

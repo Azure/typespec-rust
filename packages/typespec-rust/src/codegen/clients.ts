@@ -12,6 +12,7 @@ import queryString from 'query-string';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 import * as utils from '../utils/utils.js';
+import { emitFakeCapture } from './fakes.js';
 
 /** the client modules */
 export interface ClientModules {
@@ -1390,6 +1391,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   const paramGroups = getMethodParamGroup(method);
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let ctx = options.method_options.context.to_borrowed();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVarName} = self.${client.endpoint.name}.clone();\n`;
 
@@ -1557,6 +1559,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
@@ -1786,6 +1789,7 @@ function getResourceManagerLroMethodBody(crate: rust.Crate, indent: helpers.inde
   const params = getMethodParamGroup(method);
   const url = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let ${urlVarNeedsMut(params, method)}${url} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, params, url);
   const request = constructRequest(indent, use, method, params, false, url, false,
@@ -1857,6 +1861,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
