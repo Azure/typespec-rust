@@ -63,8 +63,6 @@ impl OperationTemplatesOptionalBodyClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(widget_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -130,8 +128,7 @@ impl OperationTemplatesOptionalBodyClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(widget_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
+                options.properties.is_some(),
             );
             options
         };
@@ -201,8 +198,7 @@ impl OperationTemplatesOptionalBodyClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(widget_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
+                options.body.is_some(),
             );
             options
         };
@@ -253,8 +249,7 @@ impl OperationTemplatesOptionalBodyClient {
             let mut options = options;
             crate::clients::fake::capture_operation_templates_optional_body_client_provider_post(
                 &mut options.method_options.context,
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
+                options.body.is_some(),
             );
             options
         };

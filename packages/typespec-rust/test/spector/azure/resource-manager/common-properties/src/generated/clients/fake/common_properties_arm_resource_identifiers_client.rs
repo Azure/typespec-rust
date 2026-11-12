@@ -19,45 +19,33 @@ use azure_core::{
 struct CommonPropertiesArmResourceIdentifiersClientCreateOrReplaceArguments {
     resource_group_name: String,
     arm_resource_identifier_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_arm_resource_identifiers_client_create_or_replace(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     arm_resource_identifier_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(
         CommonPropertiesArmResourceIdentifiersClientCreateOrReplaceArguments {
             resource_group_name,
             arm_resource_identifier_resource_name,
-            api_version,
-            subscription_id,
         },
     );
 }
 struct CommonPropertiesArmResourceIdentifiersClientGetArguments {
     resource_group_name: String,
     arm_resource_identifier_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_arm_resource_identifiers_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     arm_resource_identifier_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(CommonPropertiesArmResourceIdentifiersClientGetArguments {
         resource_group_name,
         arm_resource_identifier_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`CommonPropertiesArmResourceIdentifiersClient`](crate::clients::CommonPropertiesArmResourceIdentifiersClient).
@@ -72,13 +60,17 @@ pub trait CommonPropertiesArmResourceIdentifiersServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn create_or_replace(
         &self,
-        _resource_group_name: &str,
-        _arm_resource_identifier_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ArmResourceIdentifierResource>,
-        _options: Option<CommonPropertiesArmResourceIdentifiersClientCreateOrReplaceOptions<'_>>,
+        resource_group_name: &str,
+        arm_resource_identifier_resource_name: &str,
+        resource: RequestContent<ArmResourceIdentifierResource>,
+        options: Option<CommonPropertiesArmResourceIdentifiersClientCreateOrReplaceOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            arm_resource_identifier_resource_name,
+            resource,
+            options,
+        );
         unimplemented!(
             "CommonPropertiesArmResourceIdentifiersServer::create_or_replace is not implemented"
         )
@@ -87,12 +79,15 @@ pub trait CommonPropertiesArmResourceIdentifiersServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_group_name: &str,
-        _arm_resource_identifier_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<CommonPropertiesArmResourceIdentifiersClientGetOptions<'_>>,
+        resource_group_name: &str,
+        arm_resource_identifier_resource_name: &str,
+        options: Option<CommonPropertiesArmResourceIdentifiersClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            arm_resource_identifier_resource_name,
+            options,
+        );
         unimplemented!("CommonPropertiesArmResourceIdentifiersServer::get is not implemented")
     }
 }
@@ -113,14 +108,11 @@ pub(crate) async fn dispatch_create_or_replace<
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ArmResourceIdentifierResource> = request.body().clone().into();
     CommonPropertiesArmResourceIdentifiersServer::create_or_replace(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.arm_resource_identifier_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(
             CommonPropertiesArmResourceIdentifiersClientCreateOrReplaceOptions {
                 method_options: ClientMethodOptions {
@@ -150,8 +142,6 @@ pub(crate) async fn dispatch_get<T: CommonPropertiesArmResourceIdentifiersServer
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.arm_resource_identifier_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(CommonPropertiesArmResourceIdentifiersClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

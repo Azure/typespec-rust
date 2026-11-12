@@ -7,8 +7,9 @@ use crate::{
     generated::models::{Item, Mode},
     models::{
         FakesClientBeginStartOptions, FakesClientCollisionsOptions, FakesClientGetOptions,
-        FakesClientListOptions, FakesClientPutModelOptions, FakesClientPutOptions,
-        FakesClientSpreadOptions,
+        FakesClientGroupedOptions, FakesClientListOptionalOptions, FakesClientListOptions,
+        FakesClientPutModelOptions, FakesClientPutOptionalOptions, FakesClientPutOptions,
+        FakesClientSpreadOptions, GroupedInputs,
     },
     FakesClient, FakesClientOptions,
 };
@@ -83,6 +84,20 @@ pub(crate) fn capture_fakes_client_get(
         mode,
     });
 }
+struct FakesClientGroupedArguments {
+    count: Option<i32>,
+    name: String,
+    label: String,
+}
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn capture_fakes_client_grouped(
+    context: &mut azure_core::http::Context<'_>,
+    count: Option<i32>,
+    name: String,
+    label: String,
+) {
+    context.insert(FakesClientGroupedArguments { count, name, label });
+}
 struct FakesClientListArguments {
     name: String,
     count: Option<i32>,
@@ -94,6 +109,31 @@ pub(crate) fn capture_fakes_client_list(
     count: Option<i32>,
 ) {
     context.insert(FakesClientListArguments { name, count });
+}
+struct FakesClientListOptionalArguments {
+    state: Option<String>,
+    body_present: bool,
+}
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn capture_fakes_client_list_optional(
+    context: &mut azure_core::http::Context<'_>,
+    state: Option<String>,
+    body_present: bool,
+) {
+    context.insert(FakesClientListOptionalArguments {
+        state,
+        body_present,
+    });
+}
+struct FakesClientPutOptionalArguments {
+    body_present: bool,
+}
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn capture_fakes_client_put_optional(
+    context: &mut azure_core::http::Context<'_>,
+    body_present: bool,
+) {
+    context.insert(FakesClientPutOptionalArguments { body_present });
 }
 /// Fake server for [`FakesClient`](crate::clients::FakesClient).
 ///
@@ -108,69 +148,105 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
     #[allow(clippy::too_many_arguments)]
     async fn begin_start(
         &self,
-        _api_version: &str,
-        _content: Body,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<FakesClientBeginStartOptions<'_>>,
+        api_version: &str,
+        content: Body,
+        state: PollerState,
+        request: &Request,
+        options: Option<FakesClientBeginStartOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (api_version, content, options, state, request);
         unimplemented!("FakesServer::begin_start is not implemented")
     }
     /// Handles [`FakesClient::collisions()`](crate::clients::FakesClient::collisions).
     #[allow(clippy::too_many_arguments)]
     async fn collisions(
         &self,
-        _context: &str,
-        _frequency: i32,
-        _state: &str,
-        _options: Option<FakesClientCollisionsOptions<'_>>,
+        context: &str,
+        frequency: i32,
+        state: &str,
+        options: Option<FakesClientCollisionsOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (context, frequency, state, options);
         unimplemented!("FakesServer::collisions is not implemented")
     }
     /// Handles [`FakesClient::get()`](crate::clients::FakesClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _name: &str,
-        _options: Option<FakesClientGetOptions<'_>>,
+        name: &str,
+        options: Option<FakesClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (name, options);
         unimplemented!("FakesServer::get is not implemented")
+    }
+    /// Handles [`FakesClient::grouped()`](crate::clients::FakesClient::grouped).
+    #[allow(clippy::too_many_arguments)]
+    async fn grouped(
+        &self,
+        inputs: GroupedInputs<'_>,
+        options: Option<FakesClientGroupedOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let _ = (inputs, options);
+        unimplemented!("FakesServer::grouped is not implemented")
     }
     /// Handles [`FakesClient::list()`](crate::clients::FakesClient::list).
     #[allow(clippy::too_many_arguments)]
     async fn list(
         &self,
-        _name: &str,
-        _state: PagerState,
-        _options: Option<FakesClientListOptions<'_>>,
+        name: &str,
+        state: PagerState,
+        options: Option<FakesClientListOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (name, options, state);
         unimplemented!("FakesServer::list is not implemented")
+    }
+    /// Handles [`FakesClient::list_optional()`](crate::clients::FakesClient::list_optional).
+    #[allow(clippy::too_many_arguments)]
+    async fn list_optional(
+        &self,
+        state: PagerState,
+        options: Option<FakesClientListOptionalOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let _ = (options, state);
+        unimplemented!("FakesServer::list_optional is not implemented")
     }
     /// Handles [`FakesClient::put()`](crate::clients::FakesClient::put).
     #[allow(clippy::too_many_arguments)]
     async fn put(
         &self,
-        _content_0: RequestContent<Bytes, NoFormat>,
-        _options: Option<FakesClientPutOptions<'_>>,
+        content: RequestContent<Bytes, NoFormat>,
+        options: Option<FakesClientPutOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (content, options);
         unimplemented!("FakesServer::put is not implemented")
     }
     /// Handles [`FakesClient::put_model()`](crate::clients::FakesClient::put_model).
     #[allow(clippy::too_many_arguments)]
     async fn put_model(
         &self,
-        _content_0: RequestContent<Item>,
-        _options: Option<FakesClientPutModelOptions<'_>>,
+        content: RequestContent<Item>,
+        options: Option<FakesClientPutModelOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (content, options);
         unimplemented!("FakesServer::put_model is not implemented")
+    }
+    /// Handles [`FakesClient::put_optional()`](crate::clients::FakesClient::put_optional).
+    #[allow(clippy::too_many_arguments)]
+    async fn put_optional(
+        &self,
+        options: Option<FakesClientPutOptionalOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let _ = (options,);
+        unimplemented!("FakesServer::put_optional is not implemented")
     }
     /// Handles [`FakesClient::spread()`](crate::clients::FakesClient::spread).
     #[allow(clippy::too_many_arguments)]
     async fn spread(
         &self,
-        _content: Body,
-        _options: Option<FakesClientSpreadOptions<'_>>,
+        content: Body,
+        options: Option<FakesClientSpreadOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (content, options);
         unimplemented!("FakesServer::spread is not implemented")
     }
 }
@@ -189,7 +265,6 @@ pub(crate) async fn dispatch_begin_start<T: FakesServer + ?Sized>(
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content = request.body().clone();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -201,7 +276,7 @@ pub(crate) async fn dispatch_begin_start<T: FakesServer + ?Sized>(
     FakesServer::begin_start(
         server,
         (arguments.api_version).as_str(),
-        content,
+        request.body().clone(),
         state.clone(),
         request,
         Some(FakesClientBeginStartOptions {
@@ -269,6 +344,36 @@ pub(crate) async fn dispatch_get<T: FakesServer + ?Sized>(
     )
     .await
 }
+pub(crate) async fn dispatch_grouped<T: FakesServer + ?Sized>(
+    server: &T,
+    context: &azure_core::http::Context<'_>,
+    request: &mut azure_core::http::Request,
+    api_name: &str,
+) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
+    let _ = (&request, api_name);
+    let arguments = context
+        .value::<FakesClientGroupedArguments>()
+        .ok_or_else(|| {
+            azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{api_name}: missing operation arguments in request context"),
+            )
+        })?;
+    FakesServer::grouped(
+        server,
+        GroupedInputs {
+            name: (arguments.name).as_str(),
+            label: (arguments.label).clone(),
+        },
+        Some(FakesClientGroupedOptions {
+            count: arguments.count,
+            method_options: ClientMethodOptions {
+                context: context.to_owned(),
+            },
+        }),
+    )
+    .await
+}
 pub(crate) async fn dispatch_list<T: FakesServer + ?Sized>(
     server: &T,
     context: &azure_core::http::Context<'_>,
@@ -307,6 +412,50 @@ pub(crate) async fn dispatch_list<T: FakesServer + ?Sized>(
     )
     .await
 }
+pub(crate) async fn dispatch_list_optional<T: FakesServer + ?Sized>(
+    server: &T,
+    context: &azure_core::http::Context<'_>,
+    request: &mut azure_core::http::Request,
+    api_name: &str,
+) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
+    let _ = (&request, api_name);
+    let arguments = context
+        .value::<FakesClientListOptionalArguments>()
+        .ok_or_else(|| {
+            azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{api_name}: missing operation arguments in request context"),
+            )
+        })?;
+    let state = context
+        .value::<azure_core::http::pager::PagerState>()
+        .ok_or_else(|| {
+            azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{api_name}: missing operation state in request context"),
+            )
+        })?;
+    FakesServer::list_optional(
+        server,
+        state.clone(),
+        Some(FakesClientListOptionalOptions {
+            state: (arguments.state).clone(),
+            payload: if arguments.body_present {
+                Some(request.body().clone().into())
+            } else {
+                None
+            },
+            method_options: PagerOptions {
+                context: context.to_owned(),
+                continuation: match state {
+                    azure_core::http::pager::PagerState::Initial => None,
+                    azure_core::http::pager::PagerState::More(value) => Some(value.clone()),
+                },
+            },
+        }),
+    )
+    .await
+}
 pub(crate) async fn dispatch_put<T: FakesServer + ?Sized>(
     server: &T,
     context: &azure_core::http::Context<'_>,
@@ -314,10 +463,9 @@ pub(crate) async fn dispatch_put<T: FakesServer + ?Sized>(
     api_name: &str,
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
-    let content: RequestContent<Bytes, NoFormat> = request.body().clone().into();
     FakesServer::put(
         server,
-        content,
+        request.body().clone().into(),
         Some(FakesClientPutOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -333,11 +481,40 @@ pub(crate) async fn dispatch_put_model<T: FakesServer + ?Sized>(
     api_name: &str,
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
-    let content: RequestContent<Item> = request.body().clone().into();
     FakesServer::put_model(
         server,
-        content,
+        request.body().clone().into(),
         Some(FakesClientPutModelOptions {
+            method_options: ClientMethodOptions {
+                context: context.to_owned(),
+            },
+        }),
+    )
+    .await
+}
+pub(crate) async fn dispatch_put_optional<T: FakesServer + ?Sized>(
+    server: &T,
+    context: &azure_core::http::Context<'_>,
+    request: &mut azure_core::http::Request,
+    api_name: &str,
+) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
+    let _ = (&request, api_name);
+    let arguments = context
+        .value::<FakesClientPutOptionalArguments>()
+        .ok_or_else(|| {
+            azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{api_name}: missing operation arguments in request context"),
+            )
+        })?;
+    FakesServer::put_optional(
+        server,
+        Some(FakesClientPutOptionalOptions {
+            payload: if arguments.body_present {
+                Some(request.body().clone().into())
+            } else {
+                None
+            },
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
             },
@@ -352,10 +529,9 @@ pub(crate) async fn dispatch_spread<T: FakesServer + ?Sized>(
     api_name: &str,
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
-    let content = request.body().clone();
     FakesServer::spread(
         server,
-        content,
+        request.body().clone(),
         Some(FakesClientSpreadOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -414,8 +590,26 @@ impl<T: FakesServer + ?Sized> Policy for FakesClientTransport<T> {
                 )
                 .await
             }
+            "Fakes.grouped" => {
+                crate::clients::fake::fakes_client::dispatch_grouped(
+                    &*self.server,
+                    context,
+                    request,
+                    api_name,
+                )
+                .await
+            }
             "Fakes.list" => {
                 crate::clients::fake::fakes_client::dispatch_list(
+                    &*self.server,
+                    context,
+                    request,
+                    api_name,
+                )
+                .await
+            }
+            "Fakes.listOptional" => {
+                crate::clients::fake::fakes_client::dispatch_list_optional(
                     &*self.server,
                     context,
                     request,
@@ -434,6 +628,15 @@ impl<T: FakesServer + ?Sized> Policy for FakesClientTransport<T> {
             }
             "Fakes.putModel" => {
                 crate::clients::fake::fakes_client::dispatch_put_model(
+                    &*self.server,
+                    context,
+                    request,
+                    api_name,
+                )
+                .await
+            }
+            "Fakes.putOptional" => {
+                crate::clients::fake::fakes_client::dispatch_put_optional(
                     &*self.server,
                     context,
                     request,
@@ -481,6 +684,7 @@ impl FakesClient {
         options: Option<FakesClientOptions>,
     ) -> Result<Self> {
         let mut options = options.unwrap_or_default();
+        let endpoint = Url::parse(endpoint)?;
         if options.client_options.transport.is_some() {
             return Err(Error::with_message(
                 ErrorKind::Other,
@@ -492,7 +696,7 @@ impl FakesClient {
                 server,
             })));
         Ok(Self {
-            endpoint: Url::parse(endpoint)?,
+            endpoint,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),

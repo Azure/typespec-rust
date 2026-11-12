@@ -24,8 +24,6 @@ use azure_core::{
 struct ResourceManagerManagedHsmsClientBeginCreateOrUpdateArguments {
     resource_group_name: String,
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -33,16 +31,12 @@ pub(crate) fn capture_resource_manager_managed_hsms_client_begin_create_or_updat
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(
         ResourceManagerManagedHsmsClientBeginCreateOrUpdateArguments {
             resource_group_name,
             managed_hsm_name,
-            api_version,
-            subscription_id,
             frequency,
         },
     );
@@ -50,8 +44,6 @@ pub(crate) fn capture_resource_manager_managed_hsms_client_begin_create_or_updat
 struct ResourceManagerManagedHsmsClientBeginDeleteArguments {
     resource_group_name: String,
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -59,44 +51,32 @@ pub(crate) fn capture_resource_manager_managed_hsms_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourceManagerManagedHsmsClientBeginDeleteArguments {
         resource_group_name,
         managed_hsm_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct ResourceManagerManagedHsmsClientBeginPurgeArguments {
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_managed_hsms_client_begin_purge(
     context: &mut azure_core::http::Context<'_>,
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourceManagerManagedHsmsClientBeginPurgeArguments {
         managed_hsm_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct ResourceManagerManagedHsmsClientBeginUpdateArguments {
     resource_group_name: String,
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -104,15 +84,11 @@ pub(crate) fn capture_resource_manager_managed_hsms_client_begin_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     managed_hsm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourceManagerManagedHsmsClientBeginUpdateArguments {
         resource_group_name,
         managed_hsm_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
@@ -129,15 +105,21 @@ pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
-        _resource_group_name: &str,
-        _managed_hsm_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ManagedHsm>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourceManagerManagedHsmsClientBeginCreateOrUpdateOptions<'_>>,
+        resource_group_name: &str,
+        managed_hsm_name: &str,
+        resource: RequestContent<ManagedHsm>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerManagedHsmsClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            managed_hsm_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!(
             "ResourceManagerManagedHsmsServer::begin_create_or_update is not implemented"
         )
@@ -147,14 +129,19 @@ pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
-        _resource_group_name: &str,
-        _managed_hsm_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourceManagerManagedHsmsClientBeginDeleteOptions<'_>>,
+        resource_group_name: &str,
+        managed_hsm_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerManagedHsmsClientBeginDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            managed_hsm_name,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourceManagerManagedHsmsServer::begin_delete is not implemented")
     }
     /// Handles [`ResourceManagerManagedHsmsClient::begin_purge()`](crate::clients::ResourceManagerManagedHsmsClient::begin_purge).
@@ -162,13 +149,12 @@ pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_purge(
         &self,
-        _managed_hsm_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourceManagerManagedHsmsClientBeginPurgeOptions<'_>>,
+        managed_hsm_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerManagedHsmsClientBeginPurgeOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (managed_hsm_name, options, state, request);
         unimplemented!("ResourceManagerManagedHsmsServer::begin_purge is not implemented")
     }
     /// Handles [`ResourceManagerManagedHsmsClient::begin_update()`](crate::clients::ResourceManagerManagedHsmsClient::begin_update).
@@ -176,15 +162,21 @@ pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_update(
         &self,
-        _resource_group_name: &str,
-        _managed_hsm_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ManagedHsmTagsUpdate>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourceManagerManagedHsmsClientBeginUpdateOptions<'_>>,
+        resource_group_name: &str,
+        managed_hsm_name: &str,
+        properties: RequestContent<ManagedHsmTagsUpdate>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerManagedHsmsClientBeginUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            managed_hsm_name,
+            properties,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourceManagerManagedHsmsServer::begin_update is not implemented")
     }
 }
@@ -205,7 +197,6 @@ pub(crate) async fn dispatch_begin_create_or_update<
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ManagedHsm> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -218,9 +209,7 @@ pub(crate) async fn dispatch_begin_create_or_update<
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.managed_hsm_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourceManagerManagedHsmsClientBeginCreateOrUpdateOptions {
@@ -259,8 +248,6 @@ pub(crate) async fn dispatch_begin_delete<T: ResourceManagerManagedHsmsServer + 
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.managed_hsm_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         request,
         Some(ResourceManagerManagedHsmsClientBeginDeleteOptions {
@@ -298,8 +285,6 @@ pub(crate) async fn dispatch_begin_purge<T: ResourceManagerManagedHsmsServer + ?
     ResourceManagerManagedHsmsServer::begin_purge(
         server,
         (arguments.managed_hsm_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         request,
         Some(ResourceManagerManagedHsmsClientBeginPurgeOptions {
@@ -326,7 +311,6 @@ pub(crate) async fn dispatch_begin_update<T: ResourceManagerManagedHsmsServer + 
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ManagedHsmTagsUpdate> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -339,9 +323,7 @@ pub(crate) async fn dispatch_begin_update<T: ResourceManagerManagedHsmsServer + 
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.managed_hsm_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourceManagerManagedHsmsClientBeginUpdateOptions {

@@ -7,9 +7,10 @@ use crate::generated::{
     clients::FakesChildClient,
     models::{
         FakesClientBeginStartOperationStatus, FakesClientBeginStartOptions,
-        FakesClientCollisionsOptions, FakesClientGetOptions, FakesClientListOptions,
-        FakesClientPutModelOptions, FakesClientPutOptions, FakesClientSpreadOptions, Item,
-        ItemPage, SpreadRequest, StartRequest,
+        FakesClientCollisionsOptions, FakesClientGetOptions, FakesClientGroupedOptions,
+        FakesClientListOptionalOptions, FakesClientListOptions, FakesClientPutModelOptions,
+        FakesClientPutOptionalOptions, FakesClientPutOptions, FakesClientSpreadOptions,
+        GroupedInputs, Item, ItemPage, SpreadRequest, StartRequest,
     },
 };
 use azure_core::{
@@ -384,6 +385,63 @@ impl FakesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Fakes.grouped")]
+    pub async fn grouped(
+        &self,
+        inputs: GroupedInputs<'_>,
+        options: Option<FakesClientGroupedOptions<'_>>,
+    ) -> Result<Response<Item>> {
+        if inputs.name.is_empty() {
+            return Err(azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                "parameter name cannot be empty",
+            ));
+        }
+        let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_fakes_client_grouped(
+                &mut options.method_options.context,
+                options.count,
+                (*(inputs.name)).to_owned(),
+                (inputs.label).clone(),
+            );
+            options
+        };
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/grouped/{name}");
+        path = path.replace("{name}", inputs.name);
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        if let Some(count) = options.count {
+            query_builder.set_pair("count", count.to_string());
+        }
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("accept", "application/json");
+        request.insert_header("label", &inputs.label);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Fakes.list")]
     pub fn list(
         &self,
@@ -470,6 +528,87 @@ impl FakesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Fakes.listOptional")]
+    pub fn list_optional(
+        &self,
+        options: Option<FakesClientListOptionalOptions<'_>>,
+    ) -> Result<Pager<ItemPage>> {
+        let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_fakes_client_list_optional(
+                &mut options.method_options.context,
+                (options.state).clone(),
+                options.payload.is_some(),
+            );
+            options
+        };
+        let pipeline = self.pipeline.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url.append_path("/optional/list");
+        let mut query_builder = first_url.query_builder();
+        if let Some(state) = options.state.as_ref() {
+            query_builder.set_pair("state", state);
+        }
+        query_builder.build();
+        #[derive(serde::Deserialize)]
+        struct FakesClientListOptionalPage {
+            #[serde(rename = "nextLink")]
+            next_link: Option<String>,
+        }
+
+        Ok(Pager::new(
+            move |next_link: PagerState, pager_options| {
+                let url = match next_link {
+                    PagerState::More(next_link) => next_link.try_into().expect("expected Url"),
+                    PagerState::Initial => first_url.clone(),
+                };
+                let mut request = Request::new(url, Method::Post);
+                request.insert_header("accept", "application/json");
+                if let Some(payload) = options.payload.clone() {
+                    request.insert_header("content-type", "application/octet-stream");
+                    request.set_body(payload.clone());
+                }
+                let pipeline = pipeline.clone();
+                Box::pin({
+                    let first_url = first_url.clone();
+                    async move {
+                        let rsp = pipeline
+                            .send(
+                                &pager_options.context,
+                                &mut request,
+                                Some(PipelineSendOptions {
+                                    check_success: CheckSuccessOptions {
+                                        success_codes: &[200],
+                                    },
+                                    ..Default::default()
+                                }),
+                            )
+                            .await?;
+                        let (status, headers, body) = rsp.deconstruct();
+                        let res: FakesClientListOptionalPage = json::from_json(&body)?;
+                        let rsp = RawResponse::from_bytes(status, headers, body).into();
+                        Ok(match res.next_link {
+                            Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: PagerContinuation::Link(
+                                    first_url.join(next_link.as_ref())?,
+                                ),
+                            },
+                            _ => PagerResult::Done { response: rsp },
+                        })
+                    }
+                })
+            },
+            Some(options.method_options),
+        ))
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Fakes.put")]
     pub async fn put(
         &self,
@@ -518,6 +657,50 @@ impl FakesClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(content);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Fakes.putOptional")]
+    pub async fn put_optional(
+        &self,
+        options: Option<FakesClientPutOptionalOptions<'_>>,
+    ) -> Result<Response<Item>> {
+        let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_fakes_client_put_optional(
+                &mut options.method_options.context,
+                options.payload.is_some(),
+            );
+            options
+        };
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/optional");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        if let Some(payload) = options.payload.clone() {
+            request.insert_header("content-type", "application/octet-stream");
+            request.set_body(payload);
+        }
         let rsp = self
             .pipeline
             .send(

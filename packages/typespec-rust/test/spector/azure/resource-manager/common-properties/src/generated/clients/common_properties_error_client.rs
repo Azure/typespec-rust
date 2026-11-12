@@ -59,7 +59,7 @@ impl CommonPropertiesErrorClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::clients::fake::capture_common_properties_error_client_create_for_user_defined_error(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(confidential_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            crate::clients::fake::capture_common_properties_error_client_create_for_user_defined_error(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(confidential_resource_name)).to_owned());
             options
         };
         let ctx = options.method_options.context.to_borrowed();
@@ -126,8 +126,6 @@ impl CommonPropertiesErrorClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(confidential_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };

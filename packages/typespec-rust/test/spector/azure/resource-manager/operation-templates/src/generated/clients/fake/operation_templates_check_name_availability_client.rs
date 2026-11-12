@@ -16,42 +16,15 @@ use azure_core::{
     Result,
 };
 
-struct OperationTemplatesCheckNameAvailabilityClientCheckGlobalArguments {
-    api_version: String,
-    subscription_id: String,
-}
-#[allow(clippy::too_many_arguments)]
-pub(crate) fn capture_operation_templates_check_name_availability_client_check_global(
-    context: &mut azure_core::http::Context<'_>,
-    api_version: String,
-    subscription_id: String,
-) {
-    context.insert(
-        OperationTemplatesCheckNameAvailabilityClientCheckGlobalArguments {
-            api_version,
-            subscription_id,
-        },
-    );
-}
 struct OperationTemplatesCheckNameAvailabilityClientCheckLocalArguments {
     location: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_check_name_availability_client_check_local(
     context: &mut azure_core::http::Context<'_>,
     location: String,
-    api_version: String,
-    subscription_id: String,
 ) {
-    context.insert(
-        OperationTemplatesCheckNameAvailabilityClientCheckLocalArguments {
-            location,
-            api_version,
-            subscription_id,
-        },
-    );
+    context.insert(OperationTemplatesCheckNameAvailabilityClientCheckLocalArguments { location });
 }
 /// Fake server for [`OperationTemplatesCheckNameAvailabilityClient`](crate::clients::OperationTemplatesCheckNameAvailabilityClient).
 ///
@@ -65,11 +38,10 @@ pub trait OperationTemplatesCheckNameAvailabilityServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn check_global(
         &self,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<CheckNameAvailabilityRequest>,
-        _options: Option<OperationTemplatesCheckNameAvailabilityClientCheckGlobalOptions<'_>>,
+        body: RequestContent<CheckNameAvailabilityRequest>,
+        options: Option<OperationTemplatesCheckNameAvailabilityClientCheckGlobalOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (body, options);
         unimplemented!(
             "OperationTemplatesCheckNameAvailabilityServer::check_global is not implemented"
         )
@@ -78,12 +50,11 @@ pub trait OperationTemplatesCheckNameAvailabilityServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn check_local(
         &self,
-        _location: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<CheckNameAvailabilityRequest>,
-        _options: Option<OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'_>>,
+        location: &str,
+        body: RequestContent<CheckNameAvailabilityRequest>,
+        options: Option<OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, body, options);
         unimplemented!(
             "OperationTemplatesCheckNameAvailabilityServer::check_local is not implemented"
         )
@@ -98,20 +69,9 @@ pub(crate) async fn dispatch_check_global<
     api_name: &str,
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
-    let arguments = context
-        .value::<OperationTemplatesCheckNameAvailabilityClientCheckGlobalArguments>()
-        .ok_or_else(|| {
-            azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{api_name}: missing operation arguments in request context"),
-            )
-        })?;
-    let content: RequestContent<CheckNameAvailabilityRequest> = request.body().clone().into();
     OperationTemplatesCheckNameAvailabilityServer::check_global(
         server,
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(
             OperationTemplatesCheckNameAvailabilityClientCheckGlobalOptions {
                 method_options: ClientMethodOptions {
@@ -139,13 +99,10 @@ pub(crate) async fn dispatch_check_local<
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<CheckNameAvailabilityRequest> = request.body().clone().into();
     OperationTemplatesCheckNameAvailabilityServer::check_local(
         server,
         (arguments.location).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(
             OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions {
                 method_options: ClientMethodOptions {

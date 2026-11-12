@@ -88,8 +88,6 @@ impl OperationTemplatesLroClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(order_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -164,8 +162,6 @@ impl OperationTemplatesLroClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(order_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -242,8 +238,6 @@ impl OperationTemplatesLroClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(order_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -317,8 +311,6 @@ impl OperationTemplatesLroClient {
             let mut options = options;
             crate::clients::fake::capture_operation_templates_lro_client_begin_export_array(
                 &mut options.method_options.context,
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -387,7 +379,6 @@ impl OperationTemplatesLroClient {
                 &mut options.method_options.context,
                 (*(scope)).to_owned(),
                 (*(operation_id)).to_owned(),
-                (self.api_version).clone(),
                 options.method_options.frequency,
             );
             options

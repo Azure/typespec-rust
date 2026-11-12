@@ -66,8 +66,6 @@ impl OperationTemplatesPagingClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(monitor_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -133,8 +131,6 @@ impl OperationTemplatesPagingClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(monitor_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -209,8 +205,7 @@ impl OperationTemplatesPagingClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(monitor_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
+                options.body.is_some(),
             );
             options
         };

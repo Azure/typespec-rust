@@ -529,6 +529,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fake_endpoint_tests"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "azure_core",
+ "tokio",
+]
+
+[[package]]
 name = "fake_tests"
 version = "0.1.0"
 dependencies = [

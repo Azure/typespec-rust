@@ -16,8 +16,6 @@ use azure_core::{
 struct LargeHeaderLargeHeadersClientBeginTwo6KArguments {
     resource_group_name: String,
     large_header_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -25,15 +23,11 @@ pub(crate) fn capture_large_header_large_headers_client_begin_two6_k(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     large_header_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(LargeHeaderLargeHeadersClientBeginTwo6KArguments {
         resource_group_name,
         large_header_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
@@ -50,14 +44,19 @@ pub trait LargeHeaderLargeHeadersServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_two6_k(
         &self,
-        _resource_group_name: &str,
-        _large_header_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<LargeHeaderLargeHeadersClientBeginTwo6KOptions<'_>>,
+        resource_group_name: &str,
+        large_header_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<LargeHeaderLargeHeadersClientBeginTwo6KOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            large_header_name,
+            options,
+            state,
+            request,
+        );
         unimplemented!("LargeHeaderLargeHeadersServer::begin_two6_k is not implemented")
     }
 }
@@ -88,8 +87,6 @@ pub(crate) async fn dispatch_begin_two6_k<T: LargeHeaderLargeHeadersServer + ?Si
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.large_header_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         request,
         Some(LargeHeaderLargeHeadersClientBeginTwo6KOptions {

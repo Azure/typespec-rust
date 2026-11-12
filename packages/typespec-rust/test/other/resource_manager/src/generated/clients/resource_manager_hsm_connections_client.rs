@@ -75,8 +75,6 @@ impl ResourceManagerHsmConnectionsClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(managed_hsm_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options

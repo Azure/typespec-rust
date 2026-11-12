@@ -83,8 +83,6 @@ impl ResourcesSingletonClient {
             crate::clients::fake::capture_resources_singleton_client_begin_create_or_update(
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -134,8 +132,6 @@ impl ResourcesSingletonClient {
             crate::clients::fake::capture_resources_singleton_client_get_by_resource_group(
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -191,8 +187,6 @@ impl ResourcesSingletonClient {
             crate::clients::fake::capture_resources_singleton_client_list_by_resource_group(
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -289,8 +283,6 @@ impl ResourcesSingletonClient {
             crate::clients::fake::capture_resources_singleton_client_update(
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };

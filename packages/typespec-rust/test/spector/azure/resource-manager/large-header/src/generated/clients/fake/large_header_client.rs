@@ -80,6 +80,7 @@ impl LargeHeaderClient {
         options: Option<LargeHeaderClientOptions>,
     ) -> Result<Self> {
         let mut options = options.unwrap_or_default();
+        let endpoint = Url::parse(endpoint)?;
         if options.client_options.transport.is_some() {
             return Err(Error::with_message(
                 ErrorKind::Other,
@@ -91,7 +92,7 @@ impl LargeHeaderClient {
         )));
         Ok(Self {
             api_version: options.api_version,
-            endpoint: Url::parse(endpoint)?,
+            endpoint,
             subscription_id,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),

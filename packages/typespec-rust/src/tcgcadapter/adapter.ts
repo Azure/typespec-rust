@@ -140,6 +140,13 @@ export class Adapter {
     this.adaptTypes();
     this.adaptClients();
 
+    // Register before CodeGenerator sorts dependencies, including nested clients.
+    const hasClients = (module: rust.ModuleContainer): boolean =>
+      module.clients.length > 0 || module.subModules.some(hasClients);
+    if (this.crate.generateFakes && hasClients(this.crate)) {
+      this.crate.addDependency(new rust.CrateDependency('async-trait'));
+    }
+
     return this.crate;
   }
 

@@ -13,16 +13,6 @@ use azure_core::{
     Result,
 };
 
-struct MethodSubscriptionIdOperationsClientListArguments {
-    api_version: String,
-}
-#[allow(clippy::too_many_arguments)]
-pub(crate) fn capture_method_subscription_id_operations_client_list(
-    context: &mut azure_core::http::Context<'_>,
-    api_version: String,
-) {
-    context.insert(MethodSubscriptionIdOperationsClientListArguments { api_version });
-}
 /// Fake server for [`MethodSubscriptionIdOperationsClient`](crate::clients::MethodSubscriptionIdOperationsClient).
 ///
 /// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
@@ -35,10 +25,10 @@ pub trait MethodSubscriptionIdOperationsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn list(
         &self,
-        _api_version: String,
-        _state: PagerState,
-        _options: Option<MethodSubscriptionIdOperationsClientListOptions<'_>>,
+        state: PagerState,
+        options: Option<MethodSubscriptionIdOperationsClientListOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (options, state);
         unimplemented!("MethodSubscriptionIdOperationsServer::list is not implemented")
     }
 }
@@ -49,14 +39,6 @@ pub(crate) async fn dispatch_list<T: MethodSubscriptionIdOperationsServer + ?Siz
     api_name: &str,
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
-    let arguments = context
-        .value::<MethodSubscriptionIdOperationsClientListArguments>()
-        .ok_or_else(|| {
-            azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{api_name}: missing operation arguments in request context"),
-            )
-        })?;
     let state = context
         .value::<azure_core::http::pager::PagerState>()
         .ok_or_else(|| {
@@ -67,7 +49,6 @@ pub(crate) async fn dispatch_list<T: MethodSubscriptionIdOperationsServer + ?Siz
         })?;
     MethodSubscriptionIdOperationsServer::list(
         server,
-        (arguments.api_version).clone(),
         state.clone(),
         Some(MethodSubscriptionIdOperationsClientListOptions {
             method_options: PagerOptions {

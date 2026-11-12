@@ -22,8 +22,9 @@ pub trait FakesChildServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _options: Option<FakesChildClientGetOptions<'_>>,
+        options: Option<FakesChildClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (options,);
         unimplemented!("FakesChildServer::get is not implemented")
     }
 }

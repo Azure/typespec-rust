@@ -84,7 +84,7 @@ impl ResourcesExtensionsResourcesClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::clients::fake::capture_resources_extensions_resources_client_begin_create_or_update(&mut options.method_options.context, (*(resource_uri)).to_owned(), (*(extensions_resource_name)).to_owned(), (self.api_version).clone(), options.method_options.frequency);
+            crate::clients::fake::capture_resources_extensions_resources_client_begin_create_or_update(&mut options.method_options.context, (*(resource_uri)).to_owned(), (*(extensions_resource_name)).to_owned(), options.method_options.frequency);
             options
         };
         let mut url = self.endpoint.clone();
@@ -141,7 +141,6 @@ impl ResourcesExtensionsResourcesClient {
                 &mut options.method_options.context,
                 (*(resource_uri)).to_owned(),
                 (*(extensions_resource_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -205,7 +204,6 @@ impl ResourcesExtensionsResourcesClient {
                 &mut options.method_options.context,
                 (*(resource_uri)).to_owned(),
                 (*(extensions_resource_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -261,7 +259,6 @@ impl ResourcesExtensionsResourcesClient {
             crate::clients::fake::capture_resources_extensions_resources_client_list_by_scope(
                 &mut options.method_options.context,
                 (*(resource_uri)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -368,7 +365,6 @@ impl ResourcesExtensionsResourcesClient {
                 &mut options.method_options.context,
                 (*(resource_uri)).to_owned(),
                 (*(extensions_resource_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };

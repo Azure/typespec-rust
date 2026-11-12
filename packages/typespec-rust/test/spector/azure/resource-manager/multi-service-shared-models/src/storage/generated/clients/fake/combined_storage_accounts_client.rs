@@ -22,8 +22,6 @@ use azure_core::{
 struct CombinedStorageAccountsClientBeginCreateOrUpdateArguments {
     resource_group_name: String,
     account_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -31,37 +29,27 @@ pub(crate) fn capture_combined_storage_accounts_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     account_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(CombinedStorageAccountsClientBeginCreateOrUpdateArguments {
         resource_group_name,
         account_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct CombinedStorageAccountsClientGetArguments {
     resource_group_name: String,
     account_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_storage_accounts_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     account_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(CombinedStorageAccountsClientGetArguments {
         resource_group_name,
         account_name,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`CombinedStorageAccountsClient`](crate::storage::clients::CombinedStorageAccountsClient).
@@ -77,27 +65,32 @@ pub trait CombinedStorageAccountsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
-        _resource_group_name: &str,
-        _account_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<StorageAccount>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<CombinedStorageAccountsClientBeginCreateOrUpdateOptions<'_>>,
+        resource_group_name: &str,
+        account_name: &str,
+        resource: RequestContent<StorageAccount>,
+        state: PollerState,
+        request: &Request,
+        options: Option<CombinedStorageAccountsClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            account_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!("CombinedStorageAccountsServer::begin_create_or_update is not implemented")
     }
     /// Handles [`CombinedStorageAccountsClient::get()`](crate::storage::clients::CombinedStorageAccountsClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_group_name: &str,
-        _account_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<CombinedStorageAccountsClientGetOptions<'_>>,
+        resource_group_name: &str,
+        account_name: &str,
+        options: Option<CombinedStorageAccountsClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, account_name, options);
         unimplemented!("CombinedStorageAccountsServer::get is not implemented")
     }
 }
@@ -116,7 +109,6 @@ pub(crate) async fn dispatch_begin_create_or_update<T: CombinedStorageAccountsSe
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<StorageAccount> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -129,9 +121,7 @@ pub(crate) async fn dispatch_begin_create_or_update<T: CombinedStorageAccountsSe
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.account_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(CombinedStorageAccountsClientBeginCreateOrUpdateOptions {
@@ -162,8 +152,6 @@ pub(crate) async fn dispatch_get<T: CombinedStorageAccountsServer + ?Sized>(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.account_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(CombinedStorageAccountsClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

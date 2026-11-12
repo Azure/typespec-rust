@@ -22,7 +22,6 @@ struct Server;
 impl SecretServer for Server {
     async fn list_secret_properties(
         &self,
-        _api_version: String,
         state: PagerState,
         _options: Option<SecretClientListSecretPropertiesOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
@@ -37,7 +36,6 @@ impl SecretServer for Server {
     async fn get_secret(
         &self,
         name: &str,
-        _api_version: String,
         _options: Option<SecretClientGetSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
         let body = match name {

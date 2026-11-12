@@ -32,16 +32,12 @@ impl ResourceManagerVaultsServer for Server {
         &self,
         group: &str,
         name: &str,
-        api_version: String,
-        subscription: String,
         _content: RequestContent<Vault>,
         _state: PollerState,
         _request: &Request,
         _options: Option<ResourceManagerVaultsClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
         assert_eq!((group, name), ("group", "child"));
-        assert_eq!(subscription, "sub");
-        assert_eq!(api_version, "2026-05-15");
         Ok(AsyncRawResponse::fake_with_bytes(
             StatusCode::Ok,
             Headers::new(),
@@ -56,16 +52,12 @@ impl ResourceManagerServer for Server {
         &self,
         group: &str,
         name: &str,
-        api_version: String,
-        subscription: String,
         content: RequestContent<Vault>,
         state: PollerState,
         request: &Request,
         options: Option<ResourceManagerClientBeginAsyncResultOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
         assert_eq!((group, name), ("group/slash", "vault%invalid"));
-        assert_eq!(api_version, "2026-05-15");
-        assert_eq!(subscription, "sub");
         let options = options.unwrap();
         assert_eq!(options.method_options.frequency, Duration::seconds(1));
         assert_eq!(options.method_options.context.value::<u32>(), Some(&42));

@@ -22,8 +22,6 @@ use azure_core::{
 struct CombinedVirtualMachinesClientBeginCreateOrUpdateArguments {
     resource_group_name: String,
     vm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -31,37 +29,27 @@ pub(crate) fn capture_combined_virtual_machines_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     vm_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(CombinedVirtualMachinesClientBeginCreateOrUpdateArguments {
         resource_group_name,
         vm_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct CombinedVirtualMachinesClientGetArguments {
     resource_group_name: String,
     vm_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_virtual_machines_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     vm_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(CombinedVirtualMachinesClientGetArguments {
         resource_group_name,
         vm_name,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`CombinedVirtualMachinesClient`](crate::compute::clients::CombinedVirtualMachinesClient).
@@ -77,27 +65,32 @@ pub trait CombinedVirtualMachinesServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
-        _resource_group_name: &str,
-        _vm_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<VirtualMachine>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<CombinedVirtualMachinesClientBeginCreateOrUpdateOptions<'_>>,
+        resource_group_name: &str,
+        vm_name: &str,
+        resource: RequestContent<VirtualMachine>,
+        state: PollerState,
+        request: &Request,
+        options: Option<CombinedVirtualMachinesClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            vm_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!("CombinedVirtualMachinesServer::begin_create_or_update is not implemented")
     }
     /// Handles [`CombinedVirtualMachinesClient::get()`](crate::compute::clients::CombinedVirtualMachinesClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_group_name: &str,
-        _vm_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<CombinedVirtualMachinesClientGetOptions<'_>>,
+        resource_group_name: &str,
+        vm_name: &str,
+        options: Option<CombinedVirtualMachinesClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, vm_name, options);
         unimplemented!("CombinedVirtualMachinesServer::get is not implemented")
     }
 }
@@ -116,7 +109,6 @@ pub(crate) async fn dispatch_begin_create_or_update<T: CombinedVirtualMachinesSe
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<VirtualMachine> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -129,9 +121,7 @@ pub(crate) async fn dispatch_begin_create_or_update<T: CombinedVirtualMachinesSe
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.vm_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(CombinedVirtualMachinesClientBeginCreateOrUpdateOptions {
@@ -162,8 +152,6 @@ pub(crate) async fn dispatch_get<T: CombinedVirtualMachinesServer + ?Sized>(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.vm_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(CombinedVirtualMachinesClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

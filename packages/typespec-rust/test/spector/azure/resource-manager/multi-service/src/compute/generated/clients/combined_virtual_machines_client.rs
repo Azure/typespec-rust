@@ -81,7 +81,7 @@ impl CombinedVirtualMachinesClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::compute::clients::fake::capture_combined_virtual_machines_client_begin_create_or_update(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(vm_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone(), options.method_options.frequency);
+            crate::compute::clients::fake::capture_combined_virtual_machines_client_begin_create_or_update(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(vm_name)).to_owned(), options.method_options.frequency);
             options
         };
         let mut url = self.endpoint.clone();
@@ -139,8 +139,6 @@ impl CombinedVirtualMachinesClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(vm_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };

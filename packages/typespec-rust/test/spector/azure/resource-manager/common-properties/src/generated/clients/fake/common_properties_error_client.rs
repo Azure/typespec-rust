@@ -19,45 +19,33 @@ use azure_core::{
 struct CommonPropertiesErrorClientCreateForUserDefinedErrorArguments {
     resource_group_name: String,
     confidential_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_error_client_create_for_user_defined_error(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     confidential_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(
         CommonPropertiesErrorClientCreateForUserDefinedErrorArguments {
             resource_group_name,
             confidential_resource_name,
-            api_version,
-            subscription_id,
         },
     );
 }
 struct CommonPropertiesErrorClientGetForPredefinedErrorArguments {
     resource_group_name: String,
     confidential_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_error_client_get_for_predefined_error(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     confidential_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(CommonPropertiesErrorClientGetForPredefinedErrorArguments {
         resource_group_name,
         confidential_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`CommonPropertiesErrorClient`](crate::clients::CommonPropertiesErrorClient).
@@ -72,13 +60,17 @@ pub trait CommonPropertiesErrorServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn create_for_user_defined_error(
         &self,
-        _resource_group_name: &str,
-        _confidential_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ConfidentialResource>,
-        _options: Option<CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'_>>,
+        resource_group_name: &str,
+        confidential_resource_name: &str,
+        resource: RequestContent<ConfidentialResource>,
+        options: Option<CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            confidential_resource_name,
+            resource,
+            options,
+        );
         unimplemented!(
             "CommonPropertiesErrorServer::create_for_user_defined_error is not implemented"
         )
@@ -87,12 +79,11 @@ pub trait CommonPropertiesErrorServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn get_for_predefined_error(
         &self,
-        _resource_group_name: &str,
-        _confidential_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<CommonPropertiesErrorClientGetForPredefinedErrorOptions<'_>>,
+        resource_group_name: &str,
+        confidential_resource_name: &str,
+        options: Option<CommonPropertiesErrorClientGetForPredefinedErrorOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, confidential_resource_name, options);
         unimplemented!("CommonPropertiesErrorServer::get_for_predefined_error is not implemented")
     }
 }
@@ -113,14 +104,11 @@ pub(crate) async fn dispatch_create_for_user_defined_error<
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ConfidentialResource> = request.body().clone().into();
     CommonPropertiesErrorServer::create_for_user_defined_error(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.confidential_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(
             CommonPropertiesErrorClientCreateForUserDefinedErrorOptions {
                 method_options: ClientMethodOptions {
@@ -150,8 +138,6 @@ pub(crate) async fn dispatch_get_for_predefined_error<T: CommonPropertiesErrorSe
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.confidential_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(CommonPropertiesErrorClientGetForPredefinedErrorOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

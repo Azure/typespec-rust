@@ -63,7 +63,7 @@ impl CommonPropertiesManagedIdentityClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::clients::fake::capture_common_properties_managed_identity_client_create_with_system_assigned(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_identity_tracked_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            crate::clients::fake::capture_common_properties_managed_identity_client_create_with_system_assigned(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_identity_tracked_resource_name)).to_owned());
             options
         };
         let ctx = options.method_options.context.to_borrowed();
@@ -133,8 +133,6 @@ impl CommonPropertiesManagedIdentityClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(managed_identity_tracked_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -203,7 +201,7 @@ impl CommonPropertiesManagedIdentityClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::clients::fake::capture_common_properties_managed_identity_client_update_with_user_assigned_and_system_assigned(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_identity_tracked_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            crate::clients::fake::capture_common_properties_managed_identity_client_update_with_user_assigned_and_system_assigned(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_identity_tracked_resource_name)).to_owned());
             options
         };
         let ctx = options.method_options.context.to_borrowed();

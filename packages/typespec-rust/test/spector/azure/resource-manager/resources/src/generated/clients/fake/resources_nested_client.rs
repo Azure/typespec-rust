@@ -25,8 +25,6 @@ struct ResourcesNestedClientBeginCreateOrReplaceArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -35,16 +33,12 @@ pub(crate) fn capture_resources_nested_client_begin_create_or_replace(
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourcesNestedClientBeginCreateOrReplaceArguments {
         resource_group_name,
         top_level_tracked_resource_name,
         nexted_proxy_resource_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
@@ -52,8 +46,6 @@ struct ResourcesNestedClientBeginDeleteArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -62,16 +54,12 @@ pub(crate) fn capture_resources_nested_client_begin_delete(
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourcesNestedClientBeginDeleteArguments {
         resource_group_name,
         top_level_tracked_resource_name,
         nexted_proxy_resource_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
@@ -79,8 +67,6 @@ struct ResourcesNestedClientBeginUpdateArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -89,16 +75,12 @@ pub(crate) fn capture_resources_nested_client_begin_update(
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourcesNestedClientBeginUpdateArguments {
         resource_group_name,
         top_level_tracked_resource_name,
         nexted_proxy_resource_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
@@ -106,8 +88,6 @@ struct ResourcesNestedClientGetArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_nested_client_get(
@@ -115,37 +95,27 @@ pub(crate) fn capture_resources_nested_client_get(
     resource_group_name: String,
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesNestedClientGetArguments {
         resource_group_name,
         top_level_tracked_resource_name,
         nexted_proxy_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesNestedClientListByTopLevelTrackedResourceArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_nested_client_list_by_top_level_tracked_resource(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(
         ResourcesNestedClientListByTopLevelTrackedResourceArguments {
             resource_group_name,
             top_level_tracked_resource_name,
-            api_version,
-            subscription_id,
         },
     );
 }
@@ -162,16 +132,23 @@ pub trait ResourcesNestedServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_replace(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _nexted_proxy_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<NestedProxyResource>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesNestedClientBeginCreateOrReplaceOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        nexted_proxy_resource_name: &str,
+        resource: RequestContent<NestedProxyResource>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesNestedClientBeginCreateOrReplaceOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            nexted_proxy_resource_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourcesNestedServer::begin_create_or_replace is not implemented")
     }
     /// Handles [`ResourcesNestedClient::begin_delete()`](crate::clients::ResourcesNestedClient::begin_delete).
@@ -179,15 +156,21 @@ pub trait ResourcesNestedServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _nexted_proxy_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesNestedClientBeginDeleteOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        nexted_proxy_resource_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesNestedClientBeginDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            nexted_proxy_resource_name,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourcesNestedServer::begin_delete is not implemented")
     }
     /// Handles [`ResourcesNestedClient::begin_update()`](crate::clients::ResourcesNestedClient::begin_update).
@@ -195,42 +178,57 @@ pub trait ResourcesNestedServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_update(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _nexted_proxy_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<NestedProxyResource>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesNestedClientBeginUpdateOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        nexted_proxy_resource_name: &str,
+        properties: RequestContent<NestedProxyResource>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesNestedClientBeginUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            nexted_proxy_resource_name,
+            properties,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourcesNestedServer::begin_update is not implemented")
     }
     /// Handles [`ResourcesNestedClient::get()`](crate::clients::ResourcesNestedClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _nexted_proxy_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<ResourcesNestedClientGetOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        nexted_proxy_resource_name: &str,
+        options: Option<ResourcesNestedClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            nexted_proxy_resource_name,
+            options,
+        );
         unimplemented!("ResourcesNestedServer::get is not implemented")
     }
     /// Handles [`ResourcesNestedClient::list_by_top_level_tracked_resource()`](crate::clients::ResourcesNestedClient::list_by_top_level_tracked_resource).
     #[allow(clippy::too_many_arguments)]
     async fn list_by_top_level_tracked_resource(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PagerState,
-        _options: Option<ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        state: PagerState,
+        options: Option<ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            options,
+            state,
+        );
         unimplemented!(
             "ResourcesNestedServer::list_by_top_level_tracked_resource is not implemented"
         )
@@ -251,7 +249,6 @@ pub(crate) async fn dispatch_begin_create_or_replace<T: ResourcesNestedServer + 
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<NestedProxyResource> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -265,9 +262,7 @@ pub(crate) async fn dispatch_begin_create_or_replace<T: ResourcesNestedServer + 
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
         (arguments.nexted_proxy_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourcesNestedClientBeginCreateOrReplaceOptions {
@@ -307,8 +302,6 @@ pub(crate) async fn dispatch_begin_delete<T: ResourcesNestedServer + ?Sized>(
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
         (arguments.nexted_proxy_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         request,
         Some(ResourcesNestedClientBeginDeleteOptions {
@@ -335,7 +328,6 @@ pub(crate) async fn dispatch_begin_update<T: ResourcesNestedServer + ?Sized>(
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<NestedProxyResource> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -349,9 +341,7 @@ pub(crate) async fn dispatch_begin_update<T: ResourcesNestedServer + ?Sized>(
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
         (arguments.nexted_proxy_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourcesNestedClientBeginUpdateOptions {
@@ -383,8 +373,6 @@ pub(crate) async fn dispatch_get<T: ResourcesNestedServer + ?Sized>(
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
         (arguments.nexted_proxy_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(ResourcesNestedClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -422,8 +410,6 @@ pub(crate) async fn dispatch_list_by_top_level_tracked_resource<
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         Some(ResourcesNestedClientListByTopLevelTrackedResourceOptions {
             method_options: PagerOptions {

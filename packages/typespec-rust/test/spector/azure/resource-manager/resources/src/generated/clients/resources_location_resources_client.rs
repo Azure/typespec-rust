@@ -70,8 +70,6 @@ impl ResourcesLocationResourcesClient {
                 &mut options.method_options.context,
                 (*(location)).to_owned(),
                 (*(location_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -139,8 +137,6 @@ impl ResourcesLocationResourcesClient {
                 &mut options.method_options.context,
                 (*(location)).to_owned(),
                 (*(location_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -205,8 +201,6 @@ impl ResourcesLocationResourcesClient {
                 &mut options.method_options.context,
                 (*(location)).to_owned(),
                 (*(location_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -263,8 +257,6 @@ impl ResourcesLocationResourcesClient {
             crate::clients::fake::capture_resources_location_resources_client_list_by_location(
                 &mut options.method_options.context,
                 (*(location)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -370,8 +362,6 @@ impl ResourcesLocationResourcesClient {
                 &mut options.method_options.context,
                 (*(location)).to_owned(),
                 (*(location_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };

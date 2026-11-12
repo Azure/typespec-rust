@@ -74,8 +74,6 @@ impl ResourcesTopLevelClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -162,8 +160,6 @@ impl ResourcesTopLevelClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -241,8 +237,6 @@ impl ResourcesTopLevelClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -319,8 +313,6 @@ impl ResourcesTopLevelClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -383,8 +375,6 @@ impl ResourcesTopLevelClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -444,8 +434,6 @@ impl ResourcesTopLevelClient {
             crate::clients::fake::capture_resources_top_level_client_list_by_resource_group(
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -526,16 +514,6 @@ impl ResourcesTopLevelClient {
         options: Option<ResourcesTopLevelClientListBySubscriptionOptions<'_>>,
     ) -> Result<Pager<TopLevelTrackedResourceListResult>> {
         let options = options.unwrap_or_default().into_owned();
-        #[cfg(all(feature = "test", feature = "unstable_fake"))]
-        let options = {
-            let mut options = options;
-            crate::clients::fake::capture_resources_top_level_client_list_by_subscription(
-                &mut options.method_options.context,
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
-            );
-            options
-        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");

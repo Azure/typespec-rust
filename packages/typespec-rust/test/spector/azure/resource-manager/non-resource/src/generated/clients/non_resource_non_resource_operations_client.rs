@@ -63,8 +63,6 @@ impl NonResourceNonResourceOperationsClient {
                 &mut options.method_options.context,
                 (*(location)).to_owned(),
                 (*(parameter)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -131,8 +129,6 @@ impl NonResourceNonResourceOperationsClient {
                 &mut options.method_options.context,
                 (*(location)).to_owned(),
                 (*(parameter)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };

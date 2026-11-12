@@ -7,6 +7,7 @@ import * as rust from '../codemodel/index.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as utils from '../utils/utils.js';
+import { methodParameters, requiredConstructorParameters, supplementalEndpoint } from './parameters.js';
 
 export const fakeGate = '#[cfg(all(feature = "test", feature = "unstable_fake"))]';
 type Operation = Exclude<rust.MethodType, rust.ClientAccessor>;
@@ -31,16 +32,20 @@ function operationName(client: rust.Client, method: Operation): string {
   return `${fakeModuleName(client)}_${method.name.replace(/^r#/, '')}`;
 }
 
-function synthetic(method: Operation, name: string): string {
-  return helpers.getUniqueVarName(method.params, [name]);
+function synthetic(params: Array<{ name: string }>, name: string): string {
+  // Only names emitted in this scope can collide; optional fields and body inputs
+  // must not force a positional parameter to be renamed against itself.
+  return helpers.getUniqueVarName(params, [name]);
 }
 
 function publicPath(module: rust.ModuleContainer): string {
   return utils.buildImportPath(module, module).replace(/::generated$/, '');
 }
 
-function argumentsFor(client: rust.Client, method: Operation): Array<Argument> {
-  const params = method.params.filter(p => p.kind !== 'body' && p.kind !== 'partialBody'
+function argumentsFor(method: Operation): Array<Argument> {
+  // Normal signatures omit client inputs. Capturing them would add clones and
+  // expose arguments that callers never pass to this operation.
+  const params = method.params.filter(p => p.location === 'method' && p.kind !== 'body' && p.kind !== 'partialBody'
     && !['literal', 'enumValue'].includes(helpers.unwrapType(p.type).kind));
   return params.map(param => {
     const optionField = param.optional ? method.options.type.type.fields.find(f => f.name === param.name) : undefined;
@@ -49,12 +54,43 @@ function argumentsFor(client: rust.Client, method: Operation): Array<Argument> {
     return {
       name,
       param,
-      type: param.location === 'client' ? client.fields.find(f => f.name === param.name)!.type : optionField?.type ?? param.type,
-      source: param.location === 'client' ? `self.${param.name}` : param.optional
+      type: optionField?.type ?? param.type,
+      source: param.optional
         ? `options.${param.name}` : param.group ? `${param.group.name}.${param.name}` : param.name,
-      optional: param.optional && param.location === 'method',
+      optional: param.optional,
     };
   });
+}
+
+function captureFor(method: Operation): {
+  args: Array<Argument>;
+  fields: Array<{ name: string; type: string; value: string }>;
+  frequency: string;
+  present: string;
+} {
+  const args = argumentsFor(method);
+  const fields = args.map(a => ({ name: a.name, type: ownedType(a.type), value: own(a.type, a.source) }));
+  const frequency = synthetic(fields, 'frequency');
+  if (method.kind === 'lro') fields.push({ name: frequency, type: 'azure_core::time::Duration', value: 'options.method_options.frequency' });
+  const present = synthetic(fields, 'body_present');
+  const body = method.params.find(p => p.kind === 'body' && p.optional);
+  // Empty content is a valid Some value. Retain presence, never the body itself,
+  // so dispatch can forward the post-policy body without inspecting its length.
+  if (body) fields.push({ name: present, type: 'bool', value: `options.${body.name}.is_some()` });
+  return { args, fields, frequency, present };
+}
+
+function signatureFor(client: rust.Client, method: Operation): Array<{ name: string; type: rust.Type }> {
+  const spread = method.params.filter(p => p.kind === 'partialBody');
+  const params = methodParameters(method).filter(p => !spread.some(s => s.name === p.name));
+  // Spread fields have already been serialized and may name private helper
+  // models. Keep their assembled body opaque instead of decoding it to fields.
+  if (spread.length) {
+    const content = { name: synthetic([...params, method.options], 'content'), type: new rust.ExternalType(helpers.getCrate(client.module), 'Body', 'azure_core::http') };
+    const first = methodParameters(method).findIndex(p => spread.some(s => s.name === p.name));
+    params.splice(first < 0 ? params.length : first, 0, content);
+  }
+  return params;
 }
 
 function ownedType(type: rust.Type): string {
@@ -91,10 +127,9 @@ function own(type: rust.Type, expression: string): string {
 /** Captures only typed non-body values, never an options object containing context. */
 export function emitFakeCapture(client: rust.Client, method: Operation): string {
   if (!helpers.getCrate(client.module).generateFakes || method.visibility !== 'pub') return '';
-  const args = argumentsFor(client, method);
-  if (args.length === 0 && method.kind !== 'lro') return '';
-  const values = args.map(a => own(a.type, a.source));
-  if (method.kind === 'lro') values.push('options.method_options.frequency');
+  const { fields } = captureFor(method);
+  if (!fields.length) return '';
+  const values = fields.map(f => f.value);
   return `${fakeGate}\nlet options = {\nlet mut options = options;\n`
     + `${publicPath(client.module)}::clients::fake::capture_${operationName(client, method)}(&mut options.method_options.context, ${values.join(', ')});\noptions\n};\n`;
 }
@@ -115,8 +150,6 @@ function traitPath(client: rust.Client): string {
 }
 
 export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
-  const crate = helpers.getCrate(module);
-  if (module.clients.length) crate.addDependency(new rust.CrateDependency('async-trait'));
   return module.clients.map(client => {
     const use = new Use(module, 'clients');
     use.add('async_trait', 'async_trait');
@@ -125,17 +158,15 @@ export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
     if (methods.length || client.constructable) use.add('azure_core', 'Result');
     if (methods.length) use.add('azure_core::http', 'AsyncRawResponse');
     for (const method of methods) {
-      const args = argumentsFor(client, method);
-      if (!args.length && method.kind !== 'lro') continue;
+      const capture = captureFor(method);
+      if (!capture.fields.length) continue;
       const name = operationName(client, method);
-      args.forEach(a => useOwnedType(use, a.type));
-      const fields = args.map(a => `${a.name}: ${ownedType(a.type)}`);
-      const frequency = synthetic(method, 'frequency');
-      const context = synthetic(method, 'context');
-      if (method.kind === 'lro') fields.push(`${frequency}: azure_core::time::Duration`);
+      capture.args.forEach(a => useOwnedType(use, a.type));
+      const fields = capture.fields.map(f => `${f.name}: ${f.type}`);
+      const context = synthetic(capture.fields, 'context');
       body += `struct ${utils.pascalCase(name, false)}Arguments { ${fields.join(', ')} }\n`;
       body += `#[allow(clippy::too_many_arguments)]\npub(crate) fn capture_${name}(${context}: &mut azure_core::http::Context<'_>, ${fields.join(', ')}) {\n`
-        + `${context}.insert(${utils.pascalCase(name, false)}Arguments { ${args.map(a => a.name).concat(method.kind === 'lro' ? [frequency] : []).join(', ')} });\n}\n`;
+        + `${context}.insert(${utils.pascalCase(name, false)}Arguments { ${capture.fields.map(f => f.name).join(', ')} });\n}\n`;
     }
 
     const children = client.methods.filter((m): m is rust.ClientAccessor => m.kind === 'clientaccessor');
@@ -145,34 +176,37 @@ export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
       + '///\n/// # Panics\n/// Default operation implementations call [`unimplemented!()`].\n'
       + `#[async_trait]\npub trait ${serverName(client)}: ${[...new Set(bounds)].join(' + ')} {\n`;
     for (const method of methods) {
-      const args = argumentsFor(client, method).filter(a => !a.optional);
-      const params = args.map(a => `_${a.name.replace(/^r#/, '')}: ${declaration(a.param.location === 'client' ? a.type : a.param.type)}`);
-      args.forEach(a => use.addForType(a.param.location === 'client' ? a.type : a.param.type));
-      const bodyParam = method.params.find(p => p.kind === 'body' || p.kind === 'partialBody');
-      if (bodyParam) {
-        if (bodyParam.kind === 'partialBody') {
-          use.add('azure_core::http', 'Body');
-          params.push(`_${synthetic(method, 'content')}: Body`);
-        } else {
-          use.addForType(bodyParam.type);
-          params.push(`_${synthetic(method, 'content')}: ${declaration(bodyParam.type)}`);
-        }
-      }
+      // Share the ordinary signature rules: groups stay grouped, optional bodies
+      // stay in options, and names/types/order do not depend on transport location.
+      const signature = signatureFor(client, method);
+      const params = signature.map(p => `${p.name}: ${declaration(p.type)}`);
+      signature.forEach(p => use.addForType(p.type));
+      signature.filter(p => p.type.kind === 'struct').forEach(p => use.add(`${publicPath(module)}::models`, (p.type as rust.Struct).name));
+      const names = [...signature, method.options];
+      // State and the current LRO request describe transport steps, not extra
+      // service arguments. Allocate these additions after the ordinary names.
       if (method.kind === 'pageable') {
         use.add('azure_core::http::pager', 'PagerState');
-        params.push(`_${synthetic(method, 'state')}: PagerState`);
+        const state = synthetic(names, 'state');
+        names.push({ name: state, type: method.options.type });
+        params.push(`${state}: PagerState`);
       } else if (method.kind === 'lro') {
         use.add('azure_core::http::poller', 'PollerState');
         use.add('azure_core::http', 'Request');
-        params.push(`_${synthetic(method, 'state')}: PollerState`, `_${synthetic(method, 'request')}: &Request`);
+        const state = synthetic(names, 'state');
+        names.push({ name: state, type: method.options.type });
+        const request = synthetic(names, 'request');
+        names.push({ name: request, type: method.options.type });
+        params.push(`${state}: PollerState`, `${request}: &Request`);
       }
       use.add(`${publicPath(module)}::models`, method.options.type.type.name);
       use.addForType(method.options.type.type.fields.find(f => f.name === 'method_options')!.type);
-      params.push(`_${synthetic(method, 'options')}: ${helpers.getTypeDeclaration(method.options.type, 'anonymous')}`);
+      params.push(`${method.options.name}: ${helpers.getTypeDeclaration(method.options.type, 'anonymous')}`);
       body += `/// Handles [\`${client.name}::${method.name}()\`](${publicPath(module)}::clients::${client.name}::${method.name}).\n`;
       if (method.kind === 'lro') body += '/// The request and opaque content belong to the current HTTP step, not necessarily initiation.\n';
       if (method.name.startsWith('from_')) body += '#[allow(clippy::wrong_self_convention)]\n';
       body += `#[allow(clippy::too_many_arguments)]\nasync fn ${method.name}(&self, ${params.join(', ')}) -> Result<AsyncRawResponse> {\n`
+        + `let _ = (${names.map(p => p.name).join(', ')},);\n`
         + `unimplemented!("${serverName(client)}::${method.name} is not implemented")\n}\n`;
     }
     body += '}\n';
@@ -218,21 +252,26 @@ export function emitFakeDispatch(client: rust.Client): string {
   let body = '';
   for (const method of client.methods) {
     if (method.kind === 'clientaccessor' || method.visibility !== 'pub') continue;
-    const args = argumentsFor(client, method);
+    const { args, fields: captures, frequency, present } = captureFor(method);
     const name = operationName(client, method);
     body += `pub(crate) async fn dispatch_${method.name.replace(/^r#/, '')}<T: ${serverName(client)} + ?Sized>(server: &T, context: &azure_core::http::Context<'_>, request: &mut azure_core::http::Request, api_name: &str) -> azure_core::Result<azure_core::http::AsyncRawResponse> {\n`;
     body += 'let _ = (&request, api_name);\n';
-    if (args.length || method.kind === 'lro') {
+    if (captures.length) {
       body += `let arguments = context.value::<${utils.pascalCase(name, false)}Arguments>().ok_or_else(|| azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{api_name}: missing operation arguments in request context")))?;\n`;
     }
-    const calls = args.filter(a => !a.optional).map(a => a.param.location === 'client'
-      ? own(a.type, `arguments.${a.name}`) : borrow(a.param.type, `arguments.${a.name}`));
-    const bodyParam = method.params.find(p => p.kind === 'body' || p.kind === 'partialBody');
-    if (bodyParam) {
-      body += bodyParam.kind === 'partialBody' ? 'let content = request.body().clone();\n'
-        : `let content: ${declaration(bodyParam.type)} = request.body().clone().into();\n`;
-      calls.push('content');
-    }
+    const bodyParam = method.params.find(p => p.kind === 'body');
+    const calls = signatureFor(client, method).map(param => {
+      if (param.type.kind === 'external' && param.type.name === 'Body') return 'request.body().clone()';
+      if (param.type.kind === 'requestContent') return 'request.body().clone().into()';
+      if (param.type.kind === 'struct') {
+        const group = param.type;
+        const values = args.filter(a => a.param.group?.name === param.name)
+          .map(a => `${a.param.name}: ${borrow(a.param.type, `arguments.${a.name}`)}`);
+        return `${group.name} { ${values.join(', ')} }`;
+      }
+      const arg = args.find(a => a.param.name === param.name)!;
+      return borrow(arg.param.type, `arguments.${arg.name}`);
+    });
     if (method.kind !== 'async') {
       const state = method.kind === 'pageable' ? 'azure_core::http::pager::PagerState' : 'azure_core::http::poller::PollerState';
       body += `let state = context.value::<${state}>().ok_or_else(|| azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{api_name}: missing operation state in request context")))?;\n`;
@@ -241,11 +280,14 @@ export function emitFakeDispatch(client: rust.Client): string {
     }
     const optionsType = method.options.type.type;
     const fields = args.filter(a => a.optional).map(a => `${a.param.name}: ${own(a.type, `arguments.${a.name}`)}`);
+    if (bodyParam?.optional) {
+      fields.push(`${bodyParam.name}: if arguments.${present} { Some(request.body().clone().into()) } else { None }`);
+    }
     const methodOptionsType = optionsType.fields.find(f => f.name === 'method_options')!.type;
     fields.push(`method_options: ${helpers.getTypeDeclaration(methodOptionsType, 'omit').replace(/<.*$/, '')} {\ncontext: context.to_owned(),\n`
       + (method.kind === 'pageable' ? 'continuation: match state { azure_core::http::pager::PagerState::Initial => None, azure_core::http::pager::PagerState::More(value) => Some(value.clone()) },\n' : '')
-      + (method.kind === 'lro' ? `frequency: arguments.${synthetic(method, 'frequency')},\n` : '') + '}');
-    if (optionsType.fields.some(f => f.name !== 'method_options' && !args.some(a => a.optional && a.param.name === f.name))) fields.push('..Default::default()');
+      + (method.kind === 'lro' ? `frequency: arguments.${frequency},\n` : '') + '}');
+    if (optionsType.fields.some(f => f.name !== 'method_options' && !(bodyParam?.optional && bodyParam.name === f.name) && !args.some(a => a.optional && a.param.name === f.name))) fields.push('..Default::default()');
     calls.push(`Some(${optionsType.name} { ${fields.join(', ')} })`);
     body += `${serverName(client)}::${method.name}(server, ${calls.join(', ')}).await\n}\n`;
   }
@@ -258,15 +300,21 @@ function emitFakeConstructor(client: rust.Client, transport: string, use: Use): 
   use.add('azure_core', 'tracing');
   const params = ['endpoint: &str', `server: Arc<impl ${serverName(client)} + ?Sized + 'static>`];
   const fields: Array<string> = [];
+  // Match modeled constructor parameters, including supplemental URL inputs that
+  // are consumed during construction rather than stored as client fields.
+  const constructor = construction.constructors[0];
+  for (const param of requiredConstructorParameters(constructor.params)) {
+    if (param.kind === 'clientEndpoint' || param.kind === 'clientCredential') continue;
+    use.addForType(param.type);
+    params.push(`${param.name}: ${helpers.getTypeDeclaration(param.type)}`);
+  }
   for (const field of client.fields) {
     if (field.name === 'pipeline') continue;
     if (field.name === client.endpoint.name) {
-      fields.push(`${field.name}: Url::parse(endpoint)?`);
+      fields.push(field.name === 'endpoint' ? 'endpoint' : `${field.name}: endpoint`);
     } else if (construction.options.type.fields.some(f => f.name === field.name)) {
       fields.push(`${field.name}: options.${field.name}`);
     } else {
-      use.addForType(field.type);
-      params.push(`${field.name}: ${helpers.getTypeDeclaration(field.type)}`);
       fields.push(field.name);
     }
   }
@@ -280,6 +328,10 @@ function emitFakeConstructor(client: rust.Client, transport: string, use: Use): 
     + `${fakeGate}\n#[tracing::new("${client.languageIndependentName}")]\n`
     + `pub fn with_fake(${params.join(', ')}) -> Result<Self> {\n`
     + 'let mut options = options.unwrap_or_default();\n'
+    // Fakes use an explicit parseable endpoint without cloud/auth resolution or
+    // the real constructor's HTTP-only restriction, but share server path joins.
+    + `let ${construction.endpoint ? 'mut ' : ''}endpoint = Url::parse(endpoint)?;\n`
+    + supplementalEndpoint(new helpers.indentation(0), 'endpoint', construction.endpoint)
     + `if ${options}.transport.is_some() { return Err(Error::with_message(ErrorKind::Other, "a transport cannot be specified when using a fake server")); }\n`
     + `${options}.transport = Some(Transport::with_policy(Arc::new(${transport} { server })));\n`
     + `Ok(Self { ${fields.join(', ')} })\n}\n}\n`;

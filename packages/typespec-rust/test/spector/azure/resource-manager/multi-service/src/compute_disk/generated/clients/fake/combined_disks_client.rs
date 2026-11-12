@@ -19,8 +19,6 @@ use azure_core::{
 struct CombinedDisksClientBeginCreateOrUpdateArguments {
     resource_group_name: String,
     disk_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -28,37 +26,27 @@ pub(crate) fn capture_combined_disks_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     disk_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(CombinedDisksClientBeginCreateOrUpdateArguments {
         resource_group_name,
         disk_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct CombinedDisksClientGetArguments {
     resource_group_name: String,
     disk_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_disks_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     disk_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(CombinedDisksClientGetArguments {
         resource_group_name,
         disk_name,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`CombinedDisksClient`](crate::compute_disk::clients::CombinedDisksClient).
@@ -74,27 +62,32 @@ pub trait CombinedDisksServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
-        _resource_group_name: &str,
-        _disk_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<Disk>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<CombinedDisksClientBeginCreateOrUpdateOptions<'_>>,
+        resource_group_name: &str,
+        disk_name: &str,
+        resource: RequestContent<Disk>,
+        state: PollerState,
+        request: &Request,
+        options: Option<CombinedDisksClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            disk_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!("CombinedDisksServer::begin_create_or_update is not implemented")
     }
     /// Handles [`CombinedDisksClient::get()`](crate::compute_disk::clients::CombinedDisksClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_group_name: &str,
-        _disk_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<CombinedDisksClientGetOptions<'_>>,
+        resource_group_name: &str,
+        disk_name: &str,
+        options: Option<CombinedDisksClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, disk_name, options);
         unimplemented!("CombinedDisksServer::get is not implemented")
     }
 }
@@ -113,7 +106,6 @@ pub(crate) async fn dispatch_begin_create_or_update<T: CombinedDisksServer + ?Si
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<Disk> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -126,9 +118,7 @@ pub(crate) async fn dispatch_begin_create_or_update<T: CombinedDisksServer + ?Si
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.disk_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(CombinedDisksClientBeginCreateOrUpdateOptions {
@@ -159,8 +149,6 @@ pub(crate) async fn dispatch_get<T: CombinedDisksServer + ?Sized>(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.disk_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(CombinedDisksClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

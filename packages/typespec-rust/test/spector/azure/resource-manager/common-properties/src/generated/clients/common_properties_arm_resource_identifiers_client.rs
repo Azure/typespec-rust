@@ -62,7 +62,7 @@ impl CommonPropertiesArmResourceIdentifiersClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::clients::fake::capture_common_properties_arm_resource_identifiers_client_create_or_replace(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(arm_resource_identifier_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            crate::clients::fake::capture_common_properties_arm_resource_identifiers_client_create_or_replace(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(arm_resource_identifier_resource_name)).to_owned());
             options
         };
         let ctx = options.method_options.context.to_borrowed();
@@ -132,8 +132,6 @@ impl CommonPropertiesArmResourceIdentifiersClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(arm_resource_identifier_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };

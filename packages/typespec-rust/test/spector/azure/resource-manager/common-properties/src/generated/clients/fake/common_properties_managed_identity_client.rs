@@ -20,67 +20,49 @@ use azure_core::{
 struct CommonPropertiesManagedIdentityClientCreateWithSystemAssignedArguments {
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_managed_identity_client_create_with_system_assigned(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(
         CommonPropertiesManagedIdentityClientCreateWithSystemAssignedArguments {
             resource_group_name,
             managed_identity_tracked_resource_name,
-            api_version,
-            subscription_id,
         },
     );
 }
 struct CommonPropertiesManagedIdentityClientGetArguments {
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_managed_identity_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(CommonPropertiesManagedIdentityClientGetArguments {
         resource_group_name,
         managed_identity_tracked_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 struct CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedArguments {
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_managed_identity_client_update_with_user_assigned_and_system_assigned(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(
         CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedArguments {
             resource_group_name,
             managed_identity_tracked_resource_name,
-            api_version,
-            subscription_id,
         },
     );
 }
@@ -96,13 +78,17 @@ pub trait CommonPropertiesManagedIdentityServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn create_with_system_assigned(
         &self,
-        _resource_group_name: &str,
-        _managed_identity_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ManagedIdentityTrackedResource>,
-        _options: Option<CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'_>>,
+        resource_group_name: &str,
+        managed_identity_tracked_resource_name: &str,
+        resource: RequestContent<ManagedIdentityTrackedResource>,
+        options: Option<CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            managed_identity_tracked_resource_name,
+            resource,
+            options,
+        );
         unimplemented!(
             "CommonPropertiesManagedIdentityServer::create_with_system_assigned is not implemented"
         )
@@ -111,27 +97,34 @@ pub trait CommonPropertiesManagedIdentityServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_group_name: &str,
-        _managed_identity_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<CommonPropertiesManagedIdentityClientGetOptions<'_>>,
+        resource_group_name: &str,
+        managed_identity_tracked_resource_name: &str,
+        options: Option<CommonPropertiesManagedIdentityClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            managed_identity_tracked_resource_name,
+            options,
+        );
         unimplemented!("CommonPropertiesManagedIdentityServer::get is not implemented")
     }
     /// Handles [`CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned).
     #[allow(clippy::too_many_arguments)]
     async fn update_with_user_assigned_and_system_assigned(
         &self,
-        _resource_group_name: &str,
-        _managed_identity_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ManagedIdentityTrackedResource>,
-        _options: Option<
+        resource_group_name: &str,
+        managed_identity_tracked_resource_name: &str,
+        properties: RequestContent<ManagedIdentityTrackedResource>,
+        options: Option<
             CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions<'_>,
         >,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            managed_identity_tracked_resource_name,
+            properties,
+            options,
+        );
         unimplemented!("CommonPropertiesManagedIdentityServer::update_with_user_assigned_and_system_assigned is not implemented")
     }
 }
@@ -152,14 +145,11 @@ pub(crate) async fn dispatch_create_with_system_assigned<
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ManagedIdentityTrackedResource> = request.body().clone().into();
     CommonPropertiesManagedIdentityServer::create_with_system_assigned(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.managed_identity_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(
             CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions {
                 method_options: ClientMethodOptions {
@@ -189,8 +179,6 @@ pub(crate) async fn dispatch_get<T: CommonPropertiesManagedIdentityServer + ?Siz
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.managed_identity_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(CommonPropertiesManagedIdentityClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -209,14 +197,11 @@ pub(crate) async fn dispatch_update_with_user_assigned_and_system_assigned<
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
     let arguments = context.value::<CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedArguments>().ok_or_else(|| azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{api_name}: missing operation arguments in request context")))?;
-    let content: RequestContent<ManagedIdentityTrackedResource> = request.body().clone().into();
     CommonPropertiesManagedIdentityServer::update_with_user_assigned_and_system_assigned(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.managed_identity_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(
             CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions {
                 method_options: ClientMethodOptions {

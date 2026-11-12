@@ -32,54 +32,38 @@ use std::sync::Arc;
 
 struct SecretClientBackupSecretArguments {
     secret_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_backup_secret(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
-    api_version: String,
 ) {
-    context.insert(SecretClientBackupSecretArguments {
-        secret_name,
-        api_version,
-    });
+    context.insert(SecretClientBackupSecretArguments { secret_name });
 }
 struct SecretClientDeleteSecretArguments {
     secret_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_delete_secret(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
-    api_version: String,
 ) {
-    context.insert(SecretClientDeleteSecretArguments {
-        secret_name,
-        api_version,
-    });
+    context.insert(SecretClientDeleteSecretArguments { secret_name });
 }
 struct SecretClientGetDeletedSecretArguments {
     secret_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_get_deleted_secret(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
-    api_version: String,
 ) {
-    context.insert(SecretClientGetDeletedSecretArguments {
-        secret_name,
-        api_version,
-    });
+    context.insert(SecretClientGetDeletedSecretArguments { secret_name });
 }
 struct SecretClientGetSecretArguments {
     secret_name: String,
     secret_version: Option<String>,
     out_content_type: Option<ContentType>,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_get_secret(
@@ -87,134 +71,91 @@ pub(crate) fn capture_secret_client_get_secret(
     secret_name: String,
     secret_version: Option<String>,
     out_content_type: Option<ContentType>,
-    api_version: String,
 ) {
     context.insert(SecretClientGetSecretArguments {
         secret_name,
         secret_version,
         out_content_type,
-        api_version,
     });
 }
 struct SecretClientListDeletedSecretPropertiesArguments {
     maxresults: Option<i32>,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_list_deleted_secret_properties(
     context: &mut azure_core::http::Context<'_>,
     maxresults: Option<i32>,
-    api_version: String,
 ) {
-    context.insert(SecretClientListDeletedSecretPropertiesArguments {
-        maxresults,
-        api_version,
-    });
+    context.insert(SecretClientListDeletedSecretPropertiesArguments { maxresults });
 }
 struct SecretClientListSecretPropertiesArguments {
     maxresults: Option<i32>,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_list_secret_properties(
     context: &mut azure_core::http::Context<'_>,
     maxresults: Option<i32>,
-    api_version: String,
 ) {
-    context.insert(SecretClientListSecretPropertiesArguments {
-        maxresults,
-        api_version,
-    });
+    context.insert(SecretClientListSecretPropertiesArguments { maxresults });
 }
 struct SecretClientListSecretPropertiesVersionsArguments {
     secret_name: String,
     maxresults: Option<i32>,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_list_secret_properties_versions(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
     maxresults: Option<i32>,
-    api_version: String,
 ) {
     context.insert(SecretClientListSecretPropertiesVersionsArguments {
         secret_name,
         maxresults,
-        api_version,
     });
 }
 struct SecretClientPurgeDeletedSecretArguments {
     secret_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_purge_deleted_secret(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
-    api_version: String,
 ) {
-    context.insert(SecretClientPurgeDeletedSecretArguments {
-        secret_name,
-        api_version,
-    });
+    context.insert(SecretClientPurgeDeletedSecretArguments { secret_name });
 }
 struct SecretClientRecoverDeletedSecretArguments {
     secret_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_recover_deleted_secret(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
-    api_version: String,
 ) {
-    context.insert(SecretClientRecoverDeletedSecretArguments {
-        secret_name,
-        api_version,
-    });
-}
-struct SecretClientRestoreSecretArguments {
-    api_version: String,
-}
-#[allow(clippy::too_many_arguments)]
-pub(crate) fn capture_secret_client_restore_secret(
-    context: &mut azure_core::http::Context<'_>,
-    api_version: String,
-) {
-    context.insert(SecretClientRestoreSecretArguments { api_version });
+    context.insert(SecretClientRecoverDeletedSecretArguments { secret_name });
 }
 struct SecretClientSetSecretArguments {
     secret_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_set_secret(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
-    api_version: String,
 ) {
-    context.insert(SecretClientSetSecretArguments {
-        secret_name,
-        api_version,
-    });
+    context.insert(SecretClientSetSecretArguments { secret_name });
 }
 struct SecretClientUpdateSecretArguments {
     secret_name: String,
     secret_version: Option<String>,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_secret_client_update_secret(
     context: &mut azure_core::http::Context<'_>,
     secret_name: String,
     secret_version: Option<String>,
-    api_version: String,
 ) {
     context.insert(SecretClientUpdateSecretArguments {
         secret_name,
         secret_version,
-        api_version,
     });
 }
 /// Fake server for [`SecretClient`](crate::clients::SecretClient).
@@ -229,123 +170,123 @@ pub trait SecretServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn backup_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _options: Option<SecretClientBackupSecretOptions<'_>>,
+        secret_name: &str,
+        options: Option<SecretClientBackupSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, options);
         unimplemented!("SecretServer::backup_secret is not implemented")
     }
     /// Handles [`SecretClient::delete_secret()`](crate::clients::SecretClient::delete_secret).
     #[allow(clippy::too_many_arguments)]
     async fn delete_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _options: Option<SecretClientDeleteSecretOptions<'_>>,
+        secret_name: &str,
+        options: Option<SecretClientDeleteSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, options);
         unimplemented!("SecretServer::delete_secret is not implemented")
     }
     /// Handles [`SecretClient::get_deleted_secret()`](crate::clients::SecretClient::get_deleted_secret).
     #[allow(clippy::too_many_arguments)]
     async fn get_deleted_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _options: Option<SecretClientGetDeletedSecretOptions<'_>>,
+        secret_name: &str,
+        options: Option<SecretClientGetDeletedSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, options);
         unimplemented!("SecretServer::get_deleted_secret is not implemented")
     }
     /// Handles [`SecretClient::get_secret()`](crate::clients::SecretClient::get_secret).
     #[allow(clippy::too_many_arguments)]
     async fn get_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _options: Option<SecretClientGetSecretOptions<'_>>,
+        secret_name: &str,
+        options: Option<SecretClientGetSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, options);
         unimplemented!("SecretServer::get_secret is not implemented")
     }
     /// Handles [`SecretClient::list_deleted_secret_properties()`](crate::clients::SecretClient::list_deleted_secret_properties).
     #[allow(clippy::too_many_arguments)]
     async fn list_deleted_secret_properties(
         &self,
-        _api_version: String,
-        _state: PagerState,
-        _options: Option<SecretClientListDeletedSecretPropertiesOptions<'_>>,
+        state: PagerState,
+        options: Option<SecretClientListDeletedSecretPropertiesOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (options, state);
         unimplemented!("SecretServer::list_deleted_secret_properties is not implemented")
     }
     /// Handles [`SecretClient::list_secret_properties()`](crate::clients::SecretClient::list_secret_properties).
     #[allow(clippy::too_many_arguments)]
     async fn list_secret_properties(
         &self,
-        _api_version: String,
-        _state: PagerState,
-        _options: Option<SecretClientListSecretPropertiesOptions<'_>>,
+        state: PagerState,
+        options: Option<SecretClientListSecretPropertiesOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (options, state);
         unimplemented!("SecretServer::list_secret_properties is not implemented")
     }
     /// Handles [`SecretClient::list_secret_properties_versions()`](crate::clients::SecretClient::list_secret_properties_versions).
     #[allow(clippy::too_many_arguments)]
     async fn list_secret_properties_versions(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _state: PagerState,
-        _options: Option<SecretClientListSecretPropertiesVersionsOptions<'_>>,
+        secret_name: &str,
+        state: PagerState,
+        options: Option<SecretClientListSecretPropertiesVersionsOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, options, state);
         unimplemented!("SecretServer::list_secret_properties_versions is not implemented")
     }
     /// Handles [`SecretClient::purge_deleted_secret()`](crate::clients::SecretClient::purge_deleted_secret).
     #[allow(clippy::too_many_arguments)]
     async fn purge_deleted_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _options: Option<SecretClientPurgeDeletedSecretOptions<'_>>,
+        secret_name: &str,
+        options: Option<SecretClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, options);
         unimplemented!("SecretServer::purge_deleted_secret is not implemented")
     }
     /// Handles [`SecretClient::recover_deleted_secret()`](crate::clients::SecretClient::recover_deleted_secret).
     #[allow(clippy::too_many_arguments)]
     async fn recover_deleted_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _options: Option<SecretClientRecoverDeletedSecretOptions<'_>>,
+        secret_name: &str,
+        options: Option<SecretClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, options);
         unimplemented!("SecretServer::recover_deleted_secret is not implemented")
     }
     /// Handles [`SecretClient::restore_secret()`](crate::clients::SecretClient::restore_secret).
     #[allow(clippy::too_many_arguments)]
     async fn restore_secret(
         &self,
-        _api_version: String,
-        _content: RequestContent<RestoreSecretParameters>,
-        _options: Option<SecretClientRestoreSecretOptions<'_>>,
+        parameters: RequestContent<RestoreSecretParameters>,
+        options: Option<SecretClientRestoreSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (parameters, options);
         unimplemented!("SecretServer::restore_secret is not implemented")
     }
     /// Handles [`SecretClient::set_secret()`](crate::clients::SecretClient::set_secret).
     #[allow(clippy::too_many_arguments)]
     async fn set_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _content: RequestContent<SetSecretParameters>,
-        _options: Option<SecretClientSetSecretOptions<'_>>,
+        secret_name: &str,
+        parameters: RequestContent<SetSecretParameters>,
+        options: Option<SecretClientSetSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, parameters, options);
         unimplemented!("SecretServer::set_secret is not implemented")
     }
     /// Handles [`SecretClient::update_secret()`](crate::clients::SecretClient::update_secret).
     #[allow(clippy::too_many_arguments)]
     async fn update_secret(
         &self,
-        _secret_name: &str,
-        _api_version: String,
-        _content: RequestContent<UpdateSecretPropertiesParameters>,
-        _options: Option<SecretClientUpdateSecretOptions<'_>>,
+        secret_name: &str,
+        parameters: RequestContent<UpdateSecretPropertiesParameters>,
+        options: Option<SecretClientUpdateSecretOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (secret_name, parameters, options);
         unimplemented!("SecretServer::update_secret is not implemented")
     }
 }
@@ -367,7 +308,6 @@ pub(crate) async fn dispatch_backup_secret<T: SecretServer + ?Sized>(
     SecretServer::backup_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
         Some(SecretClientBackupSecretOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -394,7 +334,6 @@ pub(crate) async fn dispatch_delete_secret<T: SecretServer + ?Sized>(
     SecretServer::delete_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
         Some(SecretClientDeleteSecretOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -421,7 +360,6 @@ pub(crate) async fn dispatch_get_deleted_secret<T: SecretServer + ?Sized>(
     SecretServer::get_deleted_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
         Some(SecretClientGetDeletedSecretOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -448,7 +386,6 @@ pub(crate) async fn dispatch_get_secret<T: SecretServer + ?Sized>(
     SecretServer::get_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
         Some(SecretClientGetSecretOptions {
             secret_version: (arguments.secret_version).clone(),
             out_content_type: (arguments.out_content_type).clone(),
@@ -484,7 +421,6 @@ pub(crate) async fn dispatch_list_deleted_secret_properties<T: SecretServer + ?S
         })?;
     SecretServer::list_deleted_secret_properties(
         server,
-        (arguments.api_version).clone(),
         state.clone(),
         Some(SecretClientListDeletedSecretPropertiesOptions {
             maxresults: arguments.maxresults,
@@ -524,7 +460,6 @@ pub(crate) async fn dispatch_list_secret_properties<T: SecretServer + ?Sized>(
         })?;
     SecretServer::list_secret_properties(
         server,
-        (arguments.api_version).clone(),
         state.clone(),
         Some(SecretClientListSecretPropertiesOptions {
             maxresults: arguments.maxresults,
@@ -565,7 +500,6 @@ pub(crate) async fn dispatch_list_secret_properties_versions<T: SecretServer + ?
     SecretServer::list_secret_properties_versions(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
         state.clone(),
         Some(SecretClientListSecretPropertiesVersionsOptions {
             maxresults: arguments.maxresults,
@@ -598,7 +532,6 @@ pub(crate) async fn dispatch_purge_deleted_secret<T: SecretServer + ?Sized>(
     SecretServer::purge_deleted_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
         Some(SecretClientPurgeDeletedSecretOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -625,7 +558,6 @@ pub(crate) async fn dispatch_recover_deleted_secret<T: SecretServer + ?Sized>(
     SecretServer::recover_deleted_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
         Some(SecretClientRecoverDeletedSecretOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -641,19 +573,9 @@ pub(crate) async fn dispatch_restore_secret<T: SecretServer + ?Sized>(
     api_name: &str,
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
-    let arguments = context
-        .value::<SecretClientRestoreSecretArguments>()
-        .ok_or_else(|| {
-            azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{api_name}: missing operation arguments in request context"),
-            )
-        })?;
-    let content: RequestContent<RestoreSecretParameters> = request.body().clone().into();
     SecretServer::restore_secret(
         server,
-        (arguments.api_version).clone(),
-        content,
+        request.body().clone().into(),
         Some(SecretClientRestoreSecretOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -677,12 +599,10 @@ pub(crate) async fn dispatch_set_secret<T: SecretServer + ?Sized>(
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<SetSecretParameters> = request.body().clone().into();
     SecretServer::set_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
-        content,
+        request.body().clone().into(),
         Some(SecretClientSetSecretOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -706,12 +626,10 @@ pub(crate) async fn dispatch_update_secret<T: SecretServer + ?Sized>(
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<UpdateSecretPropertiesParameters> = request.body().clone().into();
     SecretServer::update_secret(
         server,
         (arguments.secret_name).as_str(),
-        (arguments.api_version).clone(),
-        content,
+        request.body().clone().into(),
         Some(SecretClientUpdateSecretOptions {
             secret_version: (arguments.secret_version).clone(),
             method_options: ClientMethodOptions {
@@ -873,6 +791,7 @@ impl SecretClient {
         options: Option<SecretClientOptions>,
     ) -> Result<Self> {
         let mut options = options.unwrap_or_default();
+        let endpoint = Url::parse(endpoint)?;
         if options.client_options.transport.is_some() {
             return Err(Error::with_message(
                 ErrorKind::Other,
@@ -885,7 +804,7 @@ impl SecretClient {
             })));
         Ok(Self {
             api_version: options.api_version,
-            endpoint: Url::parse(endpoint)?,
+            endpoint,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),

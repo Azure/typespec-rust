@@ -19,43 +19,31 @@ use azure_core::{
 struct NonResourceNonResourceOperationsClientCreateArguments {
     location: String,
     parameter: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_non_resource_non_resource_operations_client_create(
     context: &mut azure_core::http::Context<'_>,
     location: String,
     parameter: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(NonResourceNonResourceOperationsClientCreateArguments {
         location,
         parameter,
-        api_version,
-        subscription_id,
     });
 }
 struct NonResourceNonResourceOperationsClientGetArguments {
     location: String,
     parameter: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_non_resource_non_resource_operations_client_get(
     context: &mut azure_core::http::Context<'_>,
     location: String,
     parameter: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(NonResourceNonResourceOperationsClientGetArguments {
         location,
         parameter,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`NonResourceNonResourceOperationsClient`](crate::clients::NonResourceNonResourceOperationsClient).
@@ -70,25 +58,23 @@ pub trait NonResourceNonResourceOperationsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn create(
         &self,
-        _location: &str,
-        _parameter: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<NonResource>,
-        _options: Option<NonResourceNonResourceOperationsClientCreateOptions<'_>>,
+        location: &str,
+        parameter: &str,
+        body: RequestContent<NonResource>,
+        options: Option<NonResourceNonResourceOperationsClientCreateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, parameter, body, options);
         unimplemented!("NonResourceNonResourceOperationsServer::create is not implemented")
     }
     /// Handles [`NonResourceNonResourceOperationsClient::get()`](crate::clients::NonResourceNonResourceOperationsClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _location: &str,
-        _parameter: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<NonResourceNonResourceOperationsClientGetOptions<'_>>,
+        location: &str,
+        parameter: &str,
+        options: Option<NonResourceNonResourceOperationsClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, parameter, options);
         unimplemented!("NonResourceNonResourceOperationsServer::get is not implemented")
     }
 }
@@ -107,14 +93,11 @@ pub(crate) async fn dispatch_create<T: NonResourceNonResourceOperationsServer + 
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<NonResource> = request.body().clone().into();
     NonResourceNonResourceOperationsServer::create(
         server,
         (arguments.location).as_str(),
         (arguments.parameter).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(NonResourceNonResourceOperationsClientCreateOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -142,8 +125,6 @@ pub(crate) async fn dispatch_get<T: NonResourceNonResourceOperationsServer + ?Si
         server,
         (arguments.location).as_str(),
         (arguments.parameter).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(NonResourceNonResourceOperationsClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

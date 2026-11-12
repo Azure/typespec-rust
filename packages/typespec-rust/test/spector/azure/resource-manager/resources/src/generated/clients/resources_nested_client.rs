@@ -90,8 +90,6 @@ impl ResourcesNestedClient {
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
                 (*(nexted_proxy_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -173,8 +171,6 @@ impl ResourcesNestedClient {
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
                 (*(nexted_proxy_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -255,8 +251,6 @@ impl ResourcesNestedClient {
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
                 (*(nexted_proxy_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -329,8 +323,6 @@ impl ResourcesNestedClient {
                 (*(resource_group_name)).to_owned(),
                 (*(top_level_tracked_resource_name)).to_owned(),
                 (*(nexted_proxy_resource_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
             );
             options
         };
@@ -396,7 +388,7 @@ impl ResourcesNestedClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::clients::fake::capture_resources_nested_client_list_by_top_level_tracked_resource(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(top_level_tracked_resource_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone());
+            crate::clients::fake::capture_resources_nested_client_list_by_top_level_tracked_resource(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(top_level_tracked_resource_name)).to_owned());
             options
         };
         let pipeline = self.pipeline.clone();

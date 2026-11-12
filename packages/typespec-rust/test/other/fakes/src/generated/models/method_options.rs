@@ -6,7 +6,10 @@
 use super::Mode;
 use azure_core::{
     fmt::SafeDebug,
-    http::{pager::PagerOptions, poller::PollerOptions, ClientMethodOptions},
+    http::{
+        pager::PagerOptions, poller::PollerOptions, ClientMethodOptions, NoFormat, RequestContent,
+    },
+    Bytes,
 };
 
 /// Options to be passed to [`FakesChildClient::get()`](crate::generated::clients::FakesChildClient::get())
@@ -57,6 +60,40 @@ pub struct FakesClientGetOptions<'a> {
     pub version: Option<String>,
 }
 
+/// Options to be passed to [`FakesClient::grouped()`](crate::generated::clients::FakesClient::grouped())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesClientGroupedOptions<'a> {
+    pub count: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`FakesClient::list_optional()`](crate::generated::clients::FakesClient::list_optional())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesClientListOptionalOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PagerOptions<'a>,
+
+    pub payload: Option<RequestContent<Bytes, NoFormat>>,
+
+    pub state: Option<String>,
+}
+
+impl FakesClientListOptionalOptions<'_> {
+    /// Transforms this [`FakesClientListOptionalOptions`] into a new `FakesClientListOptionalOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> FakesClientListOptionalOptions<'static> {
+        FakesClientListOptionalOptions {
+            method_options: PagerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+            payload: self.payload,
+            state: self.state,
+        }
+    }
+}
+
 /// Options to be passed to [`FakesClient::list()`](crate::generated::clients::FakesClient::list())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FakesClientListOptions<'a> {
@@ -86,6 +123,15 @@ pub struct FakesClientPutModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`FakesClient::put_optional()`](crate::generated::clients::FakesClient::put_optional())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesClientPutOptionalOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub payload: Option<RequestContent<Bytes, NoFormat>>,
+}
+
 /// Options to be passed to [`FakesClient::put()`](crate::generated::clients::FakesClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FakesClientPutOptions<'a> {
@@ -100,4 +146,10 @@ pub struct FakesClientSpreadOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 
     pub optional: Option<String>,
+}
+
+#[derive(Clone, SafeDebug)]
+pub struct GroupedInputs<'a> {
+    pub name: &'a str,
+    pub label: String,
 }

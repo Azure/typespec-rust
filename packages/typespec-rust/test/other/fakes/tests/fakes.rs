@@ -46,6 +46,7 @@ struct Server {
     seen: Mutex<Vec<(String, Option<i32>, bool)>>,
     bodies: Mutex<Vec<Vec<u8>>>,
     lro_steps: Mutex<usize>,
+    optional_bodies: Mutex<Vec<Option<Vec<u8>>>>,
 }
 
 #[async_trait]
@@ -57,6 +58,43 @@ impl FakesChildServer for Server {
 
 #[async_trait]
 impl FakesServer for Server {
+    async fn grouped(
+        &self,
+        inputs: GroupedInputs<'_>,
+        options: Option<FakesClientGroupedOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        assert_eq!(inputs.name, "group/name");
+        assert_eq!(inputs.label, "label");
+        assert_eq!(options.unwrap().count, Some(7));
+        response(r#"{"value":"grouped"}"#)
+    }
+
+    async fn put_optional(
+        &self,
+        options: Option<FakesClientPutOptionalOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let body = match options.unwrap().payload {
+            Some(body) => Some(bytes(body.into()).await),
+            None => None,
+        };
+        self.optional_bodies.lock().unwrap().push(body);
+        response(r#"{"value":"optional"}"#)
+    }
+
+    async fn list_optional(
+        &self,
+        state: PagerState,
+        options: Option<FakesClientListOptionalOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        assert!(matches!(state, PagerState::Initial));
+        let body = match options.unwrap().payload {
+            Some(body) => Some(bytes(body.into()).await),
+            None => None,
+        };
+        self.optional_bodies.lock().unwrap().push(body);
+        response(r#"{"value":[]}"#)
+    }
+
     async fn get(
         &self,
         name: &str,
@@ -239,6 +277,74 @@ async fn original_arguments_and_child_routing() -> Result<()> {
             .value
             .as_deref(),
         Some("child")
+    );
+    Ok(())
+}
+
+#[tokio::test]
+async fn grouped_parameters_keep_the_normal_public_shape() -> Result<()> {
+    let client = client(Arc::new(Server::default()))?;
+    let result = client
+        .grouped(
+            GroupedInputs {
+                name: "group/name",
+                label: "label".into(),
+            },
+            Some(FakesClientGroupedOptions {
+                count: Some(7),
+                ..Default::default()
+            }),
+        )
+        .await?;
+    assert_eq!(result.into_model()?.value.as_deref(), Some("grouped"));
+    Ok(())
+}
+
+#[tokio::test]
+async fn optional_bodies_preserve_presence_empty_content_and_policy_changes() -> Result<()> {
+    let server = Arc::new(Server::default());
+    let normal = client(server.clone())?;
+    normal.put_optional(None).await?;
+    for data in [vec![], vec![0, 255, 1]] {
+        normal
+            .put_optional(Some(FakesClientPutOptionalOptions {
+                payload: Some(RequestContent::from(data)),
+                ..Default::default()
+            }))
+            .await?;
+    }
+    let modified = FakesClient::with_fake(
+        "https://example.test",
+        server.clone(),
+        Some(FakesClientOptions {
+            client_options: ClientOptions {
+                per_call_policies: vec![Arc::new(ReplaceBody)],
+                ..Default::default()
+            },
+        }),
+    )?;
+    modified
+        .put_optional(Some(FakesClientPutOptionalOptions {
+            payload: Some(RequestContent::from(b"original".to_vec())),
+            ..Default::default()
+        }))
+        .await?;
+    let mut pages = normal
+        .list_optional(Some(FakesClientListOptionalOptions {
+            payload: Some(RequestContent::from(vec![])),
+            ..Default::default()
+        }))?
+        .into_pages();
+    assert!(pages.try_next().await?.is_some());
+    assert_eq!(
+        *server.optional_bodies.lock().unwrap(),
+        vec![
+            None,
+            Some(vec![]),
+            Some(vec![0, 255, 1]),
+            Some(b"changed by policy".to_vec()),
+            Some(vec![])
+        ]
     );
     Ok(())
 }

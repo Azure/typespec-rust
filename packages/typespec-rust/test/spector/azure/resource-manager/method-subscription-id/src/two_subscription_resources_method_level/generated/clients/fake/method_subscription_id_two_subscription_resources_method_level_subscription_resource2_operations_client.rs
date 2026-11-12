@@ -21,46 +21,40 @@ struct MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResour
 {
     subscription_id: String,
     subscription_resource2_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client_delete(
     context: &mut azure_core::http::Context<'_>,
     subscription_id: String,
     subscription_resource2_name: String,
-    api_version: String,
 ) {
-    context.insert(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientDeleteArguments { subscription_id, subscription_resource2_name, api_version });
+    context.insert(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientDeleteArguments { subscription_id, subscription_resource2_name });
 }
 struct MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetArguments
 {
     subscription_id: String,
     subscription_resource2_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client_get(
     context: &mut azure_core::http::Context<'_>,
     subscription_id: String,
     subscription_resource2_name: String,
-    api_version: String,
 ) {
-    context.insert(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetArguments { subscription_id, subscription_resource2_name, api_version });
+    context.insert(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetArguments { subscription_id, subscription_resource2_name });
 }
 struct MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutArguments
 {
     subscription_id: String,
     subscription_resource2_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client_put(
     context: &mut azure_core::http::Context<'_>,
     subscription_id: String,
     subscription_resource2_name: String,
-    api_version: String,
 ) {
-    context.insert(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutArguments { subscription_id, subscription_resource2_name, api_version });
+    context.insert(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutArguments { subscription_id, subscription_resource2_name });
 }
 /// Fake server for [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient).
 ///
@@ -76,34 +70,39 @@ pub trait MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionRes
     #[allow(clippy::too_many_arguments)]
     async fn delete(
         &self,
-        _subscription_id: &str,
-        _subscription_resource2_name: &str,
-        _api_version: String,
-        _options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientDeleteOptions<'_>>,
+        subscription_id: &str,
+        subscription_resource2_name: &str,
+        options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (subscription_id, subscription_resource2_name, options);
         unimplemented!("MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::delete is not implemented")
     }
     /// Handles [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::get()`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _subscription_id: &str,
-        _subscription_resource2_name: &str,
-        _api_version: String,
-        _options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetOptions<'_>>,
+        subscription_id: &str,
+        subscription_resource2_name: &str,
+        options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (subscription_id, subscription_resource2_name, options);
         unimplemented!("MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::get is not implemented")
     }
     /// Handles [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::put()`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::put).
     #[allow(clippy::too_many_arguments)]
     async fn put(
         &self,
-        _subscription_id: &str,
-        _subscription_resource2_name: &str,
-        _api_version: String,
-        _content: RequestContent<SubscriptionResource2>,
-        _options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutOptions<'_>>,
+        subscription_id: &str,
+        subscription_resource2_name: &str,
+        resource: RequestContent<SubscriptionResource2>,
+        options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            subscription_id,
+            subscription_resource2_name,
+            resource,
+            options,
+        );
         unimplemented!("MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::put is not implemented")
     }
 }
@@ -118,7 +117,7 @@ pub(crate) async fn dispatch_delete<
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
     let arguments = context.value::<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientDeleteArguments>().ok_or_else(|| azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{api_name}: missing operation arguments in request context")))?;
-    MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::delete(server, (arguments.subscription_id).as_str(), (arguments.subscription_resource2_name).as_str(), (arguments.api_version).clone(), Some(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientDeleteOptions { method_options: ClientMethodOptions {
+    MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::delete(server, (arguments.subscription_id).as_str(), (arguments.subscription_resource2_name).as_str(), Some(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientDeleteOptions { method_options: ClientMethodOptions {
 context: context.to_owned(),
 } })).await
 }
@@ -133,7 +132,7 @@ pub(crate) async fn dispatch_get<
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
     let arguments = context.value::<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetArguments>().ok_or_else(|| azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{api_name}: missing operation arguments in request context")))?;
-    MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::get(server, (arguments.subscription_id).as_str(), (arguments.subscription_resource2_name).as_str(), (arguments.api_version).clone(), Some(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetOptions { method_options: ClientMethodOptions {
+    MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::get(server, (arguments.subscription_id).as_str(), (arguments.subscription_resource2_name).as_str(), Some(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientGetOptions { method_options: ClientMethodOptions {
 context: context.to_owned(),
 } })).await
 }
@@ -148,8 +147,7 @@ pub(crate) async fn dispatch_put<
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
     let arguments = context.value::<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutArguments>().ok_or_else(|| azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{api_name}: missing operation arguments in request context")))?;
-    let content: RequestContent<SubscriptionResource2> = request.body().clone().into();
-    MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::put(server, (arguments.subscription_id).as_str(), (arguments.subscription_resource2_name).as_str(), (arguments.api_version).clone(), content, Some(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutOptions { method_options: ClientMethodOptions {
+    MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::put(server, (arguments.subscription_id).as_str(), (arguments.subscription_resource2_name).as_str(), request.body().clone().into(), Some(MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClientPutOptions { method_options: ClientMethodOptions {
 context: context.to_owned(),
 } })).await
 }

@@ -163,8 +163,6 @@ impl ResourceManagerClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(vault_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -335,7 +333,6 @@ impl ResourceManagerClient {
             let mut options = options;
             crate::clients::fake::capture_resource_manager_client_begin_inline_result(
                 &mut options.method_options.context,
-                (self.api_version).clone(),
                 options.method_options.frequency,
             );
             options
@@ -405,7 +402,6 @@ impl ResourceManagerClient {
             let mut options = options;
             crate::clients::fake::capture_resource_manager_client_begin_original_result(
                 &mut options.method_options.context,
-                (self.api_version).clone(),
                 options.method_options.frequency,
             );
             options

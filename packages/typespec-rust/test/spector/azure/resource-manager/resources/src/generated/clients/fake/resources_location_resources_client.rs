@@ -24,103 +24,71 @@ use azure_core::{
 struct ResourcesLocationResourcesClientCreateOrUpdateArguments {
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesLocationResourcesClientCreateOrUpdateArguments {
         location,
         location_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesLocationResourcesClientDeleteArguments {
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_delete(
     context: &mut azure_core::http::Context<'_>,
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesLocationResourcesClientDeleteArguments {
         location,
         location_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesLocationResourcesClientGetArguments {
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_get(
     context: &mut azure_core::http::Context<'_>,
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesLocationResourcesClientGetArguments {
         location,
         location_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesLocationResourcesClientListByLocationArguments {
     location: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_list_by_location(
     context: &mut azure_core::http::Context<'_>,
     location: String,
-    api_version: String,
-    subscription_id: String,
 ) {
-    context.insert(ResourcesLocationResourcesClientListByLocationArguments {
-        location,
-        api_version,
-        subscription_id,
-    });
+    context.insert(ResourcesLocationResourcesClientListByLocationArguments { location });
 }
 struct ResourcesLocationResourcesClientUpdateArguments {
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_update(
     context: &mut azure_core::http::Context<'_>,
     location: String,
     location_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesLocationResourcesClientUpdateArguments {
         location,
         location_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`ResourcesLocationResourcesClient`](crate::clients::ResourcesLocationResourcesClient).
@@ -135,62 +103,57 @@ pub trait ResourcesLocationResourcesServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn create_or_update(
         &self,
-        _location: &str,
-        _location_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<LocationResource>,
-        _options: Option<ResourcesLocationResourcesClientCreateOrUpdateOptions<'_>>,
+        location: &str,
+        location_resource_name: &str,
+        resource: RequestContent<LocationResource>,
+        options: Option<ResourcesLocationResourcesClientCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, location_resource_name, resource, options);
         unimplemented!("ResourcesLocationResourcesServer::create_or_update is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::delete()`](crate::clients::ResourcesLocationResourcesClient::delete).
     #[allow(clippy::too_many_arguments)]
     async fn delete(
         &self,
-        _location: &str,
-        _location_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<ResourcesLocationResourcesClientDeleteOptions<'_>>,
+        location: &str,
+        location_resource_name: &str,
+        options: Option<ResourcesLocationResourcesClientDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, location_resource_name, options);
         unimplemented!("ResourcesLocationResourcesServer::delete is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::get()`](crate::clients::ResourcesLocationResourcesClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _location: &str,
-        _location_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<ResourcesLocationResourcesClientGetOptions<'_>>,
+        location: &str,
+        location_resource_name: &str,
+        options: Option<ResourcesLocationResourcesClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, location_resource_name, options);
         unimplemented!("ResourcesLocationResourcesServer::get is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::list_by_location()`](crate::clients::ResourcesLocationResourcesClient::list_by_location).
     #[allow(clippy::too_many_arguments)]
     async fn list_by_location(
         &self,
-        _location: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PagerState,
-        _options: Option<ResourcesLocationResourcesClientListByLocationOptions<'_>>,
+        location: &str,
+        state: PagerState,
+        options: Option<ResourcesLocationResourcesClientListByLocationOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, options, state);
         unimplemented!("ResourcesLocationResourcesServer::list_by_location is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::update()`](crate::clients::ResourcesLocationResourcesClient::update).
     #[allow(clippy::too_many_arguments)]
     async fn update(
         &self,
-        _location: &str,
-        _location_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<LocationResource>,
-        _options: Option<ResourcesLocationResourcesClientUpdateOptions<'_>>,
+        location: &str,
+        location_resource_name: &str,
+        properties: RequestContent<LocationResource>,
+        options: Option<ResourcesLocationResourcesClientUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (location, location_resource_name, properties, options);
         unimplemented!("ResourcesLocationResourcesServer::update is not implemented")
     }
 }
@@ -209,14 +172,11 @@ pub(crate) async fn dispatch_create_or_update<T: ResourcesLocationResourcesServe
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<LocationResource> = request.body().clone().into();
     ResourcesLocationResourcesServer::create_or_update(
         server,
         (arguments.location).as_str(),
         (arguments.location_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(ResourcesLocationResourcesClientCreateOrUpdateOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -244,8 +204,6 @@ pub(crate) async fn dispatch_delete<T: ResourcesLocationResourcesServer + ?Sized
         server,
         (arguments.location).as_str(),
         (arguments.location_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(ResourcesLocationResourcesClientDeleteOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -273,8 +231,6 @@ pub(crate) async fn dispatch_get<T: ResourcesLocationResourcesServer + ?Sized>(
         server,
         (arguments.location).as_str(),
         (arguments.location_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(ResourcesLocationResourcesClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -309,8 +265,6 @@ pub(crate) async fn dispatch_list_by_location<T: ResourcesLocationResourcesServe
     ResourcesLocationResourcesServer::list_by_location(
         server,
         (arguments.location).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         Some(ResourcesLocationResourcesClientListByLocationOptions {
             method_options: PagerOptions {
@@ -339,14 +293,11 @@ pub(crate) async fn dispatch_update<T: ResourcesLocationResourcesServer + ?Sized
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<LocationResource> = request.body().clone().into();
     ResourcesLocationResourcesServer::update(
         server,
         (arguments.location).as_str(),
         (arguments.location_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(ResourcesLocationResourcesClientUpdateOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

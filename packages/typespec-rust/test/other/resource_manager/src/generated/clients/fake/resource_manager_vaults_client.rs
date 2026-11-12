@@ -7,6 +7,7 @@ use crate::{
     generated::models::{PurgeRequest, Vault},
     models::{
         ResourceManagerVaultsClientBeginCreateOrUpdateOptions,
+        ResourceManagerVaultsClientBeginGetLroOptions,
         ResourceManagerVaultsClientBeginPurgeOptions,
     },
 };
@@ -22,8 +23,6 @@ use azure_core::{
 struct ResourceManagerVaultsClientBeginCreateOrUpdateArguments {
     resource_group_name: String,
     vault_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -31,23 +30,35 @@ pub(crate) fn capture_resource_manager_vaults_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     vault_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourceManagerVaultsClientBeginCreateOrUpdateArguments {
         resource_group_name,
         vault_name,
-        api_version,
-        subscription_id,
+        frequency,
+    });
+}
+struct ResourceManagerVaultsClientBeginGetLroArguments {
+    resource_group_name: String,
+    vault_name: String,
+    frequency: azure_core::time::Duration,
+}
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn capture_resource_manager_vaults_client_begin_get_lro(
+    context: &mut azure_core::http::Context<'_>,
+    resource_group_name: String,
+    vault_name: String,
+    frequency: azure_core::time::Duration,
+) {
+    context.insert(ResourceManagerVaultsClientBeginGetLroArguments {
+        resource_group_name,
+        vault_name,
         frequency,
     });
 }
 struct ResourceManagerVaultsClientBeginPurgeArguments {
     resource_group_name: String,
     vault_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -55,15 +66,11 @@ pub(crate) fn capture_resource_manager_vaults_client_begin_purge(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     vault_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourceManagerVaultsClientBeginPurgeArguments {
         resource_group_name,
         vault_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
@@ -80,31 +87,57 @@ pub trait ResourceManagerVaultsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
-        _resource_group_name: &str,
-        _vault_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<Vault>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourceManagerVaultsClientBeginCreateOrUpdateOptions<'_>>,
+        resource_group_name: &str,
+        vault_name: &str,
+        resource: RequestContent<Vault>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerVaultsClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            vault_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourceManagerVaultsServer::begin_create_or_update is not implemented")
+    }
+    /// Handles [`ResourceManagerVaultsClient::begin_get_lro()`](crate::clients::ResourceManagerVaultsClient::begin_get_lro).
+    /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
+    #[allow(clippy::too_many_arguments)]
+    async fn begin_get_lro(
+        &self,
+        resource_group_name: &str,
+        vault_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerVaultsClientBeginGetLroOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, vault_name, options, state, request);
+        unimplemented!("ResourceManagerVaultsServer::begin_get_lro is not implemented")
     }
     /// Handles [`ResourceManagerVaultsClient::begin_purge()`](crate::clients::ResourceManagerVaultsClient::begin_purge).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
     #[allow(clippy::too_many_arguments)]
     async fn begin_purge(
         &self,
-        _resource_group_name: &str,
-        _vault_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<PurgeRequest>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourceManagerVaultsClientBeginPurgeOptions<'_>>,
+        resource_group_name: &str,
+        vault_name: &str,
+        body: RequestContent<PurgeRequest>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerVaultsClientBeginPurgeOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            vault_name,
+            body,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourceManagerVaultsServer::begin_purge is not implemented")
     }
 }
@@ -123,7 +156,6 @@ pub(crate) async fn dispatch_begin_create_or_update<T: ResourceManagerVaultsServ
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<Vault> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -136,12 +168,48 @@ pub(crate) async fn dispatch_begin_create_or_update<T: ResourceManagerVaultsServ
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.vault_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourceManagerVaultsClientBeginCreateOrUpdateOptions {
+            method_options: PollerOptions {
+                context: context.to_owned(),
+                frequency: arguments.frequency,
+            },
+        }),
+    )
+    .await
+}
+pub(crate) async fn dispatch_begin_get_lro<T: ResourceManagerVaultsServer + ?Sized>(
+    server: &T,
+    context: &azure_core::http::Context<'_>,
+    request: &mut azure_core::http::Request,
+    api_name: &str,
+) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
+    let _ = (&request, api_name);
+    let arguments = context
+        .value::<ResourceManagerVaultsClientBeginGetLroArguments>()
+        .ok_or_else(|| {
+            azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{api_name}: missing operation arguments in request context"),
+            )
+        })?;
+    let state = context
+        .value::<azure_core::http::poller::PollerState>()
+        .ok_or_else(|| {
+            azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{api_name}: missing operation state in request context"),
+            )
+        })?;
+    ResourceManagerVaultsServer::begin_get_lro(
+        server,
+        (arguments.resource_group_name).as_str(),
+        (arguments.vault_name).as_str(),
+        state.clone(),
+        request,
+        Some(ResourceManagerVaultsClientBeginGetLroOptions {
             method_options: PollerOptions {
                 context: context.to_owned(),
                 frequency: arguments.frequency,
@@ -165,7 +233,6 @@ pub(crate) async fn dispatch_begin_purge<T: ResourceManagerVaultsServer + ?Sized
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<PurgeRequest> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -178,9 +245,7 @@ pub(crate) async fn dispatch_begin_purge<T: ResourceManagerVaultsServer + ?Sized
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.vault_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourceManagerVaultsClientBeginPurgeOptions {

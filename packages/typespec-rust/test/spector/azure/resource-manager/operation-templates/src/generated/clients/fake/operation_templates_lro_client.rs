@@ -25,8 +25,6 @@ use azure_core::{
 struct OperationTemplatesLroClientBeginCreateOrReplaceArguments {
     resource_group_name: String,
     order_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -34,23 +32,17 @@ pub(crate) fn capture_operation_templates_lro_client_begin_create_or_replace(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     order_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(OperationTemplatesLroClientBeginCreateOrReplaceArguments {
         resource_group_name,
         order_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct OperationTemplatesLroClientBeginDeleteArguments {
     resource_group_name: String,
     order_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -58,23 +50,17 @@ pub(crate) fn capture_operation_templates_lro_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     order_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(OperationTemplatesLroClientBeginDeleteArguments {
         resource_group_name,
         order_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct OperationTemplatesLroClientBeginExportArguments {
     resource_group_name: String,
     order_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -82,40 +68,27 @@ pub(crate) fn capture_operation_templates_lro_client_begin_export(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     order_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(OperationTemplatesLroClientBeginExportArguments {
         resource_group_name,
         order_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct OperationTemplatesLroClientBeginExportArrayArguments {
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_lro_client_begin_export_array(
     context: &mut azure_core::http::Context<'_>,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
-    context.insert(OperationTemplatesLroClientBeginExportArrayArguments {
-        api_version,
-        subscription_id,
-        frequency,
-    });
+    context.insert(OperationTemplatesLroClientBeginExportArrayArguments { frequency });
 }
 struct OperationTemplatesLroClientBeginGetLroArguments {
     scope: String,
     operation_id: String,
-    api_version: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -123,13 +96,11 @@ pub(crate) fn capture_operation_templates_lro_client_begin_get_lro(
     context: &mut azure_core::http::Context<'_>,
     scope: String,
     operation_id: String,
-    api_version: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(OperationTemplatesLroClientBeginGetLroArguments {
         scope,
         operation_id,
-        api_version,
         frequency,
     });
 }
@@ -146,15 +117,21 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_replace(
         &self,
-        _resource_group_name: &str,
-        _order_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<Order>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<OperationTemplatesLroClientBeginCreateOrReplaceOptions<'_>>,
+        resource_group_name: &str,
+        order_name: &str,
+        resource: RequestContent<Order>,
+        state: PollerState,
+        request: &Request,
+        options: Option<OperationTemplatesLroClientBeginCreateOrReplaceOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            order_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!("OperationTemplatesLroServer::begin_create_or_replace is not implemented")
     }
     /// Handles [`OperationTemplatesLroClient::begin_delete()`](crate::clients::OperationTemplatesLroClient::begin_delete).
@@ -162,14 +139,13 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
-        _resource_group_name: &str,
-        _order_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<OperationTemplatesLroClientBeginDeleteOptions<'_>>,
+        resource_group_name: &str,
+        order_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<OperationTemplatesLroClientBeginDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, order_name, options, state, request);
         unimplemented!("OperationTemplatesLroServer::begin_delete is not implemented")
     }
     /// Handles [`OperationTemplatesLroClient::begin_export()`](crate::clients::OperationTemplatesLroClient::begin_export).
@@ -177,15 +153,21 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_export(
         &self,
-        _resource_group_name: &str,
-        _order_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ExportRequest>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<OperationTemplatesLroClientBeginExportOptions<'_>>,
+        resource_group_name: &str,
+        order_name: &str,
+        body: RequestContent<ExportRequest>,
+        state: PollerState,
+        request: &Request,
+        options: Option<OperationTemplatesLroClientBeginExportOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            order_name,
+            body,
+            options,
+            state,
+            request,
+        );
         unimplemented!("OperationTemplatesLroServer::begin_export is not implemented")
     }
     /// Handles [`OperationTemplatesLroClient::begin_export_array()`](crate::clients::OperationTemplatesLroClient::begin_export_array).
@@ -193,13 +175,12 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_export_array(
         &self,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<ExportRequest>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<OperationTemplatesLroClientBeginExportArrayOptions<'_>>,
+        body: RequestContent<ExportRequest>,
+        state: PollerState,
+        request: &Request,
+        options: Option<OperationTemplatesLroClientBeginExportArrayOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (body, options, state, request);
         unimplemented!("OperationTemplatesLroServer::begin_export_array is not implemented")
     }
     /// Handles [`OperationTemplatesLroClient::begin_get_lro()`](crate::clients::OperationTemplatesLroClient::begin_get_lro).
@@ -207,13 +188,13 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_get_lro(
         &self,
-        _scope: &str,
-        _operation_id: &str,
-        _api_version: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<OperationTemplatesLroClientBeginGetLroOptions<'_>>,
+        scope: &str,
+        operation_id: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<OperationTemplatesLroClientBeginGetLroOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (scope, operation_id, options, state, request);
         unimplemented!("OperationTemplatesLroServer::begin_get_lro is not implemented")
     }
 }
@@ -232,7 +213,6 @@ pub(crate) async fn dispatch_begin_create_or_replace<T: OperationTemplatesLroSer
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<Order> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -245,9 +225,7 @@ pub(crate) async fn dispatch_begin_create_or_replace<T: OperationTemplatesLroSer
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.order_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(OperationTemplatesLroClientBeginCreateOrReplaceOptions {
@@ -286,8 +264,6 @@ pub(crate) async fn dispatch_begin_delete<T: OperationTemplatesLroServer + ?Size
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.order_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         request,
         Some(OperationTemplatesLroClientBeginDeleteOptions {
@@ -314,7 +290,6 @@ pub(crate) async fn dispatch_begin_export<T: OperationTemplatesLroServer + ?Size
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ExportRequest> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -327,9 +302,7 @@ pub(crate) async fn dispatch_begin_export<T: OperationTemplatesLroServer + ?Size
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.order_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(OperationTemplatesLroClientBeginExportOptions {
@@ -356,7 +329,6 @@ pub(crate) async fn dispatch_begin_export_array<T: OperationTemplatesLroServer +
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ExportRequest> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -367,9 +339,7 @@ pub(crate) async fn dispatch_begin_export_array<T: OperationTemplatesLroServer +
         })?;
     OperationTemplatesLroServer::begin_export_array(
         server,
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(OperationTemplatesLroClientBeginExportArrayOptions {
@@ -408,7 +378,6 @@ pub(crate) async fn dispatch_begin_get_lro<T: OperationTemplatesLroServer + ?Siz
         server,
         (arguments.scope).as_str(),
         (arguments.operation_id).as_str(),
-        (arguments.api_version).clone(),
         state.clone(),
         request,
         Some(OperationTemplatesLroClientBeginGetLroOptions {

@@ -83,7 +83,7 @@ impl ResourceManagerManagedHsmsClient {
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::clients::fake::capture_resource_manager_managed_hsms_client_begin_create_or_update(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_hsm_name)).to_owned(), (self.api_version).clone(), (self.subscription_id).clone(), options.method_options.frequency);
+            crate::clients::fake::capture_resource_manager_managed_hsms_client_begin_create_or_update(&mut options.method_options.context, (*(resource_group_name)).to_owned(), (*(managed_hsm_name)).to_owned(), options.method_options.frequency);
             options
         };
         let mut url = self.endpoint.clone();
@@ -156,8 +156,6 @@ impl ResourceManagerManagedHsmsClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(managed_hsm_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -226,8 +224,6 @@ impl ResourceManagerManagedHsmsClient {
             crate::clients::fake::capture_resource_manager_managed_hsms_client_begin_purge(
                 &mut options.method_options.context,
                 (*(managed_hsm_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options
@@ -300,8 +296,6 @@ impl ResourceManagerManagedHsmsClient {
                 &mut options.method_options.context,
                 (*(resource_group_name)).to_owned(),
                 (*(managed_hsm_name)).to_owned(),
-                (self.api_version).clone(),
-                (self.subscription_id).clone(),
                 options.method_options.frequency,
             );
             options

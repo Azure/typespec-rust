@@ -16,8 +16,6 @@ use azure_core::{
 struct ResourceManagerVaultConnectionsClientBeginDeleteArguments {
     resource_group_name: String,
     vault_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -25,15 +23,11 @@ pub(crate) fn capture_resource_manager_vault_connections_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     vault_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourceManagerVaultConnectionsClientBeginDeleteArguments {
         resource_group_name,
         vault_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
@@ -50,14 +44,13 @@ pub trait ResourceManagerVaultConnectionsServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
-        _resource_group_name: &str,
-        _vault_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourceManagerVaultConnectionsClientBeginDeleteOptions<'_>>,
+        resource_group_name: &str,
+        vault_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourceManagerVaultConnectionsClientBeginDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, vault_name, options, state, request);
         unimplemented!("ResourceManagerVaultConnectionsServer::begin_delete is not implemented")
     }
 }
@@ -88,8 +81,6 @@ pub(crate) async fn dispatch_begin_delete<T: ResourceManagerVaultConnectionsServ
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.vault_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         request,
         Some(ResourceManagerVaultConnectionsClientBeginDeleteOptions {

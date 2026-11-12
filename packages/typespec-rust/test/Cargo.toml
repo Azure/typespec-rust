@@ -5,6 +5,7 @@ members = [
     "other/colliding_locals",
     "other/doc_tests",
     "other/enum_path_params",
+    "other/fake_endpoints",
     "other/fakes",
     "other/lro",
     "other/misc_tests",

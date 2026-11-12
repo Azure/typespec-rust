@@ -23,77 +23,53 @@ use azure_core::{
 
 struct ResourcesSingletonClientBeginCreateOrUpdateArguments {
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourcesSingletonClientBeginCreateOrUpdateArguments {
         resource_group_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct ResourcesSingletonClientGetByResourceGroupArguments {
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_get_by_resource_group(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesSingletonClientGetByResourceGroupArguments {
         resource_group_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesSingletonClientListByResourceGroupArguments {
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_list_by_resource_group(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesSingletonClientListByResourceGroupArguments {
         resource_group_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesSingletonClientUpdateArguments {
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesSingletonClientUpdateArguments {
         resource_group_name,
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`ResourcesSingletonClient`](crate::clients::ResourcesSingletonClient).
@@ -109,49 +85,45 @@ pub trait ResourcesSingletonServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
-        _resource_group_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<SingletonTrackedResource>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesSingletonClientBeginCreateOrUpdateOptions<'_>>,
+        resource_group_name: &str,
+        resource: RequestContent<SingletonTrackedResource>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesSingletonClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, resource, options, state, request);
         unimplemented!("ResourcesSingletonServer::begin_create_or_update is not implemented")
     }
     /// Handles [`ResourcesSingletonClient::get_by_resource_group()`](crate::clients::ResourcesSingletonClient::get_by_resource_group).
     #[allow(clippy::too_many_arguments)]
     async fn get_by_resource_group(
         &self,
-        _resource_group_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<ResourcesSingletonClientGetByResourceGroupOptions<'_>>,
+        resource_group_name: &str,
+        options: Option<ResourcesSingletonClientGetByResourceGroupOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, options);
         unimplemented!("ResourcesSingletonServer::get_by_resource_group is not implemented")
     }
     /// Handles [`ResourcesSingletonClient::list_by_resource_group()`](crate::clients::ResourcesSingletonClient::list_by_resource_group).
     #[allow(clippy::too_many_arguments)]
     async fn list_by_resource_group(
         &self,
-        _resource_group_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PagerState,
-        _options: Option<ResourcesSingletonClientListByResourceGroupOptions<'_>>,
+        resource_group_name: &str,
+        state: PagerState,
+        options: Option<ResourcesSingletonClientListByResourceGroupOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, options, state);
         unimplemented!("ResourcesSingletonServer::list_by_resource_group is not implemented")
     }
     /// Handles [`ResourcesSingletonClient::update()`](crate::clients::ResourcesSingletonClient::update).
     #[allow(clippy::too_many_arguments)]
     async fn update(
         &self,
-        _resource_group_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<SingletonTrackedResource>,
-        _options: Option<ResourcesSingletonClientUpdateOptions<'_>>,
+        resource_group_name: &str,
+        properties: RequestContent<SingletonTrackedResource>,
+        options: Option<ResourcesSingletonClientUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, properties, options);
         unimplemented!("ResourcesSingletonServer::update is not implemented")
     }
 }
@@ -170,7 +142,6 @@ pub(crate) async fn dispatch_begin_create_or_update<T: ResourcesSingletonServer 
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<SingletonTrackedResource> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -182,9 +153,7 @@ pub(crate) async fn dispatch_begin_create_or_update<T: ResourcesSingletonServer 
     ResourcesSingletonServer::begin_create_or_update(
         server,
         (arguments.resource_group_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourcesSingletonClientBeginCreateOrUpdateOptions {
@@ -214,8 +183,6 @@ pub(crate) async fn dispatch_get_by_resource_group<T: ResourcesSingletonServer +
     ResourcesSingletonServer::get_by_resource_group(
         server,
         (arguments.resource_group_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(ResourcesSingletonClientGetByResourceGroupOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -250,8 +217,6 @@ pub(crate) async fn dispatch_list_by_resource_group<T: ResourcesSingletonServer 
     ResourcesSingletonServer::list_by_resource_group(
         server,
         (arguments.resource_group_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         Some(ResourcesSingletonClientListByResourceGroupOptions {
             method_options: PagerOptions {
@@ -280,13 +245,10 @@ pub(crate) async fn dispatch_update<T: ResourcesSingletonServer + ?Sized>(
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<SingletonTrackedResource> = request.body().clone().into();
     ResourcesSingletonServer::update(
         server,
         (arguments.resource_group_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(ResourcesSingletonClientUpdateOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

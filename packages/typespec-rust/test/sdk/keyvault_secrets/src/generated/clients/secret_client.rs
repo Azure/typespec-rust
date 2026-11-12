@@ -65,7 +65,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_backup_secret(
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -123,7 +122,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_delete_secret(
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -181,7 +179,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_get_deleted_secret(
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -240,7 +237,6 @@ impl SecretClient {
                 (*(secret_name)).to_owned(),
                 (options.secret_version).clone(),
                 (options.out_content_type).clone(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -297,7 +293,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_list_deleted_secret_properties(
                 &mut options.method_options.context,
                 options.maxresults,
-                (self.api_version).clone(),
             );
             options
         };
@@ -388,7 +383,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_list_secret_properties(
                 &mut options.method_options.context,
                 options.maxresults,
-                (self.api_version).clone(),
             );
             options
         };
@@ -486,7 +480,6 @@ impl SecretClient {
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
                 options.maxresults,
-                (self.api_version).clone(),
             );
             options
         };
@@ -586,7 +579,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_purge_deleted_secret(
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -643,7 +635,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_recover_deleted_secret(
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -688,15 +679,6 @@ impl SecretClient {
         options: Option<SecretClientRestoreSecretOptions<'_>>,
     ) -> Result<Response<Secret>> {
         let options = options.unwrap_or_default();
-        #[cfg(all(feature = "test", feature = "unstable_fake"))]
-        let options = {
-            let mut options = options;
-            crate::clients::fake::capture_secret_client_restore_secret(
-                &mut options.method_options.context,
-                (self.api_version).clone(),
-            );
-            options
-        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/secrets/restore");
@@ -754,7 +736,6 @@ impl SecretClient {
             crate::clients::fake::capture_secret_client_set_secret(
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
-                (self.api_version).clone(),
             );
             options
         };
@@ -817,7 +798,6 @@ impl SecretClient {
                 &mut options.method_options.context,
                 (*(secret_name)).to_owned(),
                 (options.secret_version).clone(),
-                (self.api_version).clone(),
             );
             options
         };

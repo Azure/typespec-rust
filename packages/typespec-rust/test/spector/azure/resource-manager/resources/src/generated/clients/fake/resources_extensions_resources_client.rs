@@ -26,7 +26,6 @@ use azure_core::{
 struct ResourcesExtensionsResourcesClientBeginCreateOrUpdateArguments {
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -34,14 +33,12 @@ pub(crate) fn capture_resources_extensions_resources_client_begin_create_or_upda
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(
         ResourcesExtensionsResourcesClientBeginCreateOrUpdateArguments {
             resource_uri,
             extensions_resource_name,
-            api_version,
             frequency,
         },
     );
@@ -49,70 +46,56 @@ pub(crate) fn capture_resources_extensions_resources_client_begin_create_or_upda
 struct ResourcesExtensionsResourcesClientDeleteArguments {
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
 ) {
     context.insert(ResourcesExtensionsResourcesClientDeleteArguments {
         resource_uri,
         extensions_resource_name,
-        api_version,
     });
 }
 struct ResourcesExtensionsResourcesClientGetArguments {
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
 ) {
     context.insert(ResourcesExtensionsResourcesClientGetArguments {
         resource_uri,
         extensions_resource_name,
-        api_version,
     });
 }
 struct ResourcesExtensionsResourcesClientListByScopeArguments {
     resource_uri: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_list_by_scope(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
-    api_version: String,
 ) {
-    context.insert(ResourcesExtensionsResourcesClientListByScopeArguments {
-        resource_uri,
-        api_version,
-    });
+    context.insert(ResourcesExtensionsResourcesClientListByScopeArguments { resource_uri });
 }
 struct ResourcesExtensionsResourcesClientUpdateArguments {
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_update(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
     extensions_resource_name: String,
-    api_version: String,
 ) {
     context.insert(ResourcesExtensionsResourcesClientUpdateArguments {
         resource_uri,
         extensions_resource_name,
-        api_version,
     });
 }
 /// Fake server for [`ResourcesExtensionsResourcesClient`](crate::clients::ResourcesExtensionsResourcesClient).
@@ -128,14 +111,21 @@ pub trait ResourcesExtensionsResourcesServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
-        _resource_uri: &str,
-        _extensions_resource_name: &str,
-        _api_version: String,
-        _content: RequestContent<ExtensionsResource>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'_>>,
+        resource_uri: &str,
+        extensions_resource_name: &str,
+        resource: RequestContent<ExtensionsResource>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_uri,
+            extensions_resource_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!(
             "ResourcesExtensionsResourcesServer::begin_create_or_update is not implemented"
         )
@@ -144,45 +134,45 @@ pub trait ResourcesExtensionsResourcesServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn delete(
         &self,
-        _resource_uri: &str,
-        _extensions_resource_name: &str,
-        _api_version: String,
-        _options: Option<ResourcesExtensionsResourcesClientDeleteOptions<'_>>,
+        resource_uri: &str,
+        extensions_resource_name: &str,
+        options: Option<ResourcesExtensionsResourcesClientDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_uri, extensions_resource_name, options);
         unimplemented!("ResourcesExtensionsResourcesServer::delete is not implemented")
     }
     /// Handles [`ResourcesExtensionsResourcesClient::get()`](crate::clients::ResourcesExtensionsResourcesClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_uri: &str,
-        _extensions_resource_name: &str,
-        _api_version: String,
-        _options: Option<ResourcesExtensionsResourcesClientGetOptions<'_>>,
+        resource_uri: &str,
+        extensions_resource_name: &str,
+        options: Option<ResourcesExtensionsResourcesClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_uri, extensions_resource_name, options);
         unimplemented!("ResourcesExtensionsResourcesServer::get is not implemented")
     }
     /// Handles [`ResourcesExtensionsResourcesClient::list_by_scope()`](crate::clients::ResourcesExtensionsResourcesClient::list_by_scope).
     #[allow(clippy::too_many_arguments)]
     async fn list_by_scope(
         &self,
-        _resource_uri: &str,
-        _api_version: String,
-        _state: PagerState,
-        _options: Option<ResourcesExtensionsResourcesClientListByScopeOptions<'_>>,
+        resource_uri: &str,
+        state: PagerState,
+        options: Option<ResourcesExtensionsResourcesClientListByScopeOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_uri, options, state);
         unimplemented!("ResourcesExtensionsResourcesServer::list_by_scope is not implemented")
     }
     /// Handles [`ResourcesExtensionsResourcesClient::update()`](crate::clients::ResourcesExtensionsResourcesClient::update).
     #[allow(clippy::too_many_arguments)]
     async fn update(
         &self,
-        _resource_uri: &str,
-        _extensions_resource_name: &str,
-        _api_version: String,
-        _content: RequestContent<ExtensionsResource>,
-        _options: Option<ResourcesExtensionsResourcesClientUpdateOptions<'_>>,
+        resource_uri: &str,
+        extensions_resource_name: &str,
+        properties: RequestContent<ExtensionsResource>,
+        options: Option<ResourcesExtensionsResourcesClientUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_uri, extensions_resource_name, properties, options);
         unimplemented!("ResourcesExtensionsResourcesServer::update is not implemented")
     }
 }
@@ -203,7 +193,6 @@ pub(crate) async fn dispatch_begin_create_or_update<
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ExtensionsResource> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -216,8 +205,7 @@ pub(crate) async fn dispatch_begin_create_or_update<
         server,
         (arguments.resource_uri).as_str(),
         (arguments.extensions_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(
@@ -250,7 +238,6 @@ pub(crate) async fn dispatch_delete<T: ResourcesExtensionsResourcesServer + ?Siz
         server,
         (arguments.resource_uri).as_str(),
         (arguments.extensions_resource_name).as_str(),
-        (arguments.api_version).clone(),
         Some(ResourcesExtensionsResourcesClientDeleteOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -278,7 +265,6 @@ pub(crate) async fn dispatch_get<T: ResourcesExtensionsResourcesServer + ?Sized>
         server,
         (arguments.resource_uri).as_str(),
         (arguments.extensions_resource_name).as_str(),
-        (arguments.api_version).clone(),
         Some(ResourcesExtensionsResourcesClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -313,7 +299,6 @@ pub(crate) async fn dispatch_list_by_scope<T: ResourcesExtensionsResourcesServer
     ResourcesExtensionsResourcesServer::list_by_scope(
         server,
         (arguments.resource_uri).as_str(),
-        (arguments.api_version).clone(),
         state.clone(),
         Some(ResourcesExtensionsResourcesClientListByScopeOptions {
             method_options: PagerOptions {
@@ -342,13 +327,11 @@ pub(crate) async fn dispatch_update<T: ResourcesExtensionsResourcesServer + ?Siz
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<ExtensionsResource> = request.body().clone().into();
     ResourcesExtensionsResourcesServer::update(
         server,
         (arguments.resource_uri).as_str(),
         (arguments.extensions_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        content,
+        request.body().clone().into(),
         Some(ResourcesExtensionsResourcesClientUpdateOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),

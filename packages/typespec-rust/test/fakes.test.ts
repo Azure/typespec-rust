@@ -9,10 +9,56 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { Adapter } from '../src/tcgcadapter/adapter.js';
 import { CodeGenerator } from '../src/codegen/codeGenerator.js';
 import { RustEmitterOptions } from '../src/lib.js';
+import * as rust from '../src/codemodel/index.js';
+import { snakeCaseName } from '../src/utils/utils.js';
+
+type Param = { name: string; type: string };
+type ModelMap = Record<string, Array<Param>>;
+
+function splitParams(text: string): Array<string> {
+  const result: Array<string> = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < text.length; i++) {
+    if ('<([{'.includes(text[i])) depth++;
+    if ('>)]}'.includes(text[i])) depth--;
+    if (text[i] === ',' && depth === 0) {
+      result.push(text.slice(start, i).trim());
+      start = i + 1;
+    }
+  }
+  return result.concat(text.slice(start).trim()).filter(Boolean);
+}
+
+function parameters(text: string): Array<Param> {
+  return splitParams(text).map(value => {
+    if (value === '&self') return { name: 'self', type: '&Self' };
+    const colon = value.indexOf(':');
+    return { name: value.slice(0, colon).trim(), type: value.slice(colon + 1).replace(/'[a-z]\w*/g, "'_").replace(/\s+/g, '') };
+  });
+}
+
+function signature(text: string, method: string): { params: Array<Param>; returns: string } {
+  const match = text.match(new RegExp(`(?:pub )?(?:async )?fn ${method}(?:<[^>]+>)?\\(([^]*?)\\)\\s*->\\s*([^]*?)\\{`));
+  expect(match, method).not.toBeNull();
+  return { params: parameters(match![1]), returns: match![2].replace(/\s+/g, '') };
+}
+
+function compareParameters(normal: Array<Param>, fake: Array<Param>, equivalents: Record<string, string> = {}, models: ModelMap = {}): void {
+  for (const [from, to] of Object.entries(equivalents)) {
+    expect(models[from], `missing model ${from}`).toBeDefined();
+    expect(models[to], `missing model ${to}`).toBeDefined();
+    expect(models[to]).toEqual(models[from]);
+  }
+  const normalize = (type: string): string => type.replace(/\b[A-Za-z_]\w*\b/g, name =>
+    Object.entries(equivalents).find(([, to]) => to === name)?.[0] ?? name);
+  expect(fake.map(p => ({ ...p, type: normalize(p.type) }))).toEqual(normal);
+}
 
 describe('fake generation', () => {
   let files: Array<{ name: string; content: string }>;
   let generator: CodeGenerator;
+  let crate: rust.Crate;
   beforeAll(async () => {
     const program = await compile(NodeHost, resolve('test/tsp/Fakes/main.tsp'), { noEmit: true });
     expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
@@ -26,7 +72,8 @@ describe('fake generation', () => {
       'emit-error-traits': false,
     };
     const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
-    generator = new CodeGenerator(adapter.tcgcToCrate());
+    crate = adapter.tcgcToCrate();
+    generator = new CodeGenerator(crate);
     files = generator.emitContent();
   }, 30000);
 
@@ -35,6 +82,117 @@ describe('fake generation', () => {
     expect(file).toBeDefined();
     return file!.content;
   }
+
+  function compareGenerated(module: rust.ModuleContainer, output: Array<{ name: string; content: string }>): number {
+    let count = 0;
+    for (const client of module.clients) {
+      const filename = `${snakeCaseName(client.name)}.rs`;
+      const normal = output.find(f => f.name.endsWith(`/clients/${filename}`))!.content;
+      const fake = output.find(f => f.name.endsWith(`/fake/${filename}`))!.content;
+      for (const method of client.methods) {
+        if (method.kind === 'clientaccessor' || method.visibility !== 'pub') continue;
+        const ordinary = signature(normal, method.name);
+        const server = signature(fake, method.name);
+        expect(server.returns).toBe('Result<AsyncRawResponse>');
+        const additions = server.params.filter(p => p.type === 'PagerState' || p.type === 'PollerState' || p.type === '&Request');
+        expect(additions.map(p => p.type)).toEqual(method.kind === 'pageable' ? ['PagerState'] : method.kind === 'lro' ? ['PollerState', '&Request'] : []);
+        let expected = ordinary.params;
+        let actual = server.params.filter(p => !additions.includes(p));
+        const spread = method.params.filter(p => p.kind === 'partialBody');
+        if (spread.length) {
+          expect(actual.filter(p => p.type === 'Body')).toHaveLength(1);
+          expected = expected.filter(p => !spread.some(s => s.name === p.name));
+          actual = actual.filter(p => p.type !== 'Body');
+        }
+        // These generators deliberately reuse the exact same public option/group
+        // models, so no type substitution or field-shape normalization is needed.
+        compareParameters(expected, actual);
+        count++;
+      }
+    }
+    for (const sub of module.subModules) count += compareGenerated(sub, output);
+    return count;
+  }
+
+  it('matches emitted data-plane parameter names, order, borrowing, groups, and options', () => {
+    expect(compareGenerated(crate, files)).toBeGreaterThan(10);
+    const models = content('models/method_options.rs');
+    expect(models).toContain('payload: Option<RequestContent<Bytes, NoFormat>>');
+    const fake = content('fake/fakes_client.rs');
+    expect(fake).toContain('inputs: GroupedInputs');
+    expect(fake).not.toContain('content_0');
+    expect(fake).toContain('body_present: bool');
+    expect(fake).toContain('payload: if arguments.body_present');
+    expect(signature(fake, 'list_optional').params.map(p => p.name)).toEqual(['self', 'state', 'options']);
+  });
+
+  it('matches emitted ARM methods including client-scoped inputs and optional bodies', async () => {
+    const program = await compile(NodeHost, resolve('test/tsp/ResourceManager/main.tsp'), { noEmit: true });
+    expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
+    const options: RustEmitterOptions = {
+      'crate-name': 'azure_resourcemanager_test',
+      'generate-fakes': true,
+      'omit-constructors': false, 'overwrite-cargo-toml': false, 'overwrite-lib-rs': false,
+      'temp-omit-doc-links': false, 'emit-error-traits': false,
+    };
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const arm = adapter.tcgcToCrate();
+    const generated = new CodeGenerator(arm).emitContent();
+    expect(compareGenerated(arm, generated)).toBeGreaterThan(15);
+  }, 30000);
+
+  it('allows only equivalent model shapes and rejects signature drift', () => {
+    const normal = parameters('&self, name: &str, options: Option<Options>');
+    const fake = parameters('&self, name: &str, options: Option<FakeOptions>');
+    const fields = parameters('body: Option<RequestContent<Payload>>, count: Option<i32>');
+    compareParameters(normal, fake, { Options: 'FakeOptions' }, { Options: fields, FakeOptions: fields });
+    for (const wrong of [
+      '&self, renamed: &str, options: Option<Options>',
+      '&self, options: Option<Options>, name: &str',
+      '&self, name: String, options: Option<Options>',
+      '&self, name: &str, options: Options',
+    ]) expect(() => compareParameters(normal, parameters(wrong))).toThrow();
+    for (const wrong of ['count: Option<i32>', 'body: RequestContent<Payload>, count: Option<i32>', 'body: Option<RequestContent<Other>>, count: Option<i32>']) {
+      expect(() => compareParameters(normal, fake, { Options: 'FakeOptions' }, { Options: fields, FakeOptions: parameters(wrong) })).toThrow();
+    }
+  });
+
+  it('registers fake dependencies before sorting the generated manifest', () => {
+    const dependencies = generator.emitCargoToml().split('[dependencies]\n')[1].trim().split('\n').map(line => line.split(' = ')[0]);
+    expect(dependencies).toContain('async-trait');
+    expect(dependencies).toEqual([...dependencies].sort());
+  });
+
+  it('shares constructor inputs and fixed or templated supplemental endpoint joins', async () => {
+    const program = await compile(NodeHost, resolve('test/tsp/FakesEndpoints/main.tsp'), { noEmit: true });
+    expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
+    const options: RustEmitterOptions = {
+      'crate-name': 'fake_endpoint_tests', 'generate-fakes': true,
+      'omit-constructors': false, 'overwrite-cargo-toml': false, 'overwrite-lib-rs': false,
+      'temp-omit-doc-links': false, 'emit-error-traits': false,
+    };
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const endpoints = adapter.tcgcToCrate();
+    const generated = new CodeGenerator(endpoints).emitContent();
+    for (const client of endpoints.clients) {
+      const filename = `${snakeCaseName(client.name)}.rs`;
+      const normal = generated.find(f => f.name.endsWith(`/clients/${filename}`))!.content;
+      const fake = generated.find(f => f.name.endsWith(`/fake/${filename}`))!.content;
+      compareParameters(signature(normal, 'with_no_credential').params, signature(fake, 'with_fake').params.filter(p => p.name !== 'server'));
+      for (const fragment of ['host.replace("{tenant}", &tenant)', 'host.replace("{version}", &options.version)', 'endpoint.join(&host)?']) {
+        expect(normal).toContain(fragment);
+        expect(fake).toContain(fragment);
+      }
+      client.constructable!.endpoint = { path: 'fixed/suffix', parameters: [] };
+    }
+    const fixed = new CodeGenerator(endpoints).emitContent();
+    expect(fixed.filter(f => f.name.includes('/clients/') && f.content.includes('endpoint.join("fixed/suffix")?'))).toHaveLength(endpoints.clients.length * 2);
+
+    const disabledAdapter = await Adapter.create({ program, options: { ...options, 'generate-fakes': false }, emitterOutputDir: '', perf: createPerfReporter() });
+    const disabled = new CodeGenerator(disabledAdapter.tcgcToCrate());
+    disabled.emitContent();
+    expect(disabled.emitCargoToml()).not.toContain('async-trait');
+  }, 30000);
 
   it.each([undefined, false])('omits all fake output when generate-fakes is %s', async generateFakes => {
     const program = await compile(NodeHost, resolve('test/tsp/Fakes/main.tsp'), { noEmit: true });
@@ -87,9 +245,9 @@ describe('fake generation', () => {
     const fake = content('fake/fakes_client.rs');
     expect(fake).toContain('RequestContent<Bytes, NoFormat>');
     expect(fake).toContain('request.body().clone().into()');
-    expect(fake).toContain('_content: Body');
-    expect(fake).toContain('_state: PollerState');
-    expect(fake).toContain('_request: &Request');
+    expect(fake).toContain('content: Body');
+    expect(fake).toContain('state: PollerState');
+    expect(fake).toContain('request: &Request');
     expect(fake).toContain('frequency: arguments.frequency');
     expect(fake).not.toContain('DeserializeOwned');
     expect(fake).not.toContain('json::from_json');

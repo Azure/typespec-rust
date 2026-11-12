@@ -62,7 +62,7 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_delete(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned(), (self.api_version).clone());
+            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_delete(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned());
             options
         };
         let ctx = options.method_options.context.to_borrowed();
@@ -121,7 +121,7 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_get(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned(), (self.api_version).clone());
+            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_get(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned());
             options
         };
         let ctx = options.method_options.context.to_borrowed();
@@ -183,7 +183,7 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         #[cfg(all(feature = "test", feature = "unstable_fake"))]
         let options = {
             let mut options = options;
-            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_put(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned(), (self.api_version).clone());
+            crate::two_subscription_resources_method_level::clients::fake::capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client_put(&mut options.method_options.context, (*(subscription_id)).to_owned(), (*(subscription_resource1_name)).to_owned());
             options
         };
         let ctx = options.method_options.context.to_borrowed();

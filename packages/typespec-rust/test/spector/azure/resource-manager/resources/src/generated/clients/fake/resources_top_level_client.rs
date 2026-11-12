@@ -26,29 +26,21 @@ use azure_core::{
 struct ResourcesTopLevelClientActionSyncArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_action_sync(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesTopLevelClientActionSyncArguments {
         resource_group_name,
         top_level_tracked_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesTopLevelClientBeginCreateOrReplaceArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -56,23 +48,17 @@ pub(crate) fn capture_resources_top_level_client_begin_create_or_replace(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourcesTopLevelClientBeginCreateOrReplaceArguments {
         resource_group_name,
         top_level_tracked_resource_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct ResourcesTopLevelClientBeginDeleteArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -80,23 +66,17 @@ pub(crate) fn capture_resources_top_level_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourcesTopLevelClientBeginDeleteArguments {
         resource_group_name,
         top_level_tracked_resource_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct ResourcesTopLevelClientBeginUpdateArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 }
 #[allow(clippy::too_many_arguments)]
@@ -104,70 +84,39 @@ pub(crate) fn capture_resources_top_level_client_begin_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
     frequency: azure_core::time::Duration,
 ) {
     context.insert(ResourcesTopLevelClientBeginUpdateArguments {
         resource_group_name,
         top_level_tracked_resource_name,
-        api_version,
-        subscription_id,
         frequency,
     });
 }
 struct ResourcesTopLevelClientGetArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
     top_level_tracked_resource_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesTopLevelClientGetArguments {
         resource_group_name,
         top_level_tracked_resource_name,
-        api_version,
-        subscription_id,
     });
 }
 struct ResourcesTopLevelClientListByResourceGroupArguments {
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_list_by_resource_group(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
-    api_version: String,
-    subscription_id: String,
 ) {
     context.insert(ResourcesTopLevelClientListByResourceGroupArguments {
         resource_group_name,
-        api_version,
-        subscription_id,
-    });
-}
-struct ResourcesTopLevelClientListBySubscriptionArguments {
-    api_version: String,
-    subscription_id: String,
-}
-#[allow(clippy::too_many_arguments)]
-pub(crate) fn capture_resources_top_level_client_list_by_subscription(
-    context: &mut azure_core::http::Context<'_>,
-    api_version: String,
-    subscription_id: String,
-) {
-    context.insert(ResourcesTopLevelClientListBySubscriptionArguments {
-        api_version,
-        subscription_id,
     });
 }
 /// Fake server for [`ResourcesTopLevelClient`](crate::clients::ResourcesTopLevelClient).
@@ -182,13 +131,17 @@ pub trait ResourcesTopLevelServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn action_sync(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<NotificationDetails>,
-        _options: Option<ResourcesTopLevelClientActionSyncOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        body: RequestContent<NotificationDetails>,
+        options: Option<ResourcesTopLevelClientActionSyncOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            body,
+            options,
+        );
         unimplemented!("ResourcesTopLevelServer::action_sync is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::begin_create_or_replace()`](crate::clients::ResourcesTopLevelClient::begin_create_or_replace).
@@ -196,15 +149,21 @@ pub trait ResourcesTopLevelServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_replace(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<TopLevelTrackedResource>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesTopLevelClientBeginCreateOrReplaceOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        resource: RequestContent<TopLevelTrackedResource>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesTopLevelClientBeginCreateOrReplaceOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            resource,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourcesTopLevelServer::begin_create_or_replace is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::begin_delete()`](crate::clients::ResourcesTopLevelClient::begin_delete).
@@ -212,14 +171,19 @@ pub trait ResourcesTopLevelServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesTopLevelClientBeginDeleteOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesTopLevelClientBeginDeleteOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourcesTopLevelServer::begin_delete is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::begin_update()`](crate::clients::ResourcesTopLevelClient::begin_update).
@@ -227,50 +191,57 @@ pub trait ResourcesTopLevelServer: Send + Sync {
     #[allow(clippy::too_many_arguments)]
     async fn begin_update(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _content: RequestContent<TopLevelTrackedResource>,
-        _state: PollerState,
-        _request: &Request,
-        _options: Option<ResourcesTopLevelClientBeginUpdateOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        properties: RequestContent<TopLevelTrackedResource>,
+        state: PollerState,
+        request: &Request,
+        options: Option<ResourcesTopLevelClientBeginUpdateOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            properties,
+            options,
+            state,
+            request,
+        );
         unimplemented!("ResourcesTopLevelServer::begin_update is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::get()`](crate::clients::ResourcesTopLevelClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
-        _resource_group_name: &str,
-        _top_level_tracked_resource_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _options: Option<ResourcesTopLevelClientGetOptions<'_>>,
+        resource_group_name: &str,
+        top_level_tracked_resource_name: &str,
+        options: Option<ResourcesTopLevelClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (
+            resource_group_name,
+            top_level_tracked_resource_name,
+            options,
+        );
         unimplemented!("ResourcesTopLevelServer::get is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::list_by_resource_group()`](crate::clients::ResourcesTopLevelClient::list_by_resource_group).
     #[allow(clippy::too_many_arguments)]
     async fn list_by_resource_group(
         &self,
-        _resource_group_name: &str,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PagerState,
-        _options: Option<ResourcesTopLevelClientListByResourceGroupOptions<'_>>,
+        resource_group_name: &str,
+        state: PagerState,
+        options: Option<ResourcesTopLevelClientListByResourceGroupOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (resource_group_name, options, state);
         unimplemented!("ResourcesTopLevelServer::list_by_resource_group is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::list_by_subscription()`](crate::clients::ResourcesTopLevelClient::list_by_subscription).
     #[allow(clippy::too_many_arguments)]
     async fn list_by_subscription(
         &self,
-        _api_version: String,
-        _subscription_id: String,
-        _state: PagerState,
-        _options: Option<ResourcesTopLevelClientListBySubscriptionOptions<'_>>,
+        state: PagerState,
+        options: Option<ResourcesTopLevelClientListBySubscriptionOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
+        let _ = (options, state);
         unimplemented!("ResourcesTopLevelServer::list_by_subscription is not implemented")
     }
 }
@@ -289,14 +260,11 @@ pub(crate) async fn dispatch_action_sync<T: ResourcesTopLevelServer + ?Sized>(
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<NotificationDetails> = request.body().clone().into();
     ResourcesTopLevelServer::action_sync(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         Some(ResourcesTopLevelClientActionSyncOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -320,7 +288,6 @@ pub(crate) async fn dispatch_begin_create_or_replace<T: ResourcesTopLevelServer 
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<TopLevelTrackedResource> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -333,9 +300,7 @@ pub(crate) async fn dispatch_begin_create_or_replace<T: ResourcesTopLevelServer 
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourcesTopLevelClientBeginCreateOrReplaceOptions {
@@ -374,8 +339,6 @@ pub(crate) async fn dispatch_begin_delete<T: ResourcesTopLevelServer + ?Sized>(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         request,
         Some(ResourcesTopLevelClientBeginDeleteOptions {
@@ -402,7 +365,6 @@ pub(crate) async fn dispatch_begin_update<T: ResourcesTopLevelServer + ?Sized>(
                 format!("{api_name}: missing operation arguments in request context"),
             )
         })?;
-    let content: RequestContent<TopLevelTrackedResource> = request.body().clone().into();
     let state = context
         .value::<azure_core::http::poller::PollerState>()
         .ok_or_else(|| {
@@ -415,9 +377,7 @@ pub(crate) async fn dispatch_begin_update<T: ResourcesTopLevelServer + ?Sized>(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
-        content,
+        request.body().clone().into(),
         state.clone(),
         request,
         Some(ResourcesTopLevelClientBeginUpdateOptions {
@@ -448,8 +408,6 @@ pub(crate) async fn dispatch_get<T: ResourcesTopLevelServer + ?Sized>(
         server,
         (arguments.resource_group_name).as_str(),
         (arguments.top_level_tracked_resource_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         Some(ResourcesTopLevelClientGetOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
@@ -484,8 +442,6 @@ pub(crate) async fn dispatch_list_by_resource_group<T: ResourcesTopLevelServer +
     ResourcesTopLevelServer::list_by_resource_group(
         server,
         (arguments.resource_group_name).as_str(),
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         Some(ResourcesTopLevelClientListByResourceGroupOptions {
             method_options: PagerOptions {
@@ -506,14 +462,6 @@ pub(crate) async fn dispatch_list_by_subscription<T: ResourcesTopLevelServer + ?
     api_name: &str,
 ) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
     let _ = (&request, api_name);
-    let arguments = context
-        .value::<ResourcesTopLevelClientListBySubscriptionArguments>()
-        .ok_or_else(|| {
-            azure_core::Error::with_message(
-                azure_core::error::ErrorKind::Other,
-                format!("{api_name}: missing operation arguments in request context"),
-            )
-        })?;
     let state = context
         .value::<azure_core::http::pager::PagerState>()
         .ok_or_else(|| {
@@ -524,8 +472,6 @@ pub(crate) async fn dispatch_list_by_subscription<T: ResourcesTopLevelServer + ?
         })?;
     ResourcesTopLevelServer::list_by_subscription(
         server,
-        (arguments.api_version).clone(),
-        (arguments.subscription_id).clone(),
         state.clone(),
         Some(ResourcesTopLevelClientListBySubscriptionOptions {
             method_options: PagerOptions {

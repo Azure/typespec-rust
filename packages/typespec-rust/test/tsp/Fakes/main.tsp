@@ -49,6 +49,28 @@ op put(@body content: bytes): Item;
 @post
 op putModel(@body content: Item): Item;
 
+@route("/optional")
+@post
+op putOptional(@body payload?: bytes): Item;
+
+@route("/optional/list")
+@post
+@list
+op listOptional(@body payload?: bytes, @query state?: string): ItemPage;
+
+model GroupedInputs {
+  @path name: string;
+  @header label: string;
+  @query count?: int32;
+}
+
+@route("/grouped/{name}")
+@get
+op grouped(...GroupedInputs): Item;
+
+op groupedOverride(inputs: GroupedInputs): Item;
+@@override(grouped, groupedOverride);
+
 @route("/spread")
 @post
 op spread(value: string, optional?: string): Item;
