@@ -5,15 +5,18 @@
 
 use crate::generated::models::{
     ArrayOfTypeOne, ArrayOfTypeTwo, BlobLayout, ChatRequestMessage, Colors,
-    DiscriminatedBaseNoSubTypes, FoundWidgets, GroupedParams, Indices, LiteralWithInvalidChar,
-    MiscTestsClientAvoidDupeHeadersOneOptions, MiscTestsClientAvoidDupeHeadersOneResult,
-    MiscTestsClientAvoidDupeHeadersTwoOptions, MiscTestsClientAvoidDupeHeadersTwoResult,
-    MiscTestsClientCollidingOptionsParamOptions, MiscTestsClientEtagHeaderParameterOptions,
-    MiscTestsClientFindTheWidgetsOptions, MiscTestsClientGetArrayOfTypeOneOptions,
+    DiscriminatedBaseNoSubTypes, FixedBody, FixedInputs, FoundWidgets, GroupedParams, Indices,
+    LiteralWithInvalidChar, MiscTestsClientAvoidDupeHeadersOneOptions,
+    MiscTestsClientAvoidDupeHeadersOneResult, MiscTestsClientAvoidDupeHeadersTwoOptions,
+    MiscTestsClientAvoidDupeHeadersTwoResult, MiscTestsClientCollidingOptionsParamOptions,
+    MiscTestsClientEtagHeaderParameterOptions, MiscTestsClientFindTheWidgetsOptions,
+    MiscTestsClientFixedBodyOptions, MiscTestsClientFixedInputsOptions,
+    MiscTestsClientFixedSpreadBodyOptions, MiscTestsClientGetArrayOfTypeOneOptions,
     MiscTestsClientGetArrayOfTypeTwoOptions, MiscTestsClientGetDiscriminatedNoSubTypesOptions,
     MiscTestsClientGetUnionsWithCyclesOptions, MiscTestsClientListBlobLayoutOptions,
-    MiscTestsClientLiteralWithInvalidCharOptions, MiscTestsClientParamGroupOptions,
-    MiscTestsClientRequiredPathParamNoEmptyCheckOptions, MiscTestsClientSpreadParamWithEnumOptions,
+    MiscTestsClientLiteralWithInvalidCharOptions, MiscTestsClientOnlyFixedInputsOptions,
+    MiscTestsClientParamGroupOptions, MiscTestsClientRequiredPathParamNoEmptyCheckOptions,
+    MiscTestsClientSpreadParamWithEnumOptions, MiscTestsClientUngroupedFixedInputsOptions,
     MiscTestsClientVariousExplodedQueryParamsOptions, MiscTestsClientWithClientParamsOptions,
     MiscTestsClientWithOptionalClientQueryParamOptions, SpreadWithEnum,
 };
@@ -328,6 +331,128 @@ impl MiscTestsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.fixedBody")]
+    pub async fn fixed_body(
+        &self,
+        body: RequestContent<FixedBody>,
+        options: Option<MiscTestsClientFixedBodyOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/fixed-body");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.fixedInputs")]
+    pub async fn fixed_inputs(
+        &self,
+        inputs: FixedInputs<'_>,
+        options: Option<MiscTestsClientFixedInputsOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        if inputs.name.is_empty() {
+            return Err(azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                "parameter name cannot be empty",
+            ));
+        }
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/fixed/{segment}/{name}");
+        path = path.replace("{name}", inputs.name);
+        path = path.replace("{segment}", "constant");
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("color", inputs.color.as_ref());
+        query_builder.set_pair("fixed", "fixed");
+        query_builder.set_pair("optionalFixed", "optional");
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("x-fixed", Colors::Blue.to_string());
+        request.insert_header("x-optional-fixed", Colors::Green.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.fixedSpreadBody")]
+    pub async fn fixed_spread_body(
+        &self,
+        name: String,
+        fixed: String,
+        fixed_enum: Colors,
+        options: Option<MiscTestsClientFixedSpreadBodyOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/fixed-spread-body");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("content-type", "application/json");
+        let body: RequestContent<FixedBody> = FixedBody {
+            name: Some(name),
+            fixed: Some(fixed),
+            fixed_enum: Some(fixed_enum),
+            optional_fixed: options.optional_fixed,
+        }
+        .try_into()?;
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("MiscTests.getArrayOfTypeOne")]
     pub async fn get_array_of_type_one(
         &self,
@@ -545,6 +670,40 @@ impl MiscTestsClient {
     ///
     /// # Arguments
     ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.onlyFixedInputs")]
+    pub async fn only_fixed_inputs(
+        &self,
+        options: Option<MiscTestsClientOnlyFixedInputsOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/only-fixed");
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("fixed", "fixed");
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("x-fixed", Colors::Blue.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
     /// * `params` - The inline param group docs.
     /// * `options` - Optional parameters for the request.
     #[tracing::function("MiscTests.paramGroup")]
@@ -644,6 +803,43 @@ impl MiscTestsClient {
         }
         .try_into()?;
         request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.ungroupedFixedInputs")]
+    pub async fn ungrouped_fixed_inputs(
+        &self,
+        options: Option<MiscTestsClientUngroupedFixedInputsOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("/ungrouped-fixed/{segment}");
+        path = path.replace("{segment}", "constant");
+        url.append_path(&path);
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("fixed", "fixed");
+        query_builder.set_pair("optionalFixed", "optional");
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("x-fixed", Colors::Blue.to_string());
         let rsp = self
             .pipeline
             .send(
@@ -783,6 +979,7 @@ impl MiscTestsClient {
         if let Some(expand) = self.expand.as_ref() {
             query_builder.set_pair("$expand", expand);
         }
+        query_builder.set_pair("clientFixed", "client");
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         let rsp = self

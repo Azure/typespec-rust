@@ -85,6 +85,31 @@ pub struct ContainsInvalidChars {
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct FixedBody {
+    /// Field has constant value body. Any specified value will be ignored.
+    #[serde(serialize_with = "models_serde::serialize_string_literal_body")]
+    pub fixed: Option<String>,
+
+    /// Field has constant value Colors::Blue. Any specified value will be ignored.
+    #[serde(
+        rename = "fixedEnum",
+        serialize_with = "models_serde::serialize_enumvalue_literal_Colors_Blue"
+    )]
+    pub fixed_enum: Option<Colors>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// When Some, field has constant value optional. Any specified value will be ignored.
+    #[serde(
+        rename = "optionalFixed",
+        serialize_with = "models_serde::serialize_optional_string_literal_optional",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub optional_fixed: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct FoundWidgets {
     #[serde(skip_serializing_if = "Option::is_none")]

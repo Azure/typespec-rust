@@ -7,11 +7,95 @@
 
 import * as rust from '../src/codemodel/index.js';
 import * as helpers from '../src/tcgcadapter/helpers.js';
-import { formatVisibility } from '../src/tcgcadapter/adapter.js';
+import { Adapter, formatVisibility } from '../src/tcgcadapter/adapter.js';
+import { CodeGenerator } from '../src/codegen/codeGenerator.js';
+import { RustEmitterOptions } from '../src/lib.js';
+import { compile, NodeHost } from '@typespec/compiler';
+import { createPerfReporter } from '@typespec/compiler/utils';
 import * as naming from '../src/tcgcadapter/naming.js';
 import { Visibility } from '@typespec/http';
 import { deepEqual, strictEqual } from 'assert';
-import { describe, it } from 'vitest';
+import { resolve } from 'node:path';
+import { beforeAll, describe, expect, it } from 'vitest';
+
+describe('fixed non-body inputs', () => {
+  let crate: rust.Crate;
+  let files: Array<{ name: string; content: string }>;
+  beforeAll(async () => {
+    const program = await compile(NodeHost, resolve('test/tsp/MiscTests/main.tsp'), { noEmit: true });
+    expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
+    const options: RustEmitterOptions = {
+      'crate-name': 'misc_tests',
+      'omit-constructors': false,
+      'overwrite-cargo-toml': false,
+      'overwrite-lib-rs': false,
+      'temp-omit-doc-links': false,
+      'emit-error-traits': false,
+    };
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    crate = adapter.tcgcToCrate();
+    files = new CodeGenerator(crate).emitContent();
+  }, 30000);
+
+  function content(suffix: string): string {
+    const file = files.find(file => file.name.endsWith(suffix));
+    expect(file).toBeDefined();
+    return file!.content;
+  }
+
+  it('omits fixed group fields while retaining dynamic fields and wire constants', () => {
+    const options = content('models/method_options.rs');
+    const group = options.match(/pub struct FixedInputs<'a> \{([^}]+)\}/)![1];
+    expect(group.match(/pub \w+:/g)).toEqual(['pub name:', 'pub color:']);
+    expect(group).toContain("name: &'a str");
+    expect(group).toContain('color: Colors');
+    const method = crate.clients.flatMap(c => c.methods).find(m => m.name === 'fixed_inputs')!;
+    const fixed = method.params.filter(p => ['fixed', 'fixed_header', 'segment'].includes(p.name));
+    expect(fixed).toHaveLength(3);
+    expect(fixed.every(p => !('group' in p) || !p.group)).toBe(true);
+    const client = content('clients/misc_tests_client.rs');
+    expect(client).toContain("inputs: FixedInputs<'_>");
+    expect(client).toContain('query_builder.set_pair("fixed", "fixed")');
+    expect(client).toContain('request.insert_header("x-fixed", Colors::Blue.to_string())');
+    expect(client).toContain('path.replace("{segment}", "constant")');
+  });
+
+  it('eliminates fixed-only groups and does not expose ungrouped or client constants', () => {
+    expect(files.some(f => f.content.includes('struct OnlyFixedInputs'))).toBe(false);
+    const client = content('clients/misc_tests_client.rs');
+    for (const name of ['only_fixed_inputs', 'ungrouped_fixed_inputs']) {
+      const signature = client.match(new RegExp(`pub async fn ${name}\\(([^]*?)\\) ->`))![1];
+      expect(signature.replace(/\s+/g, ' ')).toMatch(/^&self, options: Option<\w+<'_>>$/);
+    }
+    expect(client).not.toContain('client_fixed:');
+    expect(client).not.toContain('self.client_fixed');
+    expect(client).toContain('query_builder.set_pair("clientFixed", "client")');
+  });
+
+  it('preserves optional fixed fields but serializes their declared constants unconditionally', () => {
+    const options = content('models/method_options.rs');
+    expect(options).toContain('pub optional_fixed: Option<String>');
+    expect(options).toContain('pub optional_header: Option<Colors>');
+    const client = content('clients/misc_tests_client.rs');
+    expect(client).not.toContain('options.optional_fixed.is_some()');
+    expect(client).not.toContain('options.optional_header.is_some()');
+    expect(client).not.toContain('let Some(optional_fixed)');
+    expect(client).not.toContain('let Some(optional_header)');
+    expect(client).toContain('query_builder.set_pair("optionalFixed", "optional")');
+    expect(client).toContain('request.insert_header("x-optional-fixed", Colors::Green.to_string())');
+  });
+
+  it('preserves body-model and spread-body literal fields', () => {
+    const model = content('models/models.rs').match(/pub struct FixedBody \{([^]*?)\n\}/)![1];
+    expect(model).toContain('pub fixed: Option<String>');
+    expect(model).toContain('pub fixed_enum: Option<Colors>');
+    expect(model).toContain('pub optional_fixed: Option<String>');
+    expect(model).toContain('serialize_with');
+    const client = content('clients/misc_tests_client.rs');
+    expect(client).toContain('body: RequestContent<FixedBody>');
+    expect(client).toMatch(/pub async fn fixed_spread_body\([^]*?fixed: String,[^]*?fixed_enum: Colors,/);
+  });
+});
 
 describe('typespec-rust: tcgcadapter', () => {
   describe('helpers', () => {

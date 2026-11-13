@@ -5,7 +5,7 @@
 
 use super::{
     BlobLayout, BlobLayoutRange, ChatMessageContentItem, ChatMessageTextContentItem,
-    ChatRequestMessage, ChatRequestUserMessage, FoundWidgets, LiteralWithInvalidChar,
+    ChatRequestMessage, ChatRequestUserMessage, FixedBody, FoundWidgets, LiteralWithInvalidChar,
     SpreadWithEnum, Widget,
 };
 use async_trait::async_trait;
@@ -42,6 +42,13 @@ impl From<ChatMessageTextContentItem> for ChatMessageContentItem {
 impl From<ChatRequestUserMessage> for ChatRequestMessage {
     fn from(value: ChatRequestUserMessage) -> Self {
         Self::ChatRequestUserMessage(value)
+    }
+}
+
+impl TryFrom<FixedBody> for RequestContent<FixedBody> {
+    type Error = azure_core::Error;
+    fn try_from(value: FixedBody) -> Result<Self> {
+        Ok(to_json(&value)?.into())
     }
 }
 

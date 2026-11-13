@@ -22,6 +22,7 @@ namespace MiscTests;
 model ExpandParameter {
   @query("$expand")
   $expand?: string;
+  @query clientFixed: "client";
 }
 
 model ExplodedQueryParams {
@@ -179,6 +180,56 @@ op paramGroupCustomized(
 @@override(paramGroup,
   paramGroupCustomized,
 );
+
+model FixedInputs {
+  @path name: string;
+  @path segment: "constant";
+  @query fixed: "fixed";
+  @header("x-fixed") fixedHeader: Colors.blue;
+  @query color: Colors;
+  @query optionalFixed?: "optional";
+  @header("x-optional-fixed") optionalHeader?: Colors.green;
+}
+
+@get
+@route("/fixed/{segment}/{name}")
+op fixedInputs(...FixedInputs): void;
+op fixedInputsCustomized(inputs: FixedInputs): void;
+@@override(fixedInputs, fixedInputsCustomized);
+
+model OnlyFixedInputs {
+  @query fixed: "fixed";
+  @header("x-fixed") fixedHeader: Colors.blue;
+}
+
+@get
+@route("/only-fixed")
+op onlyFixedInputs(...OnlyFixedInputs): void;
+op onlyFixedInputsCustomized(inputs: OnlyFixedInputs): void;
+@@override(onlyFixedInputs, onlyFixedInputsCustomized);
+
+@get
+@route("/ungrouped-fixed/{segment}")
+op ungroupedFixedInputs(
+  @path segment: "constant",
+  ...OnlyFixedInputs,
+  @query optionalFixed?: "optional",
+): void;
+
+model FixedBody {
+  name: string;
+  fixed: "body";
+  fixedEnum: Colors.blue;
+  optionalFixed?: "optional";
+}
+
+@post
+@route("/fixed-body")
+op fixedBody(@body body: FixedBody): void;
+
+@post
+@route("/fixed-spread-body")
+op fixedSpreadBody(...FixedBody): void;
 
 @discriminator("kind")
 model DiscriminatedBaseNoSubTypes {

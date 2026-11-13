@@ -2,6 +2,13 @@
 
 ## 0.41.6 (Unreleased)
 
+### Breaking Changes
+
+- Removed required literal and fixed enum-value inputs from query, path, and
+  header parameter groups and client initialization. Groups with no remaining
+  caller inputs are omitted. Requests still send the declared constants;
+  body-model fields and optional parameter fields are unchanged.
+
 ### Features Added
 
 - Added Resource Manager cloud configuration and long-running operation support
@@ -13,6 +20,8 @@
 
 ### Other Changes
 
+- Limited unit test discovery to TypeScript sources so stale compiled tests from
+  other branches are not run.
 - Documented default HTTP transport feature forwarding and dependency settings
   for generated crates.
 

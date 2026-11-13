@@ -902,7 +902,7 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  * @returns 
  */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string, optionsPrefix: string = 'options.'): string {
-  if (param.optional && param.type.kind !== 'literal') {
+  if (param.optional && param.type.kind !== 'literal' && param.type.kind !== 'enumValue') {
     let asRefOrClone = ''; // Empty value is ok as well, depending on what is needed.
     if (param.type.kind === 'requestContent') {
       asRefOrClone = '.clone()';
@@ -2219,6 +2219,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         break;
       case 'literal':
         paramValue = `"${paramType.value}"`;
+        mustBorrow = false;
         break;
       case 'offsetDateTime':
         paramValue = encodeDateTime(paramType, paramName);
