@@ -15,10 +15,13 @@ use crate::generated::models::{
     MiscTestsClientGetArrayOfTypeTwoOptions, MiscTestsClientGetDiscriminatedNoSubTypesOptions,
     MiscTestsClientGetUnionsWithCyclesOptions, MiscTestsClientListBlobLayoutOptions,
     MiscTestsClientLiteralWithInvalidCharOptions, MiscTestsClientOnlyFixedInputsOptions,
+    MiscTestsClientOptionalBodyInputsOptions, MiscTestsClientOptionalResponseInputsOptions,
     MiscTestsClientParamGroupOptions, MiscTestsClientRequiredPathParamNoEmptyCheckOptions,
+    MiscTestsClientSharedOptionalBodyOptions, MiscTestsClientSharedOptionalResponseOptions,
     MiscTestsClientSpreadParamWithEnumOptions, MiscTestsClientUngroupedFixedInputsOptions,
     MiscTestsClientVariousExplodedQueryParamsOptions, MiscTestsClientWithClientParamsOptions,
-    MiscTestsClientWithOptionalClientQueryParamOptions, SpreadWithEnum,
+    MiscTestsClientWithOptionalClientQueryParamOptions, SharedOptionalBody, SharedOptionalResponse,
+    SpreadWithEnum,
 };
 use azure_core::{
     error::CheckSuccessOptions,
@@ -386,11 +389,16 @@ impl MiscTestsClient {
         let mut query_builder = url.query_builder();
         query_builder.set_pair("color", inputs.color.as_ref());
         query_builder.set_pair("fixed", "fixed");
+        if options.optional_color.is_some() {
+            query_builder.set_pair("optionalColor", Colors::Blue.to_string());
+        }
         query_builder.set_pair("optionalFixed", "optional");
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("x-fixed", Colors::Blue.to_string());
-        request.insert_header("x-optional-fixed", Colors::Green.to_string());
+        if options.optional_header.is_some() {
+            request.insert_header("x-optional-fixed", Colors::Green.to_string());
+        }
         let rsp = self
             .pipeline
             .send(
@@ -704,6 +712,82 @@ impl MiscTestsClient {
     ///
     /// # Arguments
     ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.optionalBodyInputs")]
+    pub async fn optional_body_inputs(
+        &self,
+        options: Option<MiscTestsClientOptionalBodyInputsOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/optional-body-inputs");
+        let mut query_builder = url.query_builder();
+        if let Some(color) = options.color.as_ref() {
+            query_builder.set_pair("color", color.as_ref());
+        }
+        if let Some(name) = options.name.as_ref() {
+            query_builder.set_pair("name", name);
+        }
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.optionalResponseInputs")]
+    pub async fn optional_response_inputs(
+        &self,
+        options: Option<MiscTestsClientOptionalResponseInputsOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/optional-response-inputs");
+        let mut query_builder = url.query_builder();
+        if let Some(color) = options.color.as_ref() {
+            query_builder.set_pair("color", color.as_ref());
+        }
+        if let Some(name) = options.name.as_ref() {
+            query_builder.set_pair("name", name);
+        }
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
     /// * `params` - The inline param group docs.
     /// * `options` - Optional parameters for the request.
     #[tracing::function("MiscTests.paramGroup")]
@@ -770,6 +854,70 @@ impl MiscTestsClient {
                 Some(PipelineSendOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.sharedOptionalBody")]
+    pub async fn shared_optional_body(
+        &self,
+        body: RequestContent<SharedOptionalBody>,
+        options: Option<MiscTestsClientSharedOptionalBodyOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/shared-optional-body");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("MiscTests.sharedOptionalResponse")]
+    pub async fn shared_optional_response(
+        &self,
+        options: Option<MiscTestsClientSharedOptionalResponseOptions<'_>>,
+    ) -> Result<Response<SharedOptionalResponse>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/shared-optional-response");
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("accept", "application/json");
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
                     },
                     ..Default::default()
                 }),

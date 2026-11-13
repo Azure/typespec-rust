@@ -88,6 +88,8 @@ pub struct MiscTestsClientFixedInputsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
+    pub optional_color: Option<Colors>,
+
     pub optional_fixed: Option<String>,
 
     pub optional_header: Option<Colors>,
@@ -163,6 +165,28 @@ pub struct MiscTestsClientOnlyFixedInputsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::optional_body_inputs()`](crate::generated::clients::MiscTestsClient::optional_body_inputs())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientOptionalBodyInputsOptions<'a> {
+    pub color: Option<Colors>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub name: Option<String>,
+}
+
+/// Options to be passed to [`MiscTestsClient::optional_response_inputs()`](crate::generated::clients::MiscTestsClient::optional_response_inputs())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientOptionalResponseInputsOptions<'a> {
+    pub color: Option<Colors>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub name: Option<String>,
+}
+
 /// Options to be passed to [`MiscTestsClient::param_group()`](crate::generated::clients::MiscTestsClient::param_group())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientParamGroupOptions<'a> {
@@ -173,6 +197,20 @@ pub struct MiscTestsClientParamGroupOptions<'a> {
 /// Options to be passed to [`MiscTestsClient::required_path_param_no_empty_check()`](crate::generated::clients::MiscTestsClient::required_path_param_no_empty_check())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientRequiredPathParamNoEmptyCheckOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::shared_optional_body()`](crate::generated::clients::MiscTestsClient::shared_optional_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientSharedOptionalBodyOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::shared_optional_response()`](crate::generated::clients::MiscTestsClient::shared_optional_response())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientSharedOptionalResponseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

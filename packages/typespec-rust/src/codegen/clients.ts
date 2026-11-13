@@ -889,10 +889,10 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
 }
 
 /**
- * wraps the emitted code emitted by setter in a "let Some" block
+ * wraps the code emitted by setter in a presence check
  * if the parameter is optional, else the value of setter is returned.
  * 
- * NOTE: for optional params, by convention, we'll create a local named param.name.
+ * NOTE: for optional non-constant params, we'll create a local named param.name.
  * setter MUST reference by param.name so it works for optional and required params.
  * 
  * @param indent the indentation helper currently in scope
@@ -902,7 +902,7 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  * @returns 
  */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string, optionsPrefix: string = 'options.'): string {
-  if (param.optional && param.type.kind !== 'literal' && param.type.kind !== 'enumValue') {
+  if (param.optional && param.type.kind !== 'literal') {
     let asRefOrClone = ''; // Empty value is ok as well, depending on what is needed.
     if (param.type.kind === 'requestContent') {
       asRefOrClone = '.clone()';
@@ -910,8 +910,9 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
       asRefOrClone = '.as_ref()';
     }
     // optional params are in the unwrapped options local var
+    const paramRef = `${param.location === 'client' ? 'self.' : optionsPrefix}${param.name}`;
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${param.location === 'client' ? 'self.' : optionsPrefix}${param.name}${asRefOrClone}`,
+      condition: param.type.kind === 'enumValue' ? `${paramRef}.is_some()` : `let Some(${param.name}) = ${paramRef}${asRefOrClone}`,
       body: setter,
     });
     return op + '\n';

@@ -148,6 +148,37 @@ pub struct MiscTestsClientAvoidDupeHeadersOneResult;
 #[derive(SafeDebug)]
 pub struct MiscTestsClientAvoidDupeHeadersTwoResult;
 
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct OptionalBodyInputs {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub color: Option<Colors>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct OptionalResponseInputs {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub color: Option<Colors>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct SharedOptionalBody {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inputs: Option<OptionalBodyInputs>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct SharedOptionalResponse {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inputs: Option<OptionalResponseInputs>,
+}
+
 #[derive(Clone, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadWithEnum {
     pub(crate) color: Colors,

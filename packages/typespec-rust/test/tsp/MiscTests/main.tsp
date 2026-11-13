@@ -188,6 +188,7 @@ model FixedInputs {
   @header("x-fixed") fixedHeader: Colors.blue;
   @query color: Colors;
   @query optionalFixed?: "optional";
+  @query optionalColor?: Colors.blue;
   @header("x-optional-fixed") optionalHeader?: Colors.green;
 }
 
@@ -207,6 +208,46 @@ model OnlyFixedInputs {
 op onlyFixedInputs(...OnlyFixedInputs): void;
 op onlyFixedInputsCustomized(inputs: OnlyFixedInputs): void;
 @@override(onlyFixedInputs, onlyFixedInputsCustomized);
+
+model OptionalBodyInputs {
+  @query name?: string;
+  @query color?: Colors;
+}
+
+@get
+@route("/optional-body-inputs")
+op optionalBodyInputs(...OptionalBodyInputs): void;
+@route("/optional-body-inputs-customized")
+op optionalBodyInputsCustomized(inputs: OptionalBodyInputs): void;
+@@override(optionalBodyInputs, optionalBodyInputsCustomized);
+
+model SharedOptionalBody {
+  inputs: OptionalBodyInputs;
+}
+
+@post
+@route("/shared-optional-body")
+op sharedOptionalBody(@body body: SharedOptionalBody): void;
+
+model OptionalResponseInputs {
+  @query name?: string;
+  @query color?: Colors;
+}
+
+@get
+@route("/optional-response-inputs")
+op optionalResponseInputs(...OptionalResponseInputs): void;
+@route("/optional-response-inputs-customized")
+op optionalResponseInputsCustomized(inputs: OptionalResponseInputs): void;
+@@override(optionalResponseInputs, optionalResponseInputsCustomized);
+
+model SharedOptionalResponse {
+  inputs: OptionalResponseInputs;
+}
+
+@get
+@route("/shared-optional-response")
+op sharedOptionalResponse(): SharedOptionalResponse;
 
 @get
 @route("/ungrouped-fixed/{segment}")

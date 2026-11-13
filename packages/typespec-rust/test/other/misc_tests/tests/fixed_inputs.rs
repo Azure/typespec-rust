@@ -70,7 +70,7 @@ fn client() -> Result<(MiscTestsClient, Arc<Capture>)> {
 }
 
 #[tokio::test]
-async fn mixed_group_sends_constants_regardless_of_optional_values() -> Result<()> {
+async fn mixed_group_preserves_optional_enum_presence_and_sends_declared_constants() -> Result<()> {
     let (client, capture) = client()?;
     for present in [false, true] {
         client
@@ -81,6 +81,7 @@ async fn mixed_group_sends_constants_regardless_of_optional_values() -> Result<(
                 },
                 Some(MiscTestsClientFixedInputsOptions {
                     optional_fixed: present.then(|| "ignored".into()),
+                    optional_color: present.then_some(Colors::Yellow),
                     optional_header: present.then_some(Colors::Yellow),
                     ..Default::default()
                 }),
@@ -89,7 +90,7 @@ async fn mixed_group_sends_constants_regardless_of_optional_values() -> Result<(
     }
     let requests = capture.0.lock().unwrap();
     assert_eq!(requests.len(), 2);
-    for request in requests.iter() {
+    for (request, present) in requests.iter().zip([false, true]) {
         assert_eq!(request.path, "/supplemental-path/fixed/constant/name");
         assert_eq!(request.query["fixed"], "fixed");
         assert_eq!(request.query["color"], "yellow");
@@ -98,7 +99,14 @@ async fn mixed_group_sends_constants_regardless_of_optional_values() -> Result<(
             request.query.get("optionalFixed").map(String::as_str),
             Some("optional"),
         );
-        assert_eq!(request.optional_header.as_deref(), Some("green"));
+        assert_eq!(
+            request.query.get("optionalColor").map(String::as_str),
+            present.then_some("blue"),
+        );
+        assert_eq!(
+            request.optional_header.as_deref(),
+            present.then_some("green"),
+        );
     }
     Ok(())
 }
@@ -122,6 +130,36 @@ async fn fixed_only_and_ungrouped_operations_need_no_fixed_inputs() -> Result<()
         "/supplemental-path/ungrouped-fixed/constant"
     );
     assert_eq!(requests[2].query["clientFixed"], "client");
+    Ok(())
+}
+
+#[tokio::test]
+async fn optional_only_group_models_remain_available_for_payloads() -> Result<()> {
+    let (client, capture) = client()?;
+    client.optional_body_inputs(None).await?;
+    client.optional_response_inputs(None).await?;
+    client
+        .shared_optional_body(
+            SharedOptionalBody {
+                inputs: Some(OptionalBodyInputs {
+                    name: Some("name".into()),
+                    color: Some(Colors::Yellow),
+                }),
+            }
+            .try_into()?,
+            None,
+        )
+        .await?;
+    let requests = capture.0.lock().unwrap();
+    assert_eq!(
+        requests[2].body,
+        Some(json!({"inputs": {"name": "name", "color": "yellow"}})),
+    );
+    let response: SharedOptionalResponse =
+        serde_json::from_value(json!({"inputs": {"name": "response", "color": "blue"}}))?;
+    let inputs = response.inputs.unwrap();
+    assert_eq!(inputs.name.as_deref(), Some("response"));
+    assert_eq!(inputs.color, Some(Colors::Blue));
     Ok(())
 }
 

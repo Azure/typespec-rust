@@ -72,17 +72,36 @@ describe('fixed non-body inputs', () => {
     expect(client).toContain('query_builder.set_pair("clientFixed", "client")');
   });
 
-  it('preserves optional fixed fields but serializes their declared constants unconditionally', () => {
+  it('preserves optional fixed enum presence checks and literal serialization', () => {
     const options = content('models/method_options.rs');
     expect(options).toContain('pub optional_fixed: Option<String>');
+    expect(options).toContain('pub optional_color: Option<Colors>');
     expect(options).toContain('pub optional_header: Option<Colors>');
     const client = content('clients/misc_tests_client.rs');
     expect(client).not.toContain('options.optional_fixed.is_some()');
-    expect(client).not.toContain('options.optional_header.is_some()');
+    expect(client).toMatch(/if options.optional_color.is_some\(\) \{\s*query_builder.set_pair\("optionalColor", Colors::Blue.to_string\(\)\);/);
+    expect(client).toMatch(/if options.optional_header.is_some\(\) \{\s*request.insert_header\("x-optional-fixed", Colors::Green.to_string\(\)\);/);
     expect(client).not.toContain('let Some(optional_fixed)');
     expect(client).not.toContain('let Some(optional_header)');
     expect(client).toContain('query_builder.set_pair("optionalFixed", "optional")');
     expect(client).toContain('request.insert_header("x-optional-fixed", Colors::Green.to_string())');
+  });
+
+  it('preserves optional-only group models referenced by body and response models', () => {
+    const models = content('models/models.rs');
+    const options = content('models/method_options.rs');
+    const client = content('clients/misc_tests_client.rs');
+    for (const name of ['OptionalBodyInputs', 'OptionalResponseInputs']) {
+      expect(models).toContain(`pub struct ${name} {`);
+      expect(models).toContain(`pub inputs: Option<${name}>`);
+      expect(options).not.toContain(`pub struct ${name}`);
+    }
+    for (const name of ['optional_body_inputs', 'optional_response_inputs']) {
+      const signature = client.match(new RegExp(`pub async fn ${name}\\(([^]*?)\\) ->`))![1];
+      expect(signature.replace(/\s+/g, ' ')).toMatch(/^&self, options: Option<\w+<'_>>$/);
+    }
+    expect(client).toContain('body: RequestContent<SharedOptionalBody>');
+    expect(client).toContain('Response<SharedOptionalResponse>');
   });
 
   it('preserves body-model and spread-body literal fields', () => {

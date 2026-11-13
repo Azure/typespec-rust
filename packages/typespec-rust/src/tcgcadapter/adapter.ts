@@ -2201,9 +2201,10 @@ export class Adapter {
           }
         }
 
-        // The group is emitted in method_options.rs, or disappears if it has no
-        // caller inputs. Neither case needs a separate body model.
-        if (param.type.kind === 'model') {
+        // Group-only models are emitted in method_options.rs or disappear.
+        // Keep models also used in payloads, including through other models.
+        if (param.type.kind === 'model'
+          && (param.type.usage & (tcgc.UsageFlags.Json | tcgc.UsageFlags.Xml | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread | tcgc.UsageFlags.Exception)) === 0) {
           const groupModelName = utils.capitalize(param.type.name).replace(/\W/g, '');
           const ns = this.adaptNamespace(param.type.namespace);
           const idx = ns.models.findIndex(m => m.kind === 'model' && m.name === groupModelName);

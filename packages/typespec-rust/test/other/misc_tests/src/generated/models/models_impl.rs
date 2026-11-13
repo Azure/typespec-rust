@@ -6,7 +6,7 @@
 use super::{
     BlobLayout, BlobLayoutRange, ChatMessageContentItem, ChatMessageTextContentItem,
     ChatRequestMessage, ChatRequestUserMessage, FixedBody, FoundWidgets, LiteralWithInvalidChar,
-    SpreadWithEnum, Widget,
+    SharedOptionalBody, SpreadWithEnum, Widget,
 };
 use async_trait::async_trait;
 use azure_core::{
@@ -55,6 +55,13 @@ impl TryFrom<FixedBody> for RequestContent<FixedBody> {
 impl TryFrom<LiteralWithInvalidChar> for RequestContent<LiteralWithInvalidChar> {
     type Error = azure_core::Error;
     fn try_from(value: LiteralWithInvalidChar) -> Result<Self> {
+        Ok(to_json(&value)?.into())
+    }
+}
+
+impl TryFrom<SharedOptionalBody> for RequestContent<SharedOptionalBody> {
+    type Error = azure_core::Error;
+    fn try_from(value: SharedOptionalBody) -> Result<Self> {
         Ok(to_json(&value)?.into())
     }
 }
