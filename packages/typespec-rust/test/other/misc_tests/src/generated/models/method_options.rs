@@ -9,6 +9,12 @@ use azure_core::{
     http::{pager::PagerOptions, ClientMethodOptions},
 };
 
+#[derive(Clone, SafeDebug)]
+pub struct FixedInputs<'a> {
+    pub name: &'a str,
+    pub color: Colors,
+}
+
 /// The grouped params.
 #[derive(Clone, SafeDebug)]
 pub struct GroupedParams<'a> {
@@ -69,6 +75,35 @@ impl MiscTestsClientFindTheWidgetsOptions<'_> {
     }
 }
 
+/// Options to be passed to [`MiscTestsClient::fixed_body()`](crate::generated::clients::MiscTestsClient::fixed_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientFixedBodyOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::fixed_inputs()`](crate::generated::clients::MiscTestsClient::fixed_inputs())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientFixedInputsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub optional_color: Option<Colors>,
+
+    pub optional_fixed: Option<String>,
+
+    pub optional_header: Option<Colors>,
+}
+
+/// Options to be passed to [`MiscTestsClient::fixed_spread_body()`](crate::generated::clients::MiscTestsClient::fixed_spread_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientFixedSpreadBodyOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub optional_fixed: Option<String>,
+}
+
 /// Options to be passed to [`MiscTestsClient::get_array_of_type_one()`](crate::generated::clients::MiscTestsClient::get_array_of_type_one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientGetArrayOfTypeOneOptions<'a> {
@@ -123,6 +158,35 @@ pub struct MiscTestsClientLiteralWithInvalidCharOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::only_fixed_inputs()`](crate::generated::clients::MiscTestsClient::only_fixed_inputs())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientOnlyFixedInputsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::optional_body_inputs()`](crate::generated::clients::MiscTestsClient::optional_body_inputs())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientOptionalBodyInputsOptions<'a> {
+    pub color: Option<Colors>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub name: Option<String>,
+}
+
+/// Options to be passed to [`MiscTestsClient::optional_response_inputs()`](crate::generated::clients::MiscTestsClient::optional_response_inputs())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientOptionalResponseInputsOptions<'a> {
+    pub color: Option<Colors>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub name: Option<String>,
+}
+
 /// Options to be passed to [`MiscTestsClient::param_group()`](crate::generated::clients::MiscTestsClient::param_group())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientParamGroupOptions<'a> {
@@ -137,6 +201,20 @@ pub struct MiscTestsClientRequiredPathParamNoEmptyCheckOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MiscTestsClient::shared_optional_body()`](crate::generated::clients::MiscTestsClient::shared_optional_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientSharedOptionalBodyOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`MiscTestsClient::shared_optional_response()`](crate::generated::clients::MiscTestsClient::shared_optional_response())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientSharedOptionalResponseOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`MiscTestsClient::spread_param_with_enum()`](crate::generated::clients::MiscTestsClient::spread_param_with_enum())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MiscTestsClientSpreadParamWithEnumOptions<'a> {
@@ -146,6 +224,15 @@ pub struct MiscTestsClientSpreadParamWithEnumOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 
     pub sides: Option<i32>,
+}
+
+/// Options to be passed to [`MiscTestsClient::ungrouped_fixed_inputs()`](crate::generated::clients::MiscTestsClient::ungrouped_fixed_inputs())
+#[derive(Clone, Default, SafeDebug)]
+pub struct MiscTestsClientUngroupedFixedInputsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub optional_fixed: Option<String>,
 }
 
 /// Options to be passed to [`MiscTestsClient::various_exploded_query_params()`](crate::generated::clients::MiscTestsClient::various_exploded_query_params())

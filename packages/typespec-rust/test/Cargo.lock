@@ -1260,6 +1260,8 @@ dependencies = [
  "async-trait",
  "azure_core",
  "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]

@@ -1666,6 +1666,10 @@ export class Adapter {
             break;
           }
           case 'method': {
+            if (isRequiredFixedInput(param)) {
+              // Operations serialize the constant directly, without stored client state.
+              continue;
+            }
             if (param.isApiVersionParam && param.optional && !param.clientDefaultValue) {
               if (!parent && client.children && client.methods.length === 0) {
                 // this is the top-level client for a multi-client scenario.
@@ -1703,6 +1707,9 @@ export class Adapter {
       // to create a child client that will need to inherit our client params.
       rustClient.endpoint = parent.endpoint;
       for (const prop of client.clientInitialization.parameters) {
+        if (prop.kind === 'method' && isRequiredFixedInput(prop)) {
+          continue;
+        }
         const name = utils.snakeCaseName(prop.name);
         const parentField = parent.fields.find((v) => v.name === name);
         if (parentField) {
@@ -1873,6 +1880,9 @@ export class Adapter {
     const clientAccessor = new rust.ClientAccessor(`get_${utils.snakeCaseName(subClient.name)}`, rustClient, subClient);
     clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
     for (const param of childClient.clientInitialization.parameters) {
+      if (param.kind === 'method' && isRequiredFixedInput(param)) {
+        continue;
+      }
       // check if the client's initializer already has this parameter.
       // if it does then omit it from the method sig as we'll populate
       // the child client's value from the parent.
@@ -2152,7 +2162,10 @@ export class Adapter {
           // cast is safe as we only need .type, .optional, .summary, .doc from it.
           const groupedParam = this.adaptMethodParameter(opParam, fieldProp as tcgc.SdkMethodParameter | undefined, lifetime);
           const fieldOptional = fieldProp ? (fieldProp as tcgc.SdkMethodParameter).optional : opParam.optional;
-          if (!fieldOptional) {
+          if (!fieldOptional && (groupedParam.type.kind === 'literal' || groupedParam.type.kind === 'enumValue')) {
+            // Fixed wire values are still needed for requests, but are not caller inputs.
+            processAdaptedParam(groupedParam, param);
+          } else if (!fieldOptional) {
             if (!paramGroup) {
               if (param.type.kind !== 'model') {
                 throw new AdapterError('InternalError', `expected model type for parameter group but got ${param.type.kind}`, param.__raw?.node);
@@ -2186,18 +2199,17 @@ export class Adapter {
           for (const gp of groupedParams) {
             rustMethod.params.push(gp);
           }
+        }
 
-          // remove the group's model type from the module's models list.
-          // the parameter group struct will be emitted by the client codegen
-          // in method_options.rs. leaving the model in models.rs would create
-          // a duplicate struct definition with incompatible field types.
-          if (param.type.kind === 'model') {
-            const groupModelName = utils.capitalize(param.type.name).replace(/\W/g, '');
-            const ns = this.adaptNamespace(param.type.namespace);
-            const idx = ns.models.findIndex(m => m.kind === 'model' && m.name === groupModelName);
-            if (idx >= 0) {
-              ns.models.splice(idx, 1);
-            }
+        // Group-only models are emitted in method_options.rs or disappear.
+        // Keep models also used in payloads, including through other models.
+        if (param.type.kind === 'model'
+          && (param.type.usage & (tcgc.UsageFlags.Json | tcgc.UsageFlags.Xml | tcgc.UsageFlags.Output | tcgc.UsageFlags.Spread | tcgc.UsageFlags.Exception)) === 0) {
+          const groupModelName = utils.capitalize(param.type.name).replace(/\W/g, '');
+          const ns = this.adaptNamespace(param.type.namespace);
+          const idx = ns.models.findIndex(m => m.kind === 'model' && m.name === groupModelName);
+          if (idx >= 0) {
+            ns.models.splice(idx, 1);
           }
         }
       } else {
@@ -3121,6 +3133,10 @@ export class Adapter {
       return 'NoFormat';
     }
   }
+}
+
+function isRequiredFixedInput(param: tcgc.SdkMethodParameter): boolean {
+  return !param.optional && !param.isApiVersionParam && (param.type.kind === 'constant' || param.type.kind === 'enumvalue');
 }
 
 /** type guard to determine if type is a Ref<HashMap> */

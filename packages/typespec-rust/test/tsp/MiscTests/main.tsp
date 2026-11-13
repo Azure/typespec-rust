@@ -22,6 +22,7 @@ namespace MiscTests;
 model ExpandParameter {
   @query("$expand")
   $expand?: string;
+  @query clientFixed: "client";
 }
 
 model ExplodedQueryParams {
@@ -179,6 +180,97 @@ op paramGroupCustomized(
 @@override(paramGroup,
   paramGroupCustomized,
 );
+
+model FixedInputs {
+  @path name: string;
+  @path segment: "constant";
+  @query fixed: "fixed";
+  @header("x-fixed") fixedHeader: Colors.blue;
+  @query color: Colors;
+  @query optionalFixed?: "optional";
+  @query optionalColor?: Colors.blue;
+  @header("x-optional-fixed") optionalHeader?: Colors.green;
+}
+
+@get
+@route("/fixed/{segment}/{name}")
+op fixedInputs(...FixedInputs): void;
+op fixedInputsCustomized(inputs: FixedInputs): void;
+@@override(fixedInputs, fixedInputsCustomized);
+
+model OnlyFixedInputs {
+  @query fixed: "fixed";
+  @header("x-fixed") fixedHeader: Colors.blue;
+}
+
+@get
+@route("/only-fixed")
+op onlyFixedInputs(...OnlyFixedInputs): void;
+op onlyFixedInputsCustomized(inputs: OnlyFixedInputs): void;
+@@override(onlyFixedInputs, onlyFixedInputsCustomized);
+
+model OptionalBodyInputs {
+  @query name?: string;
+  @query color?: Colors;
+}
+
+@get
+@route("/optional-body-inputs")
+op optionalBodyInputs(...OptionalBodyInputs): void;
+@route("/optional-body-inputs-customized")
+op optionalBodyInputsCustomized(inputs: OptionalBodyInputs): void;
+@@override(optionalBodyInputs, optionalBodyInputsCustomized);
+
+model SharedOptionalBody {
+  inputs: OptionalBodyInputs;
+}
+
+@post
+@route("/shared-optional-body")
+op sharedOptionalBody(@body body: SharedOptionalBody): void;
+
+model OptionalResponseInputs {
+  @query name?: string;
+  @query color?: Colors;
+}
+
+@get
+@route("/optional-response-inputs")
+op optionalResponseInputs(...OptionalResponseInputs): void;
+@route("/optional-response-inputs-customized")
+op optionalResponseInputsCustomized(inputs: OptionalResponseInputs): void;
+@@override(optionalResponseInputs, optionalResponseInputsCustomized);
+
+model SharedOptionalResponse {
+  inputs: OptionalResponseInputs;
+}
+
+@get
+@route("/shared-optional-response")
+op sharedOptionalResponse(): SharedOptionalResponse;
+
+@get
+@route("/ungrouped-fixed/{segment}")
+op ungroupedFixedInputs(
+  @path segment: "constant",
+  ...OnlyFixedInputs,
+  @query optionalFixed?: "optional",
+): void;
+
+model FixedBody {
+  name: string;
+  fixed: "body";
+  fixedEnum: Colors.blue;
+  optionalFixed?: "optional";
+}
+
+@post
+@route("/fixed-body")
+op fixedBody(@body body: FixedBody): void;
+
+@post
+@route("/fixed-spread-body")
+op fixedSpreadBody(...FixedBody): void;
 
 @discriminator("kind")
 model DiscriminatedBaseNoSubTypes {
