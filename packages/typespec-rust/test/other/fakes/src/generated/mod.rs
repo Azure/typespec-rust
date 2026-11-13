@@ -7,4 +7,8 @@
 pub mod clients;
 /// Contains all the data structures and types used by the client library.
 pub mod models;
-pub use clients::{FakesClient, FakesClientOptions};
+pub use clients::{
+    EndpointClient, EndpointClientOptions, EndpointEndpointChildClient,
+    EndpointEndpointChildClientOptions, FakesApiKeyChildClient, FakesApiKeyChildClientOptions,
+    FakesApiKeyClient, FakesApiKeyClientOptions, FakesClient, FakesClientOptions,
+};

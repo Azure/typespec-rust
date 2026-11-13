@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 // cspell:ignore tcgcadapter
 
-import { compile, NodeHost } from '@typespec/compiler';
+import { compile, NodeHost, Program } from '@typespec/compiler';
 import { createPerfReporter } from '@typespec/compiler/utils';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -56,23 +56,28 @@ function compareParameters(normal: Array<Param>, fake: Array<Param>, equivalents
 }
 
 describe('fake generation', () => {
+  const options: RustEmitterOptions = {
+    'crate-name': 'fake_tests',
+    'generate-fakes': true,
+    'omit-constructors': false,
+    'overwrite-cargo-toml': false,
+    'overwrite-lib-rs': false,
+    'temp-omit-doc-links': false,
+    'emit-error-traits': false,
+  };
+  let program: Program;
   let files: Array<{ name: string; content: string }>;
   let generator: CodeGenerator;
   let crate: rust.Crate;
   beforeAll(async () => {
-    const program = await compile(NodeHost, resolve('test/tsp/Fakes/main.tsp'), { noEmit: true });
+    program = await compile(NodeHost, resolve('test/tsp/Fakes/main.tsp'), { noEmit: true });
     expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
-    const options: RustEmitterOptions = {
-      'crate-name': 'fake_tests',
-      'generate-fakes': true,
-      'omit-constructors': false,
-      'overwrite-cargo-toml': false,
-      'overwrite-lib-rs': false,
-      'temp-omit-doc-links': false,
-      'emit-error-traits': false,
-    };
     const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
     crate = adapter.tcgcToCrate();
+    expect(crate.clients.map(client => client.name).sort()).toEqual([
+      'EndpointClient', 'EndpointEndpointChildClient', 'FakesApiKeyChildClient',
+      'FakesApiKeyClient', 'FakesChildClient', 'FakesClient',
+    ]);
     generator = new CodeGenerator(crate);
     files = generator.emitContent();
   }, 30000);
@@ -126,6 +131,21 @@ describe('fake generation', () => {
     expect(signature(fake, 'list_optional').params.map(p => p.name)).toEqual(['self', 'state', 'options']);
   });
 
+  it('reconstructs the same mixed and fixed-only groups exposed by normal clients', () => {
+    const models = content('models/method_options.rs');
+    const group = models.match(/pub struct GroupedInputs<'a> \{([^]*?)\n\}/)![1];
+    expect(group).not.toContain('fixed');
+    expect(files.some(file => file.content.includes('struct FixedInputs'))).toBe(false);
+    const fake = content('fake/fakes_client.rs');
+    expect(signature(fake, 'grouped').params.map(p => p.name)).toEqual(['self', 'inputs', 'options']);
+    expect(signature(fake, 'fixed_group').params.map(p => p.name)).toEqual(['self', 'options']);
+    expect(fake).toContain('GroupedInputs { name: (arguments.name).as_str(), label: (arguments.label).clone() }');
+    expect(fake).not.toContain('arguments.fixed');
+    for (const fragment of ['query_builder.set_pair("fixed", "fixed")', 'request.insert_header("x-fixed", Mode::First.to_string())']) {
+      expect(content('clients/fakes_client.rs')).toContain(fragment);
+    }
+  });
+
   it('matches emitted ARM methods including client-scoped inputs and optional bodies', async () => {
     const program = await compile(NodeHost, resolve('test/tsp/ResourceManager/main.tsp'), { noEmit: true });
     expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
@@ -139,6 +159,11 @@ describe('fake generation', () => {
     const arm = adapter.tcgcToCrate();
     const generated = new CodeGenerator(arm).emitContent();
     expect(compareGenerated(arm, generated)).toBeGreaterThan(15);
+    for (const client of arm.clients.filter(c => c.constructable)) {
+      for (const constructor of client.constructable!.constructors) {
+        expect(constructor.params.filter(p => p.kind !== 'clientCredential')).toEqual(client.constructable!.parameters);
+      }
+    }
   }, 30000);
 
   it('allows only equivalent model shapes and rejects signature drift', () => {
@@ -164,49 +189,54 @@ describe('fake generation', () => {
   });
 
   it('shares constructor inputs and fixed or templated supplemental endpoint joins', async () => {
-    const program = await compile(NodeHost, resolve('test/tsp/FakesEndpoints/main.tsp'), { noEmit: true });
-    expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
-    const options: RustEmitterOptions = {
-      'crate-name': 'fake_endpoint_tests', 'generate-fakes': true,
-      'omit-constructors': false, 'overwrite-cargo-toml': false, 'overwrite-lib-rs': false,
-      'temp-omit-doc-links': false, 'emit-error-traits': false,
-    };
-    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
-    const endpoints = adapter.tcgcToCrate();
-    const generated = new CodeGenerator(endpoints).emitContent();
-    for (const client of endpoints.clients) {
+    const supported = crate.clients.filter(client => ['EndpointClient', 'EndpointEndpointChildClient'].includes(client.name));
+    expect(supported).toHaveLength(2);
+    for (const client of supported) {
       const filename = `${snakeCaseName(client.name)}.rs`;
-      const normal = generated.find(f => f.name.endsWith(`/clients/${filename}`))!.content;
-      const fake = generated.find(f => f.name.endsWith(`/fake/${filename}`))!.content;
-      compareParameters(signature(normal, 'with_no_credential').params, signature(fake, 'with_fake').params.filter(p => p.name !== 'server'));
-      for (const fragment of ['host.replace("{tenant}", &tenant)', 'host.replace("{version}", &options.version)', 'endpoint.join(&host)?']) {
+      const normal = content(`clients/${filename}`);
+      const fake = content(`fake/${filename}`);
+      compareParameters(signature(normal, 'with_no_credential').params, signature(fake, 'with_fake').params.filter(p => !p.type.startsWith('Arc<')));
+      expect(signature(fake, 'with_fake').params.filter(p => p.name.startsWith('server')).map(p => p.name)).toEqual(['server_0', 'server']);
+      expect(fake).toContain('server: server_0');
+      for (const fragment of ['host.replace("{tenant}", &tenant)', 'host.replace("{server}", &server)', 'host.replace("{version}", &options.version)', 'endpoint.join(&host)?']) {
         expect(normal).toContain(fragment);
         expect(fake).toContain(fragment);
       }
+    }
+    // Keep the synthetic fixed-suffix case out of the shared generated fixture.
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const endpoints = adapter.tcgcToCrate();
+    for (const client of endpoints.clients.filter(client => supported.some(endpoint => endpoint.name === client.name))) {
       client.constructable!.endpoint = { path: 'fixed/suffix', parameters: [] };
     }
     const fixed = new CodeGenerator(endpoints).emitContent();
-    expect(fixed.filter(f => f.name.includes('/clients/') && f.content.includes('endpoint.join("fixed/suffix")?'))).toHaveLength(endpoints.clients.length * 2);
-
-    const disabledAdapter = await Adapter.create({ program, options: { ...options, 'generate-fakes': false }, emitterOutputDir: '', perf: createPerfReporter() });
-    const disabled = new CodeGenerator(disabledAdapter.tcgcToCrate());
-    disabled.emitContent();
-    expect(disabled.emitCargoToml()).not.toContain('async-trait');
+    expect(fixed.filter(f => f.name.includes('/clients/') && f.content.includes('endpoint.join("fixed/suffix")?'))).toHaveLength(supported.length * 2);
   }, 30000);
 
+  it('emits credential-free constructors with modeled inputs when API-key authentication has no real constructor', () => {
+    const keyed = crate.clients.filter(client => ['FakesApiKeyClient', 'FakesApiKeyChildClient'].includes(client.name));
+    expect(keyed).toHaveLength(2);
+    expect(keyed.every(client => client.constructable!.constructors.length === 0)).toBe(true);
+    for (const client of keyed) {
+      const fake = content(`fake/${snakeCaseName(client.name)}.rs`);
+      const params = signature(fake, 'with_fake').params;
+      expect(params.map(p => p.name)).toEqual([
+        'endpoint', 'server_0', 'tenant', 'server', 'resource', 'options',
+      ]);
+      expect(fake).not.toContain('credential:');
+      expect(fake).toContain('host.replace("{server}", &server)');
+      expect(fake).toContain('server: server_0');
+    }
+  });
+
   it.each([undefined, false])('omits all fake output when generate-fakes is %s', async generateFakes => {
-    const program = await compile(NodeHost, resolve('test/tsp/Fakes/main.tsp'), { noEmit: true });
-    expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
-    const options: RustEmitterOptions = {
-      'crate-name': 'fake_tests',
-      'omit-constructors': false,
-      'overwrite-cargo-toml': false,
-      'overwrite-lib-rs': false,
-      'temp-omit-doc-links': false,
-      'emit-error-traits': false,
-      ...(generateFakes === undefined ? {} : { 'generate-fakes': generateFakes }),
-    };
-    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const baseOptions = { ...options };
+    delete baseOptions['generate-fakes'];
+    const adapter = await Adapter.create({
+      program,
+      options: { ...baseOptions, ...(generateFakes === undefined ? {} : { 'generate-fakes': generateFakes }) },
+      emitterOutputDir: '', perf: createPerfReporter(),
+    });
     const disabled = new CodeGenerator(adapter.tcgcToCrate());
     const output = disabled.emitContent();
     expect(output.some(file => file.name.includes('/fake/'))).toBe(false);
@@ -216,6 +246,19 @@ describe('fake generation', () => {
     expect(clients).not.toContain('unstable_fake');
     expect(disabled.emitCargoToml()).not.toContain('azure_core/test');
     expect(disabled.emitCargoToml()).not.toContain('unstable_fake');
+    expect(disabled.emitCargoToml()).toContain('async-trait');
+  }, 30000);
+
+  it('omits fake-only dependencies when no pageable operation requires them', async () => {
+    const program = await compile(NodeHost, resolve('test/tsp/Fakes/endpoints.tsp'), { noEmit: true });
+    expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
+    const adapter = await Adapter.create({
+      program, options: { ...options, 'generate-fakes': false },
+      emitterOutputDir: '', perf: createPerfReporter(),
+    });
+    const disabled = new CodeGenerator(adapter.tcgcToCrate());
+    disabled.emitContent();
+    expect(disabled.emitCargoToml()).not.toContain('async-trait');
   }, 30000);
 
   it('composes child servers and routes their original API identifiers', () => {

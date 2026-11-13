@@ -7,10 +7,10 @@ use crate::generated::{
     clients::FakesChildClient,
     models::{
         FakesClientBeginStartOperationStatus, FakesClientBeginStartOptions,
-        FakesClientCollisionsOptions, FakesClientGetOptions, FakesClientGroupedOptions,
-        FakesClientListOptionalOptions, FakesClientListOptions, FakesClientPutModelOptions,
-        FakesClientPutOptionalOptions, FakesClientPutOptions, FakesClientSpreadOptions,
-        GroupedInputs, Item, ItemPage, SpreadRequest, StartRequest,
+        FakesClientCollisionsOptions, FakesClientFixedGroupOptions, FakesClientGetOptions,
+        FakesClientGroupedOptions, FakesClientListOptionalOptions, FakesClientListOptions,
+        FakesClientPutModelOptions, FakesClientPutOptionalOptions, FakesClientPutOptions,
+        FakesClientSpreadOptions, GroupedInputs, Item, ItemPage, Mode, SpreadRequest, StartRequest,
     },
 };
 use azure_core::{
@@ -307,6 +307,41 @@ impl FakesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Fakes.fixedGroup")]
+    pub async fn fixed_group(
+        &self,
+        options: Option<FakesClientFixedGroupOptions<'_>>,
+    ) -> Result<Response<Item>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/fixed-group");
+        let mut query_builder = url.query_builder();
+        query_builder.set_pair("fixed", "fixed");
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("accept", "application/json");
+        request.insert_header("x-fixed", Mode::First.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Fakes.get")]
     pub async fn get(
         &self,
@@ -418,10 +453,12 @@ impl FakesClient {
         if let Some(count) = options.count {
             query_builder.set_pair("count", count.to_string());
         }
+        query_builder.set_pair("fixed", "fixed");
         query_builder.build();
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         request.insert_header("label", &inputs.label);
+        request.insert_header("x-fixed", Mode::First.to_string());
         let rsp = self
             .pipeline
             .send(

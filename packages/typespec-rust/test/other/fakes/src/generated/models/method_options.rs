@@ -12,6 +12,34 @@ use azure_core::{
     Bytes,
 };
 
+/// Options to be passed to [`EndpointClient::get()`](crate::generated::clients::EndpointClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct EndpointClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`EndpointEndpointChildClient::get()`](crate::generated::clients::EndpointEndpointChildClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct EndpointEndpointChildClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`FakesApiKeyChildClient::get()`](crate::generated::clients::FakesApiKeyChildClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesApiKeyChildClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`FakesApiKeyClient::get()`](crate::generated::clients::FakesApiKeyClient::get())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesApiKeyClientGetOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`FakesChildClient::get()`](crate::generated::clients::FakesChildClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FakesChildClientGetOptions<'a> {
@@ -41,6 +69,13 @@ impl FakesClientBeginStartOptions<'_> {
 /// Options to be passed to [`FakesClient::collisions()`](crate::generated::clients::FakesClient::collisions())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FakesClientCollisionsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`FakesClient::fixed_group()`](crate::generated::clients::FakesClient::fixed_group())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesClientFixedGroupOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

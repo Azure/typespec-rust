@@ -1,19 +1,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#![cfg(all(feature = "test", feature = "unstable_fake"))]
-
+use super::no_content;
 use async_trait::async_trait;
 use azure_core::{
     http::{
-        fake::ResponseExt as _,
-        headers::Headers,
         policies::{Policy, PolicyResult},
-        AsyncRawResponse, ClientOptions, Context, Request, StatusCode,
+        AsyncRawResponse, ClientOptions, Context, Request,
     },
     Result,
 };
-use fake_endpoint_tests::{clients::fake::*, models::*, *};
+use fake_tests::{clients::fake::*, models::*, *};
 use std::sync::{Arc, Mutex};
 
 struct Server;
@@ -21,11 +18,7 @@ struct Server;
 #[async_trait]
 impl EndpointServer for Server {
     async fn get(&self, _: Option<EndpointClientGetOptions<'_>>) -> Result<AsyncRawResponse> {
-        Ok(AsyncRawResponse::fake_with_bytes(
-            StatusCode::NoContent,
-            Headers::new(),
-            "",
-        ))
+        no_content()
     }
 }
 
@@ -35,11 +28,7 @@ impl EndpointEndpointChildServer for Server {
         &self,
         _: Option<EndpointEndpointChildClientGetOptions<'_>>,
     ) -> Result<AsyncRawResponse> {
-        Ok(AsyncRawResponse::fake_with_bytes(
-            StatusCode::NoContent,
-            Headers::new(),
-            "",
-        ))
+        no_content()
     }
 }
 
@@ -73,18 +62,20 @@ async fn supplemental_paths_match_normal_root_and_independent_child_construction
         let normal = EndpointClient::with_no_credential(
             "https://example.test/base/",
             "tenant".into(),
+            "service".into(),
             Some(options.clone()),
         )?;
         let fake = EndpointClient::with_fake(
             "https://example.test/base/",
             Arc::new(Server),
             "tenant".into(),
+            "service".into(),
             Some(options.clone()),
         )?;
         assert_eq!(normal.endpoint(), fake.endpoint());
         assert_eq!(
             fake.endpoint().path(),
-            format!("/base/prefix/tenant/{}", version.unwrap_or("v1"))
+            format!("/base/prefix/tenant/service/{}", version.unwrap_or("v1"))
         );
         fake.get(None).await?;
         fake.get_endpoint_endpoint_child_client().get(None).await?;
@@ -96,12 +87,14 @@ async fn supplemental_paths_match_normal_root_and_independent_child_construction
         let normal_child = EndpointEndpointChildClient::with_no_credential(
             "https://example.test/base/",
             "tenant".into(),
+            "service".into(),
             Some(child_options.clone()),
         )?;
         let fake_child = EndpointEndpointChildClient::with_fake(
             "https://example.test/base/",
             Arc::new(Server),
             "tenant".into(),
+            "service".into(),
             Some(child_options),
         )?;
         assert_eq!(normal_child.endpoint(), fake_child.endpoint());

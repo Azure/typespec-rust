@@ -1,6 +1,8 @@
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-client-generator-core";
 import "@typespec/http";
+import "./endpoints.tsp";
+import "./api-key.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -8,6 +10,7 @@ using Azure.Core;
 using Azure.ClientGenerator.Core;
 
 @service
+@client({ name: "FakesClient", service: Fakes })
 @server("{endpoint}", "Service endpoint", { endpoint: url })
 namespace Fakes;
 
@@ -62,6 +65,8 @@ model GroupedInputs {
   @path name: string;
   @header label: string;
   @query count?: int32;
+  @query fixed: "fixed";
+  @header("x-fixed") fixedHeader: Mode.first;
 }
 
 @route("/grouped/{name}")
@@ -70,6 +75,18 @@ op grouped(...GroupedInputs): Item;
 
 op groupedOverride(inputs: GroupedInputs): Item;
 @@override(grouped, groupedOverride);
+
+model FixedInputs {
+  @query fixed: "fixed";
+  @header("x-fixed") fixedHeader: Mode.first;
+}
+
+@route("/fixed-group")
+@get
+op fixedGroup(...FixedInputs): Item;
+
+op fixedGroupOverride(inputs: FixedInputs): Item;
+@@override(fixedGroup, fixedGroupOverride);
 
 @route("/spread")
 @post
@@ -87,6 +104,7 @@ op start is LongRunningRpcOperation<
 >;
 
 @route("/child")
+@client({ name: "ChildClient", service: Fakes })
 interface Child {
   @get
   op get(): Item;

@@ -6,10 +6,10 @@
 use crate::{
     generated::models::{Item, Mode},
     models::{
-        FakesClientBeginStartOptions, FakesClientCollisionsOptions, FakesClientGetOptions,
-        FakesClientGroupedOptions, FakesClientListOptionalOptions, FakesClientListOptions,
-        FakesClientPutModelOptions, FakesClientPutOptionalOptions, FakesClientPutOptions,
-        FakesClientSpreadOptions, GroupedInputs,
+        FakesClientBeginStartOptions, FakesClientCollisionsOptions, FakesClientFixedGroupOptions,
+        FakesClientGetOptions, FakesClientGroupedOptions, FakesClientListOptionalOptions,
+        FakesClientListOptions, FakesClientPutModelOptions, FakesClientPutOptionalOptions,
+        FakesClientPutOptions, FakesClientSpreadOptions, GroupedInputs,
     },
     FakesClient, FakesClientOptions,
 };
@@ -169,6 +169,15 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         let _ = (context, frequency, state, options);
         unimplemented!("FakesServer::collisions is not implemented")
     }
+    /// Handles [`FakesClient::fixed_group()`](crate::clients::FakesClient::fixed_group).
+    #[allow(clippy::too_many_arguments)]
+    async fn fixed_group(
+        &self,
+        options: Option<FakesClientFixedGroupOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let _ = (options,);
+        unimplemented!("FakesServer::fixed_group is not implemented")
+    }
     /// Handles [`FakesClient::get()`](crate::clients::FakesClient::get).
     #[allow(clippy::too_many_arguments)]
     async fn get(
@@ -309,6 +318,23 @@ pub(crate) async fn dispatch_collisions<T: FakesServer + ?Sized>(
         arguments.frequency,
         (arguments.state).as_str(),
         Some(FakesClientCollisionsOptions {
+            method_options: ClientMethodOptions {
+                context: context.to_owned(),
+            },
+        }),
+    )
+    .await
+}
+pub(crate) async fn dispatch_fixed_group<T: FakesServer + ?Sized>(
+    server: &T,
+    context: &azure_core::http::Context<'_>,
+    request: &mut azure_core::http::Request,
+    api_name: &str,
+) -> azure_core::Result<azure_core::http::AsyncRawResponse> {
+    let _ = (&request, api_name);
+    FakesServer::fixed_group(
+        server,
+        Some(FakesClientFixedGroupOptions {
             method_options: ClientMethodOptions {
                 context: context.to_owned(),
             },
@@ -574,6 +600,15 @@ impl<T: FakesServer + ?Sized> Policy for FakesClientTransport<T> {
             }
             "Fakes.collisions" => {
                 crate::clients::fake::fakes_client::dispatch_collisions(
+                    &*self.server,
+                    context,
+                    request,
+                    api_name,
+                )
+                .await
+            }
+            "Fakes.fixedGroup" => {
+                crate::clients::fake::fakes_client::dispatch_fixed_group(
                     &*self.server,
                     context,
                     request,

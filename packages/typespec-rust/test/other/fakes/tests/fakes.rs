@@ -3,6 +3,11 @@
 
 #![cfg(all(feature = "test", feature = "unstable_fake"))]
 
+#[path = "fakes/construction.rs"]
+mod construction;
+#[path = "fakes/endpoints.rs"]
+mod endpoints;
+
 use async_trait::async_trait;
 use azure_core::{
     error::ErrorKind,
@@ -27,6 +32,14 @@ fn response(body: impl Into<Bytes>) -> Result<AsyncRawResponse> {
         StatusCode::Ok,
         Headers::new(),
         body,
+    ))
+}
+
+fn no_content() -> Result<AsyncRawResponse> {
+    Ok(AsyncRawResponse::fake_with_bytes(
+        StatusCode::NoContent,
+        Headers::new(),
+        "",
     ))
 }
 
@@ -58,6 +71,13 @@ impl FakesChildServer for Server {
 
 #[async_trait]
 impl FakesServer for Server {
+    async fn fixed_group(
+        &self,
+        _: Option<FakesClientFixedGroupOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        response(r#"{"value":"fixed"}"#)
+    }
+
     async fn grouped(
         &self,
         inputs: GroupedInputs<'_>,
@@ -283,7 +303,39 @@ async fn original_arguments_and_child_routing() -> Result<()> {
 
 #[tokio::test]
 async fn grouped_parameters_keep_the_normal_public_shape() -> Result<()> {
-    let client = client(Arc::new(Server::default()))?;
+    #[derive(Debug)]
+    struct CheckFixedValues;
+
+    #[async_trait]
+    impl Policy for CheckFixedValues {
+        async fn send(
+            &self,
+            context: &Context,
+            request: &mut Request,
+            next: &[Arc<dyn Policy>],
+        ) -> PolicyResult {
+            assert!(request
+                .url()
+                .query_pairs()
+                .any(|(key, value)| key == "fixed" && value == "fixed"));
+            assert_eq!(
+                request.headers().get_optional_str(&"x-fixed".into()),
+                Some("first"),
+            );
+            next[0].send(context, request, &next[1..]).await
+        }
+    }
+
+    let client = FakesClient::with_fake(
+        "https://example.test",
+        Arc::new(Server::default()),
+        Some(FakesClientOptions {
+            client_options: ClientOptions {
+                per_call_policies: vec![Arc::new(CheckFixedValues)],
+                ..Default::default()
+            },
+        }),
+    )?;
     let result = client
         .grouped(
             GroupedInputs {
@@ -297,6 +349,15 @@ async fn grouped_parameters_keep_the_normal_public_shape() -> Result<()> {
         )
         .await?;
     assert_eq!(result.into_model()?.value.as_deref(), Some("grouped"));
+    assert_eq!(
+        client
+            .fixed_group(None)
+            .await?
+            .into_model()?
+            .value
+            .as_deref(),
+        Some("fixed"),
+    );
     Ok(())
 }
 

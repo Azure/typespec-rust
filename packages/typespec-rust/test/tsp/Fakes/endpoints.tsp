@@ -6,9 +6,10 @@ using Azure.ClientGenerator.Core;
 
 @service
 @client({ name: "EndpointClient", service: FakesEndpoints })
-@server("{endpoint}/prefix/{tenant}/{version}", "Service endpoint", {
+@server("{endpoint}/prefix/{tenant}/{server}/{version}", "Service endpoint", {
   endpoint: url,
   tenant: string,
+  server: string,
   version: string = "v1",
 })
 namespace FakesEndpoints;

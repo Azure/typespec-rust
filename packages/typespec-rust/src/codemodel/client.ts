@@ -66,6 +66,9 @@ export interface ClientConstruction {
   /** the constructor functions for a client. */
   constructors: Array<Constructor>;
 
+  /** Inputs other than credentials, retained even when authentication prevents real constructors. */
+  parameters: Array<ClientParameter>;
+
   /**
    * indicates that the endpoint requires additional host configuration. i.e. the
    * endpoint passed by the caller will be augmented with supplemental path info.
@@ -726,6 +729,7 @@ export class ClientConstruction implements ClientConstruction {
   constructor(options: ClientOptions) {
     this.options = options;
     this.constructors = new Array<Constructor>();
+    this.parameters = new Array<ClientParameter>();
     this.suppressed = 'no';
   }
 }

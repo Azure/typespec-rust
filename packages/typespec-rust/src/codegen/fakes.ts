@@ -265,6 +265,7 @@ export function emitFakeDispatch(client: rust.Client): string {
       if (param.type.kind === 'requestContent') return 'request.body().clone().into()';
       if (param.type.kind === 'struct') {
         const group = param.type;
+        // Fixed wire parameters are not fields in the normal public group type.
         const values = args.filter(a => a.param.group?.name === param.name)
           .map(a => `${a.param.name}: ${borrow(a.param.type, `arguments.${a.name}`)}`);
         return `${group.name} { ${values.join(', ')} }`;
@@ -298,13 +299,16 @@ function emitFakeConstructor(client: rust.Client, transport: string, use: Use): 
   const construction = client.constructable!;
   use.add(publicPath(client.module), client.name, construction.options.type.name);
   use.add('azure_core', 'tracing');
-  const params = ['endpoint: &str', `server: Arc<impl ${serverName(client)} + ?Sized + 'static>`];
-  const fields: Array<string> = [];
   // Match modeled constructor parameters, including supplemental URL inputs that
-  // are consumed during construction rather than stored as client fields.
-  const constructor = construction.constructors[0];
-  for (const param of requiredConstructorParameters(constructor.params)) {
-    if (param.kind === 'clientEndpoint' || param.kind === 'clientCredential') continue;
+  // are consumed during construction rather than stored as client fields. These
+  // inputs exist even when unsupported authentication leaves no real constructor.
+  const constructorParams = requiredConstructorParameters(construction.parameters)
+    .filter(param => param.kind !== 'clientEndpoint' && param.kind !== 'clientCredential');
+  // Reserve only names emitted in this constructor, not fields inside options.
+  const server = synthetic([...constructorParams, { name: 'endpoint' }, { name: 'options' }], 'server');
+  const params = ['endpoint: &str', `${server}: Arc<impl ${serverName(client)} + ?Sized + 'static>`];
+  const fields: Array<string> = [];
+  for (const param of constructorParams) {
     use.addForType(param.type);
     params.push(`${param.name}: ${helpers.getTypeDeclaration(param.type)}`);
   }
@@ -333,7 +337,7 @@ function emitFakeConstructor(client: rust.Client, transport: string, use: Use): 
     + `let ${construction.endpoint ? 'mut ' : ''}endpoint = Url::parse(endpoint)?;\n`
     + supplementalEndpoint(new helpers.indentation(0), 'endpoint', construction.endpoint)
     + `if ${options}.transport.is_some() { return Err(Error::with_message(ErrorKind::Other, "a transport cannot be specified when using a fake server")); }\n`
-    + `${options}.transport = Some(Transport::with_policy(Arc::new(${transport} { server })));\n`
+    + `${options}.transport = Some(Transport::with_policy(Arc::new(${transport} { ${server === 'server' ? server : `server: ${server}`} })));\n`
     + `Ok(Self { ${fields.join(', ')} })\n}\n}\n`;
 }
 
