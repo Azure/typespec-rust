@@ -1,6 +1,6 @@
 # Release History
 
-## 0.41.6 (Unreleased)
+## 0.42.0 (2026-11-13)
 
 ### Breaking Changes
 
@@ -20,10 +20,12 @@
 
 ### Other Changes
 
-- Limited unit test discovery to TypeScript sources so stale compiled tests from
-  other branches are not run.
+- Aligned shared dependencies and overrides with TypeSpec Azure and updated
+  TypeSpec and Azure packages to versions available in the Azure SDK npm feed.
 - Documented default HTTP transport feature forwarding and dependency settings
   for generated crates.
+- Limited unit test discovery to TypeScript sources so stale compiled tests from
+  other branches are not run.
 
 ## 0.41.5 (2026-07-14)
 

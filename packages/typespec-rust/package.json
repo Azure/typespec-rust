@@ -1,6 +1,6 @@
 {
   "name": "@azure-tools/typespec-rust",
-  "version": "0.41.6",
+  "version": "0.42.0",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
   "packageManager": "pnpm@11.10.0",
@@ -13,7 +13,7 @@
     "doc": "docs"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
     "spector": "node .scripts/spector.js",
@@ -49,45 +49,45 @@
   "homepage": "https://github.com/Azure/typespec-rust#readme",
   "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
-    "@azure-tools/azure-http-specs": "0.1.0-alpha.45",
-    "@azure-tools/typespec-azure-core": "~0.72.0",
-    "@azure-tools/typespec-azure-resource-manager": "~0.72.0",
-    "@azure-tools/typespec-azure-rulesets": "~0.72.0",
+    "@azure-tools/azure-http-specs": "0.1.0-alpha.47",
+    "@azure-tools/typespec-azure-core": "~0.74.0",
+    "@azure-tools/typespec-azure-resource-manager": "~0.74.0",
+    "@azure-tools/typespec-azure-rulesets": "~0.74.0",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^22.15.0",
+    "@types/node": "^22.18.0",
     "@types/turndown": "^5.0.6",
-    "@typespec/http-specs": "0.1.0-alpha.43",
-    "@typespec/spector": "0.1.0-alpha.29",
-    "@vitest/coverage-v8": "^4.1.5",
-    "@vitest/ui": "^4.1.5",
-    "eslint": "^10.2.1",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.1",
-    "vitest": "^4.1.5"
+    "@typespec/http-specs": "0.1.0-alpha.46",
+    "@typespec/spector": "0.1.0-alpha.31",
+    "@vitest/coverage-v8": "^5.0.5",
+    "@vitest/ui": "^5.0.5",
+    "eslint": "^10.14.0",
+    "typescript": "npm:@typescript/typescript6@~6.0.2",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.0.5"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-autorest": "~0.72.0",
-    "@azure-tools/typespec-azure-core": "~0.72.0",
-    "@azure-tools/typespec-azure-resource-manager": "~0.72.0",
-    "@azure-tools/typespec-azure-rulesets": "~0.72.0",
-    "@azure-tools/typespec-client-generator-core": "~0.72.1",
-    "@typespec/compiler": "~1.16.0",
-    "@typespec/events": "~0.85.0",
-    "@typespec/http": "~1.16.0",
-    "@typespec/openapi": "~1.15.0",
-    "@typespec/rest": "~0.85.0",
-    "@typespec/sse": "~0.85.0",
-    "@typespec/streams": "~0.85.0",
-    "@typespec/versioning": "~0.85.0",
-    "@typespec/xml": "~0.85.0"
+    "@azure-tools/typespec-autorest": "~0.74.0",
+    "@azure-tools/typespec-azure-core": "~0.74.0",
+    "@azure-tools/typespec-azure-resource-manager": "~0.74.0",
+    "@azure-tools/typespec-azure-rulesets": "~0.74.0",
+    "@azure-tools/typespec-client-generator-core": "~0.74.0",
+    "@typespec/compiler": "~1.18.0",
+    "@typespec/events": "~0.88.0",
+    "@typespec/http": "~1.18.0",
+    "@typespec/openapi": "~1.18.0",
+    "@typespec/rest": "~0.88.0",
+    "@typespec/sse": "~0.88.0",
+    "@typespec/streams": "~0.88.0",
+    "@typespec/versioning": "~0.88.0",
+    "@typespec/xml": "~0.88.0"
   },
   "dependencies": {
-    "@azure-tools/typespec-client-generator-core": "~0.72.1",
-    "@typespec/compiler": "~1.16.0",
-    "@typespec/http": "~1.16.0",
-    "linkifyjs": "^4.3.2",
-    "query-string": "^9.4.1",
+    "@azure-tools/typespec-client-generator-core": "~0.74.0",
+    "@typespec/compiler": "~1.18.0",
+    "@typespec/http": "~1.18.0",
+    "linkifyjs": "^4.4.0",
+    "query-string": "^9.5.1",
     "source-map-support": "^0.5.21",
-    "turndown": "^7.2.4"
+    "turndown": "^7.2.5"
   }
 }
