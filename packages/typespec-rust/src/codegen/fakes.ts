@@ -46,7 +46,8 @@ function argumentsFor(method: Operation): Array<Argument> {
   // Normal signatures omit client inputs. Capturing them would add clones and
   // expose arguments that callers never pass to this operation.
   const params = method.params.filter(p => p.location === 'method' && p.kind !== 'body' && p.kind !== 'partialBody'
-    && !['literal', 'enumValue'].includes(helpers.unwrapType(p.type).kind));
+    && helpers.unwrapType(p.type).kind !== 'literal'
+    && (p.optional || helpers.unwrapType(p.type).kind !== 'enumValue'));
   return params.map(param => {
     const optionField = param.optional ? method.options.type.type.fields.find(f => f.name === param.name) : undefined;
     const location = param.kind.startsWith('path') ? 'path' : param.kind.startsWith('query') ? 'query' : 'header';
@@ -62,14 +63,14 @@ function argumentsFor(method: Operation): Array<Argument> {
   });
 }
 
-function captureFor(method: Operation): {
+function captureFor(method: Operation, module: rust.ModuleContainer): {
   args: Array<Argument>;
   fields: Array<{ name: string; type: string; value: string }>;
   frequency: string;
   present: string;
 } {
   const args = argumentsFor(method);
-  const fields = args.map(a => ({ name: a.name, type: ownedType(a.type), value: own(a.type, a.source) }));
+  const fields = args.map(a => ({ name: a.name, type: ownedType(a.type, module), value: own(a.type, a.source) }));
   const frequency = synthetic(fields, 'frequency');
   if (method.kind === 'lro') fields.push({ name: frequency, type: 'azure_core::time::Duration', value: 'options.method_options.frequency' });
   const present = synthetic(fields, 'body_present');
@@ -93,16 +94,16 @@ function signatureFor(client: rust.Client, method: Operation): Array<{ name: str
   return params;
 }
 
-function ownedType(type: rust.Type): string {
+function ownedType(type: rust.Type, module: rust.ModuleContainer): string {
   switch (type.kind) {
-    case 'ref': return ownedType(type.type);
+    case 'ref': return ownedType(type.type, module);
     case 'str': return 'String';
-    case 'slice': return `Vec<${ownedType(type.type)}>`;
+    case 'slice': return `Vec<${ownedType(type.type, module)}>`;
     case 'encodedBytes': return 'Vec<u8>';
-    case 'option': return `Option<${ownedType(type.type)}>`;
-    case 'Vec': return `Vec<${ownedType(type.type)}>`;
-    case 'hashmap': return `std::collections::HashMap<String, ${ownedType(type.type)}>`;
-    default: return helpers.getTypeDeclaration(type, 'anonymous');
+    case 'option': return `Option<${ownedType(type.type, module)}>`;
+    case 'Vec': return `Vec<${ownedType(type.type, module)}>`;
+    case 'hashmap': return `std::collections::HashMap<String, ${ownedType(type.type, module)}>`;
+    default: return declaration(type, module);
   }
 }
 
@@ -127,7 +128,7 @@ function own(type: rust.Type, expression: string): string {
 /** Captures only typed non-body values, never an options object containing context. */
 export function emitFakeCapture(client: rust.Client, method: Operation): string {
   if (!helpers.getCrate(client.module).generateFakes || method.visibility !== 'pub') return '';
-  const { fields } = captureFor(method);
+  const { fields } = captureFor(method, client.module);
   if (!fields.length) return '';
   const values = fields.map(f => f.value);
   return `${fakeGate}\nlet options = {\nlet mut options = options;\n`
@@ -151,14 +152,14 @@ function traitPath(client: rust.Client): string {
 
 export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
   return module.clients.map(client => {
-    const use = new Use(module, 'clients');
+    const use = new FakeUse(module);
     use.add('async_trait', 'async_trait');
     let body = '';
     const methods = client.methods.filter((m): m is Operation => m.kind !== 'clientaccessor' && m.visibility === 'pub');
     if (methods.length || client.constructable) use.add('azure_core', 'Result');
     if (methods.length) use.add('azure_core::http', 'AsyncRawResponse');
     for (const method of methods) {
-      const capture = captureFor(method);
+      const capture = captureFor(method, module);
       if (!capture.fields.length) continue;
       const name = operationName(client, method);
       capture.args.forEach(a => useOwnedType(use, a.type));
@@ -179,9 +180,8 @@ export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
       // Share the ordinary signature rules: groups stay grouped, optional bodies
       // stay in options, and names/types/order do not depend on transport location.
       const signature = signatureFor(client, method);
-      const params = signature.map(p => `${p.name}: ${declaration(p.type)}`);
+      const params = signature.map(p => `${p.name}: ${declaration(p.type, module)}`);
       signature.forEach(p => use.addForType(p.type));
-      signature.filter(p => p.type.kind === 'struct').forEach(p => use.add(`${publicPath(module)}::models`, (p.type as rust.Struct).name));
       const names = [...signature, method.options];
       // State and the current LRO request describe transport steps, not extra
       // service arguments. Allocate these additions after the ordinary names.
@@ -199,9 +199,9 @@ export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
         names.push({ name: request, type: method.options.type });
         params.push(`${state}: PollerState`, `${request}: &Request`);
       }
-      use.add(`${publicPath(module)}::models`, method.options.type.type.name);
+      use.addForType(method.options.type);
       use.addForType(method.options.type.type.fields.find(f => f.name === 'method_options')!.type);
-      params.push(`${method.options.name}: ${helpers.getTypeDeclaration(method.options.type, 'anonymous')}`);
+      params.push(`${method.options.name}: ${declaration(method.options.type, module)}`);
       body += `/// Handles [\`${client.name}::${method.name}()\`](${publicPath(module)}::clients::${client.name}::${method.name}).\n`;
       if (method.kind === 'lro') body += '/// The request and opaque content belong to the current HTTP step, not necessarily initiation.\n';
       if (method.name.startsWith('from_')) body += '#[allow(clippy::wrong_self_convention)]\n';
@@ -252,7 +252,7 @@ export function emitFakeDispatch(client: rust.Client): string {
   let body = '';
   for (const method of client.methods) {
     if (method.kind === 'clientaccessor' || method.visibility !== 'pub') continue;
-    const { args, fields: captures, frequency, present } = captureFor(method);
+    const { args, fields: captures, frequency, present } = captureFor(method, client.module);
     const name = operationName(client, method);
     body += `pub(crate) async fn dispatch_${method.name.replace(/^r#/, '')}<T: ${serverName(client)} + ?Sized>(server: &T, context: &azure_core::http::Context<'_>, request: &mut azure_core::http::Request, api_name: &str) -> azure_core::Result<azure_core::http::AsyncRawResponse> {\n`;
     body += 'let _ = (&request, api_name);\n';
@@ -268,7 +268,7 @@ export function emitFakeDispatch(client: rust.Client): string {
         // Fixed wire parameters are not fields in the normal public group type.
         const values = args.filter(a => a.param.group?.name === param.name)
           .map(a => `${a.param.name}: ${borrow(a.param.type, `arguments.${a.name}`)}`);
-        return `${group.name} { ${values.join(', ')} }`;
+        return `models::${group.name} { ${values.join(', ')} }`;
       }
       const arg = args.find(a => a.param.name === param.name)!;
       return borrow(arg.param.type, `arguments.${arg.name}`);
@@ -289,7 +289,7 @@ export function emitFakeDispatch(client: rust.Client): string {
       + (method.kind === 'pageable' ? 'continuation: match state { azure_core::http::pager::PagerState::Initial => None, azure_core::http::pager::PagerState::More(value) => Some(value.clone()) },\n' : '')
       + (method.kind === 'lro' ? `frequency: arguments.${frequency},\n` : '') + '}');
     if (optionsType.fields.some(f => f.name !== 'method_options' && !(bodyParam?.optional && bodyParam.name === f.name) && !args.some(a => a.optional && a.param.name === f.name))) fields.push('..Default::default()');
-    calls.push(`Some(${optionsType.name} { ${fields.join(', ')} })`);
+    calls.push(`Some(models::${optionsType.name} { ${fields.join(', ')} })`);
     body += `${serverName(client)}::${method.name}(server, ${calls.join(', ')}).await\n}\n`;
   }
   return body;
@@ -310,7 +310,7 @@ function emitFakeConstructor(client: rust.Client, transport: string, use: Use): 
   const fields: Array<string> = [];
   for (const param of constructorParams) {
     use.addForType(param.type);
-    params.push(`${param.name}: ${helpers.getTypeDeclaration(param.type)}`);
+    params.push(`${param.name}: ${declaration(param.type, client.module)}`);
   }
   for (const field of client.fields) {
     if (field.name === 'pipeline') continue;
@@ -341,8 +341,56 @@ function emitFakeConstructor(client: rust.Client, transport: string, use: Use): 
     + `Ok(Self { ${fields.join(', ')} })\n}\n}\n`;
 }
 
-function declaration(type: rust.Type): string {
-  return helpers.getTypeDeclaration(type, 'anonymous').replace(/'[a-z]\w*/g, "'_");
+function modelModule(type: rust.Type, module: rust.ModuleContainer): rust.ModuleContainer | undefined {
+  switch (type.kind) {
+    case 'model':
+    case 'enum':
+    case 'discriminatedUnion':
+    case 'untaggedUnion': return type.module;
+    case 'struct':
+    case 'marker': return module;
+    default: return undefined;
+  }
+}
+
+class FakeUse extends Use {
+  constructor(private readonly owner: rust.ModuleContainer) {
+    super(owner, 'clients');
+  }
+
+  override addForType(type: rust.Client | rust.ResponseHeadersTrait | rust.Type): void {
+    const module = type.kind === 'client' || type.kind === 'responseHeadersTrait' ? undefined : modelModule(type, this.owner);
+    if (module) {
+      if (module === this.owner) this.add(publicPath(module), 'models');
+      return;
+    }
+    super.addForType(type);
+  }
+}
+
+function qualifiedType(type: rust.Type, module: rust.ModuleContainer): rust.Type {
+  const owner = modelModule(type, module);
+  if (owner && 'name' in type) {
+    const path = owner === module ? 'models' : `${publicPath(owner)}::models`;
+    return { ...type, name: `${path}::${type.name}` };
+  }
+  switch (type.kind) {
+    case 'ref':
+    case 'option':
+    case 'slice':
+    case 'Vec':
+    case 'hashmap':
+    case 'box':
+    case 'enumValue':
+      return { ...type, type: qualifiedType(type.type, module) } as rust.Type;
+    case 'requestContent':
+      return { ...type, content: qualifiedType(type.content, module) } as rust.Type;
+    default: return type;
+  }
+}
+
+function declaration(type: rust.Type, module: rust.ModuleContainer): string {
+  return helpers.getTypeDeclaration(qualifiedType(type, module), 'anonymous').replace(/'[a-z]\w*/g, "'_");
 }
 
 function useOwnedType(use: Use, type: rust.Type): void {
@@ -388,6 +436,7 @@ function copyable(type: rust.Type): boolean {
     case 'decimal':
     case 'safeint': return true;
     case 'enum': return !type.extensible || type.type !== 'String';
+    case 'enumValue': return copyable(type.type);
     case 'option': return copyable(type.type);
     default: return false;
   }

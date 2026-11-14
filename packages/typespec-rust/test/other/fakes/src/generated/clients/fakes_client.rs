@@ -6,11 +6,12 @@
 use crate::generated::{
     clients::FakesChildClient,
     models::{
-        FakesClientBeginStartOperationStatus, FakesClientBeginStartOptions,
-        FakesClientCollisionsOptions, FakesClientFixedGroupOptions, FakesClientGetOptions,
-        FakesClientGroupedOptions, FakesClientListOptionalOptions, FakesClientListOptions,
-        FakesClientPutModelOptions, FakesClientPutOptionalOptions, FakesClientPutOptions,
-        FakesClientSpreadOptions, GroupedInputs, Item, ItemPage, Mode, SpreadRequest, StartRequest,
+        Body, FakesClientBeginStartOperationStatus, FakesClientBeginStartOptions,
+        FakesClientCollisionsOptions, FakesClientFixedGroupOptions, FakesClientFixedOptionsOptions,
+        FakesClientGetOptions, FakesClientGroupedOptions, FakesClientListOptionalOptions,
+        FakesClientListOptions, FakesClientPutModelOptions, FakesClientPutNamedBodyOptions,
+        FakesClientPutOptionalOptions, FakesClientPutOptions, FakesClientSpreadOptions,
+        GroupedInputs, Item, ItemPage, Mode, SpreadRequest, StartRequest,
     },
 };
 use azure_core::{
@@ -322,6 +323,55 @@ impl FakesClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         request.insert_header("x-fixed", Mode::First.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Fakes.fixedOptions")]
+    pub async fn fixed_options(
+        &self,
+        options: Option<FakesClientFixedOptionsOptions<'_>>,
+    ) -> Result<Response<Item>> {
+        let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_fakes_client_fixed_options(
+                &mut options.method_options.context,
+                options.mode,
+                options.header,
+            );
+            options
+        };
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/fixed-options");
+        let mut query_builder = url.query_builder();
+        if options.mode.is_some() {
+            query_builder.set_pair("mode", Mode::First.to_string());
+        }
+        query_builder.build();
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("accept", "application/json");
+        if options.header.is_some() {
+            request.insert_header("x-mode", Mode::Second.to_string());
+        }
         let rsp = self
             .pipeline
             .send(
@@ -690,6 +740,40 @@ impl FakesClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/model");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(content);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Fakes.putNamedBody")]
+    pub async fn put_named_body(
+        &self,
+        content: RequestContent<Body>,
+        options: Option<FakesClientPutNamedBodyOptions<'_>>,
+    ) -> Result<Response<Item>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/named-body");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

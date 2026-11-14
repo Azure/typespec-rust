@@ -80,6 +80,17 @@ pub struct FakesClientFixedGroupOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`FakesClient::fixed_options()`](crate::generated::clients::FakesClient::fixed_options())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesClientFixedOptionsOptions<'a> {
+    pub header: Option<Mode>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub mode: Option<Mode>,
+}
+
 /// Options to be passed to [`FakesClient::get()`](crate::generated::clients::FakesClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FakesClientGetOptions<'a> {
@@ -154,6 +165,13 @@ impl FakesClientListOptions<'_> {
 /// Options to be passed to [`FakesClient::put_model()`](crate::generated::clients::FakesClient::put_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FakesClientPutModelOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`FakesClient::put_named_body()`](crate::generated::clients::FakesClient::put_named_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct FakesClientPutNamedBodyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

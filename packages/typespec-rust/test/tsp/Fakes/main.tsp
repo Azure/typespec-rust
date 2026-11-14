@@ -23,6 +23,10 @@ model Item {
   value: string;
 }
 
+model Body {
+  value: string;
+}
+
 model ItemPage {
   @pageItems
   value: Item[];
@@ -51,6 +55,17 @@ op put(@body content: bytes): Item;
 @route("/model")
 @post
 op putModel(@body content: Item): Item;
+
+@route("/named-body")
+@post
+op putNamedBody(@body content: Body): Item;
+
+@route("/fixed-options")
+@get
+op fixedOptions(
+  @query mode?: Mode.first,
+  @header("x-mode") header?: Mode.second,
+): Item;
 
 @route("/optional")
 @post

@@ -23,7 +23,7 @@ use azure_core::{
     time::Duration,
     Bytes, Error, Result,
 };
-use fake_tests::{clients::fake::*, models::*, FakesClient, FakesClientOptions};
+use fake_tests::{clients::fake::*, models, models::*, FakesClient, FakesClientOptions};
 use futures::{io::AsyncReadExt as _, TryStreamExt as _};
 use std::sync::{Arc, Mutex};
 
@@ -60,6 +60,7 @@ struct Server {
     bodies: Mutex<Vec<Vec<u8>>>,
     lro_steps: Mutex<usize>,
     optional_bodies: Mutex<Vec<Option<Vec<u8>>>>,
+    fixed_options: Mutex<Vec<(Option<Mode>, Option<Mode>)>>,
 }
 
 #[async_trait]
@@ -71,6 +72,28 @@ impl FakesChildServer for Server {
 
 #[async_trait]
 impl FakesServer for Server {
+    async fn fixed_options(
+        &self,
+        options: Option<FakesClientFixedOptionsOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let options = options.unwrap();
+        self.fixed_options
+            .lock()
+            .unwrap()
+            .push((options.mode, options.header));
+        response(r#"{"value":"fixed"}"#)
+    }
+
+    async fn put_named_body(
+        &self,
+        content: RequestContent<models::Body>,
+        _: Option<FakesClientPutNamedBodyOptions<'_>>,
+    ) -> Result<AsyncRawResponse> {
+        let body = bytes(content.into()).await;
+        self.bodies.lock().unwrap().push(body);
+        response(r#"{"value":"named"}"#)
+    }
+
     async fn fixed_group(
         &self,
         _: Option<FakesClientFixedGroupOptions<'_>>,
@@ -266,6 +289,45 @@ fn list_options(count: i32) -> Option<FakesClientListOptions<'static>> {
             ..Default::default()
         },
     })
+}
+
+#[tokio::test]
+async fn fixed_enum_options_preserve_absence_and_original_variants() -> Result<()> {
+    let server = Arc::new(Server::default());
+    let client = client(server.clone())?;
+    client.fixed_options(None).await?;
+    client
+        .fixed_options(Some(FakesClientFixedOptionsOptions {
+            mode: Some(Mode::Second),
+            header: Some(Mode::First),
+            ..Default::default()
+        }))
+        .await?;
+    assert_eq!(
+        *server.fixed_options.lock().unwrap(),
+        vec![(None, None), (Some(Mode::Second), Some(Mode::First))],
+    );
+    Ok(())
+}
+
+#[tokio::test]
+async fn modeled_body_and_opaque_spread_body_do_not_collide() -> Result<()> {
+    let server = Arc::new(Server::default());
+    let client = client(server.clone())?;
+    client
+        .put_named_body(
+            models::Body {
+                value: Some("named".into()),
+            }
+            .try_into()?,
+            None,
+        )
+        .await?;
+    client.spread("spread".into(), None).await?;
+    let bodies = server.bodies.lock().unwrap();
+    assert_eq!(bodies[0], br#"{"value":"named"}"#);
+    assert_eq!(bodies[1], br#"{"value":"spread"}"#);
+    Ok(())
 }
 
 #[tokio::test]

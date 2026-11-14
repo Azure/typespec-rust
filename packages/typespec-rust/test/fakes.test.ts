@@ -11,6 +11,7 @@ import { CodeGenerator } from '../src/codegen/codeGenerator.js';
 import { RustEmitterOptions } from '../src/lib.js';
 import * as rust from '../src/codemodel/index.js';
 import { snakeCaseName } from '../src/utils/utils.js';
+import { emitFakes } from '../src/codegen/fakes.js';
 
 type Param = { name: string; type: string };
 type ModelMap = Record<string, Array<Param>>;
@@ -50,7 +51,7 @@ function compareParameters(normal: Array<Param>, fake: Array<Param>, equivalents
     expect(models[to], `missing model ${to}`).toBeDefined();
     expect(models[to]).toEqual(models[from]);
   }
-  const normalize = (type: string): string => type.replace(/\b[A-Za-z_]\w*\b/g, name =>
+  const normalize = (type: string): string => type.replace(/\bmodels::/g, '').replace(/\b[A-Za-z_]\w*\b/g, name =>
     Object.entries(equivalents).find(([, to]) => to === name)?.[0] ?? name);
   expect(fake.map(p => ({ ...p, type: normalize(p.type) }))).toEqual(normal);
 }
@@ -124,7 +125,7 @@ describe('fake generation', () => {
     const models = content('models/method_options.rs');
     expect(models).toContain('payload: Option<RequestContent<Bytes, NoFormat>>');
     const fake = content('fake/fakes_client.rs');
-    expect(fake).toContain('inputs: GroupedInputs');
+    expect(fake).toContain('inputs: models::GroupedInputs');
     expect(fake).not.toContain('content_0');
     expect(fake).toContain('body_present: bool');
     expect(fake).toContain('payload: if arguments.body_present');
@@ -139,7 +140,7 @@ describe('fake generation', () => {
     const fake = content('fake/fakes_client.rs');
     expect(signature(fake, 'grouped').params.map(p => p.name)).toEqual(['self', 'inputs', 'options']);
     expect(signature(fake, 'fixed_group').params.map(p => p.name)).toEqual(['self', 'options']);
-    expect(fake).toContain('GroupedInputs { name: (arguments.name).as_str(), label: (arguments.label).clone() }');
+    expect(fake).toContain('models::GroupedInputs { name: (arguments.name).as_str(), label: (arguments.label).clone() }');
     expect(fake).not.toContain('arguments.fixed');
     for (const fragment of ['query_builder.set_pair("fixed", "fixed")', 'request.insert_header("x-fixed", Mode::First.to_string())']) {
       expect(content('clients/fakes_client.rs')).toContain(fragment);
@@ -278,7 +279,7 @@ describe('fake generation', () => {
     const fake = content('fake/fakes_client.rs');
     expect(fake).toContain('struct FakesClientGetArguments');
     expect(fake).toContain('tags: Option<Vec<String>>');
-    expect(fake).toContain('mode: Option<Mode>');
+    expect(fake).toContain('mode: Option<models::Mode>');
     expect(fake).not.toContain('derive(Debug');
     expect(fake).not.toContain('pub struct FakesClientGetArguments');
     expect(fake).not.toContain('percent_decode');
@@ -313,5 +314,49 @@ describe('fake generation', () => {
     const fake = content('fake/fakes_client.rs');
     expect(fake).toContain("context_0: &mut azure_core::http::Context<'_>");
     expect(fake).toContain('context_0.insert(FakesClientCollisionsArguments');
+  });
+
+  it('captures and restores optional fixed enum options without normalizing their values', () => {
+    const fake = content('fake/fakes_client.rs');
+    expect(fake).toContain('mode: Option<models::Mode>, header: Option<models::Mode>');
+    expect(fake).toContain('mode: arguments.mode');
+    expect(fake).toContain('header: arguments.header');
+    const client = content('clients/fakes_client.rs');
+    expect(client).toContain('options.mode, options.header');
+    expect(client).toContain('if options.mode.is_some()');
+    expect(client).toContain('if options.header.is_some()');
+  });
+
+  it.each([
+    'Body', 'AsyncRawResponse', 'Context', 'Policy', 'PolicyResult', 'Transport',
+    'Arc', 'FakesServer', 'FakesClientTransport', 'FakesClientGetArguments',
+  ])('qualifies modeled %s without importing it into the fake scope', async name => {
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const renamed = adapter.tcgcToCrate();
+    renamed.models.find(model => model.name === 'Item')!.name = name;
+    const fake = emitFakes(renamed).find(file => file.name === 'fakes_client')!.content;
+    expect(fake).toContain(`content: RequestContent<models::${name}>`);
+    expect(fake).toContain('content: Body');
+    expect(fake).toMatch(/use crate::\{[^}]*\bmodels,/);
+    expect(fake).not.toMatch(/use crate::[^;]*models::/);
+  });
+
+  it('keeps local and cross-namespace model paths distinct inside wrappers', async () => {
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const nested = adapter.tcgcToCrate();
+    const module = new rust.SubModule('nested', nested);
+    const client = nested.clients.find(client => client.name === 'FakesClient')!;
+    client.module = module;
+    module.clients.push(client);
+    const item = nested.models.find((model): model is rust.Model => model.kind === 'model' && model.name === 'Item')!;
+    item.module = module;
+    const fake = emitFakes(module)[0].content;
+    expect(fake).toMatch(/use crate::nested::\{[^}]*\bmodels,/);
+    expect(fake).toContain('content: RequestContent<models::Item>');
+    expect(fake).toContain('content: RequestContent<crate::models::Body>');
+    expect(fake).toContain('mode: Option<crate::models::Mode>');
+    expect(fake).toContain('inputs: models::GroupedInputs');
+    expect(fake).toContain('Some(models::FakesClientGroupedOptions');
+    expect(fake).not.toMatch(/use crate::[^;]*models::/);
   });
 });

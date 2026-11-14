@@ -7,6 +7,12 @@ use super::OperationState;
 use azure_core::{error::ErrorDetail, fmt::SafeDebug};
 use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct Body {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
+}
+
 /// Provides status details for long running operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
