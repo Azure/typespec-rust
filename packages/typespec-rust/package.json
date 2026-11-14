@@ -13,7 +13,7 @@
     "doc": "docs"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
     "spector": "node .scripts/spector.js",
@@ -54,7 +54,7 @@
     "@azure-tools/typespec-azure-resource-manager": "~0.74.0",
     "@azure-tools/typespec-azure-rulesets": "~0.74.0",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^22.15.0",
+    "@types/node": "^22.18.0",
     "@types/turndown": "^5.0.6",
     "@typespec/http-specs": "0.1.0-alpha.46",
     "@typespec/spector": "0.1.0-alpha.31",

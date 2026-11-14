@@ -76,7 +76,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.14.0)
       '@types/node':
-        specifier: ^22.15.0
+        specifier: ^22.18.0
         version: 22.20.5
       '@types/turndown':
         specifier: ^5.0.6
