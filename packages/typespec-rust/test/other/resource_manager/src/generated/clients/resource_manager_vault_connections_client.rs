@@ -68,6 +68,17 @@ impl ResourceManagerVaultConnectionsClient {
         options: Option<ResourceManagerVaultConnectionsClientBeginDeleteOptions<'_>>,
     ) -> Result<Poller<ResourceManagerVaultConnectionsClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_vault_connections_client_begin_delete(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(vault_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/vault-connections/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/vaults/{vaultName}");
         path = path.replace("{resourceGroupName}", resource_group_name);

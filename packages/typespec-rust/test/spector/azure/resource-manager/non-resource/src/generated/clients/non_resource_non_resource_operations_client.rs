@@ -56,6 +56,16 @@ impl NonResourceNonResourceOperationsClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_non_resource_non_resource_operations_client_create(
+                &mut options.method_options.context,
+                (*(location)).to_owned(),
+                (*(parameter)).to_owned(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
@@ -112,6 +122,16 @@ impl NonResourceNonResourceOperationsClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_non_resource_non_resource_operations_client_get(
+                &mut options.method_options.context,
+                (*(location)).to_owned(),
+                (*(parameter)).to_owned(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");

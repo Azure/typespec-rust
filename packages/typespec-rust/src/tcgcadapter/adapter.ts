@@ -132,12 +132,20 @@ export class Adapter {
     }
 
     this.crate = new rust.Crate(this.options['crate-name'], this.options['crate-version'] ?? '0.1.0', serviceType);
+    this.crate.generateFakes = this.options['generate-fakes'] === true;
   }
 
   /** performs all the steps to convert tcgc to a crate */
   tcgcToCrate(): rust.Crate {
     this.adaptTypes();
     this.adaptClients();
+
+    // Register before CodeGenerator sorts dependencies, including nested clients.
+    const hasClients = (module: rust.ModuleContainer): boolean =>
+      module.clients.length > 0 || module.subModules.some(hasClients);
+    if (this.crate.generateFakes && hasClients(this.crate)) {
+      this.crate.addDependency(new rust.CrateDependency('async-trait'));
+    }
 
     return this.crate;
   }
@@ -1588,7 +1596,7 @@ export class Adapter {
         }
       };
 
-      const ctorParams = new Array<rust.ClientParameter>();
+      const ctorParams = rustClient.constructable.parameters;
       for (const param of client.clientInitialization.parameters) {
         switch (param.kind) {
           case 'credential':
@@ -1696,6 +1704,7 @@ export class Adapter {
       }
 
       // propagate ctor params to all client ctors
+      helpers.sortClientParameters(ctorParams);
       for (const constructor of rustClient.constructable.constructors) {
         constructor.params.push(...ctorParams);
         // ensure param order of endpoint, credential, other
@@ -1745,6 +1754,7 @@ export class Adapter {
           cur.fields.push(field);
 
           // propagate this param to all client constructors
+          constructable.parameters.push(clientParam);
           for (const constructor of constructable.constructors) {
             constructor.params.push(clientParam);
           }

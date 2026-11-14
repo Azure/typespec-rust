@@ -77,6 +77,17 @@ impl ResourceManagerVaultsClient {
         options: Option<ResourceManagerVaultsClientBeginCreateOrUpdateOptions<'_>>,
     ) -> Result<Poller<ResourceManagerVaultsClientBeginCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_vaults_client_begin_create_or_update(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(vault_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/vaults/{vaultName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -136,6 +147,17 @@ impl ResourceManagerVaultsClient {
         options: Option<ResourceManagerVaultsClientBeginGetLroOptions<'_>>,
     ) -> Result<Poller<ResourceManagerVaultsClientBeginGetLroOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_vaults_client_begin_get_lro(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(vault_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/vaults/{vaultName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -198,6 +220,17 @@ impl ResourceManagerVaultsClient {
         options: Option<ResourceManagerVaultsClientBeginPurgeOptions<'_>>,
     ) -> Result<Poller<ResourceManagerVaultsClientBeginPurgeOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_vaults_client_begin_purge(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(vault_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/purge/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/vaults/{vaultName}/purge");
         path = path.replace("{resourceGroupName}", resource_group_name);

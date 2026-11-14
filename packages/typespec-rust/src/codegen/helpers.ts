@@ -634,7 +634,7 @@ export function emitBackTicks(count: number): string {
  * @param candidates the candidate names in ascending order
  * @returns one of candidates or the last candidate with a suffix
  */
-export function getUniqueVarName(params: Array<rust.MethodParameter>, candidates: Array<string>): string {
+export function getUniqueVarName(params: Array<{ name: string }>, candidates: Array<string>): string {
   let i = 0;
   while (true) {
     // if all the candidates have been exhausted

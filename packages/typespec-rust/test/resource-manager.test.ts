@@ -94,7 +94,7 @@ describe('Resource Manager generation', () => {
   });
 
   it('delegates polling without inline state machines or synthesized status bodies', () => {
-    const clients = files.filter(file => file.name.includes('/clients/')).map(file => file.content).join('\n');
+    const clients = files.filter(file => file.name.includes('/clients/') && !file.name.includes('/fake/')).map(file => file.content).join('\n');
     expect(clients).toContain('Ok(new_poller(');
     expect(clients).not.toContain('PollerState');
     expect(clients).not.toContain('get_retry_after');

@@ -108,14 +108,14 @@ const azureHttpSpecsGroup = {
   'spector_azureduration': {input: 'azure/encode/duration'},
   'spector_azurepageable': {input: 'azure/payload/pageable'},
   'spector_azurebasic': {input: 'azure/example/basic'},
-  'spector_armcommon': {input: 'azure/resource-manager/common-properties', args: ['emit-error-traits=true']},
-  'spector_armlargeheader': {input: 'azure/resource-manager/large-header'},
-  'spector_armmethodsub': {input: 'azure/resource-manager/method-subscription-id/client.tsp'},
-  'spector_armnonresource': {input: 'azure/resource-manager/non-resource'},
-  'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
-  'spector_armresources': {input: 'azure/resource-manager/resources'},
-  'spector_arm_multi_service': {input: 'azure/resource-manager/multi-service/client.tsp'},
-  'spector_arm_multi_service_shared_models': {input: 'azure/resource-manager/multi-service-shared-models/client.tsp'},
+  'spector_armcommon': {input: 'azure/resource-manager/common-properties', args: ['emit-error-traits=true', 'generate-fakes=true']},
+  'spector_armlargeheader': {input: 'azure/resource-manager/large-header', args: ['generate-fakes=true']},
+  'spector_armmethodsub': {input: 'azure/resource-manager/method-subscription-id/client.tsp', args: ['generate-fakes=true']},
+  'spector_armnonresource': {input: 'azure/resource-manager/non-resource', args: ['generate-fakes=true']},
+  'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates', args: ['generate-fakes=true']},
+  'spector_armresources': {input: 'azure/resource-manager/resources', args: ['generate-fakes=true']},
+  'spector_arm_multi_service': {input: 'azure/resource-manager/multi-service/client.tsp', args: ['generate-fakes=true']},
+  'spector_arm_multi_service_shared_models': {input: 'azure/resource-manager/multi-service-shared-models/client.tsp', args: ['generate-fakes=true']},
   'spector_requestidheader': {input: 'azure/special-headers/client-request-id'},
   'spector_azpreviewversion': {input: 'azure/versioning/previewVersion'},
   'spector_azure_client_namespace': {input: 'client/namespace/client.tsp', output: 'azure/client/namespace'},
@@ -164,6 +164,7 @@ function should_generate(name) {
 
 const alternate_types = pkgRoot + 'test/tsp/AlternateTypes';
 generate('alternate_types', alternate_types, 'test/other/alternate_types');
+generate('fake_tests', pkgRoot + 'test/tsp/Fakes', 'test/other/fakes', ['generate-fakes=true']);
 
 //const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration/client.tsp';
 //generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
@@ -172,7 +173,7 @@ const keyvault_keys = pkgRoot + 'test/tsp/Security.KeyVault.Keys/client.tsp';
 generate('keyvault_keys', keyvault_keys, 'test/sdk/keyvault_keys', ['omit-constructors=true', 'api-version=2025-07-01']);
 
 const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrets/client.tsp';
-generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets', ['omit-constructors=true']);
+generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets', ['omit-constructors=true', 'generate-fakes=true']);
 
 const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
 generate('blob_storage', blob_storage, 'test/sdk/blob_storage', ['temp-omit-doc-links=true']);
@@ -192,7 +193,7 @@ generate('colliding_locals', colliding_locals, 'test/other/colliding_locals');
 const lro = pkgRoot + 'test/tsp/lro';
 generate('lro', lro, 'test/other/lro');
 
-generate('azure_resourcemanager_test', pkgRoot + 'test/tsp/ResourceManager', 'test/other/resource_manager', ['api-version=2026-05-15']);
+generate('azure_resourcemanager_test', pkgRoot + 'test/tsp/ResourceManager', 'test/other/resource_manager', ['api-version=2026-05-15', 'generate-fakes=true']);
 
 const misc_tests = pkgRoot + 'test/tsp/MiscTests';
 generate('misc_tests', misc_tests, 'test/other/misc_tests', ['crate-version=0.2.0']);

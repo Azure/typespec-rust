@@ -11,6 +11,8 @@ export interface RustEmitterOptions {
   'crate-name': string;
   /** The version of the generated Rust crate. Defaults to 0.1.0 */
   'crate-version'?: string;
+  /** Whether to generate fake servers. Defaults to false */
+  'generate-fakes'?: boolean;
   /** Whether to skip emitting client constructors and their options type. Defaults to false */
   'omit-constructors': boolean;
   /** Whether to overwrite an existing Cargo.toml file. Defaults to false */
@@ -43,6 +45,12 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
       nullable: false,
       default: false,
       description: 'Whether to skip emitting client constructors and their options type. Defaults to false'
+    },
+    'generate-fakes': {
+      type: 'boolean',
+      nullable: true,
+      default: false,
+      description: 'Whether to generate fake servers. Defaults to false'
     },
     'overwrite-cargo-toml': { 
       type: 'boolean', 

@@ -12,6 +12,8 @@ import queryString from 'query-string';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 import * as utils from '../utils/utils.js';
+import { emitFakeCapture } from './fakes.js';
+import { methodParameters, requiredConstructorParameters, supplementalEndpoint } from './parameters.js';
 
 /** the client modules */
 export interface ClientModules {
@@ -124,20 +126,7 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
             body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
           })}`
 
-          // construct the supplemental path and join it to the endpoint
-          if (client.constructable.endpoint) {
-            const supplementalEndpoint = client.constructable.endpoint;
-            if (supplementalEndpoint.parameters.length > 0) {
-              body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
-              for (const param of supplementalEndpoint.parameters) {
-                body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
-              }
-              body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
-            } else {
-              // there are no params for the supplemental host, so just append it
-              body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join("${supplementalEndpoint.path}")?;\n`;
-            }
-          }
+          body += supplementalEndpoint(indent, endpointParamName, client.constructable.endpoint);
 
           // if there's a credential param, create the necessary auth policy
           const authPolicy = getAuthPolicy(constructor, use);
@@ -581,12 +570,7 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
  */
 function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: rust.ClientOptions, use: Use): string {
   const paramsSig = new Array<string>();
-  for (const param of params) {
-    if (param.optional) {
-      // optional params will be in the client options type
-      continue;
-    }
-
+  for (const param of requiredConstructorParameters(params)) {
     use.addForType(param.type);
     paramsSig.push(`${param.name}: ${helpers.getTypeDeclaration(param.type)}`);
   }
@@ -617,34 +601,17 @@ function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): { count:
       ++count;
     }
   } else {
-    const emittedGroups = new Set<string>();
     for (const param of method.params) {
-      if (param.group) {
-        if (!emittedGroups.has(param.group.name)) {
-          emittedGroups.add(param.group.name);
-          // required parameter group appears as a single struct parameter in the method signature
-          paramsSig.push(`${param.group.name}: ${helpers.getTypeDeclaration(param.group.type, 'anonymous')}`);
-          ++count;
-        }
-        continue;
-      }
-
       const paramType = helpers.unwrapType(param.type);
-      if (paramType.kind === 'literal') {
-        // literal params are embedded directly in the code (e.g. accept header param)
-        continue;
-      } else if (paramType.kind === 'enumValue') {
-        // enum values are treated like literals, we just need to use their type
+      if (!param.group && paramType.kind === 'enumValue') {
         use.addForType(paramType.type);
-        continue;
       }
-
-      // don't add client or optional params to the method param sig
-      if (param.location === 'method' && !param.optional) {
-        use.addForType(param.kind === 'partialBody' ? param.paramType : param.type);
-        paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
-        ++count;
-      }
+    }
+    for (const param of methodParameters(method)) {
+      use.addForType(param.type);
+      const grouped = method.params.some(p => p.group?.name === param.name);
+      paramsSig.push(`${param.name}: ${param.mut ? 'mut ' : ''}${helpers.getTypeDeclaration(param.type, grouped ? 'anonymous' : undefined)}`);
+      ++count;
     }
 
     paramsSig.push(`${method.options.name}: ${helpers.getTypeDeclaration(method.options.type, 'anonymous')}`);
@@ -1390,6 +1357,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   const paramGroups = getMethodParamGroup(method);
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let ctx = options.method_options.context.to_borrowed();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVarName} = self.${client.endpoint.name}.clone();\n`;
 
@@ -1557,6 +1525,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
@@ -1786,6 +1755,7 @@ function getResourceManagerLroMethodBody(crate: rust.Crate, indent: helpers.inde
   const params = getMethodParamGroup(method);
   const url = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let ${urlVarNeedsMut(params, method)}${url} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, params, url);
   const request = constructRequest(indent, use, method, params, false, url, false,
@@ -1857,6 +1827,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  body += emitFakeCapture(client, method);
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${client.endpoint.name}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
@@ -2067,35 +2038,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::new
 
   return body;
-}
-
-/**
- * contains the code to use when populating a client endpoint parameter value
- * from a parameter of that type.
- * @param param the param for which to get the value
- * @returns the code to use for the param's value
- */
-function getClientSupplementalEndpointParamValue(param: rust.ClientSupplementalEndpointParameter): string {
-  let paramName = param.name;
-  if (param.optional) {
-    paramName = 'options.' + paramName;
-  }
-
-  const unwrappedType = helpers.unwrapType(param.type);
-
-  switch (unwrappedType.kind) {
-    case 'String':
-      return `&${paramName}`;
-    case 'enum':
-      return `${paramName}.as_ref()`;
-    case 'offsetDateTime':
-    case 'scalar':
-      return `&${paramName}.to_string()`;
-    case 'str':
-      return paramName;
-    default:
-      throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${param.type.kind}`);
-  }
 }
 
 /**

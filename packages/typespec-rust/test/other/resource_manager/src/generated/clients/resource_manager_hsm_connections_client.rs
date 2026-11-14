@@ -68,6 +68,17 @@ impl ResourceManagerHsmConnectionsClient {
         options: Option<ResourceManagerHsmConnectionsClientBeginDeleteOptions<'_>>,
     ) -> Result<Poller<ResourceManagerHsmConnectionsClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resource_manager_hsm_connections_client_begin_delete(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(managed_hsm_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/hsm-connections/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/ResourceManager/managedHsms/{managedHsmName}");
         path = path.replace("{managedHsmName}", managed_hsm_name);

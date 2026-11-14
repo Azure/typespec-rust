@@ -10,38 +10,36 @@ to disable it with `--no-default-features`.
 
 ## Azure Resource Manager
 
-Resource Manager services are detected from TypeSpec metadata; no mode or flavor
-option is required. Use the `azure_resourcemanager_<service>` crate naming
-convention. The common `api-version` emitter option selects the service version:
+ARM services are detected from TypeSpec metadata. Generated crates enable
+`azure_core/unstable_resource_manager` and use Public cloud by default.
+For other clouds, pass the same cloud configuration to the credential and client.
+See the [default-cloud][default-cloud] and [custom-cloud][custom-cloud] examples.
+
+Generated pagers and pollers use shared Azure Core helpers, keeping paging and
+long-running operation behavior consistent with ARM conventions.
+
+[default-cloud]: test/other/resource_manager/examples/default_cloud.rs
+[custom-cloud]: test/other/resource_manager/examples/custom_cloud.rs
+
+## Fake servers
+
+Fake server generation is disabled by default. Opt in for data-plane or Resource
+Manager clients with the emitter option:
 
 ```yaml
 options:
   "@azure-tools/typespec-rust":
-    crate-name: azure_resourcemanager_keyvault
-    api-version: "2026-05-15"
+    generate-fakes: true
 ```
 
-Generated manifests inherit workspace package metadata, including `exclude`,
-and workspace dependencies. Use a version of `azure_core` that supports
-`unstable_resource_manager`; generated Resource Manager crates enable this
-feature.
+Enable the generated crate's `unstable_fake` Cargo feature (which also enables
+`test`), implement its `clients::fake::<Name>Server` trait, and construct the client
+with `with_fake()`. No credential is needed. Fakes use the normal client pipeline,
+pagers, and pollers. See the offline [Key Vault secrets example][secrets-fake] and
+[Resource Manager LRO example][arm-fake].
 
-Clients use Azure Public cloud when cloud configuration is omitted. Start
-with the [default-cloud construction example][default-cloud], which uses
-`DeveloperToolsCredential` and the signed-in developer tool's configuration.
-
-For an explicit cloud, use the [custom-cloud construction example][custom-cloud].
-It passes the same configuration to `ClientSecretCredential` and the service
-client. Configure the identity authority, management endpoint, and authentication
-audience separately; the endpoint and audience need not be the same URL. Register
-the audience with `azure_core::cloud::resource_manager::Audience`, shared across
-Resource Manager crates.
-
-Await a long-running operation's poller for its final response, or stream its
-polling responses before awaiting the result.
-
-[default-cloud]: test/other/resource_manager/examples/default_cloud.rs
-[custom-cloud]: test/other/resource_manager/examples/custom_cloud.rs
+[secrets-fake]: test/sdk/keyvault_secrets/examples/secret_client_fake.rs
+[arm-fake]: test/other/resource_manager/examples/fake.rs
 
 ## Contributing
 

@@ -67,6 +67,16 @@ impl ResourcesTopLevelClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_top_level_client_action_sync(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/actionSync");
@@ -143,6 +153,17 @@ impl ResourcesTopLevelClient {
         options: Option<ResourcesTopLevelClientBeginCreateOrReplaceOptions<'_>>,
     ) -> Result<Poller<ResourcesTopLevelClientBeginCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_top_level_client_begin_create_or_replace(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -209,6 +230,17 @@ impl ResourcesTopLevelClient {
         options: Option<ResourcesTopLevelClientBeginDeleteOptions<'_>>,
     ) -> Result<Poller<ResourcesTopLevelClientBeginDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_top_level_client_begin_delete(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -274,6 +306,17 @@ impl ResourcesTopLevelClient {
         options: Option<ResourcesTopLevelClientBeginUpdateOptions<'_>>,
     ) -> Result<Poller<ResourcesTopLevelClientBeginUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_top_level_client_begin_update(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -325,6 +368,16 @@ impl ResourcesTopLevelClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_top_level_client_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(top_level_tracked_resource_name)).to_owned(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
@@ -375,6 +428,15 @@ impl ResourcesTopLevelClient {
             ));
         }
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_resources_top_level_client_list_by_resource_group(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+            );
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");

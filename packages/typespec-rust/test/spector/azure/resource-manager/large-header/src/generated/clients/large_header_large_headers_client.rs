@@ -71,6 +71,17 @@ impl LargeHeaderLargeHeadersClient {
         options: Option<LargeHeaderLargeHeadersClientBeginTwo6KOptions<'_>>,
     ) -> Result<Poller<LargeHeaderLargeHeadersClientBeginTwo6KOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_large_header_large_headers_client_begin_two6_k(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(large_header_name)).to_owned(),
+                options.method_options.frequency,
+            );
+            options
+        };
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.LargeHeader/largeHeaders/{largeHeaderName}/two6k");
         path = path.replace("{largeHeaderName}", large_header_name);

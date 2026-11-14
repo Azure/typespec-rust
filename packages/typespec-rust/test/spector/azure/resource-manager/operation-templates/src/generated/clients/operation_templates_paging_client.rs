@@ -59,6 +59,16 @@ impl OperationTemplatesPagingClient {
             ));
         }
         let options = options.unwrap_or_default();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_paging_client_get(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(monitor_name)).to_owned(),
+            );
+            options
+        };
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/monitors/{monitorName}");
@@ -114,6 +124,16 @@ impl OperationTemplatesPagingClient {
             ));
         }
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_paging_client_list_mark_as_pageable(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(monitor_name)).to_owned(),
+            );
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/monitors/{monitorName}/collections");
@@ -178,6 +198,17 @@ impl OperationTemplatesPagingClient {
             ));
         }
         let options = options.unwrap_or_default().into_owned();
+        #[cfg(all(feature = "test", feature = "unstable_fake"))]
+        let options = {
+            let mut options = options;
+            crate::clients::fake::capture_operation_templates_paging_client_list_post_action_paging(
+                &mut options.method_options.context,
+                (*(resource_group_name)).to_owned(),
+                (*(monitor_name)).to_owned(),
+                options.body.is_some(),
+            );
+            options
+        };
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/monitors/{monitorName}/postActionPaging");

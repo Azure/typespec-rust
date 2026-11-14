@@ -11,6 +11,9 @@
 
 ### Features Added
 
+- Added opt-in fake servers (`generate-fakes: true`) for data-plane and Resource
+  Manager clients, including typed arguments, paging, and request-aware long-running
+  operations.
 - Added Resource Manager cloud configuration and long-running operation support
   using the shared Azure Core helpers.
 
