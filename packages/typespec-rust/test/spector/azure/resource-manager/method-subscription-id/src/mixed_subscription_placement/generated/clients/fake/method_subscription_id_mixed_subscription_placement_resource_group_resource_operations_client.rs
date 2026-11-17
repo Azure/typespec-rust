@@ -15,7 +15,6 @@ struct MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperat
     resource_group_name: String,
     resource_group_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -28,7 +27,6 @@ struct MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperat
     resource_group_name: String,
     resource_group_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -41,7 +39,6 @@ struct MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperat
     resource_group_name: String,
     resource_group_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client_put(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -60,7 +57,6 @@ pub trait MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOpe
     Send + Sync
 {
     /// Handles [`MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClient::delete()`](crate::mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClient::delete).
-    #[allow(clippy::too_many_arguments)]
     async fn delete(
         &self,
         resource_group_name: &str,
@@ -71,7 +67,6 @@ pub trait MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOpe
         unimplemented!("MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsServer::delete is not implemented")
     }
     /// Handles [`MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClient::get()`](crate::mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,
@@ -82,7 +77,6 @@ pub trait MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOpe
         unimplemented!("MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsServer::get is not implemented")
     }
     /// Handles [`MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClient::put()`](crate::mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClient::put).
-    #[allow(clippy::too_many_arguments)]
     async fn put(
         &self,
         resource_group_name: &str,

@@ -14,7 +14,6 @@ struct CommonPropertiesManagedIdentityClientCreateWithSystemAssignedArguments {
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_managed_identity_client_create_with_system_assigned(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -31,7 +30,6 @@ struct CommonPropertiesManagedIdentityClientGetArguments {
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_managed_identity_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -46,7 +44,6 @@ struct CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssig
     resource_group_name: String,
     managed_identity_tracked_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_managed_identity_client_update_with_user_assigned_and_system_assigned(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -68,7 +65,6 @@ pub(crate) fn capture_common_properties_managed_identity_client_update_with_user
 #[async_trait]
 pub trait CommonPropertiesManagedIdentityServer: Send + Sync {
     /// Handles [`CommonPropertiesManagedIdentityClient::create_with_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::create_with_system_assigned).
-    #[allow(clippy::too_many_arguments)]
     async fn create_with_system_assigned(
         &self,
         resource_group_name: &str,
@@ -89,7 +85,6 @@ pub trait CommonPropertiesManagedIdentityServer: Send + Sync {
         )
     }
     /// Handles [`CommonPropertiesManagedIdentityClient::get()`](crate::clients::CommonPropertiesManagedIdentityClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,
@@ -104,7 +99,6 @@ pub trait CommonPropertiesManagedIdentityServer: Send + Sync {
         unimplemented!("CommonPropertiesManagedIdentityServer::get is not implemented")
     }
     /// Handles [`CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned).
-    #[allow(clippy::too_many_arguments)]
     async fn update_with_user_assigned_and_system_assigned(
         &self,
         resource_group_name: &str,

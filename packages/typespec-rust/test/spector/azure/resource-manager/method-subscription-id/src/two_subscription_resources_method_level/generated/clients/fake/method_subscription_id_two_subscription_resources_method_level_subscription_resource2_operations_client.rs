@@ -15,7 +15,6 @@ struct MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResour
     subscription_id: String,
     subscription_resource2_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client_delete(
     context: &mut azure_core::http::Context<'_>,
     subscription_id: String,
@@ -28,7 +27,6 @@ struct MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResour
     subscription_id: String,
     subscription_resource2_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client_get(
     context: &mut azure_core::http::Context<'_>,
     subscription_id: String,
@@ -41,7 +39,6 @@ struct MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResour
     subscription_id: String,
     subscription_resource2_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client_put(
     context: &mut azure_core::http::Context<'_>,
     subscription_id: String,
@@ -60,7 +57,6 @@ pub trait MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionRes
     Send + Sync
 {
     /// Handles [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::delete()`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::delete).
-    #[allow(clippy::too_many_arguments)]
     async fn delete(
         &self,
         subscription_id: &str,
@@ -71,7 +67,6 @@ pub trait MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionRes
         unimplemented!("MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::delete is not implemented")
     }
     /// Handles [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::get()`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         subscription_id: &str,
@@ -82,7 +77,6 @@ pub trait MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionRes
         unimplemented!("MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsServer::get is not implemented")
     }
     /// Handles [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::put()`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource2OperationsClient::put).
-    #[allow(clippy::too_many_arguments)]
     async fn put(
         &self,
         subscription_id: &str,

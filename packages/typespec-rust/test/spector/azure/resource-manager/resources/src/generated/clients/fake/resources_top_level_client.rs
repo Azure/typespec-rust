@@ -18,7 +18,6 @@ struct ResourcesTopLevelClientActionSyncArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_action_sync(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -34,7 +33,6 @@ struct ResourcesTopLevelClientBeginCreateOrReplaceArguments {
     top_level_tracked_resource_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_begin_create_or_replace(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -52,7 +50,6 @@ struct ResourcesTopLevelClientBeginDeleteArguments {
     top_level_tracked_resource_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -70,7 +67,6 @@ struct ResourcesTopLevelClientBeginUpdateArguments {
     top_level_tracked_resource_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_begin_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -87,7 +83,6 @@ struct ResourcesTopLevelClientGetArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -101,7 +96,6 @@ pub(crate) fn capture_resources_top_level_client_get(
 struct ResourcesTopLevelClientListByResourceGroupArguments {
     resource_group_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_top_level_client_list_by_resource_group(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -119,7 +113,6 @@ pub(crate) fn capture_resources_top_level_client_list_by_resource_group(
 #[async_trait]
 pub trait ResourcesTopLevelServer: Send + Sync {
     /// Handles [`ResourcesTopLevelClient::action_sync()`](crate::clients::ResourcesTopLevelClient::action_sync).
-    #[allow(clippy::too_many_arguments)]
     async fn action_sync(
         &self,
         resource_group_name: &str,
@@ -137,7 +130,6 @@ pub trait ResourcesTopLevelServer: Send + Sync {
     }
     /// Handles [`ResourcesTopLevelClient::begin_create_or_replace()`](crate::clients::ResourcesTopLevelClient::begin_create_or_replace).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_replace(
         &self,
         resource_group_name: &str,
@@ -159,7 +151,6 @@ pub trait ResourcesTopLevelServer: Send + Sync {
     }
     /// Handles [`ResourcesTopLevelClient::begin_delete()`](crate::clients::ResourcesTopLevelClient::begin_delete).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
         resource_group_name: &str,
@@ -179,7 +170,6 @@ pub trait ResourcesTopLevelServer: Send + Sync {
     }
     /// Handles [`ResourcesTopLevelClient::begin_update()`](crate::clients::ResourcesTopLevelClient::begin_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_update(
         &self,
         resource_group_name: &str,
@@ -200,7 +190,6 @@ pub trait ResourcesTopLevelServer: Send + Sync {
         unimplemented!("ResourcesTopLevelServer::begin_update is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::get()`](crate::clients::ResourcesTopLevelClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,
@@ -215,7 +204,6 @@ pub trait ResourcesTopLevelServer: Send + Sync {
         unimplemented!("ResourcesTopLevelServer::get is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::list_by_resource_group()`](crate::clients::ResourcesTopLevelClient::list_by_resource_group).
-    #[allow(clippy::too_many_arguments)]
     async fn list_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -226,7 +214,6 @@ pub trait ResourcesTopLevelServer: Send + Sync {
         unimplemented!("ResourcesTopLevelServer::list_by_resource_group is not implemented")
     }
     /// Handles [`ResourcesTopLevelClient::list_by_subscription()`](crate::clients::ResourcesTopLevelClient::list_by_subscription).
-    #[allow(clippy::too_many_arguments)]
     async fn list_by_subscription(
         &self,
         state: PagerState,

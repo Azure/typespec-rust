@@ -22,7 +22,6 @@ struct FakesClientBeginStartArguments {
     api_version: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_begin_start(
     context: &mut azure_core::http::Context<'_>,
     api_version: String,
@@ -38,7 +37,6 @@ struct FakesClientCollisionsArguments {
     frequency: i32,
     state: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_collisions(
     context_0: &mut azure_core::http::Context<'_>,
     context: String,
@@ -55,7 +53,6 @@ struct FakesClientFixedOptionsArguments {
     mode: Option<models::Mode>,
     header: Option<models::Mode>,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_fixed_options(
     context: &mut azure_core::http::Context<'_>,
     mode: Option<models::Mode>,
@@ -70,7 +67,6 @@ struct FakesClientGetArguments {
     header_name: Option<String>,
     mode: Option<models::Mode>,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_get(
     context: &mut azure_core::http::Context<'_>,
     name: String,
@@ -92,7 +88,6 @@ struct FakesClientGroupedArguments {
     name: String,
     label: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_grouped(
     context: &mut azure_core::http::Context<'_>,
     count: Option<i32>,
@@ -105,7 +100,6 @@ struct FakesClientListArguments {
     name: String,
     count: Option<i32>,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_list(
     context: &mut azure_core::http::Context<'_>,
     name: String,
@@ -117,7 +111,6 @@ struct FakesClientListOptionalArguments {
     state: Option<String>,
     body_present: bool,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_list_optional(
     context: &mut azure_core::http::Context<'_>,
     state: Option<String>,
@@ -131,7 +124,6 @@ pub(crate) fn capture_fakes_client_list_optional(
 struct FakesClientPutOptionalArguments {
     body_present: bool,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_fakes_client_put_optional(
     context: &mut azure_core::http::Context<'_>,
     body_present: bool,
@@ -148,7 +140,6 @@ pub(crate) fn capture_fakes_client_put_optional(
 pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
     /// Handles [`FakesClient::begin_start()`](crate::clients::FakesClient::begin_start).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_start(
         &self,
         api_version: &str,
@@ -161,7 +152,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::begin_start is not implemented")
     }
     /// Handles [`FakesClient::collisions()`](crate::clients::FakesClient::collisions).
-    #[allow(clippy::too_many_arguments)]
     async fn collisions(
         &self,
         context: &str,
@@ -173,7 +163,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::collisions is not implemented")
     }
     /// Handles [`FakesClient::fixed_group()`](crate::clients::FakesClient::fixed_group).
-    #[allow(clippy::too_many_arguments)]
     async fn fixed_group(
         &self,
         options: Option<models::FakesClientFixedGroupOptions<'_>>,
@@ -182,7 +171,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::fixed_group is not implemented")
     }
     /// Handles [`FakesClient::fixed_options()`](crate::clients::FakesClient::fixed_options).
-    #[allow(clippy::too_many_arguments)]
     async fn fixed_options(
         &self,
         options: Option<models::FakesClientFixedOptionsOptions<'_>>,
@@ -191,7 +179,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::fixed_options is not implemented")
     }
     /// Handles [`FakesClient::get()`](crate::clients::FakesClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         name: &str,
@@ -201,7 +188,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::get is not implemented")
     }
     /// Handles [`FakesClient::grouped()`](crate::clients::FakesClient::grouped).
-    #[allow(clippy::too_many_arguments)]
     async fn grouped(
         &self,
         inputs: models::GroupedInputs<'_>,
@@ -211,7 +197,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::grouped is not implemented")
     }
     /// Handles [`FakesClient::list()`](crate::clients::FakesClient::list).
-    #[allow(clippy::too_many_arguments)]
     async fn list(
         &self,
         name: &str,
@@ -222,7 +207,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::list is not implemented")
     }
     /// Handles [`FakesClient::list_optional()`](crate::clients::FakesClient::list_optional).
-    #[allow(clippy::too_many_arguments)]
     async fn list_optional(
         &self,
         state: PagerState,
@@ -232,7 +216,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::list_optional is not implemented")
     }
     /// Handles [`FakesClient::put()`](crate::clients::FakesClient::put).
-    #[allow(clippy::too_many_arguments)]
     async fn put(
         &self,
         content: RequestContent<Bytes, NoFormat>,
@@ -242,7 +225,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::put is not implemented")
     }
     /// Handles [`FakesClient::put_model()`](crate::clients::FakesClient::put_model).
-    #[allow(clippy::too_many_arguments)]
     async fn put_model(
         &self,
         content: RequestContent<models::Item>,
@@ -252,7 +234,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::put_model is not implemented")
     }
     /// Handles [`FakesClient::put_named_body()`](crate::clients::FakesClient::put_named_body).
-    #[allow(clippy::too_many_arguments)]
     async fn put_named_body(
         &self,
         content: RequestContent<models::Body>,
@@ -262,7 +243,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::put_named_body is not implemented")
     }
     /// Handles [`FakesClient::put_optional()`](crate::clients::FakesClient::put_optional).
-    #[allow(clippy::too_many_arguments)]
     async fn put_optional(
         &self,
         options: Option<models::FakesClientPutOptionalOptions<'_>>,
@@ -271,7 +251,6 @@ pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
         unimplemented!("FakesServer::put_optional is not implemented")
     }
     /// Handles [`FakesClient::spread()`](crate::clients::FakesClient::spread).
-    #[allow(clippy::too_many_arguments)]
     async fn spread(
         &self,
         content: Body,

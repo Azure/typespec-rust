@@ -18,7 +18,6 @@ struct CombinedStorageAccountsClientBeginCreateOrUpdateArguments {
     account_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_storage_accounts_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -35,7 +34,6 @@ struct CombinedStorageAccountsClientGetArguments {
     resource_group_name: String,
     account_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_storage_accounts_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -56,7 +54,6 @@ pub(crate) fn capture_combined_storage_accounts_client_get(
 pub trait CombinedStorageAccountsServer: Send + Sync {
     /// Handles [`CombinedStorageAccountsClient::begin_create_or_update()`](crate::storage::clients::CombinedStorageAccountsClient::begin_create_or_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
         resource_group_name: &str,
@@ -77,7 +74,6 @@ pub trait CombinedStorageAccountsServer: Send + Sync {
         unimplemented!("CombinedStorageAccountsServer::begin_create_or_update is not implemented")
     }
     /// Handles [`CombinedStorageAccountsClient::get()`](crate::storage::clients::CombinedStorageAccountsClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,

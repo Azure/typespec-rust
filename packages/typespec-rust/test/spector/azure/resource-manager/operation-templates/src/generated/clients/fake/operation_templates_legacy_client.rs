@@ -15,7 +15,6 @@ struct OperationTemplatesLegacyClientCreateOrReplaceOptionalBodyArguments {
     configuration_name: String,
     body_present: bool,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_legacy_client_create_or_replace_optional_body(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -35,7 +34,6 @@ struct OperationTemplatesLegacyClientRoutedGetArguments {
     name: String,
     diagnostic_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_legacy_client_routed_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -57,7 +55,6 @@ pub(crate) fn capture_operation_templates_legacy_client_routed_get(
 #[async_trait]
 pub trait OperationTemplatesLegacyServer: Send + Sync {
     /// Handles [`OperationTemplatesLegacyClient::create_or_replace_optional_body()`](crate::clients::OperationTemplatesLegacyClient::create_or_replace_optional_body).
-    #[allow(clippy::too_many_arguments)]
     async fn create_or_replace_optional_body(
         &self,
         resource_group_name: &str,
@@ -72,7 +69,6 @@ pub trait OperationTemplatesLegacyServer: Send + Sync {
         )
     }
     /// Handles [`OperationTemplatesLegacyClient::routed_get()`](crate::clients::OperationTemplatesLegacyClient::routed_get).
-    #[allow(clippy::too_many_arguments)]
     async fn routed_get(
         &self,
         resource_group_name: &str,

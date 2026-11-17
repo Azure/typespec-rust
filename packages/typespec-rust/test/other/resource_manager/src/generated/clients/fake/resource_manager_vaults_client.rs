@@ -18,7 +18,6 @@ struct ResourceManagerVaultsClientBeginCreateOrUpdateArguments {
     vault_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_vaults_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -36,7 +35,6 @@ struct ResourceManagerVaultsClientBeginGetLroArguments {
     vault_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_vaults_client_begin_get_lro(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -54,7 +52,6 @@ struct ResourceManagerVaultsClientBeginPurgeArguments {
     vault_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_vaults_client_begin_purge(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -77,7 +74,6 @@ pub(crate) fn capture_resource_manager_vaults_client_begin_purge(
 pub trait ResourceManagerVaultsServer: Send + Sync {
     /// Handles [`ResourceManagerVaultsClient::begin_create_or_update()`](crate::clients::ResourceManagerVaultsClient::begin_create_or_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
         resource_group_name: &str,
@@ -99,7 +95,6 @@ pub trait ResourceManagerVaultsServer: Send + Sync {
     }
     /// Handles [`ResourceManagerVaultsClient::begin_get_lro()`](crate::clients::ResourceManagerVaultsClient::begin_get_lro).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_get_lro(
         &self,
         resource_group_name: &str,
@@ -113,7 +108,6 @@ pub trait ResourceManagerVaultsServer: Send + Sync {
     }
     /// Handles [`ResourceManagerVaultsClient::begin_purge()`](crate::clients::ResourceManagerVaultsClient::begin_purge).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_purge(
         &self,
         resource_group_name: &str,

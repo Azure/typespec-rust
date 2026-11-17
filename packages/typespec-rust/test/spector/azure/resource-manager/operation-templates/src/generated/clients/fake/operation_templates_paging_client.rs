@@ -17,7 +17,6 @@ struct OperationTemplatesPagingClientGetArguments {
     resource_group_name: String,
     monitor_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_paging_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -32,7 +31,6 @@ struct OperationTemplatesPagingClientListMarkAsPageableArguments {
     resource_group_name: String,
     monitor_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_paging_client_list_mark_as_pageable(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -48,7 +46,6 @@ struct OperationTemplatesPagingClientListPostActionPagingArguments {
     monitor_name: String,
     body_present: bool,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_paging_client_list_post_action_paging(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -72,7 +69,6 @@ pub(crate) fn capture_operation_templates_paging_client_list_post_action_paging(
 #[async_trait]
 pub trait OperationTemplatesPagingServer: Send + Sync {
     /// Handles [`OperationTemplatesPagingClient::get()`](crate::clients::OperationTemplatesPagingClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,
@@ -83,7 +79,6 @@ pub trait OperationTemplatesPagingServer: Send + Sync {
         unimplemented!("OperationTemplatesPagingServer::get is not implemented")
     }
     /// Handles [`OperationTemplatesPagingClient::list_mark_as_pageable()`](crate::clients::OperationTemplatesPagingClient::list_mark_as_pageable).
-    #[allow(clippy::too_many_arguments)]
     async fn list_mark_as_pageable(
         &self,
         resource_group_name: &str,
@@ -95,7 +90,6 @@ pub trait OperationTemplatesPagingServer: Send + Sync {
         unimplemented!("OperationTemplatesPagingServer::list_mark_as_pageable is not implemented")
     }
     /// Handles [`OperationTemplatesPagingClient::list_post_action_paging()`](crate::clients::OperationTemplatesPagingClient::list_post_action_paging).
-    #[allow(clippy::too_many_arguments)]
     async fn list_post_action_paging(
         &self,
         resource_group_name: &str,

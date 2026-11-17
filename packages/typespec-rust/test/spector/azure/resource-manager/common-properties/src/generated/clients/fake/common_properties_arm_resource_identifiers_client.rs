@@ -14,7 +14,6 @@ struct CommonPropertiesArmResourceIdentifiersClientCreateOrReplaceArguments {
     resource_group_name: String,
     arm_resource_identifier_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_arm_resource_identifiers_client_create_or_replace(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -31,7 +30,6 @@ struct CommonPropertiesArmResourceIdentifiersClientGetArguments {
     resource_group_name: String,
     arm_resource_identifier_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_arm_resource_identifiers_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -51,7 +49,6 @@ pub(crate) fn capture_common_properties_arm_resource_identifiers_client_get(
 #[async_trait]
 pub trait CommonPropertiesArmResourceIdentifiersServer: Send + Sync {
     /// Handles [`CommonPropertiesArmResourceIdentifiersClient::create_or_replace()`](crate::clients::CommonPropertiesArmResourceIdentifiersClient::create_or_replace).
-    #[allow(clippy::too_many_arguments)]
     async fn create_or_replace(
         &self,
         resource_group_name: &str,
@@ -72,7 +69,6 @@ pub trait CommonPropertiesArmResourceIdentifiersServer: Send + Sync {
         )
     }
     /// Handles [`CommonPropertiesArmResourceIdentifiersClient::get()`](crate::clients::CommonPropertiesArmResourceIdentifiersClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,

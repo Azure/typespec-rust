@@ -18,7 +18,6 @@ struct CombinedDisksClientBeginCreateOrUpdateArguments {
     disk_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_disks_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -35,7 +34,6 @@ struct CombinedDisksClientGetArguments {
     resource_group_name: String,
     disk_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_disks_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -56,7 +54,6 @@ pub(crate) fn capture_combined_disks_client_get(
 pub trait CombinedDisksServer: Send + Sync {
     /// Handles [`CombinedDisksClient::begin_create_or_update()`](crate::compute_disk::clients::CombinedDisksClient::begin_create_or_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
         resource_group_name: &str,
@@ -77,7 +74,6 @@ pub trait CombinedDisksServer: Send + Sync {
         unimplemented!("CombinedDisksServer::begin_create_or_update is not implemented")
     }
     /// Handles [`CombinedDisksClient::get()`](crate::compute_disk::clients::CombinedDisksClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,

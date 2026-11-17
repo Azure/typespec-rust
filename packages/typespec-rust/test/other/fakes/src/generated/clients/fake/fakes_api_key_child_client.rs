@@ -24,7 +24,6 @@ use std::sync::Arc;
 #[async_trait]
 pub trait FakesApiKeyChildServer: Send + Sync {
     /// Handles [`FakesApiKeyChildClient::get()`](crate::clients::FakesApiKeyChildClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         options: Option<models::FakesApiKeyChildClientGetOptions<'_>>,

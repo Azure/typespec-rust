@@ -20,7 +20,6 @@ struct ResourcesNestedClientBeginCreateOrReplaceArguments {
     nexted_proxy_resource_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_nested_client_begin_create_or_replace(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -41,7 +40,6 @@ struct ResourcesNestedClientBeginDeleteArguments {
     nexted_proxy_resource_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_nested_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -62,7 +60,6 @@ struct ResourcesNestedClientBeginUpdateArguments {
     nexted_proxy_resource_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_nested_client_begin_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -82,7 +79,6 @@ struct ResourcesNestedClientGetArguments {
     top_level_tracked_resource_name: String,
     nexted_proxy_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_nested_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -99,7 +95,6 @@ struct ResourcesNestedClientListByTopLevelTrackedResourceArguments {
     resource_group_name: String,
     top_level_tracked_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_nested_client_list_by_top_level_tracked_resource(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -146,7 +141,6 @@ pub trait ResourcesNestedServer: Send + Sync {
     }
     /// Handles [`ResourcesNestedClient::begin_delete()`](crate::clients::ResourcesNestedClient::begin_delete).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
         resource_group_name: &str,
@@ -191,7 +185,6 @@ pub trait ResourcesNestedServer: Send + Sync {
         unimplemented!("ResourcesNestedServer::begin_update is not implemented")
     }
     /// Handles [`ResourcesNestedClient::get()`](crate::clients::ResourcesNestedClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,
@@ -208,7 +201,6 @@ pub trait ResourcesNestedServer: Send + Sync {
         unimplemented!("ResourcesNestedServer::get is not implemented")
     }
     /// Handles [`ResourcesNestedClient::list_by_top_level_tracked_resource()`](crate::clients::ResourcesNestedClient::list_by_top_level_tracked_resource).
-    #[allow(clippy::too_many_arguments)]
     async fn list_by_top_level_tracked_resource(
         &self,
         resource_group_name: &str,

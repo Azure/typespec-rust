@@ -1,5 +1,12 @@
 # Release History
 
+## 0.42.1 (Unreleased)
+
+### Other Changes
+
+- Fake servers only allow `clippy::too_many_arguments` on functions with more than
+  seven arguments.
+
 ## 0.42.0 (2026-11-13)
 
 ### Breaking Changes

@@ -14,7 +14,6 @@ struct NonResourceNonResourceOperationsClientCreateArguments {
     location: String,
     parameter: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_non_resource_non_resource_operations_client_create(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -29,7 +28,6 @@ struct NonResourceNonResourceOperationsClientGetArguments {
     location: String,
     parameter: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_non_resource_non_resource_operations_client_get(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -49,7 +47,6 @@ pub(crate) fn capture_non_resource_non_resource_operations_client_get(
 #[async_trait]
 pub trait NonResourceNonResourceOperationsServer: Send + Sync {
     /// Handles [`NonResourceNonResourceOperationsClient::create()`](crate::clients::NonResourceNonResourceOperationsClient::create).
-    #[allow(clippy::too_many_arguments)]
     async fn create(
         &self,
         location: &str,
@@ -61,7 +58,6 @@ pub trait NonResourceNonResourceOperationsServer: Send + Sync {
         unimplemented!("NonResourceNonResourceOperationsServer::create is not implemented")
     }
     /// Handles [`NonResourceNonResourceOperationsClient::get()`](crate::clients::NonResourceNonResourceOperationsClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         location: &str,

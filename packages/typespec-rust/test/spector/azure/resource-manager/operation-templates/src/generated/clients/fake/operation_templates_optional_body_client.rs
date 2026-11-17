@@ -14,7 +14,6 @@ struct OperationTemplatesOptionalBodyClientGetArguments {
     resource_group_name: String,
     widget_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_optional_body_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -30,7 +29,6 @@ struct OperationTemplatesOptionalBodyClientPatchArguments {
     widget_name: String,
     body_present: bool,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_optional_body_client_patch(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -48,7 +46,6 @@ struct OperationTemplatesOptionalBodyClientPostArguments {
     widget_name: String,
     body_present: bool,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_optional_body_client_post(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -64,7 +61,6 @@ pub(crate) fn capture_operation_templates_optional_body_client_post(
 struct OperationTemplatesOptionalBodyClientProviderPostArguments {
     body_present: bool,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_optional_body_client_provider_post(
     context: &mut azure_core::http::Context<'_>,
     body_present: bool,
@@ -80,7 +76,6 @@ pub(crate) fn capture_operation_templates_optional_body_client_provider_post(
 #[async_trait]
 pub trait OperationTemplatesOptionalBodyServer: Send + Sync {
     /// Handles [`OperationTemplatesOptionalBodyClient::get()`](crate::clients::OperationTemplatesOptionalBodyClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,
@@ -91,7 +86,6 @@ pub trait OperationTemplatesOptionalBodyServer: Send + Sync {
         unimplemented!("OperationTemplatesOptionalBodyServer::get is not implemented")
     }
     /// Handles [`OperationTemplatesOptionalBodyClient::patch()`](crate::clients::OperationTemplatesOptionalBodyClient::patch).
-    #[allow(clippy::too_many_arguments)]
     async fn patch(
         &self,
         resource_group_name: &str,
@@ -102,7 +96,6 @@ pub trait OperationTemplatesOptionalBodyServer: Send + Sync {
         unimplemented!("OperationTemplatesOptionalBodyServer::patch is not implemented")
     }
     /// Handles [`OperationTemplatesOptionalBodyClient::post()`](crate::clients::OperationTemplatesOptionalBodyClient::post).
-    #[allow(clippy::too_many_arguments)]
     async fn post(
         &self,
         resource_group_name: &str,
@@ -113,7 +106,6 @@ pub trait OperationTemplatesOptionalBodyServer: Send + Sync {
         unimplemented!("OperationTemplatesOptionalBodyServer::post is not implemented")
     }
     /// Handles [`OperationTemplatesOptionalBodyClient::provider_post()`](crate::clients::OperationTemplatesOptionalBodyClient::provider_post).
-    #[allow(clippy::too_many_arguments)]
     async fn provider_post(
         &self,
         options: Option<models::OperationTemplatesOptionalBodyClientProviderPostOptions<'_>>,
