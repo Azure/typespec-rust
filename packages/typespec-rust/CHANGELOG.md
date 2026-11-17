@@ -6,7 +6,6 @@
 
 - Fake servers only allow `clippy::too_many_arguments` on functions with more than
   seven arguments.
-- Shared the argument-count allowance logic between clients and fake servers.
 
 ## 0.42.0 (2026-11-13)
 
