@@ -18,7 +18,6 @@ struct ResourceManagerManagedHsmsClientBeginCreateOrUpdateArguments {
     managed_hsm_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_managed_hsms_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -38,7 +37,6 @@ struct ResourceManagerManagedHsmsClientBeginDeleteArguments {
     managed_hsm_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_managed_hsms_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -55,7 +53,6 @@ struct ResourceManagerManagedHsmsClientBeginPurgeArguments {
     managed_hsm_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_managed_hsms_client_begin_purge(
     context: &mut azure_core::http::Context<'_>,
     managed_hsm_name: String,
@@ -71,7 +68,6 @@ struct ResourceManagerManagedHsmsClientBeginUpdateArguments {
     managed_hsm_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_managed_hsms_client_begin_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -94,7 +90,6 @@ pub(crate) fn capture_resource_manager_managed_hsms_client_begin_update(
 pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     /// Handles [`ResourceManagerManagedHsmsClient::begin_create_or_update()`](crate::clients::ResourceManagerManagedHsmsClient::begin_create_or_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
         resource_group_name: &str,
@@ -118,7 +113,6 @@ pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     }
     /// Handles [`ResourceManagerManagedHsmsClient::begin_delete()`](crate::clients::ResourceManagerManagedHsmsClient::begin_delete).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
         resource_group_name: &str,
@@ -138,7 +132,6 @@ pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     }
     /// Handles [`ResourceManagerManagedHsmsClient::begin_purge()`](crate::clients::ResourceManagerManagedHsmsClient::begin_purge).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_purge(
         &self,
         managed_hsm_name: &str,
@@ -151,7 +144,6 @@ pub trait ResourceManagerManagedHsmsServer: Send + Sync {
     }
     /// Handles [`ResourceManagerManagedHsmsClient::begin_update()`](crate::clients::ResourceManagerManagedHsmsClient::begin_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_update(
         &self,
         resource_group_name: &str,

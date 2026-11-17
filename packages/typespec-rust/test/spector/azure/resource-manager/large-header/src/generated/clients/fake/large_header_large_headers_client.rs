@@ -18,7 +18,6 @@ struct LargeHeaderLargeHeadersClientBeginTwo6KArguments {
     large_header_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_large_header_large_headers_client_begin_two6_k(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -41,7 +40,6 @@ pub(crate) fn capture_large_header_large_headers_client_begin_two6_k(
 pub trait LargeHeaderLargeHeadersServer: Send + Sync {
     /// Handles [`LargeHeaderLargeHeadersClient::begin_two6_k()`](crate::clients::LargeHeaderLargeHeadersClient::begin_two6_k).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_two6_k(
         &self,
         resource_group_name: &str,

@@ -13,7 +13,6 @@ use azure_core::{
 struct OperationTemplatesCheckNameAvailabilityClientCheckLocalArguments {
     location: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_check_name_availability_client_check_local(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -29,7 +28,6 @@ pub(crate) fn capture_operation_templates_check_name_availability_client_check_l
 #[async_trait]
 pub trait OperationTemplatesCheckNameAvailabilityServer: Send + Sync {
     /// Handles [`OperationTemplatesCheckNameAvailabilityClient::check_global()`](crate::clients::OperationTemplatesCheckNameAvailabilityClient::check_global).
-    #[allow(clippy::too_many_arguments)]
     async fn check_global(
         &self,
         body: RequestContent<models::CheckNameAvailabilityRequest>,
@@ -43,7 +41,6 @@ pub trait OperationTemplatesCheckNameAvailabilityServer: Send + Sync {
         )
     }
     /// Handles [`OperationTemplatesCheckNameAvailabilityClient::check_local()`](crate::clients::OperationTemplatesCheckNameAvailabilityClient::check_local).
-    #[allow(clippy::too_many_arguments)]
     async fn check_local(
         &self,
         location: &str,

@@ -285,6 +285,27 @@ describe('fake generation', () => {
     expect(fake).not.toContain('percent_decode');
   });
 
+  it.each([
+    { name: 'collisions', count: 5, capture: false, server: false },
+    { name: 'collisions', count: 6, capture: false, server: true },
+    { name: 'collisions', count: 7, capture: true, server: true },
+    { name: 'list', count: 4, capture: false, server: false },
+    { name: 'list', count: 5, capture: false, server: true },
+    { name: 'begin_start', count: 3, capture: false, server: false },
+    { name: 'begin_start', count: 4, capture: false, server: true },
+  ])('limits argument-count allowances for $name with $count inputs', async ({ name, count, capture, server }) => {
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const boundary = adapter.tcgcToCrate();
+    const client = boundary.clients.find(client => client.name === 'FakesClient')!;
+    const source = client.methods.find(method => method.name === 'collisions')!.params[0];
+    const method = client.methods.find(method => method.name === name)!;
+    method.params = Array.from({ length: count }, (_, i) => ({ ...source, name: `input_${i}` }));
+    const fake = emitFakes(boundary).find(file => file.name === 'fakes_client')!.content;
+    const allow = '#[allow(clippy::too_many_arguments)]\n';
+    expect(fake.includes(`${allow}pub(crate) fn capture_fakes_client_${name}(`)).toBe(capture);
+    expect(fake.includes(`${allow}async fn ${name}(`)).toBe(server);
+  });
+
   it('forwards opaque bodies and exposes request-aware LRO callbacks', () => {
     const fake = content('fake/fakes_client.rs');
     expect(fake).toContain('RequestContent<Bytes, NoFormat>');

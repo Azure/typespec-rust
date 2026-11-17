@@ -18,7 +18,6 @@ struct ResourceManagerVaultConnectionsClientBeginDeleteArguments {
     vault_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_vault_connections_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -41,7 +40,6 @@ pub(crate) fn capture_resource_manager_vault_connections_client_begin_delete(
 pub trait ResourceManagerVaultConnectionsServer: Send + Sync {
     /// Handles [`ResourceManagerVaultConnectionsClient::begin_delete()`](crate::clients::ResourceManagerVaultConnectionsClient::begin_delete).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
         resource_group_name: &str,

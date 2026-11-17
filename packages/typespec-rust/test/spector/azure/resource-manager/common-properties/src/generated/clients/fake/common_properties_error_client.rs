@@ -14,7 +14,6 @@ struct CommonPropertiesErrorClientCreateForUserDefinedErrorArguments {
     resource_group_name: String,
     confidential_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_error_client_create_for_user_defined_error(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -31,7 +30,6 @@ struct CommonPropertiesErrorClientGetForPredefinedErrorArguments {
     resource_group_name: String,
     confidential_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_common_properties_error_client_get_for_predefined_error(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -51,7 +49,6 @@ pub(crate) fn capture_common_properties_error_client_get_for_predefined_error(
 #[async_trait]
 pub trait CommonPropertiesErrorServer: Send + Sync {
     /// Handles [`CommonPropertiesErrorClient::create_for_user_defined_error()`](crate::clients::CommonPropertiesErrorClient::create_for_user_defined_error).
-    #[allow(clippy::too_many_arguments)]
     async fn create_for_user_defined_error(
         &self,
         resource_group_name: &str,
@@ -70,7 +67,6 @@ pub trait CommonPropertiesErrorServer: Send + Sync {
         )
     }
     /// Handles [`CommonPropertiesErrorClient::get_for_predefined_error()`](crate::clients::CommonPropertiesErrorClient::get_for_predefined_error).
-    #[allow(clippy::too_many_arguments)]
     async fn get_for_predefined_error(
         &self,
         resource_group_name: &str,

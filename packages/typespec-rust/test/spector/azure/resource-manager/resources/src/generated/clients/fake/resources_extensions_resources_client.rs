@@ -19,7 +19,6 @@ struct ResourcesExtensionsResourcesClientBeginCreateOrUpdateArguments {
     extensions_resource_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
@@ -38,7 +37,6 @@ struct ResourcesExtensionsResourcesClientDeleteArguments {
     resource_uri: String,
     extensions_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
@@ -53,7 +51,6 @@ struct ResourcesExtensionsResourcesClientGetArguments {
     resource_uri: String,
     extensions_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
@@ -67,7 +64,6 @@ pub(crate) fn capture_resources_extensions_resources_client_get(
 struct ResourcesExtensionsResourcesClientListByScopeArguments {
     resource_uri: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_list_by_scope(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
@@ -78,7 +74,6 @@ struct ResourcesExtensionsResourcesClientUpdateArguments {
     resource_uri: String,
     extensions_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_extensions_resources_client_update(
     context: &mut azure_core::http::Context<'_>,
     resource_uri: String,
@@ -99,7 +94,6 @@ pub(crate) fn capture_resources_extensions_resources_client_update(
 pub trait ResourcesExtensionsResourcesServer: Send + Sync {
     /// Handles [`ResourcesExtensionsResourcesClient::begin_create_or_update()`](crate::clients::ResourcesExtensionsResourcesClient::begin_create_or_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
         resource_uri: &str,
@@ -122,7 +116,6 @@ pub trait ResourcesExtensionsResourcesServer: Send + Sync {
         )
     }
     /// Handles [`ResourcesExtensionsResourcesClient::delete()`](crate::clients::ResourcesExtensionsResourcesClient::delete).
-    #[allow(clippy::too_many_arguments)]
     async fn delete(
         &self,
         resource_uri: &str,
@@ -133,7 +126,6 @@ pub trait ResourcesExtensionsResourcesServer: Send + Sync {
         unimplemented!("ResourcesExtensionsResourcesServer::delete is not implemented")
     }
     /// Handles [`ResourcesExtensionsResourcesClient::get()`](crate::clients::ResourcesExtensionsResourcesClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_uri: &str,
@@ -144,7 +136,6 @@ pub trait ResourcesExtensionsResourcesServer: Send + Sync {
         unimplemented!("ResourcesExtensionsResourcesServer::get is not implemented")
     }
     /// Handles [`ResourcesExtensionsResourcesClient::list_by_scope()`](crate::clients::ResourcesExtensionsResourcesClient::list_by_scope).
-    #[allow(clippy::too_many_arguments)]
     async fn list_by_scope(
         &self,
         resource_uri: &str,
@@ -155,7 +146,6 @@ pub trait ResourcesExtensionsResourcesServer: Send + Sync {
         unimplemented!("ResourcesExtensionsResourcesServer::list_by_scope is not implemented")
     }
     /// Handles [`ResourcesExtensionsResourcesClient::update()`](crate::clients::ResourcesExtensionsResourcesClient::update).
-    #[allow(clippy::too_many_arguments)]
     async fn update(
         &self,
         resource_uri: &str,

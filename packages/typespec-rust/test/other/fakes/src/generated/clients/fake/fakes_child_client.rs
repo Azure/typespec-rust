@@ -19,7 +19,6 @@ use azure_core::{
 #[async_trait]
 pub trait FakesChildServer: Send + Sync {
     /// Handles [`FakesChildClient::get()`](crate::clients::FakesChildClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         options: Option<models::FakesChildClientGetOptions<'_>>,

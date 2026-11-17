@@ -18,7 +18,6 @@ struct OperationTemplatesLroClientBeginCreateOrReplaceArguments {
     order_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_lro_client_begin_create_or_replace(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -36,7 +35,6 @@ struct OperationTemplatesLroClientBeginDeleteArguments {
     order_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_lro_client_begin_delete(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -54,7 +52,6 @@ struct OperationTemplatesLroClientBeginExportArguments {
     order_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_lro_client_begin_export(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -70,7 +67,6 @@ pub(crate) fn capture_operation_templates_lro_client_begin_export(
 struct OperationTemplatesLroClientBeginExportArrayArguments {
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_lro_client_begin_export_array(
     context: &mut azure_core::http::Context<'_>,
     frequency: azure_core::time::Duration,
@@ -82,7 +78,6 @@ struct OperationTemplatesLroClientBeginGetLroArguments {
     operation_id: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_operation_templates_lro_client_begin_get_lro(
     context: &mut azure_core::http::Context<'_>,
     scope: String,
@@ -105,7 +100,6 @@ pub(crate) fn capture_operation_templates_lro_client_begin_get_lro(
 pub trait OperationTemplatesLroServer: Send + Sync {
     /// Handles [`OperationTemplatesLroClient::begin_create_or_replace()`](crate::clients::OperationTemplatesLroClient::begin_create_or_replace).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_replace(
         &self,
         resource_group_name: &str,
@@ -127,7 +121,6 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     }
     /// Handles [`OperationTemplatesLroClient::begin_delete()`](crate::clients::OperationTemplatesLroClient::begin_delete).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_delete(
         &self,
         resource_group_name: &str,
@@ -141,7 +134,6 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     }
     /// Handles [`OperationTemplatesLroClient::begin_export()`](crate::clients::OperationTemplatesLroClient::begin_export).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_export(
         &self,
         resource_group_name: &str,
@@ -163,7 +155,6 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     }
     /// Handles [`OperationTemplatesLroClient::begin_export_array()`](crate::clients::OperationTemplatesLroClient::begin_export_array).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_export_array(
         &self,
         body: RequestContent<models::ExportRequest>,
@@ -176,7 +167,6 @@ pub trait OperationTemplatesLroServer: Send + Sync {
     }
     /// Handles [`OperationTemplatesLroClient::begin_get_lro()`](crate::clients::OperationTemplatesLroClient::begin_get_lro).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_get_lro(
         &self,
         scope: &str,

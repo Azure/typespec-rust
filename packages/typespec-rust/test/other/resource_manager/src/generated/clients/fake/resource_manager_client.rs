@@ -22,7 +22,6 @@ struct ResourceManagerClientBeginAsyncResultArguments {
     vault_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_client_begin_async_result(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -38,7 +37,6 @@ pub(crate) fn capture_resource_manager_client_begin_async_result(
 struct ResourceManagerClientBeginEmptyResultArguments {
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_client_begin_empty_result(
     context: &mut azure_core::http::Context<'_>,
     frequency: azure_core::time::Duration,
@@ -48,7 +46,6 @@ pub(crate) fn capture_resource_manager_client_begin_empty_result(
 struct ResourceManagerClientBeginExplicitEmptyResultArguments {
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_client_begin_explicit_empty_result(
     context: &mut azure_core::http::Context<'_>,
     frequency: azure_core::time::Duration,
@@ -58,7 +55,6 @@ pub(crate) fn capture_resource_manager_client_begin_explicit_empty_result(
 struct ResourceManagerClientBeginInlineResultArguments {
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_client_begin_inline_result(
     context: &mut azure_core::http::Context<'_>,
     frequency: azure_core::time::Duration,
@@ -68,7 +64,6 @@ pub(crate) fn capture_resource_manager_client_begin_inline_result(
 struct ResourceManagerClientBeginOriginalResultArguments {
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_client_begin_original_result(
     context: &mut azure_core::http::Context<'_>,
     frequency: azure_core::time::Duration,
@@ -78,7 +73,6 @@ pub(crate) fn capture_resource_manager_client_begin_original_result(
 struct ResourceManagerClientBeginSpreadArguments {
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resource_manager_client_begin_spread(
     context: &mut azure_core::http::Context<'_>,
     frequency: azure_core::time::Duration,
@@ -102,7 +96,6 @@ pub trait ResourceManagerServer:
 {
     /// Handles [`ResourceManagerClient::begin_async_result()`](crate::clients::ResourceManagerClient::begin_async_result).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_async_result(
         &self,
         resource_group_name: &str,
@@ -124,7 +117,6 @@ pub trait ResourceManagerServer:
     }
     /// Handles [`ResourceManagerClient::begin_empty_result()`](crate::clients::ResourceManagerClient::begin_empty_result).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_empty_result(
         &self,
         state: PollerState,
@@ -136,7 +128,6 @@ pub trait ResourceManagerServer:
     }
     /// Handles [`ResourceManagerClient::begin_explicit_empty_result()`](crate::clients::ResourceManagerClient::begin_explicit_empty_result).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_explicit_empty_result(
         &self,
         state: PollerState,
@@ -148,7 +139,6 @@ pub trait ResourceManagerServer:
     }
     /// Handles [`ResourceManagerClient::begin_inline_result()`](crate::clients::ResourceManagerClient::begin_inline_result).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_inline_result(
         &self,
         state: PollerState,
@@ -160,7 +150,6 @@ pub trait ResourceManagerServer:
     }
     /// Handles [`ResourceManagerClient::begin_original_result()`](crate::clients::ResourceManagerClient::begin_original_result).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_original_result(
         &self,
         state: PollerState,
@@ -172,7 +161,6 @@ pub trait ResourceManagerServer:
     }
     /// Handles [`ResourceManagerClient::begin_spread()`](crate::clients::ResourceManagerClient::begin_spread).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_spread(
         &self,
         content: Body,
@@ -184,7 +172,6 @@ pub trait ResourceManagerServer:
         unimplemented!("ResourceManagerServer::begin_spread is not implemented")
     }
     /// Handles [`ResourceManagerClient::get_original()`](crate::clients::ResourceManagerClient::get_original).
-    #[allow(clippy::too_many_arguments)]
     async fn get_original(
         &self,
         options: Option<models::ResourceManagerClientGetOriginalOptions<'_>>,

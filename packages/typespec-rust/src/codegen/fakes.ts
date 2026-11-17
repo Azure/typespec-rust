@@ -166,7 +166,10 @@ export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
       const fields = capture.fields.map(f => `${f.name}: ${f.type}`);
       const context = synthetic(capture.fields, 'context');
       body += `struct ${utils.pascalCase(name, false)}Arguments { ${fields.join(', ')} }\n`;
-      body += `#[allow(clippy::too_many_arguments)]\npub(crate) fn capture_${name}(${context}: &mut azure_core::http::Context<'_>, ${fields.join(', ')}) {\n`
+      if (fields.length >= 7) {
+        body += '#[allow(clippy::too_many_arguments)]\n';
+      }
+      body += `pub(crate) fn capture_${name}(${context}: &mut azure_core::http::Context<'_>, ${fields.join(', ')}) {\n`
         + `${context}.insert(${utils.pascalCase(name, false)}Arguments { ${capture.fields.map(f => f.name).join(', ')} });\n}\n`;
     }
 
@@ -205,7 +208,10 @@ export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
       body += `/// Handles [\`${client.name}::${method.name}()\`](${publicPath(module)}::clients::${client.name}::${method.name}).\n`;
       if (method.kind === 'lro') body += '/// The request and opaque content belong to the current HTTP step, not necessarily initiation.\n';
       if (method.name.startsWith('from_')) body += '#[allow(clippy::wrong_self_convention)]\n';
-      body += `#[allow(clippy::too_many_arguments)]\nasync fn ${method.name}(&self, ${params.join(', ')}) -> Result<AsyncRawResponse> {\n`
+      if (params.length >= 7) {
+        body += '#[allow(clippy::too_many_arguments)]\n';
+      }
+      body += `async fn ${method.name}(&self, ${params.join(', ')}) -> Result<AsyncRawResponse> {\n`
         + `let _ = (${names.map(p => p.name).join(', ')},);\n`
         + `unimplemented!("${serverName(client)}::${method.name} is not implemented")\n}\n`;
     }

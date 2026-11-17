@@ -17,7 +17,6 @@ struct ResourcesLocationResourcesClientCreateOrUpdateArguments {
     location: String,
     location_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -32,7 +31,6 @@ struct ResourcesLocationResourcesClientDeleteArguments {
     location: String,
     location_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_delete(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -47,7 +45,6 @@ struct ResourcesLocationResourcesClientGetArguments {
     location: String,
     location_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_get(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -61,7 +58,6 @@ pub(crate) fn capture_resources_location_resources_client_get(
 struct ResourcesLocationResourcesClientListByLocationArguments {
     location: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_list_by_location(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -72,7 +68,6 @@ struct ResourcesLocationResourcesClientUpdateArguments {
     location: String,
     location_resource_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_location_resources_client_update(
     context: &mut azure_core::http::Context<'_>,
     location: String,
@@ -92,7 +87,6 @@ pub(crate) fn capture_resources_location_resources_client_update(
 #[async_trait]
 pub trait ResourcesLocationResourcesServer: Send + Sync {
     /// Handles [`ResourcesLocationResourcesClient::create_or_update()`](crate::clients::ResourcesLocationResourcesClient::create_or_update).
-    #[allow(clippy::too_many_arguments)]
     async fn create_or_update(
         &self,
         location: &str,
@@ -104,7 +98,6 @@ pub trait ResourcesLocationResourcesServer: Send + Sync {
         unimplemented!("ResourcesLocationResourcesServer::create_or_update is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::delete()`](crate::clients::ResourcesLocationResourcesClient::delete).
-    #[allow(clippy::too_many_arguments)]
     async fn delete(
         &self,
         location: &str,
@@ -115,7 +108,6 @@ pub trait ResourcesLocationResourcesServer: Send + Sync {
         unimplemented!("ResourcesLocationResourcesServer::delete is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::get()`](crate::clients::ResourcesLocationResourcesClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         location: &str,
@@ -126,7 +118,6 @@ pub trait ResourcesLocationResourcesServer: Send + Sync {
         unimplemented!("ResourcesLocationResourcesServer::get is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::list_by_location()`](crate::clients::ResourcesLocationResourcesClient::list_by_location).
-    #[allow(clippy::too_many_arguments)]
     async fn list_by_location(
         &self,
         location: &str,
@@ -137,7 +128,6 @@ pub trait ResourcesLocationResourcesServer: Send + Sync {
         unimplemented!("ResourcesLocationResourcesServer::list_by_location is not implemented")
     }
     /// Handles [`ResourcesLocationResourcesClient::update()`](crate::clients::ResourcesLocationResourcesClient::update).
-    #[allow(clippy::too_many_arguments)]
     async fn update(
         &self,
         location: &str,

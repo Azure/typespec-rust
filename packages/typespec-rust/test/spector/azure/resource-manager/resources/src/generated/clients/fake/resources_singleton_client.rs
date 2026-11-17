@@ -18,7 +18,6 @@ struct ResourcesSingletonClientBeginCreateOrUpdateArguments {
     resource_group_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -32,7 +31,6 @@ pub(crate) fn capture_resources_singleton_client_begin_create_or_update(
 struct ResourcesSingletonClientGetByResourceGroupArguments {
     resource_group_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_get_by_resource_group(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -44,7 +42,6 @@ pub(crate) fn capture_resources_singleton_client_get_by_resource_group(
 struct ResourcesSingletonClientListByResourceGroupArguments {
     resource_group_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_list_by_resource_group(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -56,7 +53,6 @@ pub(crate) fn capture_resources_singleton_client_list_by_resource_group(
 struct ResourcesSingletonClientUpdateArguments {
     resource_group_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_resources_singleton_client_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -75,7 +71,6 @@ pub(crate) fn capture_resources_singleton_client_update(
 pub trait ResourcesSingletonServer: Send + Sync {
     /// Handles [`ResourcesSingletonClient::begin_create_or_update()`](crate::clients::ResourcesSingletonClient::begin_create_or_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
         resource_group_name: &str,
@@ -88,7 +83,6 @@ pub trait ResourcesSingletonServer: Send + Sync {
         unimplemented!("ResourcesSingletonServer::begin_create_or_update is not implemented")
     }
     /// Handles [`ResourcesSingletonClient::get_by_resource_group()`](crate::clients::ResourcesSingletonClient::get_by_resource_group).
-    #[allow(clippy::too_many_arguments)]
     async fn get_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -98,7 +92,6 @@ pub trait ResourcesSingletonServer: Send + Sync {
         unimplemented!("ResourcesSingletonServer::get_by_resource_group is not implemented")
     }
     /// Handles [`ResourcesSingletonClient::list_by_resource_group()`](crate::clients::ResourcesSingletonClient::list_by_resource_group).
-    #[allow(clippy::too_many_arguments)]
     async fn list_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -109,7 +102,6 @@ pub trait ResourcesSingletonServer: Send + Sync {
         unimplemented!("ResourcesSingletonServer::list_by_resource_group is not implemented")
     }
     /// Handles [`ResourcesSingletonClient::update()`](crate::clients::ResourcesSingletonClient::update).
-    #[allow(clippy::too_many_arguments)]
     async fn update(
         &self,
         resource_group_name: &str,

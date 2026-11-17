@@ -24,7 +24,6 @@ use std::sync::Arc;
 #[async_trait]
 pub trait EndpointServer: Send + Sync + crate::clients::fake::EndpointEndpointChildServer {
     /// Handles [`EndpointClient::get()`](crate::clients::EndpointClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         options: Option<models::EndpointClientGetOptions<'_>>,

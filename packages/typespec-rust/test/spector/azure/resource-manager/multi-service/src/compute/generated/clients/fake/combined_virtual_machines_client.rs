@@ -18,7 +18,6 @@ struct CombinedVirtualMachinesClientBeginCreateOrUpdateArguments {
     vm_name: String,
     frequency: azure_core::time::Duration,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_virtual_machines_client_begin_create_or_update(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -35,7 +34,6 @@ struct CombinedVirtualMachinesClientGetArguments {
     resource_group_name: String,
     vm_name: String,
 }
-#[allow(clippy::too_many_arguments)]
 pub(crate) fn capture_combined_virtual_machines_client_get(
     context: &mut azure_core::http::Context<'_>,
     resource_group_name: String,
@@ -56,7 +54,6 @@ pub(crate) fn capture_combined_virtual_machines_client_get(
 pub trait CombinedVirtualMachinesServer: Send + Sync {
     /// Handles [`CombinedVirtualMachinesClient::begin_create_or_update()`](crate::compute::clients::CombinedVirtualMachinesClient::begin_create_or_update).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
-    #[allow(clippy::too_many_arguments)]
     async fn begin_create_or_update(
         &self,
         resource_group_name: &str,
@@ -77,7 +74,6 @@ pub trait CombinedVirtualMachinesServer: Send + Sync {
         unimplemented!("CombinedVirtualMachinesServer::begin_create_or_update is not implemented")
     }
     /// Handles [`CombinedVirtualMachinesClient::get()`](crate::compute::clients::CombinedVirtualMachinesClient::get).
-    #[allow(clippy::too_many_arguments)]
     async fn get(
         &self,
         resource_group_name: &str,

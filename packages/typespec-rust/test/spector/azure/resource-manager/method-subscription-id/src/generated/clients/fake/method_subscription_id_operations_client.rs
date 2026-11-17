@@ -22,7 +22,6 @@ use azure_core::{
 #[async_trait]
 pub trait MethodSubscriptionIdOperationsServer: Send + Sync {
     /// Handles [`MethodSubscriptionIdOperationsClient::list()`](crate::clients::MethodSubscriptionIdOperationsClient::list).
-    #[allow(clippy::too_many_arguments)]
     async fn list(
         &self,
         state: PagerState,
