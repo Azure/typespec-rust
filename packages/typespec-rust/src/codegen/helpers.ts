@@ -77,6 +77,14 @@ export function contentPreamble(includeDNE: boolean = true): string {
   return `${headerText}${includeDNE ? ' DO NOT EDIT.' : ''}\n\n`;
 }
 
+/** Emits the Clippy allowance when the total argument count, including self, exceeds seven. */
+export function emitAllowTooManyArguments(count: number, indent?: indentation): string {
+  if (count > 7) {
+    return `${indent?.get() ?? ''}#[allow(clippy::too_many_arguments)]\n`;
+  }
+  return '';
+}
+
 /**
  * formats doc comments if available
  * 

@@ -260,12 +260,7 @@ export function emitClients(module: rust.ModuleContainer): ClientModules | undef
       }
 
       const paramsInfo = getMethodParamsCountAndSig(method, use);
-      if (paramsInfo.count > 7) {
-        // clippy will by default warn on 7+ args in a method.
-        // note that this doesn't include self which is included
-        // in the count.
-        body += `${indent.get()}#[allow(clippy::too_many_arguments)]\n`;
-      }
+      body += helpers.emitAllowTooManyArguments(paramsInfo.count, indent);
 
       if (isPublicApi) {
         body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
