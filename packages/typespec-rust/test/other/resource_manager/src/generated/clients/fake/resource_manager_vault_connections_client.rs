@@ -32,10 +32,10 @@ pub(crate) fn capture_resource_manager_vault_connections_client_begin_delete(
 }
 /// Fake server for [`ResourceManagerVaultConnectionsClient`](crate::clients::ResourceManagerVaultConnectionsClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait ResourceManagerVaultConnectionsServer: Send + Sync {
     /// Handles [`ResourceManagerVaultConnectionsClient::begin_delete()`](crate::clients::ResourceManagerVaultConnectionsClient::begin_delete).

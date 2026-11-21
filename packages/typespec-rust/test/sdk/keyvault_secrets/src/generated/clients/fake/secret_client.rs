@@ -136,10 +136,10 @@ pub(crate) fn capture_secret_client_update_secret(
 }
 /// Fake server for [`SecretClient`](crate::clients::SecretClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait SecretServer: Send + Sync {
     /// Handles [`SecretClient::backup_secret()`](crate::clients::SecretClient::backup_secret).

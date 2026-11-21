@@ -17,12 +17,19 @@ use std::sync::Arc;
 
 /// Fake server for [`FakesApiKeyClient`](crate::clients::FakesApiKeyClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
-pub trait FakesApiKeyServer: Send + Sync + crate::clients::fake::FakesApiKeyChildServer {
+pub trait FakesApiKeyServer: Send + Sync {
+    /// Returns the fake server for [`FakesApiKeyChildClient`](crate::clients::FakesApiKeyChildClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_fakes_api_key_child(&self) -> &dyn crate::clients::fake::FakesApiKeyChildServer {
+        unimplemented!("FakesApiKeyServer::as_fakes_api_key_child is not implemented")
+    }
     /// Handles [`FakesApiKeyClient::get()`](crate::clients::FakesApiKeyClient::get).
     async fn get(
         &self,
@@ -82,7 +89,7 @@ impl<T: FakesApiKeyServer + ?Sized> Policy for FakesApiKeyClientTransport<T> {
             }
             "FakesApiKey.Child.get" => {
                 crate::clients::fake::fakes_api_key_child_client::dispatch_get(
-                    &*self.server,
+                    self.server.as_fakes_api_key_child(),
                     context,
                     request,
                     api_name,

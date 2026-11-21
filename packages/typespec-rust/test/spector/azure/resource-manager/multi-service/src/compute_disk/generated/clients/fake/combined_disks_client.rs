@@ -46,10 +46,10 @@ pub(crate) fn capture_combined_disks_client_get(
 }
 /// Fake server for [`CombinedDisksClient`](crate::compute_disk::clients::CombinedDisksClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait CombinedDisksServer: Send + Sync {
     /// Handles [`CombinedDisksClient::begin_create_or_update()`](crate::compute_disk::clients::CombinedDisksClient::begin_create_or_update).

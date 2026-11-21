@@ -19,11 +19,6 @@ use std::sync::Arc;
 
 struct Server;
 
-impl ResourceManagerHsmConnectionsServer for Server {}
-impl ResourceManagerManagedHsmsServer for Server {}
-impl ResourceManagerVaultConnectionsServer for Server {}
-impl ResourceManagerVaultsServer for Server {}
-
 #[async_trait]
 impl ResourceManagerServer for Server {
     async fn begin_empty_result(

@@ -42,10 +42,10 @@ pub(crate) fn capture_common_properties_arm_resource_identifiers_client_get(
 }
 /// Fake server for [`CommonPropertiesArmResourceIdentifiersClient`](crate::clients::CommonPropertiesArmResourceIdentifiersClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait CommonPropertiesArmResourceIdentifiersServer: Send + Sync {
     /// Handles [`CommonPropertiesArmResourceIdentifiersClient::create_or_replace()`](crate::clients::CommonPropertiesArmResourceIdentifiersClient::create_or_replace).

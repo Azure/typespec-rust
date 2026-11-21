@@ -40,10 +40,10 @@ pub(crate) fn capture_non_resource_non_resource_operations_client_get(
 }
 /// Fake server for [`NonResourceNonResourceOperationsClient`](crate::clients::NonResourceNonResourceOperationsClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait NonResourceNonResourceOperationsServer: Send + Sync {
     /// Handles [`NonResourceNonResourceOperationsClient::create()`](crate::clients::NonResourceNonResourceOperationsClient::create).

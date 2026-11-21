@@ -17,22 +17,78 @@ use std::sync::Arc;
 
 /// Fake server for [`OperationTemplatesClient`](crate::clients::OperationTemplatesClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait OperationTemplatesServer:
-    Send
-    + Sync
-    + crate::clients::fake::OperationTemplatesCheckNameAvailabilityServer
-    + crate::clients::fake::OperationTemplatesLegacyServer
-    + crate::clients::fake::OperationTemplatesLroServer
-    + crate::clients::fake::OperationTemplatesLroPagingServer
-    + crate::clients::fake::OperationTemplatesOperationsServer
-    + crate::clients::fake::OperationTemplatesOptionalBodyServer
-    + crate::clients::fake::OperationTemplatesPagingServer
-{
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait OperationTemplatesServer: Send + Sync {
+    /// Returns the fake server for [`OperationTemplatesCheckNameAvailabilityClient`](crate::clients::OperationTemplatesCheckNameAvailabilityClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_operation_templates_check_name_availability(
+        &self,
+    ) -> &dyn crate::clients::fake::OperationTemplatesCheckNameAvailabilityServer {
+        unimplemented!("OperationTemplatesServer::as_operation_templates_check_name_availability is not implemented")
+    }
+    /// Returns the fake server for [`OperationTemplatesLegacyClient`](crate::clients::OperationTemplatesLegacyClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_operation_templates_legacy(
+        &self,
+    ) -> &dyn crate::clients::fake::OperationTemplatesLegacyServer {
+        unimplemented!("OperationTemplatesServer::as_operation_templates_legacy is not implemented")
+    }
+    /// Returns the fake server for [`OperationTemplatesLroClient`](crate::clients::OperationTemplatesLroClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_operation_templates_lro(&self) -> &dyn crate::clients::fake::OperationTemplatesLroServer {
+        unimplemented!("OperationTemplatesServer::as_operation_templates_lro is not implemented")
+    }
+    /// Returns the fake server for [`OperationTemplatesLroPagingClient`](crate::clients::OperationTemplatesLroPagingClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_operation_templates_lro_paging(
+        &self,
+    ) -> &dyn crate::clients::fake::OperationTemplatesLroPagingServer {
+        unimplemented!(
+            "OperationTemplatesServer::as_operation_templates_lro_paging is not implemented"
+        )
+    }
+    /// Returns the fake server for [`OperationTemplatesOperationsClient`](crate::clients::OperationTemplatesOperationsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_operation_templates_operations(
+        &self,
+    ) -> &dyn crate::clients::fake::OperationTemplatesOperationsServer {
+        unimplemented!(
+            "OperationTemplatesServer::as_operation_templates_operations is not implemented"
+        )
+    }
+    /// Returns the fake server for [`OperationTemplatesOptionalBodyClient`](crate::clients::OperationTemplatesOptionalBodyClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_operation_templates_optional_body(
+        &self,
+    ) -> &dyn crate::clients::fake::OperationTemplatesOptionalBodyServer {
+        unimplemented!(
+            "OperationTemplatesServer::as_operation_templates_optional_body is not implemented"
+        )
+    }
+    /// Returns the fake server for [`OperationTemplatesPagingClient`](crate::clients::OperationTemplatesPagingClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_operation_templates_paging(
+        &self,
+    ) -> &dyn crate::clients::fake::OperationTemplatesPagingServer {
+        unimplemented!("OperationTemplatesServer::as_operation_templates_paging is not implemented")
+    }
 }
 struct OperationTemplatesClientTransport<T: OperationTemplatesServer + ?Sized> {
     server: Arc<T>,
@@ -59,55 +115,55 @@ impl<T: OperationTemplatesServer + ?Sized> Policy for OperationTemplatesClientTr
         let _ = &request;
         match api_name {
 "Azure.ResourceManager.OperationTemplates.CheckNameAvailability.checkGlobal" => {
-crate::clients::fake::operation_templates_check_name_availability_client::dispatch_check_global(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_check_name_availability_client::dispatch_check_global(self.server.as_operation_templates_check_name_availability(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.CheckNameAvailability.checkLocal" => {
-crate::clients::fake::operation_templates_check_name_availability_client::dispatch_check_local(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_check_name_availability_client::dispatch_check_local(self.server.as_operation_templates_check_name_availability(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Legacy.createOrReplaceOptionalBody" => {
-crate::clients::fake::operation_templates_legacy_client::dispatch_create_or_replace_optional_body(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_legacy_client::dispatch_create_or_replace_optional_body(self.server.as_operation_templates_legacy(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Legacy.routedGet" => {
-crate::clients::fake::operation_templates_legacy_client::dispatch_routed_get(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_legacy_client::dispatch_routed_get(self.server.as_operation_templates_legacy(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Lro.createOrReplace" => {
-crate::clients::fake::operation_templates_lro_client::dispatch_begin_create_or_replace(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_lro_client::dispatch_begin_create_or_replace(self.server.as_operation_templates_lro(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Lro.delete" => {
-crate::clients::fake::operation_templates_lro_client::dispatch_begin_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_lro_client::dispatch_begin_delete(self.server.as_operation_templates_lro(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Lro.export" => {
-crate::clients::fake::operation_templates_lro_client::dispatch_begin_export(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_lro_client::dispatch_begin_export(self.server.as_operation_templates_lro(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Lro.exportArray" => {
-crate::clients::fake::operation_templates_lro_client::dispatch_begin_export_array(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_lro_client::dispatch_begin_export_array(self.server.as_operation_templates_lro(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Lro.getLro" => {
-crate::clients::fake::operation_templates_lro_client::dispatch_begin_get_lro(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_lro_client::dispatch_begin_get_lro(self.server.as_operation_templates_lro(), context, request, api_name).await
 },
 "Azure.ResourceManager.Operations.list" => {
-crate::clients::fake::operation_templates_operations_client::dispatch_list(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_operations_client::dispatch_list(self.server.as_operation_templates_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.OptionalBody.get" => {
-crate::clients::fake::operation_templates_optional_body_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_optional_body_client::dispatch_get(self.server.as_operation_templates_optional_body(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.OptionalBody.patch" => {
-crate::clients::fake::operation_templates_optional_body_client::dispatch_patch(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_optional_body_client::dispatch_patch(self.server.as_operation_templates_optional_body(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.OptionalBody.post" => {
-crate::clients::fake::operation_templates_optional_body_client::dispatch_post(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_optional_body_client::dispatch_post(self.server.as_operation_templates_optional_body(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.OptionalBody.providerPost" => {
-crate::clients::fake::operation_templates_optional_body_client::dispatch_provider_post(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_optional_body_client::dispatch_provider_post(self.server.as_operation_templates_optional_body(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Paging.get" => {
-crate::clients::fake::operation_templates_paging_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_paging_client::dispatch_get(self.server.as_operation_templates_paging(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Paging.markAsPageable" => {
-crate::clients::fake::operation_templates_paging_client::dispatch_list_mark_as_pageable(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_paging_client::dispatch_list_mark_as_pageable(self.server.as_operation_templates_paging(), context, request, api_name).await
 },
 "Azure.ResourceManager.OperationTemplates.Paging.postActionPaging" => {
-crate::clients::fake::operation_templates_paging_client::dispatch_list_post_action_paging(&*self.server, context, request, api_name).await
+crate::clients::fake::operation_templates_paging_client::dispatch_list_post_action_paging(self.server.as_operation_templates_paging(), context, request, api_name).await
 },
 _ => Err(Error::with_message(ErrorKind::Other, format!("unknown API name '{api_name}' in request context"))),
 }

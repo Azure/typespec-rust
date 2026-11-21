@@ -22,10 +22,6 @@ struct Server {
     requests: Mutex<Vec<(Method, bool, bool)>>,
 }
 
-impl ResourceManagerHsmConnectionsServer for Server {}
-impl ResourceManagerManagedHsmsServer for Server {}
-impl ResourceManagerVaultConnectionsServer for Server {}
-
 #[async_trait]
 impl ResourceManagerVaultsServer for Server {
     async fn begin_create_or_update(
@@ -48,6 +44,10 @@ impl ResourceManagerVaultsServer for Server {
 
 #[async_trait]
 impl ResourceManagerServer for Server {
+    fn as_resource_manager_vaults(&self) -> &dyn ResourceManagerVaultsServer {
+        self
+    }
+
     async fn begin_async_result(
         &self,
         group: &str,
