@@ -32,10 +32,10 @@ pub(crate) fn capture_large_header_large_headers_client_begin_two6_k(
 }
 /// Fake server for [`LargeHeaderLargeHeadersClient`](crate::clients::LargeHeaderLargeHeadersClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait LargeHeaderLargeHeadersServer: Send + Sync {
     /// Handles [`LargeHeaderLargeHeadersClient::begin_two6_k()`](crate::clients::LargeHeaderLargeHeadersClient::begin_two6_k).

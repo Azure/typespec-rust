@@ -17,14 +17,22 @@ use std::sync::Arc;
 
 /// Fake server for [`NonResourceClient`](crate::clients::NonResourceClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait NonResourceServer:
-    Send + Sync + crate::clients::fake::NonResourceNonResourceOperationsServer
-{
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait NonResourceServer: Send + Sync {
+    /// Returns the fake server for [`NonResourceNonResourceOperationsClient`](crate::clients::NonResourceNonResourceOperationsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_non_resource_non_resource_operations(
+        &self,
+    ) -> &dyn crate::clients::fake::NonResourceNonResourceOperationsServer {
+        unimplemented!(
+            "NonResourceServer::as_non_resource_non_resource_operations is not implemented"
+        )
+    }
 }
 struct NonResourceClientTransport<T: NonResourceServer + ?Sized> {
     server: Arc<T>,
@@ -50,7 +58,7 @@ impl<T: NonResourceServer + ?Sized> Policy for NonResourceClientTransport<T> {
         match api_name {
             "Azure.ResourceManager.NonResource.NonResourceOperations.create" => {
                 crate::clients::fake::non_resource_non_resource_operations_client::dispatch_create(
-                    &*self.server,
+                    self.server.as_non_resource_non_resource_operations(),
                     context,
                     request,
                     api_name,
@@ -59,7 +67,7 @@ impl<T: NonResourceServer + ?Sized> Policy for NonResourceClientTransport<T> {
             }
             "Azure.ResourceManager.NonResource.NonResourceOperations.get" => {
                 crate::clients::fake::non_resource_non_resource_operations_client::dispatch_get(
-                    &*self.server,
+                    self.server.as_non_resource_non_resource_operations(),
                     context,
                     request,
                     api_name,

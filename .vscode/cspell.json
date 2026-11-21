@@ -58,6 +58,7 @@
         "safeint",
         "serde",
         "spector",
+        "subclients",
         "tcgc",
         "tspcompile",
         "typespec"

@@ -17,20 +17,50 @@ use std::sync::Arc;
 
 /// Fake server for [`ResourcesClient`](crate::clients::ResourcesClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait ResourcesServer:
-    Send
-    + Sync
-    + crate::clients::fake::ResourcesExtensionsResourcesServer
-    + crate::clients::fake::ResourcesLocationResourcesServer
-    + crate::clients::fake::ResourcesNestedServer
-    + crate::clients::fake::ResourcesSingletonServer
-    + crate::clients::fake::ResourcesTopLevelServer
-{
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait ResourcesServer: Send + Sync {
+    /// Returns the fake server for [`ResourcesExtensionsResourcesClient`](crate::clients::ResourcesExtensionsResourcesClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resources_extensions_resources(
+        &self,
+    ) -> &dyn crate::clients::fake::ResourcesExtensionsResourcesServer {
+        unimplemented!("ResourcesServer::as_resources_extensions_resources is not implemented")
+    }
+    /// Returns the fake server for [`ResourcesLocationResourcesClient`](crate::clients::ResourcesLocationResourcesClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resources_location_resources(
+        &self,
+    ) -> &dyn crate::clients::fake::ResourcesLocationResourcesServer {
+        unimplemented!("ResourcesServer::as_resources_location_resources is not implemented")
+    }
+    /// Returns the fake server for [`ResourcesNestedClient`](crate::clients::ResourcesNestedClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resources_nested(&self) -> &dyn crate::clients::fake::ResourcesNestedServer {
+        unimplemented!("ResourcesServer::as_resources_nested is not implemented")
+    }
+    /// Returns the fake server for [`ResourcesSingletonClient`](crate::clients::ResourcesSingletonClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resources_singleton(&self) -> &dyn crate::clients::fake::ResourcesSingletonServer {
+        unimplemented!("ResourcesServer::as_resources_singleton is not implemented")
+    }
+    /// Returns the fake server for [`ResourcesTopLevelClient`](crate::clients::ResourcesTopLevelClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resources_top_level(&self) -> &dyn crate::clients::fake::ResourcesTopLevelServer {
+        unimplemented!("ResourcesServer::as_resources_top_level is not implemented")
+    }
 }
 struct ResourcesClientTransport<T: ResourcesServer + ?Sized> {
     server: Arc<T>,
@@ -55,82 +85,82 @@ impl<T: ResourcesServer + ?Sized> Policy for ResourcesClientTransport<T> {
         let _ = &request;
         match api_name {
 "Azure.ResourceManager.Resources.ExtensionsResources.createOrUpdate" => {
-crate::clients::fake::resources_extensions_resources_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_extensions_resources_client::dispatch_begin_create_or_update(self.server.as_resources_extensions_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.ExtensionsResources.delete" => {
-crate::clients::fake::resources_extensions_resources_client::dispatch_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_extensions_resources_client::dispatch_delete(self.server.as_resources_extensions_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.ExtensionsResources.get" => {
-crate::clients::fake::resources_extensions_resources_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_extensions_resources_client::dispatch_get(self.server.as_resources_extensions_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.ExtensionsResources.listByScope" => {
-crate::clients::fake::resources_extensions_resources_client::dispatch_list_by_scope(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_extensions_resources_client::dispatch_list_by_scope(self.server.as_resources_extensions_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.ExtensionsResources.update" => {
-crate::clients::fake::resources_extensions_resources_client::dispatch_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_extensions_resources_client::dispatch_update(self.server.as_resources_extensions_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.LocationResources.createOrUpdate" => {
-crate::clients::fake::resources_location_resources_client::dispatch_create_or_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_location_resources_client::dispatch_create_or_update(self.server.as_resources_location_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.LocationResources.delete" => {
-crate::clients::fake::resources_location_resources_client::dispatch_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_location_resources_client::dispatch_delete(self.server.as_resources_location_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.LocationResources.get" => {
-crate::clients::fake::resources_location_resources_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_location_resources_client::dispatch_get(self.server.as_resources_location_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.LocationResources.listByLocation" => {
-crate::clients::fake::resources_location_resources_client::dispatch_list_by_location(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_location_resources_client::dispatch_list_by_location(self.server.as_resources_location_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.LocationResources.update" => {
-crate::clients::fake::resources_location_resources_client::dispatch_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_location_resources_client::dispatch_update(self.server.as_resources_location_resources(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Nested.createOrReplace" => {
-crate::clients::fake::resources_nested_client::dispatch_begin_create_or_replace(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_nested_client::dispatch_begin_create_or_replace(self.server.as_resources_nested(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Nested.delete" => {
-crate::clients::fake::resources_nested_client::dispatch_begin_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_nested_client::dispatch_begin_delete(self.server.as_resources_nested(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Nested.update" => {
-crate::clients::fake::resources_nested_client::dispatch_begin_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_nested_client::dispatch_begin_update(self.server.as_resources_nested(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Nested.get" => {
-crate::clients::fake::resources_nested_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_nested_client::dispatch_get(self.server.as_resources_nested(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Nested.listByTopLevelTrackedResource" => {
-crate::clients::fake::resources_nested_client::dispatch_list_by_top_level_tracked_resource(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_nested_client::dispatch_list_by_top_level_tracked_resource(self.server.as_resources_nested(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Singleton.createOrUpdate" => {
-crate::clients::fake::resources_singleton_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_singleton_client::dispatch_begin_create_or_update(self.server.as_resources_singleton(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Singleton.getByResourceGroup" => {
-crate::clients::fake::resources_singleton_client::dispatch_get_by_resource_group(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_singleton_client::dispatch_get_by_resource_group(self.server.as_resources_singleton(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Singleton.listByResourceGroup" => {
-crate::clients::fake::resources_singleton_client::dispatch_list_by_resource_group(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_singleton_client::dispatch_list_by_resource_group(self.server.as_resources_singleton(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.Singleton.update" => {
-crate::clients::fake::resources_singleton_client::dispatch_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_singleton_client::dispatch_update(self.server.as_resources_singleton(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.TopLevel.actionSync" => {
-crate::clients::fake::resources_top_level_client::dispatch_action_sync(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_top_level_client::dispatch_action_sync(self.server.as_resources_top_level(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.TopLevel.createOrReplace" => {
-crate::clients::fake::resources_top_level_client::dispatch_begin_create_or_replace(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_top_level_client::dispatch_begin_create_or_replace(self.server.as_resources_top_level(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.TopLevel.delete" => {
-crate::clients::fake::resources_top_level_client::dispatch_begin_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_top_level_client::dispatch_begin_delete(self.server.as_resources_top_level(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.TopLevel.update" => {
-crate::clients::fake::resources_top_level_client::dispatch_begin_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_top_level_client::dispatch_begin_update(self.server.as_resources_top_level(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.TopLevel.get" => {
-crate::clients::fake::resources_top_level_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_top_level_client::dispatch_get(self.server.as_resources_top_level(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.TopLevel.listByResourceGroup" => {
-crate::clients::fake::resources_top_level_client::dispatch_list_by_resource_group(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_top_level_client::dispatch_list_by_resource_group(self.server.as_resources_top_level(), context, request, api_name).await
 },
 "Azure.ResourceManager.Resources.TopLevel.listBySubscription" => {
-crate::clients::fake::resources_top_level_client::dispatch_list_by_subscription(&*self.server, context, request, api_name).await
+crate::clients::fake::resources_top_level_client::dispatch_list_by_subscription(self.server.as_resources_top_level(), context, request, api_name).await
 },
 _ => Err(Error::with_message(ErrorKind::Other, format!("unknown API name '{api_name}' in request context"))),
 }

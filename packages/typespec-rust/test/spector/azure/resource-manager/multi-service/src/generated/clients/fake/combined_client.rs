@@ -17,17 +17,27 @@ use std::sync::Arc;
 
 /// Fake server for [`CombinedClient`](crate::clients::CombinedClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait CombinedServer:
-    Send
-    + Sync
-    + crate::compute_disk::clients::fake::CombinedDisksServer
-    + crate::compute::clients::fake::CombinedVirtualMachinesServer
-{
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait CombinedServer: Send + Sync {
+    /// Returns the fake server for [`CombinedDisksClient`](crate::compute_disk::clients::CombinedDisksClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_combined_disks(&self) -> &dyn crate::compute_disk::clients::fake::CombinedDisksServer {
+        unimplemented!("CombinedServer::as_combined_disks is not implemented")
+    }
+    /// Returns the fake server for [`CombinedVirtualMachinesClient`](crate::compute::clients::CombinedVirtualMachinesClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_combined_virtual_machines(
+        &self,
+    ) -> &dyn crate::compute::clients::fake::CombinedVirtualMachinesServer {
+        unimplemented!("CombinedServer::as_combined_virtual_machines is not implemented")
+    }
 }
 struct CombinedClientTransport<T: CombinedServer + ?Sized> {
     server: Arc<T>,
@@ -52,16 +62,16 @@ impl<T: CombinedServer + ?Sized> Policy for CombinedClientTransport<T> {
         let _ = &request;
         match api_name {
 "Azure.ResourceManager.MultiService.ComputeDisk.Disks.createOrUpdate" => {
-crate::compute_disk::clients::fake::combined_disks_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::compute_disk::clients::fake::combined_disks_client::dispatch_begin_create_or_update(self.server.as_combined_disks(), context, request, api_name).await
 },
 "Azure.ResourceManager.MultiService.ComputeDisk.Disks.get" => {
-crate::compute_disk::clients::fake::combined_disks_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::compute_disk::clients::fake::combined_disks_client::dispatch_get(self.server.as_combined_disks(), context, request, api_name).await
 },
 "Azure.ResourceManager.MultiService.Compute.VirtualMachines.createOrUpdate" => {
-crate::compute::clients::fake::combined_virtual_machines_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::compute::clients::fake::combined_virtual_machines_client::dispatch_begin_create_or_update(self.server.as_combined_virtual_machines(), context, request, api_name).await
 },
 "Azure.ResourceManager.MultiService.Compute.VirtualMachines.get" => {
-crate::compute::clients::fake::combined_virtual_machines_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::compute::clients::fake::combined_virtual_machines_client::dispatch_get(self.server.as_combined_virtual_machines(), context, request, api_name).await
 },
 _ => Err(Error::with_message(ErrorKind::Other, format!("unknown API name '{api_name}' in request context"))),
 }

@@ -17,6 +17,10 @@ struct Server;
 
 #[async_trait]
 impl EndpointServer for Server {
+    fn as_endpoint_endpoint_child(&self) -> &dyn EndpointEndpointChildServer {
+        self
+    }
+
     async fn get(&self, _: Option<EndpointClientGetOptions<'_>>) -> Result<AsyncRawResponse> {
         no_content()
     }

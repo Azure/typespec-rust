@@ -17,18 +17,38 @@ use std::sync::Arc;
 
 /// Fake server for [`CommonPropertiesClient`](crate::clients::CommonPropertiesClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait CommonPropertiesServer:
-    Send
-    + Sync
-    + crate::clients::fake::CommonPropertiesArmResourceIdentifiersServer
-    + crate::clients::fake::CommonPropertiesErrorServer
-    + crate::clients::fake::CommonPropertiesManagedIdentityServer
-{
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait CommonPropertiesServer: Send + Sync {
+    /// Returns the fake server for [`CommonPropertiesArmResourceIdentifiersClient`](crate::clients::CommonPropertiesArmResourceIdentifiersClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_common_properties_arm_resource_identifiers(
+        &self,
+    ) -> &dyn crate::clients::fake::CommonPropertiesArmResourceIdentifiersServer {
+        unimplemented!("CommonPropertiesServer::as_common_properties_arm_resource_identifiers is not implemented")
+    }
+    /// Returns the fake server for [`CommonPropertiesErrorClient`](crate::clients::CommonPropertiesErrorClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_common_properties_error(&self) -> &dyn crate::clients::fake::CommonPropertiesErrorServer {
+        unimplemented!("CommonPropertiesServer::as_common_properties_error is not implemented")
+    }
+    /// Returns the fake server for [`CommonPropertiesManagedIdentityClient`](crate::clients::CommonPropertiesManagedIdentityClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_common_properties_managed_identity(
+        &self,
+    ) -> &dyn crate::clients::fake::CommonPropertiesManagedIdentityServer {
+        unimplemented!(
+            "CommonPropertiesServer::as_common_properties_managed_identity is not implemented"
+        )
+    }
 }
 struct CommonPropertiesClientTransport<T: CommonPropertiesServer + ?Sized> {
     server: Arc<T>,
@@ -53,25 +73,25 @@ impl<T: CommonPropertiesServer + ?Sized> Policy for CommonPropertiesClientTransp
         let _ = &request;
         match api_name {
 "Azure.ResourceManager.CommonProperties.ArmResourceIdentifiers.createOrReplace" => {
-crate::clients::fake::common_properties_arm_resource_identifiers_client::dispatch_create_or_replace(&*self.server, context, request, api_name).await
+crate::clients::fake::common_properties_arm_resource_identifiers_client::dispatch_create_or_replace(self.server.as_common_properties_arm_resource_identifiers(), context, request, api_name).await
 },
 "Azure.ResourceManager.CommonProperties.ArmResourceIdentifiers.get" => {
-crate::clients::fake::common_properties_arm_resource_identifiers_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::common_properties_arm_resource_identifiers_client::dispatch_get(self.server.as_common_properties_arm_resource_identifiers(), context, request, api_name).await
 },
 "Azure.ResourceManager.CommonProperties.Error.createForUserDefinedError" => {
-crate::clients::fake::common_properties_error_client::dispatch_create_for_user_defined_error(&*self.server, context, request, api_name).await
+crate::clients::fake::common_properties_error_client::dispatch_create_for_user_defined_error(self.server.as_common_properties_error(), context, request, api_name).await
 },
 "Azure.ResourceManager.CommonProperties.Error.getForPredefinedError" => {
-crate::clients::fake::common_properties_error_client::dispatch_get_for_predefined_error(&*self.server, context, request, api_name).await
+crate::clients::fake::common_properties_error_client::dispatch_get_for_predefined_error(self.server.as_common_properties_error(), context, request, api_name).await
 },
 "Azure.ResourceManager.CommonProperties.ManagedIdentity.createWithSystemAssigned" => {
-crate::clients::fake::common_properties_managed_identity_client::dispatch_create_with_system_assigned(&*self.server, context, request, api_name).await
+crate::clients::fake::common_properties_managed_identity_client::dispatch_create_with_system_assigned(self.server.as_common_properties_managed_identity(), context, request, api_name).await
 },
 "Azure.ResourceManager.CommonProperties.ManagedIdentity.get" => {
-crate::clients::fake::common_properties_managed_identity_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::clients::fake::common_properties_managed_identity_client::dispatch_get(self.server.as_common_properties_managed_identity(), context, request, api_name).await
 },
 "Azure.ResourceManager.CommonProperties.ManagedIdentity.updateWithUserAssignedAndSystemAssigned" => {
-crate::clients::fake::common_properties_managed_identity_client::dispatch_update_with_user_assigned_and_system_assigned(&*self.server, context, request, api_name).await
+crate::clients::fake::common_properties_managed_identity_client::dispatch_update_with_user_assigned_and_system_assigned(self.server.as_common_properties_managed_identity(), context, request, api_name).await
 },
 _ => Err(Error::with_message(ErrorKind::Other, format!("unknown API name '{api_name}' in request context"))),
 }

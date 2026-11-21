@@ -22,6 +22,10 @@ struct Server(AtomicUsize);
 
 #[async_trait]
 impl FakesApiKeyServer for Server {
+    fn as_fakes_api_key_child(&self) -> &dyn FakesApiKeyChildServer {
+        self
+    }
+
     async fn get(&self, _: Option<FakesApiKeyClientGetOptions<'_>>) -> Result<AsyncRawResponse> {
         self.0.fetch_add(1, Ordering::Relaxed);
         no_content()

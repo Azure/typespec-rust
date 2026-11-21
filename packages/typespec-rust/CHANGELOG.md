@@ -1,5 +1,11 @@
 # Release History
 
+## 0.42.0 (Unreleased)
+
+### Breaking Changes
+
+- Use dynamic dispatch for server traits that support subclients.
+
 ## 0.42.1 (2026-11-17)
 
 ### Other Changes

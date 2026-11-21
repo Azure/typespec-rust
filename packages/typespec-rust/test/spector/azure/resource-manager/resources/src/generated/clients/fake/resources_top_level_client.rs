@@ -106,10 +106,10 @@ pub(crate) fn capture_resources_top_level_client_list_by_resource_group(
 }
 /// Fake server for [`ResourcesTopLevelClient`](crate::clients::ResourcesTopLevelClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait ResourcesTopLevelServer: Send + Sync {
     /// Handles [`ResourcesTopLevelClient::action_sync()`](crate::clients::ResourcesTopLevelClient::action_sync).

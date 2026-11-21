@@ -17,12 +17,19 @@ use std::sync::Arc;
 
 /// Fake server for [`EndpointClient`](crate::clients::EndpointClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
-pub trait EndpointServer: Send + Sync + crate::clients::fake::EndpointEndpointChildServer {
+pub trait EndpointServer: Send + Sync {
+    /// Returns the fake server for [`EndpointEndpointChildClient`](crate::clients::EndpointEndpointChildClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_endpoint_endpoint_child(&self) -> &dyn crate::clients::fake::EndpointEndpointChildServer {
+        unimplemented!("EndpointServer::as_endpoint_endpoint_child is not implemented")
+    }
     /// Handles [`EndpointClient::get()`](crate::clients::EndpointClient::get).
     async fn get(
         &self,
@@ -82,7 +89,7 @@ impl<T: EndpointServer + ?Sized> Policy for EndpointClientTransport<T> {
             }
             "FakesEndpoints.Child.get" => {
                 crate::clients::fake::endpoint_endpoint_child_client::dispatch_get(
-                    &*self.server,
+                    self.server.as_endpoint_endpoint_child(),
                     context,
                     request,
                     api_name,

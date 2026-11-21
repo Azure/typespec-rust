@@ -17,12 +17,36 @@ use std::sync::Arc;
 
 /// Fake server for [`MethodSubscriptionIdClient`](crate::clients::MethodSubscriptionIdClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait MethodSubscriptionIdServer: Send + Sync + crate::mixed_subscription_placement::clients::fake::MethodSubscriptionIdMixedSubscriptionPlacementServer + crate::clients::fake::MethodSubscriptionIdOperationsServer + crate::two_subscription_resources_method_level::clients::fake::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelServer {
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait MethodSubscriptionIdServer: Send + Sync {
+    /// Returns the fake server for [`MethodSubscriptionIdMixedSubscriptionPlacementClient`](crate::mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_method_subscription_id_mixed_subscription_placement(&self) -> &dyn crate::mixed_subscription_placement::clients::fake::MethodSubscriptionIdMixedSubscriptionPlacementServer{
+        unimplemented!("MethodSubscriptionIdServer::as_method_subscription_id_mixed_subscription_placement is not implemented")
+    }
+    /// Returns the fake server for [`MethodSubscriptionIdOperationsClient`](crate::clients::MethodSubscriptionIdOperationsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_method_subscription_id_operations(
+        &self,
+    ) -> &dyn crate::clients::fake::MethodSubscriptionIdOperationsServer {
+        unimplemented!(
+            "MethodSubscriptionIdServer::as_method_subscription_id_operations is not implemented"
+        )
+    }
+    /// Returns the fake server for [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelClient`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_method_subscription_id_two_subscription_resources_method_level(&self) -> &dyn crate::two_subscription_resources_method_level::clients::fake::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelServer{
+        unimplemented!("MethodSubscriptionIdServer::as_method_subscription_id_two_subscription_resources_method_level is not implemented")
+    }
 }
 struct MethodSubscriptionIdClientTransport<T: MethodSubscriptionIdServer + ?Sized> {
     server: Arc<T>,
@@ -49,43 +73,43 @@ impl<T: MethodSubscriptionIdServer + ?Sized> Policy for MethodSubscriptionIdClie
         let _ = &request;
         match api_name {
 "Azure.ResourceManager.MethodSubscriptionId.MixedSubscriptionPlacement.ResourceGroupResourceOperations.delete" => {
-crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client::dispatch_delete(&*self.server, context, request, api_name).await
+crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client::dispatch_delete(self.server.as_method_subscription_id_mixed_subscription_placement().as_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.MixedSubscriptionPlacement.ResourceGroupResourceOperations.get" => {
-crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client::dispatch_get(self.server.as_method_subscription_id_mixed_subscription_placement().as_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.MixedSubscriptionPlacement.ResourceGroupResourceOperations.put" => {
-crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client::dispatch_put(&*self.server, context, request, api_name).await
+crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client::dispatch_put(self.server.as_method_subscription_id_mixed_subscription_placement().as_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.MixedSubscriptionPlacement.SubscriptionResourceOperations.delete" => {
-crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_subscription_resource_operations_client::dispatch_delete(&*self.server, context, request, api_name).await
+crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_subscription_resource_operations_client::dispatch_delete(self.server.as_method_subscription_id_mixed_subscription_placement().as_method_subscription_id_mixed_subscription_placement_subscription_resource_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.MixedSubscriptionPlacement.SubscriptionResourceOperations.get" => {
-crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_subscription_resource_operations_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_subscription_resource_operations_client::dispatch_get(self.server.as_method_subscription_id_mixed_subscription_placement().as_method_subscription_id_mixed_subscription_placement_subscription_resource_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.MixedSubscriptionPlacement.SubscriptionResourceOperations.put" => {
-crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_subscription_resource_operations_client::dispatch_put(&*self.server, context, request, api_name).await
+crate::mixed_subscription_placement::clients::fake::method_subscription_id_mixed_subscription_placement_subscription_resource_operations_client::dispatch_put(self.server.as_method_subscription_id_mixed_subscription_placement().as_method_subscription_id_mixed_subscription_placement_subscription_resource_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.Operations.list" => {
-crate::clients::fake::method_subscription_id_operations_client::dispatch_list(&*self.server, context, request, api_name).await
+crate::clients::fake::method_subscription_id_operations_client::dispatch_list(self.server.as_method_subscription_id_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.TwoSubscriptionResourcesMethodLevel.SubscriptionResource1Operations.delete" => {
-crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client::dispatch_delete(&*self.server, context, request, api_name).await
+crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client::dispatch_delete(self.server.as_method_subscription_id_two_subscription_resources_method_level().as_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.TwoSubscriptionResourcesMethodLevel.SubscriptionResource1Operations.get" => {
-crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client::dispatch_get(self.server.as_method_subscription_id_two_subscription_resources_method_level().as_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.TwoSubscriptionResourcesMethodLevel.SubscriptionResource1Operations.put" => {
-crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client::dispatch_put(&*self.server, context, request, api_name).await
+crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations_client::dispatch_put(self.server.as_method_subscription_id_two_subscription_resources_method_level().as_method_subscription_id_two_subscription_resources_method_level_subscription_resource1_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.TwoSubscriptionResourcesMethodLevel.SubscriptionResource2Operations.delete" => {
-crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client::dispatch_delete(&*self.server, context, request, api_name).await
+crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client::dispatch_delete(self.server.as_method_subscription_id_two_subscription_resources_method_level().as_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.TwoSubscriptionResourcesMethodLevel.SubscriptionResource2Operations.get" => {
-crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client::dispatch_get(self.server.as_method_subscription_id_two_subscription_resources_method_level().as_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations(), context, request, api_name).await
 },
 "Azure.ResourceManager.MethodSubscriptionId.TwoSubscriptionResourcesMethodLevel.SubscriptionResource2Operations.put" => {
-crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client::dispatch_put(&*self.server, context, request, api_name).await
+crate::two_subscription_resources_method_level::clients::fake::method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations_client::dispatch_put(self.server.as_method_subscription_id_two_subscription_resources_method_level().as_method_subscription_id_two_subscription_resources_method_level_subscription_resource2_operations(), context, request, api_name).await
 },
 _ => Err(Error::with_message(ErrorKind::Other, format!("unknown API name '{api_name}' in request context"))),
 }

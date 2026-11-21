@@ -81,19 +81,50 @@ pub(crate) fn capture_resource_manager_client_begin_spread(
 }
 /// Fake server for [`ResourceManagerClient`](crate::clients::ResourceManagerClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
-pub trait ResourceManagerServer:
-    Send
-    + Sync
-    + crate::clients::fake::ResourceManagerHsmConnectionsServer
-    + crate::clients::fake::ResourceManagerManagedHsmsServer
-    + crate::clients::fake::ResourceManagerVaultConnectionsServer
-    + crate::clients::fake::ResourceManagerVaultsServer
-{
+pub trait ResourceManagerServer: Send + Sync {
+    /// Returns the fake server for [`ResourceManagerHsmConnectionsClient`](crate::clients::ResourceManagerHsmConnectionsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resource_manager_hsm_connections(
+        &self,
+    ) -> &dyn crate::clients::fake::ResourceManagerHsmConnectionsServer {
+        unimplemented!(
+            "ResourceManagerServer::as_resource_manager_hsm_connections is not implemented"
+        )
+    }
+    /// Returns the fake server for [`ResourceManagerManagedHsmsClient`](crate::clients::ResourceManagerManagedHsmsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resource_manager_managed_hsms(
+        &self,
+    ) -> &dyn crate::clients::fake::ResourceManagerManagedHsmsServer {
+        unimplemented!("ResourceManagerServer::as_resource_manager_managed_hsms is not implemented")
+    }
+    /// Returns the fake server for [`ResourceManagerVaultConnectionsClient`](crate::clients::ResourceManagerVaultConnectionsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resource_manager_vault_connections(
+        &self,
+    ) -> &dyn crate::clients::fake::ResourceManagerVaultConnectionsServer {
+        unimplemented!(
+            "ResourceManagerServer::as_resource_manager_vault_connections is not implemented"
+        )
+    }
+    /// Returns the fake server for [`ResourceManagerVaultsClient`](crate::clients::ResourceManagerVaultsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_resource_manager_vaults(&self) -> &dyn crate::clients::fake::ResourceManagerVaultsServer {
+        unimplemented!("ResourceManagerServer::as_resource_manager_vaults is not implemented")
+    }
     /// Handles [`ResourceManagerClient::begin_async_result()`](crate::clients::ResourceManagerClient::begin_async_result).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
     async fn begin_async_result(
@@ -464,31 +495,31 @@ crate::clients::fake::resource_manager_client::dispatch_begin_spread(&*self.serv
 crate::clients::fake::resource_manager_client::dispatch_get_original(&*self.server, context, request, api_name).await
 },
 "ResourceManager.HsmConnections.delete" => {
-crate::clients::fake::resource_manager_hsm_connections_client::dispatch_begin_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_hsm_connections_client::dispatch_begin_delete(self.server.as_resource_manager_hsm_connections(), context, request, api_name).await
 },
 "ResourceManager.ManagedHsms.createOrUpdate" => {
-crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_create_or_update(self.server.as_resource_manager_managed_hsms(), context, request, api_name).await
 },
 "ResourceManager.ManagedHsms.delete" => {
-crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_delete(self.server.as_resource_manager_managed_hsms(), context, request, api_name).await
 },
 "ResourceManager.ManagedHsms.purge" => {
-crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_purge(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_purge(self.server.as_resource_manager_managed_hsms(), context, request, api_name).await
 },
 "ResourceManager.ManagedHsms.update" => {
-crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_managed_hsms_client::dispatch_begin_update(self.server.as_resource_manager_managed_hsms(), context, request, api_name).await
 },
 "ResourceManager.VaultConnections.delete" => {
-crate::clients::fake::resource_manager_vault_connections_client::dispatch_begin_delete(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_vault_connections_client::dispatch_begin_delete(self.server.as_resource_manager_vault_connections(), context, request, api_name).await
 },
 "ResourceManager.Vaults.createOrUpdate" => {
-crate::clients::fake::resource_manager_vaults_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_vaults_client::dispatch_begin_create_or_update(self.server.as_resource_manager_vaults(), context, request, api_name).await
 },
 "ResourceManager.Vaults.getLro" => {
-crate::clients::fake::resource_manager_vaults_client::dispatch_begin_get_lro(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_vaults_client::dispatch_begin_get_lro(self.server.as_resource_manager_vaults(), context, request, api_name).await
 },
 "ResourceManager.Vaults.purge" => {
-crate::clients::fake::resource_manager_vaults_client::dispatch_begin_purge(&*self.server, context, request, api_name).await
+crate::clients::fake::resource_manager_vaults_client::dispatch_begin_purge(self.server.as_resource_manager_vaults(), context, request, api_name).await
 },
 _ => Err(Error::with_message(ErrorKind::Other, format!("unknown API name '{api_name}' in request context"))),
 }
