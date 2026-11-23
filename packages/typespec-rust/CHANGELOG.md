@@ -1,6 +1,6 @@
 # Release History
 
-## 0.42.0 (Unreleased)
+## 0.43.0 (Unreleased)
 
 ### Breaking Changes
 
