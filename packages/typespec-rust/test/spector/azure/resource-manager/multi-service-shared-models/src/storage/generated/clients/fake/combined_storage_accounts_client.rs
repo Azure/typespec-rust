@@ -46,10 +46,10 @@ pub(crate) fn capture_combined_storage_accounts_client_get(
 }
 /// Fake server for [`CombinedStorageAccountsClient`](crate::storage::clients::CombinedStorageAccountsClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait CombinedStorageAccountsServer: Send + Sync {
     /// Handles [`CombinedStorageAccountsClient::begin_create_or_update()`](crate::storage::clients::CombinedStorageAccountsClient::begin_create_or_update).

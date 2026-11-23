@@ -46,10 +46,10 @@ pub(crate) fn capture_combined_virtual_machines_client_get(
 }
 /// Fake server for [`CombinedVirtualMachinesClient`](crate::compute::clients::CombinedVirtualMachinesClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait CombinedVirtualMachinesServer: Send + Sync {
     /// Handles [`CombinedVirtualMachinesClient::begin_create_or_update()`](crate::compute::clients::CombinedVirtualMachinesClient::begin_create_or_update).

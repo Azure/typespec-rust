@@ -264,13 +264,38 @@ describe('fake generation', () => {
 
   it('composes child servers and routes their original API identifiers', () => {
     const fake = content('fake/fakes_client.rs');
-    expect(fake).toContain('crate::clients::fake::FakesChildServer');
+    expect(fake).toContain('pub trait FakesServer: Send + Sync {');
+    expect(fake).toContain('fn as_fakes_child(&self) -> &dyn crate::clients::fake::FakesChildServer');
+    expect(fake).toContain('unimplemented!("FakesServer::as_fakes_child is not implemented")');
     expect(fake).toContain('"Fakes.Child.get"');
-    expect(fake).toContain('fakes_child_client::dispatch_get');
+    expect(fake).toContain('fakes_child_client::dispatch_get(self.server.as_fakes_child(), context, request, api_name)');
+    expect(fake).toContain('fakes_client::dispatch_get(&*self.server, context, request, api_name)');
     expect(fake).toContain('impl FakesClient');
     expect(fake).toContain("Arc<impl FakesServer + ?Sized + 'static>");
     expect(fake).not.toContain('pub struct FakesClient');
+    const child = content('fake/fakes_child_client.rs');
+    expect(child).not.toContain('pub fn with_fake(');
+    expect(child).not.toContain('struct FakesChildClientTransport');
   });
+
+  it('routes nested servers across namespaces and avoids operation name collisions', async () => {
+    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const nested = adapter.tcgcToCrate();
+    const root = nested.clients.find(client => client.name === 'FakesClient')!;
+    const child = nested.clients.find(client => client.name === 'FakesChildClient')!;
+    const grandchild = nested.clients.find(client => client.name === 'EndpointEndpointChildClient')!;
+    const module = new rust.SubModule('nested', nested);
+    grandchild.module = module;
+    module.clients.push(grandchild);
+    child.methods.push(new rust.ClientAccessor('get_nested_client', child, grandchild));
+    root.methods.find(method => method.name === 'get')!.name = 'as_fakes_child';
+
+    const rootFake = emitFakes(nested).find(file => file.name === 'fakes_client')!.content;
+    const childFake = emitFakes(nested).find(file => file.name === 'fakes_child_client')!.content;
+    expect(rootFake).toContain('fn as_fakes_child_0(&self) -> &dyn crate::clients::fake::FakesChildServer');
+    expect(childFake).toContain('fn as_endpoint_endpoint_child(&self) -> &dyn crate::nested::clients::fake::EndpointEndpointChildServer');
+    expect(rootFake).toContain('crate::nested::clients::fake::endpoint_endpoint_child_client::dispatch_get(self.server.as_fakes_child_0().as_endpoint_endpoint_child(), context, request, api_name)');
+  }, 30000);
 
   it('captures owned typed arguments before constructing pagers', () => {
     const client = content('clients/fakes_client.rs');

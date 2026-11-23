@@ -48,10 +48,10 @@ pub(crate) fn capture_method_subscription_id_two_subscription_resources_method_l
 }
 /// Fake server for [`MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource1OperationsClient`](crate::two_subscription_resources_method_level::clients::MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource1OperationsClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource1OperationsServer:
     Send + Sync

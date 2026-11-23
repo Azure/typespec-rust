@@ -10,7 +10,6 @@ use azure_core::{
 use std::sync::Arc;
 
 struct Server;
-impl FakesChildServer for Server {}
 impl FakesServer for Server {}
 
 #[tokio::test]

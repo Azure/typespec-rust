@@ -17,14 +17,20 @@ use std::sync::Arc;
 
 /// Fake server for [`LargeHeaderClient`](crate::clients::LargeHeaderClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait LargeHeaderServer:
-    Send + Sync + crate::clients::fake::LargeHeaderLargeHeadersServer
-{
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait LargeHeaderServer: Send + Sync {
+    /// Returns the fake server for [`LargeHeaderLargeHeadersClient`](crate::clients::LargeHeaderLargeHeadersClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_large_header_large_headers(
+        &self,
+    ) -> &dyn crate::clients::fake::LargeHeaderLargeHeadersServer {
+        unimplemented!("LargeHeaderServer::as_large_header_large_headers is not implemented")
+    }
 }
 struct LargeHeaderClientTransport<T: LargeHeaderServer + ?Sized> {
     server: Arc<T>,
@@ -50,7 +56,7 @@ impl<T: LargeHeaderServer + ?Sized> Policy for LargeHeaderClientTransport<T> {
         match api_name {
             "Azure.ResourceManager.LargeHeader.LargeHeaders.two6k" => {
                 crate::clients::fake::large_header_large_headers_client::dispatch_begin_two6_k(
-                    &*self.server,
+                    self.server.as_large_header_large_headers(),
                     context,
                     request,
                     api_name,

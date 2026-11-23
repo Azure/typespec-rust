@@ -32,10 +32,10 @@ pub(crate) fn capture_resource_manager_hsm_connections_client_begin_delete(
 }
 /// Fake server for [`ResourceManagerHsmConnectionsClient`](crate::clients::ResourceManagerHsmConnectionsClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait ResourceManagerHsmConnectionsServer: Send + Sync {
     /// Handles [`ResourceManagerHsmConnectionsClient::begin_delete()`](crate::clients::ResourceManagerHsmConnectionsClient::begin_delete).

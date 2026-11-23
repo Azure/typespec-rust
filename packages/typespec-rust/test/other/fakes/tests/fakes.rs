@@ -72,6 +72,10 @@ impl FakesChildServer for Server {
 
 #[async_trait]
 impl FakesServer for Server {
+    fn as_fakes_child(&self) -> &dyn FakesChildServer {
+        self
+    }
+
     async fn fixed_options(
         &self,
         options: Option<FakesClientFixedOptionsOptions<'_>>,
@@ -361,6 +365,41 @@ async fn original_arguments_and_child_routing() -> Result<()> {
         Some("child")
     );
     Ok(())
+}
+
+#[tokio::test]
+async fn child_server_can_be_delegated() -> Result<()> {
+    struct Parent {
+        child: Server,
+    }
+    impl FakesServer for Parent {
+        fn as_fakes_child(&self) -> &dyn FakesChildServer {
+            &self.child
+        }
+    }
+
+    let server: Arc<dyn FakesServer> = Arc::new(Parent {
+        child: Server::default(),
+    });
+    let client = FakesClient::with_fake("https://example.test", server, None)?;
+    let result = client
+        .get_fakes_child_client()
+        .get(None)
+        .await?
+        .into_model()?;
+    assert_eq!(result.value.as_deref(), Some("child"));
+    Ok(())
+}
+
+#[tokio::test]
+#[should_panic(expected = "FakesServer::as_fakes_child is not implemented")]
+async fn missing_child_server_panics_on_use() {
+    struct Parent;
+    impl FakesServer for Parent {}
+
+    let client = FakesClient::with_fake("https://example.test", Arc::new(Parent), None).unwrap();
+    let child = client.get_fakes_child_client();
+    let _ = child.get(None).await;
 }
 
 #[tokio::test]

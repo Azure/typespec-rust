@@ -42,10 +42,10 @@ pub(crate) fn capture_common_properties_error_client_get_for_predefined_error(
 }
 /// Fake server for [`CommonPropertiesErrorClient`](crate::clients::CommonPropertiesErrorClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait CommonPropertiesErrorServer: Send + Sync {
     /// Handles [`CommonPropertiesErrorClient::create_for_user_defined_error()`](crate::clients::CommonPropertiesErrorClient::create_for_user_defined_error).

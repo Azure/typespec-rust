@@ -132,12 +132,19 @@ pub(crate) fn capture_fakes_client_put_optional(
 }
 /// Fake server for [`FakesClient`](crate::clients::FakesClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
-pub trait FakesServer: Send + Sync + crate::clients::fake::FakesChildServer {
+pub trait FakesServer: Send + Sync {
+    /// Returns the fake server for [`FakesChildClient`](crate::clients::FakesChildClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_fakes_child(&self) -> &dyn crate::clients::fake::FakesChildServer {
+        unimplemented!("FakesServer::as_fakes_child is not implemented")
+    }
     /// Handles [`FakesClient::begin_start()`](crate::clients::FakesClient::begin_start).
     /// The request and opaque content belong to the current HTTP step, not necessarily initiation.
     async fn begin_start(
@@ -754,7 +761,7 @@ impl<T: FakesServer + ?Sized> Policy for FakesClientTransport<T> {
             }
             "Fakes.Child.get" => {
                 crate::clients::fake::fakes_child_client::dispatch_get(
-                    &*self.server,
+                    self.server.as_fakes_child(),
                     context,
                     request,
                     api_name,

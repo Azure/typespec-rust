@@ -109,10 +109,10 @@ pub(crate) fn capture_resources_nested_client_list_by_top_level_tracked_resource
 }
 /// Fake server for [`ResourcesNestedClient`](crate::clients::ResourcesNestedClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait ResourcesNestedServer: Send + Sync {
     /// Handles [`ResourcesNestedClient::begin_create_or_replace()`](crate::clients::ResourcesNestedClient::begin_create_or_replace).

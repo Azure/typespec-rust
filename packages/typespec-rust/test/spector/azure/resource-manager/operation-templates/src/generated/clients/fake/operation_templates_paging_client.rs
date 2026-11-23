@@ -62,10 +62,10 @@ pub(crate) fn capture_operation_templates_paging_client_list_post_action_paging(
 }
 /// Fake server for [`OperationTemplatesPagingClient`](crate::clients::OperationTemplatesPagingClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait OperationTemplatesPagingServer: Send + Sync {
     /// Handles [`OperationTemplatesPagingClient::get()`](crate::clients::OperationTemplatesPagingClient::get).

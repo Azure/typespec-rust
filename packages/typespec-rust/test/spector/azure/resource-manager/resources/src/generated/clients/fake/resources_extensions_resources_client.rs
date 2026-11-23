@@ -86,10 +86,10 @@ pub(crate) fn capture_resources_extensions_resources_client_update(
 }
 /// Fake server for [`ResourcesExtensionsResourcesClient`](crate::clients::ResourcesExtensionsResourcesClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait ResourcesExtensionsResourcesServer: Send + Sync {
     /// Handles [`ResourcesExtensionsResourcesClient::begin_create_or_update()`](crate::clients::ResourcesExtensionsResourcesClient::begin_create_or_update).
