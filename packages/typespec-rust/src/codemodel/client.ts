@@ -228,40 +228,21 @@ export interface ResourceManagerFinalState {
   resultPath: Array<string>;
 }
 
-/** A status property path and optional enum-backed classifier for an LRO response. */
+/** A minimal operation-status field path. */
 export interface LroStatusSource {
-  /** Serialized JSON property names from the response root to the status value. */
+  /** Serialized property names from the response root to the operation status. */
   path: Array<string>;
-
-  /** Mapped Rust field names for each property in the path. */
-  fieldNames?: Array<string>;
-
-  /** Components accepting absent values. */
-  optional?: Array<boolean>;
-
-  /** Components accepting null values even when required. */
-  nullable?: Array<boolean>;
-
-  /** Rust enum used to classify wire values when the status is represented by an enum. */
-  statusEnum?: types.Enum;
+  /** Mapped Rust property names for the private decoder. */
+  fieldNames: Array<string>;
+  /** Whether each path component may be absent or null. */
+  optional: Array<boolean>;
+  nullable: Array<boolean>;
 }
 
-/** Status-bearing response shapes used to classify an LRO. */
+/** Operation-status sources, independent of final-result selection. */
 export interface LroStatusMetadata {
-  /** Initial operation response status, which may have a different shape than the monitor. */
   initial?: LroStatusSource;
-
-  /** Polling response status. */
-  polling?: LroStatusSource;
-
-  /** Polling response sources selected by the operation's status-monitor link. */
-  pollingKinds?: Array<'AzureAsyncOperation' | 'OperationLocation' | 'Location' | 'OriginalUrl'>;
-
-  /** Protocol-selected resource responses, distinct from the polling monitor model. */
-  resourcePolling?: boolean;
-
-  /** Actual resource envelope read by ARM Location and original-URL polling. */
-  resource?: LroStatusSource;
+  polling: LroStatusSource;
 }
 
 /** LroMethod is a method that returns a long-running operation. */
@@ -280,7 +261,7 @@ export interface LroMethod extends HTTPMethodBase {
   /** Omission delegates final response selection to the Resource Manager runtime. */
   resourceManagerFinalState?: ResourceManagerFinalState;
 
-  /** TypeSpec metadata describing status paths for the initial and polling responses. */
+  /** Actual operation-status fields, excluding unrelated resource lifecycle fields. */
   statusMetadata?: LroStatusMetadata;
 }
 

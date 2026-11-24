@@ -6,10 +6,7 @@
 /** ErrorCode defines the types of errors */
 export type ErrorCode =
   /** the emitter encountered an internal error. this is always a bug in the emitter */
-  'InternalError' |
-
-  /** the emitter cannot represent the encountered TypeSpec metadata */
-  'UnsupportedTsp';
+  'InternalError';
 
 /**
  * CodegenError is thrown when the emitter fails some condition

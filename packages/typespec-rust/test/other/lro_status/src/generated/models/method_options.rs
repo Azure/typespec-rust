@@ -8,74 +8,17 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`LroStatusTestSnapshotsClient::begin_location_status()`](crate::generated::clients::LroStatusTestSnapshotsClient::begin_location_status())
+/// Options to be passed to [`LroStatusTestSnapshotsClient::begin_monitor()`](crate::generated::clients::LroStatusTestSnapshotsClient::begin_monitor())
 #[derive(Clone, Default, SafeDebug)]
-pub struct LroStatusTestSnapshotsClientBeginLocationStatusOptions<'a> {
+pub struct LroStatusTestSnapshotsClientBeginMonitorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: PollerOptions<'a>,
 }
 
-impl LroStatusTestSnapshotsClientBeginLocationStatusOptions<'_> {
-    /// Transforms this [`LroStatusTestSnapshotsClientBeginLocationStatusOptions`] into a new `LroStatusTestSnapshotsClientBeginLocationStatusOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> LroStatusTestSnapshotsClientBeginLocationStatusOptions<'static> {
-        LroStatusTestSnapshotsClientBeginLocationStatusOptions {
-            method_options: PollerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
-}
-
-/// Options to be passed to [`LroStatusTestSnapshotsClient::begin_nullable_status()`](crate::generated::clients::LroStatusTestSnapshotsClient::begin_nullable_status())
-#[derive(Clone, Default, SafeDebug)]
-pub struct LroStatusTestSnapshotsClientBeginNullableStatusOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl LroStatusTestSnapshotsClientBeginNullableStatusOptions<'_> {
-    /// Transforms this [`LroStatusTestSnapshotsClientBeginNullableStatusOptions`] into a new `LroStatusTestSnapshotsClientBeginNullableStatusOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> LroStatusTestSnapshotsClientBeginNullableStatusOptions<'static> {
-        LroStatusTestSnapshotsClientBeginNullableStatusOptions {
-            method_options: PollerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
-}
-
-/// Options to be passed to [`LroStatusTestSnapshotsClient::begin_optional_status()`](crate::generated::clients::LroStatusTestSnapshotsClient::begin_optional_status())
-#[derive(Clone, Default, SafeDebug)]
-pub struct LroStatusTestSnapshotsClientBeginOptionalStatusOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl LroStatusTestSnapshotsClientBeginOptionalStatusOptions<'_> {
-    /// Transforms this [`LroStatusTestSnapshotsClientBeginOptionalStatusOptions`] into a new `LroStatusTestSnapshotsClientBeginOptionalStatusOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> LroStatusTestSnapshotsClientBeginOptionalStatusOptions<'static> {
-        LroStatusTestSnapshotsClientBeginOptionalStatusOptions {
-            method_options: PollerOptions {
-                context: self.method_options.context.into_owned(),
-                ..self.method_options
-            },
-        }
-    }
-}
-
-/// Options to be passed to [`LroStatusTestSnapshotsClient::begin()`](crate::generated::clients::LroStatusTestSnapshotsClient::begin())
-#[derive(Clone, Default, SafeDebug)]
-pub struct LroStatusTestSnapshotsClientBeginOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: PollerOptions<'a>,
-}
-
-impl LroStatusTestSnapshotsClientBeginOptions<'_> {
-    /// Transforms this [`LroStatusTestSnapshotsClientBeginOptions`] into a new `LroStatusTestSnapshotsClientBeginOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> LroStatusTestSnapshotsClientBeginOptions<'static> {
-        LroStatusTestSnapshotsClientBeginOptions {
+impl LroStatusTestSnapshotsClientBeginMonitorOptions<'_> {
+    /// Transforms this [`LroStatusTestSnapshotsClientBeginMonitorOptions`] into a new `LroStatusTestSnapshotsClientBeginMonitorOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> LroStatusTestSnapshotsClientBeginMonitorOptions<'static> {
+        LroStatusTestSnapshotsClientBeginMonitorOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
                 ..self.method_options
@@ -101,6 +44,13 @@ impl LroStatusTestSnapshotsClientBeginStatusFlowOptions<'_> {
             },
         }
     }
+}
+
+/// Options to be passed to [`LroStatusTestSnapshotsClient::get_operation()`](crate::generated::clients::LroStatusTestSnapshotsClient::get_operation())
+#[derive(Clone, Default, SafeDebug)]
+pub struct LroStatusTestSnapshotsClientGetOperationOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 /// Options to be passed to [`LroStatusTestSnapshotsClient::get()`](crate::generated::clients::LroStatusTestSnapshotsClient::get())

@@ -528,53 +528,18 @@ export function getStatusField(model: rust.Model): rust.ModelField | undefined {
 }
 
 /**
- * returns whether any LRO status enum declares a non-canonical terminal wire value.
- *
- * @param metadata the LRO initial and polling status descriptions
- * @returns true when custom terminal classification is needed
- */
-export function hasCustomTerminalStatus(metadata?: rust.LroStatusMetadata): boolean {
-  const statusTypes = [metadata?.initial?.statusEnum, metadata?.polling?.statusEnum,
-    metadata?.resourcePolling ? metadata.resource?.statusEnum : undefined];
-  return statusTypes.some(type => {
-    if (!type) {
-      return false;
-    }
-    const statusEnum = unwrapType(type);
-    return statusEnum.kind === 'enum' && statusEnum.values.some(value => {
-      if (!value.lroTerminalStatus || typeof value.value !== 'string') {
-        return false;
-      }
-      return !['succeeded', 'failed', 'canceled', 'cancelled'].includes(value.value.replace(/[A-Z]/g, c => c.toLowerCase()));
-    });
-  });
-}
-
-/**
  * returns the Rust expression used to compute a PollerStatus for a receiver.
  *
  * @param receiver the variable name to read the status field from
  * @param statusField the status field if the model defines one
- * @param customTerminalStatus whether to use the generated custom terminal mapping
  * @returns a Rust expression that evaluates to PollerStatus
  */
-export function getPollerStatusExpression(receiver: string, statusField?: rust.ModelField, customTerminalStatus = false): string {
+export function getPollerStatusExpression(receiver: string, statusField?: rust.ModelField): string {
   if (statusField) {
-    const statusType = customTerminalStatus ? unwrapType(statusField.type) : undefined;
-    const statusExpression = statusType?.kind === 'enum'
-      ? `Self::lro_status_from_enum(v)`
-      : customTerminalStatus
-        ? `Self::lro_status_from_str(v.as_ref())`
-        : 'PollerStatus::from(v.as_ref())';
     if (statusField.type.kind === 'option') {
-      return `match &${receiver}.${statusField.name} { Some(v) => ${statusExpression}, None => PollerStatus::InProgress }`;
+      return `match &${receiver}.${statusField.name} { Some(v) => PollerStatus::from(v.as_ref()), None => PollerStatus::InProgress }`;
     }
-    if (!customTerminalStatus) {
-      return `${receiver}.${statusField.name}.as_deref().map(Into::into).unwrap_or(PollerStatus::InProgress)`;
-    }
-    return statusType?.kind === 'enum'
-      ? `Self::lro_status_from_enum(&${receiver}.${statusField.name})`
-      : `Self::lro_status_from_str(${receiver}.${statusField.name}.as_ref())`;
+    return `${receiver}.${statusField.name}.as_deref().map(Into::into).unwrap_or(PollerStatus::InProgress)`;
   }
   return 'PollerStatus::Succeeded';
 }

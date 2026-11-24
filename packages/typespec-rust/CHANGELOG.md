@@ -4,13 +4,9 @@
 
 ### Bugs Fixed
 
-- Long-running operation status handling now uses TypeSpec terminal annotations,
-  treats unknown values as in progress, and distinguishes initial responses from
-  polling monitors.
-- Custom terminal status decoding preserves optional and nullable fields, accepts
-  escaped strings, and keeps terminal mappings specific to each response source.
-  Private decoders use mapped property names for troubleshooting. Standard LROs
-  retain their existing typed model decoding.
+- Long-running operations read only the applicable operation status instead of
+  deserializing intermediate responses as the monitor model. Unrelated initial
+  resource statuses are ignored, and unrecognized operation status values keep polling.
 
 ## 0.42.1 (2026-11-17)
 

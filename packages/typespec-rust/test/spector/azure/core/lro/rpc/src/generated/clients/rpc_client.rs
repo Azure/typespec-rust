@@ -12,14 +12,11 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{
-            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
-            StatusMonitor,
-        },
+        poller::{get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus},
         ClientOptions, Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
         RequestContent, Url, UrlExt,
     },
-    json, tracing, Result,
+    tracing, Result,
 };
 
 /// Illustrates bodies templated with Azure Core with long-running RPC operation
@@ -122,6 +119,7 @@ impl RpcClient {
         let api_version = self.api_version.clone();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
+                let is_initial = matches!(&poller_state, PollerState::Initial);
                 let (mut request, continuation) = match poller_state {
                     PollerState::More(continuation) => {
                         let (mut next_link, final_link) = match continuation {
@@ -200,9 +198,34 @@ impl RpcClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: RpcClientBeginLongRunningRpcOperationStatus = json::from_json(&body)?;
+                    let poller_status = if is_initial {
+                        if status == azure_core::http::StatusCode::Accepted
+                            || headers
+                                .get_optional_string(&HeaderName::from_static("operation-location"))
+                                .is_some()
+                        {
+                            PollerStatus::InProgress
+                        } else {
+                            PollerStatus::Succeeded
+                        }
+                    } else {
+                        /// Reads only operation status, not the public response model.
+                        #[derive(serde::Deserialize)]
+                        #[serde(transparent)]
+                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
+                        #[derive(serde::Deserialize)]
+                        struct OperationStatus<'a> {
+                            #[serde(borrow, rename = "status")]
+                            status: StatusValue<'a>,
+                        }
+                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
+                        Some(operation_status)
+                            .map(|value| value.status)
+                            .map(|value| PollerStatus::from(value.0.as_ref()))
+                            .unwrap_or(PollerStatus::InProgress)
+                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
+                    if poller_status == PollerStatus::Succeeded {
                         let body = azure_core::http::response::ResponseBody::from_bytes(
                             serde_json::from_str::<azure_core::Value>(
                                 body.clone().into_string()?.as_str(),
@@ -212,14 +235,7 @@ impl RpcClient {
                         final_rsp = Some(RawResponse::from_bytes(status, headers.clone(), body));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress | PollerStatus::UnknownValue(_) => {
-                            PollerResult::InProgress {
-                                response: rsp,
-                                retry_after,
-                                continuation,
-                            }
-                        }
+                    Ok(match poller_status {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
@@ -232,7 +248,14 @@ impl RpcClient {
                                 })
                             }),
                         },
-                        _ => PollerResult::Done { response: rsp },
+                        PollerStatus::Failed | PollerStatus::Canceled => {
+                            PollerResult::Done { response: rsp }
+                        }
+                        _ => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
                     })
                 })
             },

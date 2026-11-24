@@ -196,9 +196,6 @@ generate('lro', lro, 'test/other/lro');
 const lro_status = pkgRoot + 'test/tsp/lro-status';
 generate('lro_status', lro_status, 'test/other/lro_status');
 
-const lro_status_arm = pkgRoot + 'test/tsp/lro-status-arm';
-generate('lro_status_arm', lro_status_arm, 'test/other/lro_status_arm');
-
 generate('azure_resourcemanager_test', pkgRoot + 'test/tsp/ResourceManager', 'test/other/resource_manager', ['api-version=2026-05-15', 'generate-fakes=true']);
 
 const misc_tests = pkgRoot + 'test/tsp/MiscTests';

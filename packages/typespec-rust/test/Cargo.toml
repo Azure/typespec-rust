@@ -8,7 +8,6 @@ members = [
     "other/fakes",
     "other/lro",
     "other/lro_status",
-    "other/lro_status_arm",
     "other/misc_tests",
     "other/pub_crate",
     "other/resource_manager",
