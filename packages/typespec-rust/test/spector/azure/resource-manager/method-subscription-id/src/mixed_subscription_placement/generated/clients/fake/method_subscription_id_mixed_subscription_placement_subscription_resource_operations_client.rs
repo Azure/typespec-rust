@@ -48,10 +48,10 @@ pub(crate) fn capture_method_subscription_id_mixed_subscription_placement_subscr
 }
 /// Fake server for [`MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperationsClient`](crate::mixed_subscription_placement::clients::MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperationsClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperationsServer:
     Send + Sync

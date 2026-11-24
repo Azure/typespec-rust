@@ -48,10 +48,10 @@ pub(crate) fn capture_operation_templates_legacy_client_routed_get(
 }
 /// Fake server for [`OperationTemplatesLegacyClient`](crate::clients::OperationTemplatesLegacyClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait OperationTemplatesLegacyServer: Send + Sync {
     /// Handles [`OperationTemplatesLegacyClient::create_or_replace_optional_body()`](crate::clients::OperationTemplatesLegacyClient::create_or_replace_optional_body).

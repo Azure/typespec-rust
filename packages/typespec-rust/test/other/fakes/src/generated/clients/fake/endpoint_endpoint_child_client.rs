@@ -17,10 +17,10 @@ use std::sync::Arc;
 
 /// Fake server for [`EndpointEndpointChildClient`](crate::clients::EndpointEndpointChildClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait EndpointEndpointChildServer: Send + Sync {
     /// Handles [`EndpointEndpointChildClient::get()`](crate::clients::EndpointEndpointChildClient::get).

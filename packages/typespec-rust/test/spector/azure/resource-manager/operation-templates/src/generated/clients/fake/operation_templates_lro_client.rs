@@ -92,10 +92,10 @@ pub(crate) fn capture_operation_templates_lro_client_begin_get_lro(
 }
 /// Fake server for [`OperationTemplatesLroClient`](crate::clients::OperationTemplatesLroClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait OperationTemplatesLroServer: Send + Sync {
     /// Handles [`OperationTemplatesLroClient::begin_create_or_replace()`](crate::clients::OperationTemplatesLroClient::begin_create_or_replace).

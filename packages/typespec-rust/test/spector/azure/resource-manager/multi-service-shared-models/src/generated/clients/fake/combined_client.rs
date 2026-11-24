@@ -17,17 +17,29 @@ use std::sync::Arc;
 
 /// Fake server for [`CombinedClient`](crate::clients::CombinedClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
-#[async_trait]
-pub trait CombinedServer:
-    Send
-    + Sync
-    + crate::storage::clients::fake::CombinedStorageAccountsServer
-    + crate::compute::clients::fake::CombinedVirtualMachinesServer
-{
+/// Default operation and accessor implementations call [`unimplemented!()`].
+pub trait CombinedServer: Send + Sync {
+    /// Returns the fake server for [`CombinedStorageAccountsClient`](crate::storage::clients::CombinedStorageAccountsClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_combined_storage_accounts(
+        &self,
+    ) -> &dyn crate::storage::clients::fake::CombinedStorageAccountsServer {
+        unimplemented!("CombinedServer::as_combined_storage_accounts is not implemented")
+    }
+    /// Returns the fake server for [`CombinedVirtualMachinesClient`](crate::compute::clients::CombinedVirtualMachinesClient).
+    ///
+    /// # Panics
+    /// Panics unless overridden.
+    fn as_combined_virtual_machines(
+        &self,
+    ) -> &dyn crate::compute::clients::fake::CombinedVirtualMachinesServer {
+        unimplemented!("CombinedServer::as_combined_virtual_machines is not implemented")
+    }
 }
 struct CombinedClientTransport<T: CombinedServer + ?Sized> {
     server: Arc<T>,
@@ -52,16 +64,16 @@ impl<T: CombinedServer + ?Sized> Policy for CombinedClientTransport<T> {
         let _ = &request;
         match api_name {
 "Azure.ResourceManager.MultiServiceSharedModels.Storage.StorageAccounts.createOrUpdate" => {
-crate::storage::clients::fake::combined_storage_accounts_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::storage::clients::fake::combined_storage_accounts_client::dispatch_begin_create_or_update(self.server.as_combined_storage_accounts(), context, request, api_name).await
 },
 "Azure.ResourceManager.MultiServiceSharedModels.Storage.StorageAccounts.get" => {
-crate::storage::clients::fake::combined_storage_accounts_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::storage::clients::fake::combined_storage_accounts_client::dispatch_get(self.server.as_combined_storage_accounts(), context, request, api_name).await
 },
 "Azure.ResourceManager.MultiServiceSharedModels.Compute.VirtualMachines.createOrUpdate" => {
-crate::compute::clients::fake::combined_virtual_machines_client::dispatch_begin_create_or_update(&*self.server, context, request, api_name).await
+crate::compute::clients::fake::combined_virtual_machines_client::dispatch_begin_create_or_update(self.server.as_combined_virtual_machines(), context, request, api_name).await
 },
 "Azure.ResourceManager.MultiServiceSharedModels.Compute.VirtualMachines.get" => {
-crate::compute::clients::fake::combined_virtual_machines_client::dispatch_get(&*self.server, context, request, api_name).await
+crate::compute::clients::fake::combined_virtual_machines_client::dispatch_get(self.server.as_combined_virtual_machines(), context, request, api_name).await
 },
 _ => Err(Error::with_message(ErrorKind::Other, format!("unknown API name '{api_name}' in request context"))),
 }

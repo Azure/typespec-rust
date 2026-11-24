@@ -83,12 +83,13 @@ function captureFor(method: Operation, module: rust.ModuleContainer): {
 
 function signatureFor(client: rust.Client, method: Operation): Array<{ name: string; type: rust.Type }> {
   const spread = method.params.filter(p => p.kind === 'partialBody');
-  const params = methodParameters(method).filter(p => !spread.some(s => s.name === p.name));
+  const normalParams = methodParameters(method);
+  const params = normalParams.filter(p => !spread.some(s => s.name === p.name));
   // Spread fields have already been serialized and may name private helper
   // models. Keep their assembled body opaque instead of decoding it to fields.
   if (spread.length) {
     const content = { name: synthetic([...params, method.options], 'content'), type: new rust.ExternalType(helpers.getCrate(client.module), 'Body', 'azure_core::http') };
-    const first = methodParameters(method).findIndex(p => spread.some(s => s.name === p.name));
+    const first = normalParams.findIndex(p => spread.some(s => s.name === p.name));
     params.splice(first < 0 ? params.length : first, 0, content);
   }
   return params;
@@ -135,15 +136,27 @@ export function emitFakeCapture(client: rust.Client, method: Operation): string 
     + `${publicPath(client.module)}::clients::fake::capture_${operationName(client, method)}(&mut options.method_options.context, ${values.join(', ')});\noptions\n};\n`;
 }
 
-function descendants(client: rust.Client): Array<rust.Client> {
-  const clients = new Set<rust.Client>();
-  const visit = (current: rust.Client): void => {
-    if (clients.has(current)) return;
-    clients.add(current);
-    current.methods.forEach(m => { if (m.kind === 'clientaccessor') visit(m.returns); });
+function childAccessors(client: rust.Client): Array<{ child: rust.ClientAccessor; name: string }> {
+  const names = client.methods.filter(m => m.kind !== 'clientaccessor' && m.visibility === 'pub')
+    .map(m => ({ name: m.name.replace(/^r#/, '') }));
+  return client.methods.filter((m): m is rust.ClientAccessor => m.kind === 'clientaccessor').map(child => {
+    const name = helpers.getUniqueVarName(names, [`as_${utils.snakeCaseName(serverName(child.returns).replace(/Server$/, ''))}`]);
+    names.push({ name });
+    return { child, name };
+  });
+}
+
+function descendants(client: rust.Client): Array<{ client: rust.Client; server: string }> {
+  const visited = new Set<rust.Client>();
+  const clients: Array<{ client: rust.Client; server: string }> = [];
+  const visit = (current: rust.Client, server: string): void => {
+    if (visited.has(current)) return;
+    visited.add(current);
+    clients.push({ client: current, server });
+    childAccessors(current).forEach(({ child, name }) => visit(child.returns, `${server}.${name}()`));
   };
-  visit(client);
-  return [...clients];
+  visit(client, 'self.server');
+  return clients;
 }
 
 function traitPath(client: rust.Client): string {
@@ -153,9 +166,9 @@ function traitPath(client: rust.Client): string {
 export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
   return module.clients.map(client => {
     const use = new FakeUse(module);
-    use.add('async_trait', 'async_trait');
     let body = '';
     const methods = client.methods.filter((m): m is Operation => m.kind !== 'clientaccessor' && m.visibility === 'pub');
+    if (methods.length || client.constructable) use.add('async_trait', 'async_trait');
     if (methods.length || client.constructable) use.add('azure_core', 'Result');
     if (methods.length) use.add('azure_core::http', 'AsyncRawResponse');
     for (const method of methods) {
@@ -171,12 +184,17 @@ export function emitFakes(module: rust.ModuleContainer): Array<helpers.Module> {
         + `${context}.insert(${utils.pascalCase(name, false)}Arguments { ${capture.fields.map(f => f.name).join(', ')} });\n}\n`;
     }
 
-    const children = client.methods.filter((m): m is rust.ClientAccessor => m.kind === 'clientaccessor');
-    const bounds = ['Send', 'Sync', ...children.map(c => traitPath(c.returns))];
+    const children = childAccessors(client);
     body += `/// Fake server for [\`${client.name}\`](${publicPath(module)}::clients::${client.name}).\n`
-      + '///\n/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.\n'
-      + '///\n/// # Panics\n/// Default operation implementations call [`unimplemented!()`].\n'
-      + `#[async_trait]\npub trait ${serverName(client)}: ${[...new Set(bounds)].join(' + ')} {\n`;
+      + '///\n/// Implement the operations and child server accessors used by your test.\n'
+      + '///\n/// # Panics\n/// Default operation and accessor implementations call [`unimplemented!()`].\n'
+      + `${methods.length ? '#[async_trait]\n' : ''}pub trait ${serverName(client)}: Send + Sync {\n`;
+    for (const { child, name } of children) {
+      body += `/// Returns the fake server for [\`${child.returns.name}\`](${publicPath(child.returns.module)}::clients::${child.returns.name}).\n`
+        + '///\n/// # Panics\n/// Panics unless overridden.\n'
+        + `fn ${name}(&self) -> &dyn ${traitPath(child.returns)} {\n`
+        + `unimplemented!("${serverName(client)}::${name} is not implemented")\n}\n`;
+    }
     for (const method of methods) {
       // Share the ordinary signature rules: groups stay grouped, optional bodies
       // stay in options, and names/types/order do not depend on transport location.
@@ -234,13 +252,14 @@ function emitTransport(client: rust.Client, use: Use): string {
     + 'let api_name = azure_core::http::fake::get_api_name(context).ok_or_else(|| Error::with_message(ErrorKind::Other, "missing API name in request context"))?;\n'
     + 'let _ = &request;\n';
   let dispatch = '';
-  for (const current of descendants(client)) {
+  for (const { client: current, server } of descendants(client)) {
     for (const method of current.methods) {
       if (method.kind === 'clientaccessor' || method.visibility !== 'pub') continue;
       const helperPath = `${publicPath(current.module)}::clients::fake::${fakeModuleName(current)}`;
       dispatch += `"${method.languageIndependentName}" => {\n`;
       // Dispatch remains inside the owning module so argument payloads stay private.
-      dispatch += `${helperPath}::dispatch_${method.name.replace(/^r#/, '')}(&*self.server, context, request, api_name).await\n},\n`;
+      const target = current === client ? '&*self.server' : server;
+      dispatch += `${helperPath}::dispatch_${method.name.replace(/^r#/, '')}(${target}, context, request, api_name).await\n},\n`;
     }
   }
   const unknown = 'Err(Error::with_message(ErrorKind::Other, format!("unknown API name \'{api_name}\' in request context")))';

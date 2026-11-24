@@ -15,10 +15,10 @@ use azure_core::{
 
 /// Fake server for [`MethodSubscriptionIdOperationsClient`](crate::clients::MethodSubscriptionIdOperationsClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait MethodSubscriptionIdOperationsServer: Send + Sync {
     /// Handles [`MethodSubscriptionIdOperationsClient::list()`](crate::clients::MethodSubscriptionIdOperationsClient::list).

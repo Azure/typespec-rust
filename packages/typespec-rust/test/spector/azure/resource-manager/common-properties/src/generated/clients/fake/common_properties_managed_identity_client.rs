@@ -58,10 +58,10 @@ pub(crate) fn capture_common_properties_managed_identity_client_update_with_user
 }
 /// Fake server for [`CommonPropertiesManagedIdentityClient`](crate::clients::CommonPropertiesManagedIdentityClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait CommonPropertiesManagedIdentityServer: Send + Sync {
     /// Handles [`CommonPropertiesManagedIdentityClient::create_with_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::create_with_system_assigned).

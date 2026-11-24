@@ -21,10 +21,10 @@ pub(crate) fn capture_operation_templates_check_name_availability_client_check_l
 }
 /// Fake server for [`OperationTemplatesCheckNameAvailabilityClient`](crate::clients::OperationTemplatesCheckNameAvailabilityClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait OperationTemplatesCheckNameAvailabilityServer: Send + Sync {
     /// Handles [`OperationTemplatesCheckNameAvailabilityClient::check_global()`](crate::clients::OperationTemplatesCheckNameAvailabilityClient::check_global).

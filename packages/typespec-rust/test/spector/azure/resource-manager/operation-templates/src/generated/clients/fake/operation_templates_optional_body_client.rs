@@ -69,10 +69,10 @@ pub(crate) fn capture_operation_templates_optional_body_client_provider_post(
 }
 /// Fake server for [`OperationTemplatesOptionalBodyClient`](crate::clients::OperationTemplatesOptionalBodyClient).
 ///
-/// Implement the operations used by your test. Implement unused child server traits with an empty `impl`.
+/// Implement the operations and child server accessors used by your test.
 ///
 /// # Panics
-/// Default operation implementations call [`unimplemented!()`].
+/// Default operation and accessor implementations call [`unimplemented!()`].
 #[async_trait]
 pub trait OperationTemplatesOptionalBodyServer: Send + Sync {
     /// Handles [`OperationTemplatesOptionalBodyClient::get()`](crate::clients::OperationTemplatesOptionalBodyClient::get).

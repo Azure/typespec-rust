@@ -83,6 +83,82 @@ async fn resource_group_resource_delete() {
         .unwrap();
 }
 
+#[cfg(all(feature = "test", feature = "unstable_fake"))]
+mod fake {
+    use super::{RESOURCE_GROUP_NAME, RESOURCE_GROUP_RESOURCE_NAME};
+    use async_trait::async_trait;
+    use azure_core::{
+        http::{fake::ResponseExt as _, headers::Headers, AsyncRawResponse, StatusCode},
+        Result,
+    };
+    use spector_armmethodsub::{
+        clients::fake::MethodSubscriptionIdServer,
+        mixed_subscription_placement::{
+            clients::fake::{
+                MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsServer as LeafServer,
+                MethodSubscriptionIdMixedSubscriptionPlacementServer as BranchServer,
+            },
+            models::MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClientDeleteOptions as DeleteOptions,
+        },
+        MethodSubscriptionIdClient,
+    };
+    use std::sync::Arc;
+
+    struct Root(Branch);
+    struct Branch(Leaf);
+    struct Leaf;
+
+    impl MethodSubscriptionIdServer for Root {
+        fn as_method_subscription_id_mixed_subscription_placement(&self) -> &dyn BranchServer {
+            &self.0
+        }
+    }
+
+    impl BranchServer for Branch {
+        fn as_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations(
+            &self,
+        ) -> &dyn LeafServer {
+            &self.0
+        }
+    }
+
+    #[async_trait]
+    impl LeafServer for Leaf {
+        async fn delete(
+            &self,
+            group: &str,
+            name: &str,
+            _: Option<DeleteOptions<'_>>,
+        ) -> Result<AsyncRawResponse> {
+            assert_eq!(
+                (group, name),
+                (RESOURCE_GROUP_NAME, RESOURCE_GROUP_RESOURCE_NAME)
+            );
+            Ok(AsyncRawResponse::fake_with_bytes(
+                StatusCode::NoContent,
+                Headers::new(),
+                "",
+            ))
+        }
+    }
+
+    #[tokio::test]
+    async fn dispatches_through_nested_child_servers() -> Result<()> {
+        let client = MethodSubscriptionIdClient::with_fake(
+            "https://example.test",
+            Arc::new(Root(Branch(Leaf))),
+            "subscription".into(),
+            None,
+        )?;
+        client
+            .get_method_subscription_id_mixed_subscription_placement_client()
+            .get_method_subscription_id_mixed_subscription_placement_resource_group_resource_operations_client()
+            .delete(RESOURCE_GROUP_NAME, RESOURCE_GROUP_RESOURCE_NAME, None)
+            .await?;
+        Ok(())
+    }
+}
+
 fn get_valid_resource_group_resource() -> ResourceGroupResource {
     ResourceGroupResource {
         id: Some(format!("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/{RESOURCE_GROUP_NAME}/providers/Azure.ResourceManager.MethodSubscriptionId/resourceGroupResources/{RESOURCE_GROUP_RESOURCE_NAME}")),
