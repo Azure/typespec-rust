@@ -1807,10 +1807,22 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   }
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
+  const statusModel = helpers.unwrapType(method.returns.type);
+  const customTerminalStatus = helpers.hasCustomTerminalStatus(method.statusMetadata);
+  const pollingStatusKind = pollingStepHeaderName === 'azure-asyncoperation'
+    ? 'AzureAsyncOperation'
+    : pollingStepHeaderName === 'operation-location'
+      ? 'OperationLocation'
+      : pollingStepHeaderName === 'location'
+        ? 'Location'
+        : 'OriginalUrl';
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor');
+  if (customTerminalStatus) {
+    use.add('azure_core::http::poller', 'StatusResponseKind');
+  }
   if (pollingStepHeaderName !== undefined || method.finalResultStrategy.kind !== 'originalUri') {
     use.add('azure_core::http::headers', 'HeaderName');
   }
@@ -1849,6 +1861,9 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   body += `${indent.get()}Ok(${method.returns.type.name}::new(\n`
   body += `${indent.push().get()}move |poller_state: PollerState, poller_options| {\n`;
+  if (customTerminalStatus) {
+    body += `${indent.get()}let is_initial = matches!(&poller_state, PollerState::Initial);\n`;
+  }
   const fallibleInitialPollerRequest = paramGroups.partialBody.length > 0
     ? constructFallibleInitialPollerRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName)
     : undefined;
@@ -1966,11 +1981,24 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
   use.add('azure_core', bodyFormat);
-  body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+  if (customTerminalStatus) {
+    body += `${indent.push().get()}let raw = RawResponse::from_bytes(status, headers.clone(), body.clone());\n`;
+    body += `${indent.get()}let kind = if is_initial { StatusResponseKind::Initial } else { StatusResponseKind::${pollingStatusKind} };\n`;
+    body += `${indent.get()}let poller_status = match <${helpers.getTypeDeclaration(statusModel)} as StatusMonitor>::status_from_response(&raw, kind)? {\n`;
+    body += `${indent.push().get()}Some(status) => status,\n`;
+    body += `${indent.get()}None => {\n`;
+    body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(statusModel)} = ${deserialize}(&body)?;\n`;
+    body += `${indent.get()}res.status()\n`;
+    body += `${indent.pop().get()}},\n`;
+    body += `${indent.pop().get()}};\n`;
+  } else {
+    body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(statusModel)} = ${deserialize}(&body)?;\n`;
+  }
+  const statusExpression = customTerminalStatus ? 'poller_status' : 'res.status()';
 
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
     body += `${indent.get()}let mut final_rsp: Option<RawResponse> = None;\n`
-    body += `if res.status() == PollerStatus::Succeeded {\n`
+    body += `if ${statusExpression} == PollerStatus::Succeeded {\n`
     let responseBodyExpr = 'body.clone()';
     if (method.finalResultStrategy.propertyName !== undefined) {
       responseBodyExpr = 'body';
@@ -1987,7 +2015,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
 
   const arms: helpers.matchArm[] = [{
-    pattern: `PollerStatus::InProgress`,
+    pattern: `PollerStatus::InProgress | PollerStatus::UnknownValue(_)`,
     body: (indent) => {
       return `${indent.get()}response: rsp, retry_after, continuation\n`;
     },
@@ -2027,7 +2055,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
     returns: 'PollerResult::Done'
   });
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, statusExpression, arms)})\n`;
   body += `${indent.pop().get()}})\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::new

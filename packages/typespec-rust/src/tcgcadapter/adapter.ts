@@ -54,6 +54,46 @@ export class AdapterError extends Error {
  */
 export class ExternalError extends Error { }
 
+function asciiLower(value: string): string {
+  return value.replace(/[A-Z]/g, character => String.fromCharCode(character.charCodeAt(0) + 32));
+}
+
+function getCanonicalLroTerminalStatus(value: string): rust.EnumValue['lroTerminalStatus'] {
+  switch (asciiLower(value)) {
+    case 'succeeded':
+      return 'Succeeded';
+    case 'failed':
+      return 'Failed';
+    case 'canceled':
+    case 'cancelled':
+      return 'Canceled';
+    default:
+      return undefined;
+  }
+}
+
+function getDeclaredLroTerminalStatus(value: tcgc.SdkEnumValueType): rust.EnumValue['lroTerminalStatus'] {
+  let classification: rust.EnumValue['lroTerminalStatus'];
+  for (const decorator of value.decorators) {
+    let declared: rust.EnumValue['lroTerminalStatus'];
+    switch (decorator.name) {
+      case 'Azure.Core.@lroSucceeded':
+        declared = 'Succeeded';
+        break;
+      case 'Azure.Core.@lroFailed':
+        declared = 'Failed';
+        break;
+      case 'Azure.Core.@lroCanceled':
+        declared = 'Canceled';
+        break;
+      default:
+        continue;
+    }
+    classification ??= declared;
+  }
+  return classification;
+}
+
 /** Adapter converts the tcgc code model to a Rust Crate */
 export class Adapter {
   /**
@@ -67,7 +107,15 @@ export class Adapter {
     // same as TypeSpec.Xml.@name. however, it's filtered out by default
     // so we need to add it to the allow list of decorators
     const ctx = await tcgc.createSdkContext(context, '@azure-tools/typespec-rust', {
-      additionalDecorators: ['TypeSpec\\.@encodedName', '@clientName', 'Azure.ClientGenerator.Core.@deserializeEmptyStringAsNull'],
+      additionalDecorators: [
+        'TypeSpec\\.@encodedName',
+        '@clientName',
+        'Azure.ClientGenerator.Core.@deserializeEmptyStringAsNull',
+        'Azure.Core.@lroStatus',
+        'Azure.Core.@lroSucceeded',
+        'Azure.Core.@lroFailed',
+        'Azure.Core.@lroCanceled',
+      ],
       disableUsageAccessPropagationToBase: true,
     });
 
@@ -82,13 +130,23 @@ export class Adapter {
       }
     }
 
-    return new Adapter(ctx, context.options);
+    const adapter = new Adapter(ctx, context.options);
+    for (const diagnostic of [...context.program.diagnostics, ...ctx.diagnostics]) {
+      if (diagnostic.code === '@azure-tools/typespec-azure-core/polling-operation-no-status-monitor') {
+        adapter.statusErrors.push(`${diagnostic.code}: ${diagnostic.message}`);
+        adapter.statusErrorTarget ??= diagnostic.target === tsp.NoTarget ? undefined : diagnostic.target;
+      }
+    }
+    return adapter;
   }
 
   private readonly crate: rust.Crate;
   private readonly ctx: tcgc.SdkContext;
   private readonly options: RustEmitterOptions;
   private readonly rootNamespace: string = '';
+  private readonly statusErrors: string[] = [];
+  private statusErrorTarget?: tsp.DiagnosticTarget;
+  private readonly statusMetadata = new Map<tcgc.SdkLroServiceMethod<tcgc.SdkHttpOperation>, rust.LroStatusMetadata | undefined>();
 
   // cache of adapted types
   private readonly types: Map<string, rust.Type>;
@@ -137,6 +195,22 @@ export class Adapter {
 
   /** performs all the steps to convert tcgc to a crate */
   tcgcToCrate(): rust.Crate {
+    const validate = (client: tcgc.SdkClientType<tcgc.SdkHttpOperation>): void => {
+      for (const method of client.methods) {
+        if (method.kind === 'lro') {
+          this.statusMetadata.set(method, this.adaptLroStatusMetadata(method));
+        }
+      }
+      for (const child of client.children ?? []) {
+        validate(child);
+      }
+    };
+    for (const client of this.ctx.sdkPackage.clients) {
+      validate(client);
+    }
+    if (this.statusErrors.length > 0) {
+      throw new AdapterError('UnsupportedTsp', Array.from(new Set(this.statusErrors)).join('\n'), this.statusErrorTarget);
+    }
     this.adaptTypes();
     this.adaptClients();
 
@@ -374,6 +448,7 @@ export class Adapter {
 
     rustEnum = new rust.Enum(enumName, adaptAccessFlags(sdkEnum.access), !sdkEnum.isFixed, enumType, this.adaptNamespace(sdkEnum.namespace));
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
+    rustEnum.lroStatus = sdkEnum.decorators.some(decorator => decorator.name === 'Azure.Core.@lroStatus');
     this.types.set(enumName, rustEnum);
 
     // the first pass is to detect any enum values that coalesce into duplicate entries
@@ -396,6 +471,7 @@ export class Adapter {
       if (enumValues.length === 1) {
         const rustEnumValue = new rust.EnumValue(enumValueName, rustEnum, enumValues[0].value);
         rustEnumValue.docs = this.adaptDocs(enumValues[0].summary, enumValues[0].doc);
+        rustEnumValue.lroTerminalStatus = getDeclaredLroTerminalStatus(enumValues[0]) ?? getCanonicalLroTerminalStatus(String(rustEnumValue.value));
         rustEnum.values.push(rustEnumValue);
       } else {
         this.ctx.program.reportDiagnostic({
@@ -409,6 +485,7 @@ export class Adapter {
           const collidingEnumValueName = `COLLIDES_GRP${groupCounter}_ID${i + 1}_${enumValueName}`;
           const rustEnumValue = new rust.EnumValue(collidingEnumValueName, rustEnum, enumValue.value);
           rustEnumValue.docs = this.adaptDocs(enumValue.summary, enumValue.doc);
+          rustEnumValue.lroTerminalStatus = getDeclaredLroTerminalStatus(enumValue) ?? getCanonicalLroTerminalStatus(String(rustEnumValue.value));
           rustEnum.values.push(rustEnumValue);
         }
         ++groupCounter;
@@ -2034,6 +2111,7 @@ export class Adapter {
           lroFinalResultStrategy.propertyName = method.lroMetadata.finalResultPath;
         }
         rustMethod = new rust.LroMethod( methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path, lroFinalResultStrategy);
+        rustMethod.statusMetadata = this.statusMetadata.get(method);
         if (this.crate.type === 'azure-arm') {
           rustMethod.resourceManagerFinalState = this.adaptResourceManagerFinalState(method);
         }
@@ -2508,6 +2586,267 @@ export class Adapter {
         }
       }
     }
+  }
+
+  /**
+   * Adapts the initial and polling status paths selected by the public TCGC model.
+   *
+   * @param method the LRO method to adapt
+   * @returns response status paths, when the operation declares model statuses
+   */
+  private adaptLroStatusMetadata(method: tcgc.SdkLroServiceMethod<tcgc.SdkHttpOperation>): rust.LroStatusMetadata | undefined {
+    const unwrap = (type: tcgc.SdkType): tcgc.SdkType => {
+      while (type.kind === 'nullable') {
+        type = type.type;
+      }
+      return type;
+    };
+    const report = (source: string, message: string): void => {
+      this.statusErrors.push(`LRO ${method.name} ${source}: ${message}`);
+    };
+    const sourcePath = (path: tcgc.SdkModelPropertyType[]): Pick<rust.LroStatusSource, 'path' | 'fieldNames' | 'optional' | 'nullable'> => ({
+      path: path.map(property => this.getSerializedPropertyName(property) ?? property.name),
+      fieldNames: path.map(property => naming.getEscapedReservedName(utils.snakeCaseName(property.name), 'prop')),
+      optional: path.map(property => property.optional),
+      nullable: path.map(property => property.type.kind === 'nullable'),
+    });
+    const findPropertyPaths = (
+      model: tcgc.SdkModelType,
+      target: tcgc.SdkModelPropertyType,
+      parents: Set<tcgc.SdkModelType> = new Set(),
+      matchByName = false,
+    ): Array<Array<tcgc.SdkModelPropertyType>> => {
+      if (parents.has(model)) {
+        return [];
+      }
+      const paths: tcgc.SdkModelPropertyType[][] = [];
+      const currentParents = new Set(parents).add(model);
+      for (const property of model.properties) {
+        if (property === target
+          || (property.crossLanguageDefinitionId !== undefined
+            && property.crossLanguageDefinitionId === target.crossLanguageDefinitionId)
+          || (matchByName && property.name === target.name
+            && unwrap(property.type).kind === unwrap(target.type).kind)) {
+          paths.push([property]);
+        }
+        const propertyType = unwrap(property.type);
+        if (propertyType.kind === 'model') {
+          for (const nested of findPropertyPaths(propertyType, target, currentParents, matchByName)) {
+            paths.push([property, ...nested]);
+          }
+        }
+      }
+      if (model.baseModel) {
+        paths.push(...findPropertyPaths(model.baseModel, target, currentParents, matchByName));
+      }
+      return paths;
+    };
+
+    const getStatusEnum = (property: tcgc.SdkModelPropertyType, source: string): rust.Enum | undefined => {
+      const propertyType = unwrap(property.type);
+      if (propertyType.kind !== 'enum') {
+        if (propertyType.decorators.some(d => d.name === 'Azure.Core.@lroStatus')
+          || property.decorators.some(d => d.name === 'Azure.Core.@lroStatus')) {
+          report(source, `unsupported status type ${propertyType.kind}; expected a string enum`);
+        }
+        return undefined;
+      }
+      const classifications = new Map<string, string>();
+      for (const value of propertyType.values) {
+        const wire = value.serializationOptions?.json?.name ?? String(value.value);
+        const canonical = getCanonicalLroTerminalStatus(wire);
+        const roles = value.decorators.map(d => ({
+          'Azure.Core.@lroSucceeded': 'Succeeded',
+          'Azure.Core.@lroFailed': 'Failed',
+          'Azure.Core.@lroCanceled': 'Canceled',
+        })[d.name]).filter((role): role is string => role !== undefined);
+        if (new Set(roles).size > 1) {
+          report(source, `status "${wire}" has conflicting terminal decorators (${roles.join(', ')})`);
+        }
+        const declared = roles[0];
+        const established = getCanonicalLroTerminalStatus(value.name);
+        if (established && !canonical && !declared) {
+          report(source, `status "${wire}" has no matching @lro${established} annotation`);
+        }
+        if (canonical && declared && canonical !== declared) {
+          report(source, `status "${wire}" conflicts with its canonical ${canonical} classification`);
+        }
+        const role = declared ?? canonical;
+        if (role) {
+          if (propertyType.valueType.kind !== 'string' || typeof value.value !== 'string') {
+            report(source, `unsupported terminal status "${wire}"; expected a string wire value`);
+          }
+          const previous = classifications.get(asciiLower(wire));
+          if (previous && previous !== role) {
+            report(source, `LRO status values mapped case-insensitively to "${wire}" have conflicting terminal classifications (${previous} and ${role})`);
+          }
+          classifications.set(asciiLower(wire), role);
+        }
+      }
+      return this.getEnum(propertyType);
+    };
+
+    let polling: rust.LroStatusSource | undefined;
+    const terminationStatus = method.lroMetadata.pollingInfo.terminationStatus;
+    if (terminationStatus.kind === 'model-property') {
+      let paths = findPropertyPaths(method.lroMetadata.pollingInfo.responseModel, terminationStatus.property);
+      // TCGC may synthesize the termination property with an anonymous definition ID.
+      if (paths.length === 0) {
+        paths = findPropertyPaths(method.lroMetadata.pollingInfo.responseModel, terminationStatus.property, new Set(), true);
+      }
+      if (paths.length > 1) {
+        report('polling', `status property "${terminationStatus.property.name}" has ambiguous response paths`);
+      }
+      const path = paths[0];
+      if (!path) {
+        report('polling', `status property "${terminationStatus.property.name}" is not present in the declared response model`);
+      }
+      const statusEnum = getStatusEnum(terminationStatus.property, 'polling');
+      let sourceStatusType = terminationStatus.property.type;
+      while (sourceStatusType.kind === 'nullable') {
+        sourceStatusType = sourceStatusType.type;
+      }
+      const sourceStatusEnum = sourceStatusType.kind === 'enum' ? sourceStatusType : undefined;
+      const terminalStates = [
+        ...terminationStatus.succeededState.map(value => [value, 'Succeeded'] as const),
+        ...terminationStatus.failedState.map(value => [value, 'Failed'] as const),
+        ...terminationStatus.canceledState.map(value => [value, 'Canceled'] as const),
+      ];
+      for (const [value, classification] of terminalStates) {
+        const sdkEnumValue = sourceStatusEnum?.values.find(enumValue =>
+          asciiLower(enumValue.name) === asciiLower(value) || asciiLower(String(enumValue.value)) === asciiLower(value));
+        const wireValue = sdkEnumValue
+          ? sdkEnumValue.serializationOptions?.json?.name ?? String(sdkEnumValue.value)
+          : value;
+        const canonical = getCanonicalLroTerminalStatus(wireValue);
+        const declared = sdkEnumValue ? getDeclaredLroTerminalStatus(sdkEnumValue) : undefined;
+        if (canonical && canonical !== classification) {
+          report('polling', `status "${wireValue}" conflicts with its canonical ${canonical} classification`);
+        }
+        if (!canonical && declared !== classification) {
+          report('polling', `status "${wireValue}" is classified as ${classification} by TCGC but has no matching @lro${classification} annotation`);
+        }
+      }
+      polling = path ? {
+        ...sourcePath(path),
+        statusEnum,
+      } : undefined;
+    }
+
+    let initial: rust.LroStatusSource | undefined;
+    const findMarkedStatuses = (
+      model: tcgc.SdkModelType,
+      parents: Set<tcgc.SdkModelType> = new Set(),
+    ): Array<Array<tcgc.SdkModelPropertyType>> => {
+      if (parents.has(model)) {
+        return [];
+      }
+      const paths: tcgc.SdkModelPropertyType[][] = [];
+      const currentParents = new Set(parents).add(model);
+      for (const property of model.properties) {
+        const propertyType = unwrap(property.type);
+        const marked = property.decorators.some(decorator => decorator.name === 'Azure.Core.@lroStatus')
+          || propertyType.decorators.some(decorator => decorator.name === 'Azure.Core.@lroStatus');
+        if (marked) {
+          paths.push([property]);
+        }
+        if (propertyType.kind === 'model') {
+          for (const nested of findMarkedStatuses(propertyType, currentParents)) {
+            paths.push([property, ...nested]);
+          }
+        }
+      }
+      if (model.baseModel) {
+        paths.push(...findMarkedStatuses(model.baseModel, currentParents));
+      }
+      return paths;
+    };
+
+    for (const response of method.operation.responses) {
+      const responseModel = response.type ? unwrap(response.type) : undefined;
+      if (responseModel?.kind !== 'model') {
+        continue;
+      }
+      const paths = findMarkedStatuses(responseModel);
+      if (paths.length > 1) {
+        report('initial', `response model "${responseModel.name}" has ambiguous annotated status paths`);
+      }
+      for (const path of paths) {
+        const source = {
+          ...sourcePath(path),
+          statusEnum: getStatusEnum(path[path.length - 1], 'initial'),
+        };
+        const key = (value: rust.LroStatusSource): string => JSON.stringify([
+          value.path, value.fieldNames, value.optional, value.nullable,
+          Array.from(new Map(value.statusEnum?.values
+            .filter(value => value.lroTerminalStatus && !getCanonicalLroTerminalStatus(String(value.value)))
+            .map(value => [asciiLower(String(value.value)), value.lroTerminalStatus])))
+            .sort(([a], [b]) => a.localeCompare(b)),
+        ]);
+        if (initial && key(initial) !== key(source)) {
+          report('initial', `response model "${responseModel.name}" has indistinguishable incompatible status paths or terminal mappings`);
+        } else {
+          initial = source;
+        }
+      }
+    }
+
+    const pollingKinds = new Set<NonNullable<rust.LroStatusMetadata['pollingKinds']>[number]>();
+    for (const response of method.operation.responses) {
+      for (const header of response.headers) {
+        switch (asciiLower(header.serializedName)) {
+          case 'azure-asyncoperation':
+            pollingKinds.add('AzureAsyncOperation');
+            break;
+          case 'operation-location':
+            pollingKinds.add('OperationLocation');
+            break;
+          case 'location':
+            pollingKinds.add('Location');
+            break;
+        }
+      }
+    }
+    const statusLink = method.lroMetadata.statusMonitorStep;
+    if (pollingKinds.size === 0 && statusLink?.kind === 'nextOperationLink') {
+      const linkName = asciiLower(this.getSerializedPropertyName(statusLink.target.property) ?? statusLink.target.property.name);
+      if (linkName === 'azure-asyncoperation') {
+        pollingKinds.add('AzureAsyncOperation');
+      } else if (linkName === 'operation-location') {
+        pollingKinds.add('OperationLocation');
+      } else if (linkName === 'location') {
+        pollingKinds.add('Location');
+      }
+    }
+    if (polling && pollingKinds.size === 0) {
+      pollingKinds.add('OriginalUrl');
+    }
+    if (this.crate.type === 'azure-arm' && statusLink?.kind !== 'nextOperationReference') {
+      pollingKinds.add('OriginalUrl');
+    }
+
+    const resourcePolling = this.crate.type === 'azure-arm'
+      && statusLink?.kind !== 'nextOperationReference'
+      && Array.from(pollingKinds).some(kind => kind === 'Location' || kind === 'OriginalUrl');
+    let resource: rust.LroStatusSource | undefined;
+    const resourceModel = method.lroMetadata.finalResponse?.envelopeResult;
+    if (resourcePolling && resourceModel?.kind === 'model') {
+      const paths = findMarkedStatuses(resourceModel);
+      if (paths.length > 1) {
+        report('polling resource', `response model "${resourceModel.name}" has ambiguous annotated status paths`);
+      }
+      for (const path of paths) {
+        resource = {
+          ...sourcePath(path),
+          statusEnum: getStatusEnum(path[path.length - 1], 'polling resource'),
+        };
+      }
+    }
+
+    if (!initial && !polling && !resource) {
+      return undefined;
+    }
+    return { initial, polling, pollingKinds: Array.from(pollingKinds), resourcePolling, resource };
   }
 
   /**

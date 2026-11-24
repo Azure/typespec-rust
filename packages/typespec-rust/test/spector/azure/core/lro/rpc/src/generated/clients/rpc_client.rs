@@ -213,11 +213,13 @@ impl RpcClient {
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
+                        PollerStatus::InProgress | PollerStatus::UnknownValue(_) => {
+                            PollerResult::InProgress {
+                                response: rsp,
+                                retry_after,
+                                continuation,
+                            }
+                        }
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {

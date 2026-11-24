@@ -116,6 +116,9 @@ export interface Enum {
 
   /** the module to which this enum belongs */
   module: ModuleContainer;
+
+  /** Whether this enum is used as an LRO status. */
+  lroStatus?: boolean;
 }
 
 /** EnumValue is an enum value for a specific Enum */
@@ -133,6 +136,9 @@ export interface EnumValue {
 
   /** the value used in SerDe operations */
   value: number | string;
+
+  /** The LRO terminal classification explicitly declared for this value. */
+  lroTerminalStatus?: 'Succeeded' | 'Failed' | 'Canceled';
 }
 
 /** DiscriminatedUnion is a Rust tagged enum type */
