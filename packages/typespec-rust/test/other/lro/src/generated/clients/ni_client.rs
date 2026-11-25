@@ -14,7 +14,10 @@ use azure_core::{
     error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus},
+        poller::{
+            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
+            StatusMonitor,
+        },
         Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
         Response, Url, UrlExt,
     },
@@ -148,27 +151,15 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
+                    let poller_status = if !is_initial {
+                        let res: NIClientBeginCustomLinkOperationStatus = body.json()?;
+                        res.status()
+                    } else {
                         if status == azure_core::http::StatusCode::Accepted {
                             PollerStatus::InProgress
                         } else {
                             PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match poller_status {
@@ -316,7 +307,10 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
+                    let poller_status = if !is_initial {
+                        let res: NIClientBeginIncorrectCustomOpRefOperationStatus = body.json()?;
+                        res.status()
+                    } else {
                         if status == azure_core::http::StatusCode::Accepted
                             || headers
                                 .get_optional_string(&HeaderName::from_static("operation-location"))
@@ -326,21 +320,6 @@ impl NIClient {
                         } else {
                             PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let mut final_rsp: Option<RawResponse> = None;
                     if poller_status == PollerStatus::Succeeded {
@@ -508,7 +487,10 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
+                    let poller_status = if !is_initial {
+                        let res: NIClientBeginPartialBodyOperationStatus = body.json()?;
+                        res.status()
+                    } else {
                         if status == azure_core::http::StatusCode::Accepted
                             || headers
                                 .get_optional_string(&HeaderName::from_static("operation-location"))
@@ -518,21 +500,6 @@ impl NIClient {
                         } else {
                             PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let mut final_rsp: Option<RawResponse> = None;
                     if poller_status == PollerStatus::Succeeded {
@@ -746,7 +713,10 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
+                    let poller_status = if !is_initial {
+                        let res: NIClientStartPartialBodyOperationStatus = body.json()?;
+                        res.status()
+                    } else {
                         if status == azure_core::http::StatusCode::Accepted
                             || headers
                                 .get_optional_string(&HeaderName::from_static("operation-location"))
@@ -756,21 +726,6 @@ impl NIClient {
                         } else {
                             PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let mut final_rsp: Option<RawResponse> = None;
                     if poller_status == PollerStatus::Succeeded {

@@ -20,6 +20,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 describe('operation status response sources', () => {
   let crate: rust.Crate;
+  let createAdapter: () => Promise<Adapter>;
   beforeAll(async () => {
     const program = await compile(NodeHost, resolve('test/tsp/lro-status/main.tsp'), { noEmit: true });
     expect(program.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
@@ -31,7 +32,8 @@ describe('operation status response sources', () => {
       'temp-omit-doc-links': false,
       'emit-error-traits': false,
     };
-    const adapter = await Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    createAdapter = () => Adapter.create({ program, options, emitterOutputDir: '', perf: createPerfReporter() });
+    const adapter = await createAdapter();
     crate = adapter.tcgcToCrate();
   });
 
@@ -41,13 +43,7 @@ describe('operation status response sources', () => {
     if (method?.kind !== 'lro') {
       throw new Error('expected LRO');
     }
-    expect(method.statusMetadata?.initial).toBeUndefined();
-    expect(method.statusMetadata?.polling).toEqual({
-      path: ['status'],
-      fieldNames: ['status'],
-      optional: [false],
-      nullable: [false],
-    });
+    expect(method.initialMonitorStatusCodes).toEqual([]);
   });
 
   it('recognizes the actual monitor when returned by the initial operation', () => {
@@ -56,13 +52,50 @@ describe('operation status response sources', () => {
     if (method?.kind !== 'lro') {
       throw new Error('expected LRO');
     }
-    expect(method.statusMetadata?.initial).toEqual(method.statusMetadata?.polling);
+    expect(method.initialMonitorStatusCodes).toEqual([200]);
     const content = new CodeGenerator(crate).emitContent().find(file => file.name.endsWith('clients/lro_status_test_snapshots_client.rs'))!.content;
-    expect(content).toContain('struct OperationStatus');
-    expect(content).not.toContain('required_details:');
+    expect(content).not.toContain('struct OperationStatus');
+    expect(content).toContain('let res: LroStatusTestSnapshotsClientBeginMonitorOperationStatus = body.json()?');
+    expect(content).toContain('res.status()');
     expect(content).not.toContain('status_from_response');
     expect(content).toContain('PollerStatus::Failed | PollerStatus::Canceled');
     expect(content).toContain('_ => PollerResult::InProgress');
+    expect(content).not.toContain('serde_json');
+    expect(content).not.toContain('std::borrow::Cow');
+    expect(content).not.toContain('#[serde(rename = "status")]');
+  });
+
+  it('selects only the modeled initial monitor and avoids shadowing operation inputs', () => {
+    const method = crate.clients.flatMap(client => client.methods).find(method => method.name === 'begin_mixed');
+    if (method?.kind !== 'lro') {
+      throw new Error('expected LRO');
+    }
+    expect(method.initialMonitorStatusCodes).toEqual([202]);
+    const content = new CodeGenerator(crate).emitContent().find(file => file.name.endsWith('clients/lro_status_test_snapshots_client.rs'))!.content;
+    expect(content).toContain('let is_initial_response = matches!');
+    expect(content).toContain('if !is_initial_response ||');
+    expect(content).toContain('StatusCode::from(202)');
+  });
+
+  it('preserves TCGC status ranges and rejects overlapping incompatible response roles', async () => {
+    const adapter = await createAdapter();
+    const clients = [...adapter['ctx'].sdkPackage.clients];
+    for (const client of clients) {
+      clients.push(...client.children ?? []);
+    }
+    const methods = clients.flatMap(client => client.methods);
+    const monitor = methods.find(method => method.name === 'monitor');
+    const resource = methods.find(method => method.name === 'statusFlow');
+    if (monitor?.kind !== 'lro' || resource?.kind !== 'lro') {
+      throw new Error('expected LRO metadata');
+    }
+    const ranged = {
+      ...monitor,
+      operation: { ...monitor.operation, responses: [{ ...monitor.operation.responses[0], statusCodes: { start: 202, end: 203 } }] },
+    };
+    expect(adapter['adaptInitialMonitorStatusCodes'](ranged)).toEqual([202, 203]);
+    ranged.operation.responses.push({ ...resource.operation.responses[0], statusCodes: { start: 201, end: 202 } });
+    expect(() => adapter['adaptInitialMonitorStatusCodes'](ranged)).toThrow('ambiguous initial response roles for HTTP 202');
   });
 });
 

@@ -62,4 +62,20 @@ interface Snapshots {
     {},
     Foundations.ErrorResponse
   >;
+
+  @route("/snapshots/mixed")
+  @put
+  @pollingOperation(Snapshots.getOperation)
+  @createsOrReplacesResource(Snapshot)
+  op mixed(@header("x-is-initial") isInitial: string):
+    {
+      @statusCode statusCode: 201;
+      @body body: Snapshot;
+      ...Foundations.LongRunningStatusLocation;
+    } | {
+      @statusCode statusCode: 202;
+      @body body: OperationDetails;
+      ...Foundations.LongRunningStatusLocation;
+    } | Foundations.ErrorResponse;
+
 }

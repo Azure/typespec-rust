@@ -8,6 +8,25 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
+/// Options to be passed to [`LroStatusTestSnapshotsClient::begin_mixed()`](crate::generated::clients::LroStatusTestSnapshotsClient::begin_mixed())
+#[derive(Clone, Default, SafeDebug)]
+pub struct LroStatusTestSnapshotsClientBeginMixedOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: PollerOptions<'a>,
+}
+
+impl LroStatusTestSnapshotsClientBeginMixedOptions<'_> {
+    /// Transforms this [`LroStatusTestSnapshotsClientBeginMixedOptions`] into a new `LroStatusTestSnapshotsClientBeginMixedOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> LroStatusTestSnapshotsClientBeginMixedOptions<'static> {
+        LroStatusTestSnapshotsClientBeginMixedOptions {
+            method_options: PollerOptions {
+                context: self.method_options.context.into_owned(),
+                ..self.method_options
+            },
+        }
+    }
+}
+
 /// Options to be passed to [`LroStatusTestSnapshotsClient::begin_monitor()`](crate::generated::clients::LroStatusTestSnapshotsClient::begin_monitor())
 #[derive(Clone, Default, SafeDebug)]
 pub struct LroStatusTestSnapshotsClientBeginMonitorOptions<'a> {

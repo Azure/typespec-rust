@@ -13,7 +13,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus},
+        poller::{
+            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
+            StatusMonitor,
+        },
         ClientOptions, Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
         RequestContent, Url, UrlExt,
     },
@@ -207,7 +210,10 @@ impl StandardClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
+                    let poller_status = if !is_initial {
+                        let res: StandardClientBeginCreateOrReplaceOperationStatus = body.json()?;
+                        res.status()
+                    } else {
                         if status == azure_core::http::StatusCode::Accepted
                             || headers
                                 .get_optional_string(&HeaderName::from_static("operation-location"))
@@ -217,21 +223,6 @@ impl StandardClient {
                         } else {
                             PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match poller_status {
@@ -386,41 +377,21 @@ impl StandardClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
-                        if body.is_empty() {
+                    let poller_status = if !is_initial
+                        || status == azure_core::http::StatusCode::from(202)
+                    {
+                        let res: StandardClientBeginDeleteOperationStatus = body.json()?;
+                        res.status()
+                    } else {
+                        if status == azure_core::http::StatusCode::Accepted
+                            || headers
+                                .get_optional_string(&HeaderName::from_static("operation-location"))
+                                .is_some()
+                        {
                             PollerStatus::InProgress
                         } else {
-                            /// Reads only operation status, not the public response model.
-                            #[derive(serde::Deserialize)]
-                            #[serde(transparent)]
-                            struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                            #[derive(serde::Deserialize)]
-                            struct OperationStatus<'a> {
-                                #[serde(borrow, rename = "status")]
-                                status: StatusValue<'a>,
-                            }
-                            let operation_status: OperationStatus<'_> =
-                                serde_json::from_slice(&body)?;
-                            Some(operation_status)
-                                .map(|value| value.status)
-                                .map(|value| PollerStatus::from(value.0.as_ref()))
-                                .unwrap_or(PollerStatus::InProgress)
+                            PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let mut final_rsp: Option<RawResponse> = None;
                     if poller_status == PollerStatus::Succeeded {
@@ -587,7 +558,10 @@ impl StandardClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
+                    let poller_status = if !is_initial {
+                        let res: StandardClientBeginExportOperationStatus = body.json()?;
+                        res.status()
+                    } else {
                         if status == azure_core::http::StatusCode::Accepted
                             || headers
                                 .get_optional_string(&HeaderName::from_static("operation-location"))
@@ -597,21 +571,6 @@ impl StandardClient {
                         } else {
                             PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let mut final_rsp: Option<RawResponse> = None;
                     if poller_status == PollerStatus::Succeeded {

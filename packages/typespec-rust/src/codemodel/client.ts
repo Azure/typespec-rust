@@ -228,23 +228,6 @@ export interface ResourceManagerFinalState {
   resultPath: Array<string>;
 }
 
-/** A minimal operation-status field path. */
-export interface LroStatusSource {
-  /** Serialized property names from the response root to the operation status. */
-  path: Array<string>;
-  /** Mapped Rust property names for the private decoder. */
-  fieldNames: Array<string>;
-  /** Whether each path component may be absent or null. */
-  optional: Array<boolean>;
-  nullable: Array<boolean>;
-}
-
-/** Operation-status sources, independent of final-result selection. */
-export interface LroStatusMetadata {
-  initial?: LroStatusSource;
-  polling: LroStatusSource;
-}
-
 /** LroMethod is a method that returns a long-running operation. */
 export interface LroMethod extends HTTPMethodBase {
   kind: 'lro';
@@ -261,8 +244,8 @@ export interface LroMethod extends HTTPMethodBase {
   /** Omission delegates final response selection to the Resource Manager runtime. */
   resourceManagerFinalState?: ResourceManagerFinalState;
 
-  /** Actual operation-status fields, excluding unrelated resource lifecycle fields. */
-  statusMetadata?: LroStatusMetadata;
+  /** Initial HTTP statuses whose responses are operation monitors, not resource representations. */
+  initialMonitorStatusCodes?: Array<number>;
 }
 
 /** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */

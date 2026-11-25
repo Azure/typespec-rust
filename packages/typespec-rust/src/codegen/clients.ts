@@ -1807,14 +1807,11 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   }
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
-  const statusMetadata = bodyFormat === 'json' ? method.statusMetadata : undefined;
+  const initialMonitorStatusCodes = bodyFormat === 'json' ? method.initialMonitorStatusCodes : undefined;
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
-  use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus');
-  if (!statusMetadata) {
-    use.add('azure_core::http::poller', 'StatusMonitor');
-  }
+  use.add('azure_core::http::poller', 'get_retry_after', 'PollerContinuation', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor');
   if (pollingStepHeaderName !== undefined || method.finalResultStrategy.kind !== 'originalUri') {
     use.add('azure_core::http::headers', 'HeaderName');
   }
@@ -1825,6 +1822,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   const paramGroups = getMethodParamGroup(method);
   const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
 
+  const initialVar = initialMonitorStatusCodes ? helpers.getUniqueVarName(method.params, ['is_initial', 'is_initial_response']) : '';
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += emitFakeCapture(client, method);
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
@@ -1853,8 +1851,8 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   body += `${indent.get()}Ok(${method.returns.type.name}::new(\n`
   body += `${indent.push().get()}move |poller_state: PollerState, poller_options| {\n`;
-  if (statusMetadata) {
-    body += `${indent.get()}let is_initial = matches!(&poller_state, PollerState::Initial);\n`;
+  if (initialMonitorStatusCodes) {
+    body += `${indent.get()}let ${initialVar} = matches!(&poller_state, PollerState::Initial);\n`;
   }
   const fallibleInitialPollerRequest = paramGroups.partialBody.length > 0
     ? constructFallibleInitialPollerRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName)
@@ -1974,22 +1972,17 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
   indent.push();
   let statusExpression = 'res.status()';
-  if (statusMetadata) {
-    crate.addDependency(new rust.CrateDependency('serde_json'));
-    body += `${indent.get()}let poller_status = if is_initial {\n`;
-    indent.push();
-    if (statusMetadata.initial) {
-      body += `${indent.get()}if body.is_empty() { PollerStatus::InProgress } else {\n`;
-      body += emitLroStatusDecoder(statusMetadata.initial, indent.push());
-      body += `${indent.pop().get()}}\n`;
-    } else {
-      const pollingHeader = pollingStepHeaderName
-        ? ` || headers.get_optional_string(&HeaderName::from_static("${pollingStepHeaderName}")).is_some()`
-        : '';
-      body += `${indent.get()}if status == azure_core::http::StatusCode::Accepted${pollingHeader} { PollerStatus::InProgress } else { PollerStatus::Succeeded }\n`;
-    }
+  if (initialMonitorStatusCodes) {
+    const monitorCondition = initialMonitorStatusCodes.map(code => `status == azure_core::http::StatusCode::from(${code})`).join(' || ');
+    body += `${indent.get()}let poller_status = if !${initialVar}${monitorCondition ? ` || ${monitorCondition}` : ''} {\n`;
+    body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = body.json()?;\n`;
+    body += `${indent.get()}res.status()\n`;
     body += `${indent.pop().get()}} else {\n`;
-    body += emitLroStatusDecoder(statusMetadata.polling, indent.push());
+    indent.push();
+    const pollingHeader = pollingStepHeaderName
+      ? ` || headers.get_optional_string(&HeaderName::from_static("${pollingStepHeaderName}")).is_some()`
+      : '';
+    body += `${indent.get()}if status == azure_core::http::StatusCode::Accepted${pollingHeader} { PollerStatus::InProgress } else { PollerStatus::Succeeded }\n`;
     body += `${indent.pop().get()}};\n`;
     statusExpression = 'poller_status';
   } else {
@@ -2061,36 +2054,6 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::new
 
-  return body;
-}
-
-function emitLroStatusDecoder(source: rust.LroStatusSource, indent: helpers.indentation): string {
-  const names = source.fieldNames;
-  const types = names.map((_, index) =>
-    'OperationStatus' + names.slice(0, index).map(name => utils.pascalCase(name, false)).join(''));
-  let body = `${indent.get()}/// Reads only operation status, not the public response model.\n`;
-  body += `${indent.get()}#[derive(serde::Deserialize)]\n`;
-  body += `${indent.get()}#[serde(transparent)]\n`;
-  body += `${indent.get()}struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);\n`;
-  for (let index = source.path.length - 1; index >= 0; index--) {
-    const type = index === source.path.length - 1 ? "StatusValue<'a>" : `${types[index + 1]}<'a>`;
-    body += `${indent.get()}#[derive(serde::Deserialize)]\n`;
-    body += `${indent.get()}struct ${types[index]}<'a> {\n`;
-    body += `${indent.push().get()}#[serde(borrow, rename = ${JSON.stringify(source.path[index])})]\n`;
-    if (source.nullable[index] && !source.optional[index]) {
-      body += `${indent.get()}#[serde(deserialize_with = "serde::Deserialize::deserialize")]\n`;
-    }
-    body += `${indent.get()}${names[index]}: ${source.optional[index] || source.nullable[index] ? `Option<${type}>` : type},\n`;
-    body += `${indent.pop().get()}}\n`;
-  }
-  body += `${indent.get()}let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;\n`;
-  let expression = 'Some(operation_status)';
-  for (const [index, name] of names.entries()) {
-    expression += source.optional[index] || source.nullable[index]
-      ? `.and_then(|value| value.${name})`
-      : `.map(|value| value.${name})`;
-  }
-  body += `${indent.get()}${expression}.map(|value| PollerStatus::from(value.0.as_ref())).unwrap_or(PollerStatus::InProgress)\n`;
   return body;
 }
 

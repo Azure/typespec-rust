@@ -12,7 +12,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
-        poller::{get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus},
+        poller::{
+            get_retry_after, PollerContinuation, PollerResult, PollerState, PollerStatus,
+            StatusMonitor,
+        },
         ClientOptions, Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
         RequestContent, Url, UrlExt,
     },
@@ -198,7 +201,10 @@ impl RpcClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let poller_status = if is_initial {
+                    let poller_status = if !is_initial {
+                        let res: RpcClientBeginLongRunningRpcOperationStatus = body.json()?;
+                        res.status()
+                    } else {
                         if status == azure_core::http::StatusCode::Accepted
                             || headers
                                 .get_optional_string(&HeaderName::from_static("operation-location"))
@@ -208,21 +214,6 @@ impl RpcClient {
                         } else {
                             PollerStatus::Succeeded
                         }
-                    } else {
-                        /// Reads only operation status, not the public response model.
-                        #[derive(serde::Deserialize)]
-                        #[serde(transparent)]
-                        struct StatusValue<'a>(#[serde(borrow)] std::borrow::Cow<'a, str>);
-                        #[derive(serde::Deserialize)]
-                        struct OperationStatus<'a> {
-                            #[serde(borrow, rename = "status")]
-                            status: StatusValue<'a>,
-                        }
-                        let operation_status: OperationStatus<'_> = serde_json::from_slice(&body)?;
-                        Some(operation_status)
-                            .map(|value| value.status)
-                            .map(|value| PollerStatus::from(value.0.as_ref()))
-                            .unwrap_or(PollerStatus::InProgress)
                     };
                     let mut final_rsp: Option<RawResponse> = None;
                     if poller_status == PollerStatus::Succeeded {

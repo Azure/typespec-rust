@@ -4,9 +4,12 @@
 
 ### Bugs Fixed
 
-- Long-running operations read only the applicable operation status instead of
-  deserializing intermediate responses as the monitor model. Unrelated initial
+- Long-running operations deserialize only applicable responses as the monitor
+  model. Unrelated initial
   resource statuses are ignored, and unrecognized operation status values keep polling.
+  Initial monitor selection respects HTTP response variants. Missing or null
+  monitor status retains existing progress behavior; empty or malformed monitor
+  bodies remain decoding errors.
 
 ### Breaking Changes
 

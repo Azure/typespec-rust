@@ -9,6 +9,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+pub struct LroStatusTestSnapshotsClientBeginMixedOperationStatus {
+    #[serde(rename = "operationId", skip_serializing_if = "Option::is_none")]
+    pub operation_id: Option<String>,
+
+    #[serde(rename = "requiredDetails", skip_serializing_if = "Option::is_none")]
+    pub required_details: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct LroStatusTestSnapshotsClientBeginMonitorOperationStatus {
     #[serde(rename = "operationId", skip_serializing_if = "Option::is_none")]
     pub operation_id: Option<String>,
