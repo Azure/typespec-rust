@@ -21,7 +21,7 @@ use azure_core::{
         Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
         Response, Url, UrlExt,
     },
-    json, tracing, Result,
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -58,6 +58,7 @@ impl NIClient {
         query_builder.build();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
+                let is_initial = matches!(&poller_state, PollerState::Initial);
                 let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
                     PollerState::More(continuation) => {
                         let (next_link, final_link) = match continuation {
@@ -150,14 +151,18 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientBeginCustomLinkOperationStatus = json::from_json(&body)?;
+                    let poller_status = if !is_initial {
+                        let res: NIClientBeginCustomLinkOperationStatus = body.json()?;
+                        res.status()
+                    } else {
+                        if status == azure_core::http::StatusCode::Accepted {
+                            PollerStatus::InProgress
+                        } else {
+                            PollerStatus::Succeeded
+                        }
+                    };
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
+                    Ok(match poller_status {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
@@ -169,7 +174,14 @@ impl NIClient {
                                 })
                             }),
                         },
-                        _ => PollerResult::Done { response: rsp },
+                        PollerStatus::Failed | PollerStatus::Canceled => {
+                            PollerResult::Done { response: rsp }
+                        }
+                        _ => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
                     })
                 })
             },
@@ -224,6 +236,7 @@ impl NIClient {
         query_builder.build();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
+                let is_initial = matches!(&poller_state, PollerState::Initial);
                 let (mut request, continuation) = match poller_state {
                     PollerState::More(continuation) => {
                         let (next_link, final_link) = match continuation.clone() {
@@ -294,10 +307,22 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientBeginIncorrectCustomOpRefOperationStatus =
-                        json::from_json(&body)?;
+                    let poller_status = if !is_initial {
+                        let res: NIClientBeginIncorrectCustomOpRefOperationStatus = body.json()?;
+                        res.status()
+                    } else {
+                        if status == azure_core::http::StatusCode::Accepted
+                            || headers
+                                .get_optional_string(&HeaderName::from_static("operation-location"))
+                                .is_some()
+                        {
+                            PollerStatus::InProgress
+                        } else {
+                            PollerStatus::Succeeded
+                        }
+                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
+                    if poller_status == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -305,12 +330,7 @@ impl NIClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
+                    Ok(match poller_status {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
@@ -323,7 +343,14 @@ impl NIClient {
                                 })
                             }),
                         },
-                        _ => PollerResult::Done { response: rsp },
+                        PollerStatus::Failed | PollerStatus::Canceled => {
+                            PollerResult::Done { response: rsp }
+                        }
+                        _ => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
                     })
                 })
             },
@@ -375,6 +402,7 @@ impl NIClient {
         query_builder.build();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
+                let is_initial = matches!(&poller_state, PollerState::Initial);
                 let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
                     PollerState::More(continuation) => {
                         let (next_link, final_link) = match continuation {
@@ -459,9 +487,22 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientBeginPartialBodyOperationStatus = json::from_json(&body)?;
+                    let poller_status = if !is_initial {
+                        let res: NIClientBeginPartialBodyOperationStatus = body.json()?;
+                        res.status()
+                    } else {
+                        if status == azure_core::http::StatusCode::Accepted
+                            || headers
+                                .get_optional_string(&HeaderName::from_static("operation-location"))
+                                .is_some()
+                        {
+                            PollerStatus::InProgress
+                        } else {
+                            PollerStatus::Succeeded
+                        }
+                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
+                    if poller_status == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -469,12 +510,7 @@ impl NIClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
+                    Ok(match poller_status {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
@@ -487,7 +523,14 @@ impl NIClient {
                                 })
                             }),
                         },
-                        _ => PollerResult::Done { response: rsp },
+                        PollerStatus::Failed | PollerStatus::Canceled => {
+                            PollerResult::Done { response: rsp }
+                        }
+                        _ => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
                     })
                 })
             },
@@ -585,6 +628,7 @@ impl NIClient {
         query_builder.build();
         Ok(Poller::new(
             move |poller_state: PollerState, poller_options| {
+                let is_initial = matches!(&poller_state, PollerState::Initial);
                 let poller_request: Result<(Request, PollerContinuation)> = match poller_state {
                     PollerState::More(continuation) => {
                         let (next_link, final_link) = match continuation {
@@ -669,9 +713,22 @@ impl NIClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &poller_options,
                     );
-                    let res: NIClientStartPartialBodyOperationStatus = json::from_json(&body)?;
+                    let poller_status = if !is_initial {
+                        let res: NIClientStartPartialBodyOperationStatus = body.json()?;
+                        res.status()
+                    } else {
+                        if status == azure_core::http::StatusCode::Accepted
+                            || headers
+                                .get_optional_string(&HeaderName::from_static("operation-location"))
+                                .is_some()
+                        {
+                            PollerStatus::InProgress
+                        } else {
+                            PollerStatus::Succeeded
+                        }
+                    };
                     let mut final_rsp: Option<RawResponse> = None;
-                    if res.status() == PollerStatus::Succeeded {
+                    if poller_status == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
                             status,
                             headers.clone(),
@@ -679,12 +736,7 @@ impl NIClient {
                         ));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            continuation,
-                        },
+                    Ok(match poller_status {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
@@ -697,7 +749,14 @@ impl NIClient {
                                 })
                             }),
                         },
-                        _ => PollerResult::Done { response: rsp },
+                        PollerStatus::Failed | PollerStatus::Canceled => {
+                            PollerResult::Done { response: rsp }
+                        }
+                        _ => PollerResult::InProgress {
+                            response: rsp,
+                            retry_after,
+                            continuation,
+                        },
                     })
                 })
             },

@@ -7,6 +7,7 @@ members = [
     "other/enum_path_params",
     "other/fakes",
     "other/lro",
+    "other/lro_status",
     "other/misc_tests",
     "other/pub_crate",
     "other/resource_manager",

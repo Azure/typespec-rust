@@ -2036,6 +2036,8 @@ export class Adapter {
         rustMethod = new rust.LroMethod( methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path, lroFinalResultStrategy);
         if (this.crate.type === 'azure-arm') {
           rustMethod.resourceManagerFinalState = this.adaptResourceManagerFinalState(method);
+        } else {
+          rustMethod.initialMonitorStatusCodes = this.adaptInitialMonitorStatusCodes(method);
         }
       }
         break;
@@ -2508,6 +2510,72 @@ export class Adapter {
         }
       }
     }
+  }
+
+  /** Selects initial monitor responses by HTTP status without interpreting unrelated resource lifecycle fields. */
+  private adaptInitialMonitorStatusCodes(method: tcgc.SdkLroServiceMethod<tcgc.SdkHttpOperation>): Array<number> | undefined {
+    const termination = method.lroMetadata.pollingInfo.terminationStatus;
+    if (termination.kind !== 'model-property') {
+      return undefined;
+    }
+    let statusProperty = termination.property;
+    const findPath = (model: tcgc.SdkModelType, parents = new Set<tcgc.SdkModelType>(), synthesized = false): tcgc.SdkModelPropertyType[] | undefined => {
+      if (parents.has(model)) {
+        return undefined;
+      }
+      const visited = new Set(parents).add(model);
+      for (const property of model.properties) {
+        if (property === statusProperty
+          || (property.crossLanguageDefinitionId
+            && property.crossLanguageDefinitionId === statusProperty.crossLanguageDefinitionId)
+          || (synthesized && property.name === statusProperty.name)) {
+          return [property];
+        }
+        let type = property.type;
+        while (type.kind === 'nullable') {
+          type = type.type;
+        }
+        if (type.kind === 'model') {
+          const nested = findPath(type, visited, synthesized);
+          if (nested) {
+            return [property, ...nested];
+          }
+        }
+      }
+      return model.baseModel ? findPath(model.baseModel, visited, synthesized) : undefined;
+    };
+    const pollingModel = method.lroMetadata.pollingInfo.responseModel;
+    // TCGC can synthesize the termination property rather than reuse the model property.
+    const pollingPath = findPath(pollingModel) ?? findPath(pollingModel, new Set(), true);
+    if (!pollingPath) {
+      throw new AdapterError('UnsupportedTsp', `Cannot find the operation status property for LRO ${method.name}`);
+    }
+    statusProperty = pollingPath[pollingPath.length - 1];
+    const serializedPath = (path: tcgc.SdkModelPropertyType[]): string =>
+      JSON.stringify(path.map(property => this.getSerializedPropertyName(property) ?? property.name));
+    const initialResponses = method.operation.responses.map(response => {
+      const path = response.type?.kind === 'model'
+        ? findPath(response.type, new Set(), response.type === pollingModel)
+        : undefined;
+      const selector = response.statusCodes;
+      const start = typeof selector === 'number' ? selector : selector.start;
+      const end = typeof selector === 'number' ? selector : selector.end;
+      const statusCodes = Array.from({ length: end - start + 1 }, (_, index) => start + index);
+      if (path && serializedPath(path) !== serializedPath(pollingPath)) {
+        throw new AdapterError('UnsupportedTsp', `LRO ${method.name} has an initial monitor incompatible with its polling model`);
+      }
+      return { statusCodes, monitor: path !== undefined };
+    });
+    const selected = new Map<number, boolean>();
+    for (const response of initialResponses) {
+      for (const code of response.statusCodes) {
+        if (selected.has(code) && selected.get(code) !== response.monitor) {
+          throw new AdapterError('UnsupportedTsp', `LRO ${method.name} has ambiguous initial response roles for HTTP ${code}`);
+        }
+        selected.set(code, response.monitor);
+      }
+    }
+    return [...selected].filter(([, monitor]) => monitor).map(([code]) => code).sort((a, b) => a - b);
   }
 
   /**

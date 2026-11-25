@@ -243,6 +243,9 @@ export interface LroMethod extends HTTPMethodBase {
 
   /** Omission delegates final response selection to the Resource Manager runtime. */
   resourceManagerFinalState?: ResourceManagerFinalState;
+
+  /** Initial HTTP statuses whose responses are operation monitors, not resource representations. */
+  initialMonitorStatusCodes?: Array<number>;
 }
 
 /** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */

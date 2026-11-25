@@ -193,6 +193,9 @@ generate('colliding_locals', colliding_locals, 'test/other/colliding_locals');
 const lro = pkgRoot + 'test/tsp/lro';
 generate('lro', lro, 'test/other/lro');
 
+const lro_status = pkgRoot + 'test/tsp/lro-status';
+generate('lro_status', lro_status, 'test/other/lro_status');
+
 generate('azure_resourcemanager_test', pkgRoot + 'test/tsp/ResourceManager', 'test/other/resource_manager', ['api-version=2026-05-15', 'generate-fakes=true']);
 
 const misc_tests = pkgRoot + 'test/tsp/MiscTests';

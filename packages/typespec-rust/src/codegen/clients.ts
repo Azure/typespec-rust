@@ -1807,6 +1807,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   }
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
+  const initialMonitorStatusCodes = bodyFormat === 'json' ? method.initialMonitorStatusCodes : undefined;
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
@@ -1821,6 +1822,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   const paramGroups = getMethodParamGroup(method);
   const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
 
+  const initialVar = initialMonitorStatusCodes ? helpers.getUniqueVarName(method.params, ['is_initial', 'is_initial_response']) : '';
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += emitFakeCapture(client, method);
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
@@ -1849,6 +1851,9 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   body += `${indent.get()}Ok(${method.returns.type.name}::new(\n`
   body += `${indent.push().get()}move |poller_state: PollerState, poller_options| {\n`;
+  if (initialMonitorStatusCodes) {
+    body += `${indent.get()}let ${initialVar} = matches!(&poller_state, PollerState::Initial);\n`;
+  }
   const fallibleInitialPollerRequest = paramGroups.partialBody.length > 0
     ? constructFallibleInitialPollerRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName)
     : undefined;
@@ -1965,12 +1970,29 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &poller_options);\n`
 
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
-  use.add('azure_core', bodyFormat);
-  body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+  indent.push();
+  let statusExpression = 'res.status()';
+  if (initialMonitorStatusCodes) {
+    const monitorCondition = initialMonitorStatusCodes.map(code => `status == azure_core::http::StatusCode::from(${code})`).join(' || ');
+    body += `${indent.get()}let poller_status = if !${initialVar}${monitorCondition ? ` || ${monitorCondition}` : ''} {\n`;
+    body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = body.json()?;\n`;
+    body += `${indent.get()}res.status()\n`;
+    body += `${indent.pop().get()}} else {\n`;
+    indent.push();
+    const pollingHeader = pollingStepHeaderName
+      ? ` || headers.get_optional_string(&HeaderName::from_static("${pollingStepHeaderName}")).is_some()`
+      : '';
+    body += `${indent.get()}if status == azure_core::http::StatusCode::Accepted${pollingHeader} { PollerStatus::InProgress } else { PollerStatus::Succeeded }\n`;
+    body += `${indent.pop().get()}};\n`;
+    statusExpression = 'poller_status';
+  } else {
+    use.add('azure_core', bodyFormat);
+    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+  }
 
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
     body += `${indent.get()}let mut final_rsp: Option<RawResponse> = None;\n`
-    body += `if res.status() == PollerStatus::Succeeded {\n`
+    body += `if ${statusExpression} == PollerStatus::Succeeded {\n`
     let responseBodyExpr = 'body.clone()';
     if (method.finalResultStrategy.propertyName !== undefined) {
       responseBodyExpr = 'body';
@@ -1986,13 +2008,7 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
 
   body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
 
-  const arms: helpers.matchArm[] = [{
-    pattern: `PollerStatus::InProgress`,
-    body: (indent) => {
-      return `${indent.get()}response: rsp, retry_after, continuation\n`;
-    },
-    returns: 'PollerResult::InProgress'
-  }];
+  const arms: helpers.matchArm[] = [];
 
   arms.push({
     pattern: `PollerStatus::Succeeded`,
@@ -2020,14 +2036,20 @@ function getLroMethodBody(crate: rust.Crate, indent: helpers.indentation, use: U
   });
 
   arms.push({
-    pattern: '_',
+    pattern: 'PollerStatus::Failed | PollerStatus::Canceled',
     body: (indent) => {
       return `${indent.get()}response: rsp`;
     },
     returns: 'PollerResult::Done'
   });
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
+  arms.push({
+    pattern: '_',
+    body: (indent) => `${indent.get()}response: rsp, retry_after, continuation\n`,
+    returns: 'PollerResult::InProgress',
+  });
+
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, statusExpression, arms)})\n`;
   body += `${indent.pop().get()}})\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::new
